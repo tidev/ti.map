@@ -1,0 +1,32 @@
+---
+name: Modules.Map.Route
+summary: Represents a path between two or more points of interest.
+description: |
+    The `Route` object gives you low-level control over routes that can be added to a
+    [map view](Modules.Map.View). A route must have its `points` property set to appear on a map.
+
+    Use the <Modules.Map.createRoute> method to create a route.
+extends: Titanium.Proxy
+since: "3.0.2"
+platforms: [android]
+
+properties:
+
+  - name: points
+    summary: Array of map points making up the route.
+    type: Array<MapPointType>
+    optional: false
+
+  - name: color
+    summary: |
+        Color to use when drawing the route, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>. 
+    type: String
+    default: black
+
+  - name: width
+    summary: Line width in pixels to use when drawing the route.
+    type: Number
+    default: 10
+
