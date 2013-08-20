@@ -1,6 +1,6 @@
 titanium.sdk=/Library/Application\ Support/Titanium/
 titanium.os=osx
-titanium.version=3.0.2.GA
+titanium.version=3.1.0.GA
 android.sdk=/usr/android-sdk
 
 titanium.platform=${titanium.sdk}/mobilesdk/${titanium.os}/${titanium.version}/android
