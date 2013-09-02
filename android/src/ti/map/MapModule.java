@@ -31,6 +31,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_LEFT_PANE = "leftPane";
 	public static final String PROPERTY_RIGHT_PANE = "rightPane";
 	public static final String PROPERTY_USER_LOCATION_BUTTON = "userLocationButton";
+	public static final String PROPERTY_ZORDER_ON_TOP = "zOrderOnTop";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;

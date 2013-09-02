@@ -1,6 +1,7 @@
 # Change Log
 <pre>
 v2.1.2    Clicking on an annotation should center it in map view [TIMOB-13778].
+          Added support for zOrderOnTop [TIMOB-13628].
           Fixed a bug where removing an annotation using its title crashed the app [TIMOB-14502].
           Updated Google Play Services SDK.
 

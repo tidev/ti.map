@@ -257,6 +257,12 @@ properties:
         or <Modules.Map.HYBRID_TYPE>
     type: Number
     default: NORMAL_TYPE
+    
+  - name: zOrderOnTop
+    summary: Controls wether the map view's surface is placed on top of its window.
+    type: Boolean
+    default: false
+    availability: creation
 
   - name: region
     summary: |
