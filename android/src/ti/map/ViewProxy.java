@@ -8,6 +8,7 @@ package ti.map;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.appcelerator.kroll.annotations.Kroll;
@@ -17,6 +18,7 @@ import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
+import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
 
 import android.app.Activity;
@@ -50,12 +52,10 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
 	
-	private ArrayList<AnnotationProxy> preloadAnnotations;
 	private ArrayList<RouteProxy> preloadRoutes;
 	
 	public ViewProxy() {
 		super();
-		preloadAnnotations = new ArrayList<AnnotationProxy>();
 		preloadRoutes = new ArrayList<RouteProxy>();
 	}
 	
@@ -64,7 +64,6 @@ public class ViewProxy extends TiViewProxy
 	}
 	
 	public void clearPreloadObjects() {
-		preloadAnnotations.clear();
 		preloadRoutes.clear();
 	}
 
@@ -152,49 +151,58 @@ public class ViewProxy extends TiViewProxy
 		}
 		}
 	}
-	
-
-	public ArrayList<AnnotationProxy> getPreloadAnnotations() {
-		return preloadAnnotations;
-	}
 
 	@Kroll.method
 	public void addAnnotation(AnnotationProxy annotation) {
-		if (TiApplication.isUIThread()) {
-			handleAddAnnotation(annotation);
+		//Update the JS object
+		Object annotations = getProperty(TiC.PROPERTY_ANNOTATIONS);
+		if (annotations instanceof Object[]) {
+			ArrayList<Object> annoList = new ArrayList<Object>(Arrays.asList((Object[])annotations));
+			annoList.add(annotation);
+			setProperty(TiC.PROPERTY_ANNOTATIONS, annoList.toArray());
 		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ANNOTATION), annotation);
+			setProperty(TiC.PROPERTY_ANNOTATIONS, new Object[] {annotation});
+		}
+
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			if (TiApplication.isUIThread()) {
+				handleAddAnnotation(annotation);
+			} else {
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ANNOTATION), annotation);
+			}
 		}
 	}
 	
 	private void handleAddAnnotation(AnnotationProxy annotation) {
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		if (mapView.getMap() != null) {
+			mapView.addAnnotation(annotation);
+		} 
+	}
+
+	@Kroll.method
+	public void addAnnotations(AnnotationProxy[] annos) {
+		//Update the JS object
+		Object annotations = getProperty(TiC.PROPERTY_ANNOTATIONS);
+		if (annotations instanceof Object[]) {
+			ArrayList<Object> annoList = new ArrayList<Object>(Arrays.asList((Object[])annotations));
+			for (int i = 0; i < annos.length; i++) {
+				AnnotationProxy annotation = annos[i];
+				annoList.add(annotation);
+			}
+			setProperty(TiC.PROPERTY_ANNOTATIONS, annoList.toArray());
+		} else {
+			setProperty(TiC.PROPERTY_ANNOTATIONS, annos);
+		}
 
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			TiUIMapView mapView = (TiUIMapView) view;
-			if (mapView.getMap() != null) {
-				mapView.addAnnotation(annotation);
-
+			if (TiApplication.isUIThread()) {
+				handleAddAnnotations(annos);
 			} else {
-				addPreloadAnnotation(annotation);
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ANNOTATIONS), annos);
 			}
-		} else {
-			addPreloadAnnotation(annotation);
-		}
-	}
-	
-	private void addPreloadAnnotation(AnnotationProxy anno) {
-		if (!preloadAnnotations.contains(anno)) {
-			preloadAnnotations.add(anno);
-		}
-	}
-	
-	@Kroll.method
-	public void addAnnotations(AnnotationProxy[] annotations) {
-		if (TiApplication.isUIThread()) {
-			handleAddAnnotations(annotations);
-		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ANNOTATIONS), annotations);
 		}
 	}
 	
@@ -209,6 +217,9 @@ public class ViewProxy extends TiViewProxy
 	
 	@Kroll.method
 	public void removeAllAnnotations() {
+		//Update the JS object
+		setProperty(TiC.PROPERTY_ANNOTATIONS, new Object[0]);
+
 		if (TiApplication.isUIThread()) {
 			handleRemoveAllAnnotations();
 		} else {
@@ -247,53 +258,91 @@ public class ViewProxy extends TiViewProxy
 		
 		return true;
 	}
+
+	private void removeAnnotationByTitle(ArrayList<Object> annoList, String annoTitle) {
+		for (int i = 0; i < annoList.size(); i++) {
+			Object obj = annoList.get(i);
+			if (obj instanceof AnnotationProxy) {
+				AnnotationProxy annoProxy = (AnnotationProxy) obj;
+				String title = TiConvert.toString(annoProxy.getProperty(TiC.PROPERTY_TITLE));
+				if (title != null && title.equals(annoTitle)) {
+					annoList.remove(annoProxy);
+					break;
+				}
+			}
+		}
+	}
+
+	private void removeAnnoFromList(ArrayList<Object> annoList, Object annotation) {
+		if (annotation instanceof AnnotationProxy) {
+			annoList.remove(annotation);
+		} else if (annotation instanceof String) {
+			removeAnnotationByTitle(annoList, (String)annotation);
+		}
+	}
+
 	@Kroll.method
 	public void removeAnnotation(Object annotation) {
-		if (!isAnnotationValid(annotation)) {
+		if (!(annotation instanceof AnnotationProxy || annotation instanceof String)) {
+			Log.e(TAG, "Unsupported argument type for removeAnnotation");
 			return;
 		}
 
-		if (TiApplication.isUIThread()) {
-			handleRemoveAnnotation(annotation);
-		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ANNOTATION), annotation);
+		//Update the JS object
+		Object annotations = getProperty(TiC.PROPERTY_ANNOTATIONS);
+		if (annotations instanceof Object[]) {
+			ArrayList<Object> annoList = new ArrayList<Object>(Arrays.asList((Object[])annotations));
+			removeAnnoFromList(annoList, annotation);
+			setProperty(TiC.PROPERTY_ANNOTATIONS, annoList.toArray());
 		}
-		
+
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			if (TiApplication.isUIThread()) {
+				handleRemoveAnnotation(annotation);
+			} else {
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ANNOTATION), annotation);
+			}
+		}	
 	}
 	
 	@Kroll.method
-	public void removeAnnotations(Object annotations) {
-		if (TiApplication.isUIThread()) {
-			handleRemoveAnnotations((Object[])annotations);
-		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ANNOTATIONS), annotations);
+	public void removeAnnotations(Object annos) {
+		//Update the JS object
+		Object annotations = getProperty(TiC.PROPERTY_ANNOTATIONS);
+		if (annotations instanceof Object[] && annos instanceof Object[]) {
+			ArrayList<Object> annoList = new ArrayList<Object>(Arrays.asList((Object[])annotations));
+			Object[] annoArray = (Object[]) annos;
+			for (int i = 0; i < annoArray.length; i++) {
+				Object annotation = annoArray[i];
+				removeAnnoFromList(annoList, annotation);
+			}
+			setProperty(TiC.PROPERTY_ANNOTATIONS, annoList.toArray());
+		}
+
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			if (TiApplication.isUIThread()) {
+				handleRemoveAnnotations((Object[])annos);
+			} else {
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ANNOTATIONS), annos);
+			}
 		}
 	}
 	
 	public void handleRemoveAnnotations(Object[] annotations) {
 		for (int i = 0; i < annotations.length; i++) {
-			removeAnnotation(annotations[i]);
+			Object annotation = annotations[i];
+			if (annotation instanceof AnnotationProxy || annotation instanceof String) {
+				handleRemoveAnnotation(annotations[i]);
+			}
 		}
 	}
 	
 	public void handleRemoveAnnotation(Object annotation) {
-		TiUIView view = peekView();
-		if (view instanceof TiUIMapView) {
-			TiUIMapView mapView = (TiUIMapView) view;
-			if (mapView.getMap() != null) {
-				mapView.removeAnnotation(annotation);
-			} else {
-				removePreloadAnnotation(annotation);
-			}
-			
-		} else {
-			removePreloadAnnotation(annotation);
-		}
-	}
-	
-	public void removePreloadAnnotation(Object annotation) {
-		if (annotation instanceof AnnotationProxy && preloadAnnotations.contains(annotation)) {
-			preloadAnnotations.remove(annotation);
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		if (mapView.getMap() != null) {
+			mapView.removeAnnotation(annotation);
 		}
 	}
 	
