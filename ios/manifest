@@ -5,7 +5,7 @@
 version: 1.0.0
 apiversion: 2
 description: External version of Map module
-author: Jon Alter
+author: Jeff Haynie
 license: Apache Public License v2
 copyright: Copyright (c) 2013 by Appcelerator, Inc.
 
