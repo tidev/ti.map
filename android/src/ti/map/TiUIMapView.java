@@ -33,9 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
-
 import ti.map.ViewProxy;
-
 import ti.map.shape.PolygonProxy;
 import ti.map.shape.PolylineProxy;
 

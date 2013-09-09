@@ -15,12 +15,11 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
+
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import compose.map.MapModule;
+import ti.map.MapModule;
 
 @Kroll.proxy(creatableInModule=MapModule.class, propertyAccessors = {
 	

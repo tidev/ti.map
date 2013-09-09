@@ -19,13 +19,14 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.view.TiUIView;
 
-import compose.map.TiUIMapView;
+import android.app.Activity;
+import android.os.Message;
+
+import ti.map.TiUIMapView;
 
 import ti.map.shape.PolygonProxy;
 import ti.map.shape.PolylineProxy;
 
-import android.app.Activity;
-import android.os.Message;
 
 @Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {
 	TiC.PROPERTY_USER_LOCATION,
