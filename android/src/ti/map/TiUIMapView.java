@@ -34,7 +34,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
-	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter
+	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
+	GoogleMap.OnMapLongClickListener
 {
 	private static final String TAG = "TiUIMapView";
 	private GoogleMap map;
@@ -75,6 +76,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setOnMarkerDragListener(this);
 		map.setOnInfoWindowClickListener(this);
 		map.setInfoWindowAdapter(this);
+		map.setOnMapLongClickListener(this);
 		((ViewProxy) proxy).clearPreloadObjects();
 		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
@@ -416,6 +418,17 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
+	
+	public void fireLongClickEvent(LatLng point)
+	{
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
+		d.put(TiC.PROPERTY_LONGITUDE, point.longitude);
+		d.put(MapModule.PROPERTY_MAP, proxy);
+		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_LONGCLICK);
+		d.put(TiC.PROPERTY_SOURCE, proxy);
+		proxy.fireEvent(TiC.EVENT_LONGCLICK, d);
+	}
 
 	public void firePinChangeDragStateEvent(Marker marker, AnnotationProxy annoProxy, int dragState)
 	{
@@ -464,6 +477,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			selectedAnnotation = null;
 		}
 
+	}
+	
+	@Override
+	public void onMapLongClick(LatLng point)
+	{
+		fireLongClickEvent(point);
 	}
 
 	@Override
