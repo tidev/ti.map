@@ -21,12 +21,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import ti.map.MapModule;
 
-@Kroll.proxy(creatableInModule=MapModule.class, propertyAccessors = {
+@Kroll.proxy(name="Polyline",creatableInModule=MapModule.class, propertyAccessors = {
 	
-	PolygonProxy.PROPERTY_FILL_COLOR,
-	PolygonProxy.PROPERTY_STROKE_COLOR,
-	PolygonProxy.PROPERTY_STROKE_WIDTH,
-	PolygonProxy.PROPERTY_ZINDEX,
+	PolylineProxy.PROPERTY_STROKE_COLOR,
+	PolylineProxy.PROPERTY_STROKE_WIDTH,
+	PolylineProxy.PROPERTY_ZINDEX,
 	
 	MapModule.PROPERTY_POINTS,
 
@@ -114,17 +113,17 @@ public class PolylineProxy extends KrollProxy {
 			 processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
 		}
 		
-		op = PolygonProxy.PROPERTY_STROKE_COLOR;
+		op = PolylineProxy.PROPERTY_STROKE_COLOR;
 		if (hasProperty(op)) {
 			options.color(TiConvert.toColor((String)getProperty(op)));
 		}
 		
-		op = PolygonProxy.PROPERTY_STROKE_WIDTH;
+		op = PolylineProxy.PROPERTY_STROKE_WIDTH;
 		if (hasProperty(op)) {
 			options.width(TiConvert.toFloat(getProperty(op)));
 		}
 
-		op = PolygonProxy.PROPERTY_ZINDEX;
+		op = PolylineProxy.PROPERTY_ZINDEX;
 		if (hasProperty(op)) {
 			options.zIndex(TiConvert.toFloat(getProperty(op)));
 		}

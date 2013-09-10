@@ -15,14 +15,13 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import ti.map.MapModule;
 
-@Kroll.proxy(creatableInModule=MapModule.class, propertyAccessors = {
+@Kroll.proxy(name="Polygon", creatableInModule=MapModule.class, propertyAccessors = {
 	
 	PolygonProxy.PROPERTY_FILL_COLOR,
 	PolygonProxy.PROPERTY_STROKE_COLOR,
