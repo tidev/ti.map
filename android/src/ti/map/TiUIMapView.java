@@ -18,6 +18,8 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 
+import ti.map.ViewProxy;
+
 import android.app.Activity;
 import android.graphics.Point;
 import android.support.v4.app.Fragment;
@@ -56,6 +58,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		return SupportMapFragment.newInstance();
 	}
 
+	protected void processPreloadAnnotations()
+	{
+		ArrayList<AnnotationProxy> annotations = ((ViewProxy) proxy).getPreloadAnnotations();
+		for (int i = 0; i < annotations.size(); i++) {
+			addAnnotation(annotations.get(i));
+		}
+	}
+
 	protected void processPreloadRoutes()
 	{
 		ArrayList<RouteProxy> routes = ((ViewProxy) proxy).getPreloadRoutes();
@@ -64,11 +74,32 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 	}
 
+
+	protected void processPreloadPolygons()
+	{
+		ArrayList<PolygonProxy> polygons = ((ViewProxy) proxy).getPreloadPolygons();
+		for (int i = 0; i < polygons.size(); i++) {
+			addPolygon(polygons.get(i));
+		}
+	}		
+	
+	protected void processPreloadPolylines()
+	{
+		ArrayList<PolylineProxy> polylines = ((ViewProxy) proxy).getPreloadPolylines();
+		for (int i = 0; i < polylines.size(); i++) {
+			addPolyline(polylines.get(i));
+		}
+	}		
+	
 	protected void onViewCreated()
 	{
 		map = acquireMap();
 		processMapProperties(proxy.getProperties());
+		processPreloadAnnotations();
 		processPreloadRoutes();
+		processPreloadPolygons();
+		processPreloadPolylines();
+		
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
@@ -378,7 +409,57 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		r.processOptions();
 		r.setRoute(map.addPolyline(r.getOptions()));
 	}
+	
+	/**
+	 * Polygon
+	 */	
+	public void addPolygon(PolygonProxy p)
+	{
+		Log.w("mapView.addPolygon", "Add Polygon");
+		// check if polygon already added.
+		if (p.getPolygon() != null) {
+			return;
+		}
+		Log.e("mapView.addPolygon", "Polygon ADDDED!!!!");
+				
+		p.processOptions();
+		p.setPolygon(map.addPolygon(p.getOptions()));
+	}	
+	
+	public void removePolygon(PolygonProxy p)
+	{
+		if (p.getPolygon() == null) {
+			return;
+		}
 
+		p.getPolygon().remove();
+		p.setPolygon(null);
+	}
+
+	/**
+	 * Polyline
+	 */	
+	public void addPolyline(PolylineProxy p)
+	{
+		Log.w("mapView.addPolyline", "Add Polygon");
+		// check if polygon already added.
+		if (p.getPolyline() != null) {
+			return;
+		}
+		p.processOptions();
+		p.setPolyline(map.addPolyline(p.getOptions()));
+	}	
+	
+	public void removePolyline(PolylineProxy p)
+	{
+		if (p.getPolyline() == null) {
+			return;
+		}
+
+		p.getPolyline().remove();
+		p.setPolyline(null);
+	}
+	
 	public void removeRoute(RouteProxy r)
 	{
 		if (r.getRoute() == null) {

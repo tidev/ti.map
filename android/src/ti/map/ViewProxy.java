@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
@@ -21,8 +22,14 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
 
+import ti.map.TiUIMapView;
+
+
 import android.app.Activity;
 import android.os.Message;
+
+
+
 
 @Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {
 	TiC.PROPERTY_USER_LOCATION,
@@ -51,12 +58,22 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_REMOVE_ROUTE = MSG_FIRST_ID + 508;
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
+
+	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 511;	
+	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 512;
+	
+	private static final int MSG_ADD_POLYLINE = MSG_FIRST_ID + 513;	
+	private static final int MSG_REMOVE_POLYLINE = MSG_FIRST_ID + 514;
 	
 	private ArrayList<RouteProxy> preloadRoutes;
+	private ArrayList<PolygonProxy> preloadPolygons;
+	private ArrayList<PolylineProxy> preloadPolylines;
 	
 	public ViewProxy() {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
+		preloadPolygons = new ArrayList<PolygonProxy>();
+		preloadPolylines = new ArrayList<PolylineProxy>();		
 	}
 	
 	public TiUIView createView(Activity activity) {
@@ -65,6 +82,8 @@ public class ViewProxy extends TiViewProxy
 	
 	public void clearPreloadObjects() {
 		preloadRoutes.clear();
+		preloadPolygons.clear();
+		preloadPolylines.clear();		
 	}
 
 	@Override
@@ -146,6 +165,34 @@ public class ViewProxy extends TiViewProxy
 			return true;
 		}
 
+		case MSG_ADD_POLYGON: {
+			result = (AsyncResult) msg.obj;
+			handleAddPolygon((PolygonProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_REMOVE_POLYGON: {
+			result = (AsyncResult) msg.obj;
+			handleRemovePolygon((PolygonProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}		
+
+		case MSG_ADD_POLYLINE: {
+			result = (AsyncResult) msg.obj;
+			handleAddPolyline((PolylineProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_REMOVE_POLYLINE: {
+			result = (AsyncResult) msg.obj;
+			handleRemovePolyline((PolylineProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}		
+		
 		default : {
 			return super.handleMessage(msg);
 		}
@@ -458,6 +505,163 @@ public class ViewProxy extends TiViewProxy
 		return preloadRoutes;
 	}
 
+	/** 
+	 * Polygons
+	 * 
+	 **/	
+
+	@Kroll.method
+	public void addPolygon(PolygonProxy polygon) {
+		if (TiApplication.isUIThread()) {
+			handleAddPolygon(polygon);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_POLYGON), polygon);
+		}
+	}
+	
+	public void handleAddPolygon(Object polygon) {
+		if (polygon == null) {
+			return;
+		}
+		PolygonProxy p = (PolygonProxy) polygon;
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addPolygon(p);
+			} else {
+				addPreloadPolygon(p);
+			}
+		} else {
+			addPreloadPolygon(p);
+		}
+
+	}
+	
+	public void addPreloadPolygon(PolygonProxy p) {
+		if (!preloadPolygons.contains(p)) {
+			preloadPolygons.add(p);
+		}
+	}
+	
+	public void removePreloadPolygon(PolygonProxy p) {
+		if (preloadPolygons.contains(p)) {
+			preloadPolygons.remove(p);
+		}
+	}
+	
+	@Kroll.method
+	public void removePolygon(PolygonProxy polygon) {
+		if (TiApplication.isUIThread()) {
+			handleRemovePolygon(polygon);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_POLYGON), polygon);
+
+		}
+	}
+	
+	public void handleRemovePolygon(PolygonProxy polygon) {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removePolygon(polygon);
+
+			} else {
+				removePreloadPolygon(polygon);
+			}
+		} else {
+			removePreloadPolygon(polygon);
+		}
+	}
+	
+	public ArrayList<PolygonProxy> getPreloadPolygons() {
+		return preloadPolygons;
+	}
+	
+	
+	/**
+	 * EOF Polygons
+	 */	
+	
+
+	/** 
+	 * Polylines
+	 * 
+	 **/	
+
+	@Kroll.method
+	public void addPolyline(PolylineProxy polyline) {
+		if (TiApplication.isUIThread()) {
+			handleAddPolygon(polyline);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_POLYLINE), polyline);
+		}
+	}
+	
+	public void handleAddPolyline(Object polyline) {
+		if (polyline == null) {
+			return;
+		}
+		PolylineProxy p = (PolylineProxy) polyline;
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addPolyline(p);
+			} else {
+				addPreloadPolyline(p);
+			}
+		} else {
+			addPreloadPolyline(p);
+		}
+
+	}
+	
+	public void addPreloadPolyline(PolylineProxy p) {
+		if (!preloadPolylines.contains(p)) {
+			preloadPolylines.add(p);
+		}
+	}
+	
+	public void removePreloadPolyline(PolylineProxy p) {
+		if (preloadPolylines.contains(p)) {
+			preloadPolylines.remove(p);
+		}
+	}
+	
+	@Kroll.method
+	public void removePolyline(PolylineProxy polyline) {
+		if (TiApplication.isUIThread()) {
+			handleRemovePolyline(polyline);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_POLYLINE), polyline);
+		}
+	}
+	
+	public void handleRemovePolyline(PolylineProxy polyline) {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removePolyline(polyline);
+			} else {
+				removePreloadPolyline(polyline);
+			}
+		} else {
+			removePreloadPolyline(polyline);
+		}
+	}
+	
+	public ArrayList<PolylineProxy> getPreloadPolylines() {
+		return preloadPolylines;
+	}
+	
+	
+/**
+ * EOF Polylines
+ */
+	
 	@Kroll.method
 	public void zoom(int delta)
 	{
