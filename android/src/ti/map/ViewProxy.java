@@ -10,6 +10,7 @@ package ti.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
@@ -19,13 +20,13 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.view.TiUIView;
 
+import ti.map.TiUIMapView;
+
+
 import android.app.Activity;
 import android.os.Message;
 
-import ti.map.TiUIMapView;
 
-import ti.map.shape.PolygonProxy;
-import ti.map.shape.PolylineProxy;
 
 
 @Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {

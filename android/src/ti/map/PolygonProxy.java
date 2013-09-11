@@ -1,4 +1,4 @@
-package ti.map.shape;
+package ti.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,46 +16,56 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 
-import ti.map.MapModule;
-
-@Kroll.proxy(name="Polyline",creatableInModule=MapModule.class, propertyAccessors = {
+@Kroll.proxy(name="Polygon", creatableInModule=MapModule.class, propertyAccessors = {
 	
-	PolylineProxy.PROPERTY_STROKE_COLOR,
-	PolylineProxy.PROPERTY_STROKE_WIDTH,
-	PolylineProxy.PROPERTY_ZINDEX,
+	PolygonProxy.PROPERTY_FILL_COLOR,
+	PolygonProxy.PROPERTY_STROKE_COLOR,
+	PolygonProxy.PROPERTY_STROKE_WIDTH,
+	PolygonProxy.PROPERTY_ZINDEX,
 	
 	MapModule.PROPERTY_POINTS,
-
-})
-public class PolylineProxy extends KrollProxy {
 	
-	private PolylineOptions options;
-	private Polyline polyline;
+//	TiC.PROPERTY_COLOR,
+//	TiC.PROPERTY_WIDTH
+})
+public class PolygonProxy extends KrollProxy {
+	
+	private PolygonOptions options;
+	private Polygon polygon;
 		
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
+
 	
-	private static final int MSG_SET_POINTS 	  = MSG_FIRST_ID + 499;
-	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 501;
-	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 502;
-	private static final int MSG_SET_ZINDEX 	  = MSG_FIRST_ID + 503;	
+//	int MSG_SET_POINTS
+//	int MSG_SET_FILL_COLOR
+//	int MSG_SET_STROKE_COLOR
+//	int MSG_SET_STROKE_WIDTH 
+//	int MSG_SET_ZINDEX	
+	private static final int MSG_SET_POINTS 	  = MSG_FIRST_ID + 699;
+	private static final int MSG_SET_FILL_COLOR   = MSG_FIRST_ID + 700;
+	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 701;
+	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 702;
+	private static final int MSG_SET_ZINDEX 	  = MSG_FIRST_ID + 703;	
 	
 	// 			 points (MapView)
 	// (int) 	 strokeColor 
 	// (float)	 strokeWidth 
 	// (int) 	 fillColor 
 	// (float)	 zIndex	
-	public static final String PROPERTY_STROKE_COLOR = "color";
-	public static final String PROPERTY_STROKE_WIDTH = "width";
-	public static final String PROPERTY_ZINDEX = "zIndex";	
+	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
+	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
+	public static final String PROPERTY_FILL_COLOR = "fillColor";
+	public static final String PROPERTY_ZINDEX = "zIndex";
 	
-	public PolylineProxy() {
+	
+	public PolygonProxy() {
 		super();
 	}
 	
-	public PolylineProxy(TiContext tiContext) {
+	public PolygonProxy(TiContext tiContext) {
 		this();
 	}
 	
@@ -72,20 +82,26 @@ public class PolylineProxy extends KrollProxy {
 		switch (msg.what) {
 			case MSG_SET_POINTS: {
 				result = (AsyncResult) msg.obj;
-				Log.e("PolylineProxy.handleMessage.MSG_SET_POINTS", result.getArg().toString());
-				polyline.setPoints(processPoints(result.getArg(), true));
+				Log.e("PolygonProxy.handleMessage.MSG_SET_POINTS", result.getArg().toString());
+				polygon.setPoints(processPoints(result.getArg(), true));
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_FILL_COLOR: {
+				result = (AsyncResult) msg.obj;
+				options.fillColor((Integer)result.getArg());
 				result.setResult(null);
 				return true;
 			}
 			case MSG_SET_STROKE_WIDTH: {
 				result = (AsyncResult) msg.obj;
-				options.width((Float)result.getArg());
+				options.strokeWidth((Float)result.getArg());
 				result.setResult(null);
 				return true;
 			}
 			case MSG_SET_STROKE_COLOR: {
 				result = (AsyncResult) msg.obj;
-				options.color((Integer)result.getArg());
+				options.strokeColor((Integer)result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -102,7 +118,7 @@ public class PolylineProxy extends KrollProxy {
 	}
 	public void processOptions() {
 
-		options = new PolylineOptions();
+		options = new PolygonOptions();
 		String op;
 		// (int) 	 strokeColor 
 		// (float)	 strokeWidth 
@@ -113,17 +129,22 @@ public class PolylineProxy extends KrollProxy {
 			 processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
 		}
 		
-		op = PolylineProxy.PROPERTY_STROKE_COLOR;
+		op = PolygonProxy.PROPERTY_STROKE_COLOR;
 		if (hasProperty(op)) {
-			options.color(TiConvert.toColor((String)getProperty(op)));
+			options.strokeColor(TiConvert.toColor((String)getProperty(op)));
 		}
 		
-		op = PolylineProxy.PROPERTY_STROKE_WIDTH;
+		op = PolygonProxy.PROPERTY_STROKE_WIDTH;
 		if (hasProperty(op)) {
-			options.width(TiConvert.toFloat(getProperty(op)));
+			options.strokeWidth(TiConvert.toFloat(getProperty(op)));
 		}
-
-		op = PolylineProxy.PROPERTY_ZINDEX;
+		
+		op = PolygonProxy.PROPERTY_FILL_COLOR;
+		if (hasProperty(op)) {
+			options.fillColor(TiConvert.toColor((String)getProperty(op)));
+		}
+		
+		op = PolygonProxy.PROPERTY_ZINDEX;
 		if (hasProperty(op)) {
 			options.zIndex(TiConvert.toFloat(getProperty(op)));
 		}
@@ -160,16 +181,16 @@ public class PolylineProxy extends KrollProxy {
 		return locationArray;
 	}
 	
-	public PolylineOptions getOptions() {
+	public PolygonOptions getOptions() {
 		return options;
 	}
 	
-	public void setPolyline(Polyline r) {
-		polyline = r;
+	public void setPolygon(Polygon r) {
+		polygon = r;
 	}
 	
-	public Polyline getPolyline() {
-		return polyline;
+	public Polygon getPolygon() {
+		return polygon;
 	}
 	
 	@Override
@@ -177,7 +198,7 @@ public class PolylineProxy extends KrollProxy {
 		
 		super.onPropertyChanged(name, value);
 		
-		if (polyline == null) {
+		if (polygon == null) {
 			return;
 		}
 		
@@ -185,15 +206,19 @@ public class PolylineProxy extends KrollProxy {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_POINTS), value);
 		}
 
-		else if (name.equals(PolylineProxy.PROPERTY_STROKE_WIDTH)) {
+		else if (name.equals(PolygonProxy.PROPERTY_STROKE_WIDTH)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH), TiConvert.toFloat(value));
 		}
 
-		else if (name.equals(PolylineProxy.PROPERTY_STROKE_COLOR)) {
+		else if (name.equals(PolygonProxy.PROPERTY_STROKE_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR), TiConvert.toColor((String)value));
 		}
 
-		else if (name.equals(PolylineProxy.PROPERTY_ZINDEX)) {
+		else if (name.equals(PolygonProxy.PROPERTY_FILL_COLOR)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_FILL_COLOR), TiConvert.toColor((String)value));
+		}		
+
+		else if (name.equals(PolygonProxy.PROPERTY_ZINDEX)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
 

@@ -10,6 +10,7 @@ package ti.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.common.Log;
@@ -17,6 +18,8 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
+
+import ti.map.ViewProxy;
 
 import android.app.Activity;
 import android.graphics.Point;
@@ -33,9 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
-import ti.map.ViewProxy;
-import ti.map.shape.PolygonProxy;
-import ti.map.shape.PolylineProxy;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter
@@ -97,8 +97,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	{
 		map = acquireMap();
 		processMapProperties(proxy.getProperties());
+		
 		processPreloadAnnotations();
 		processPreloadRoutes();
+		processPreloadPolygons();
+		processPreloadPolylines();
+		
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);

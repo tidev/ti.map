@@ -22,3 +22,7 @@ xcuserdata
 
 .idea/
 libs/
+android/clean
+android/ant_clean
+android/.classpath
+
