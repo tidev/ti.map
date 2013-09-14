@@ -33,6 +33,9 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_USER_LOCATION_BUTTON = "userLocationButton";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	
+	public static final String PROPERTY_POLYGONS = "polygons";
+	public static final String PROPERTY_POLYLINES = "polylines";
+	
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
 	@Kroll.constant public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
 	@Kroll.constant public static final int SATELLITE_TYPE = GoogleMap.MAP_TYPE_SATELLITE;

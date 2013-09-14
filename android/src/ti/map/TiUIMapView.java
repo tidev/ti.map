@@ -33,6 +33,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
+import ti.map.PolygonProxy;
+import ti.map.PolylineProxy;
+
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter
 {
@@ -64,11 +67,32 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 	}
 
+
+	protected void processPreloadPolygons()
+	{
+		ArrayList<PolygonProxy> polygons = ((ViewProxy) proxy).getPreloadPolygons();
+		for (int i = 0; i < polygons.size(); i++) {
+			addPolygon(polygons.get(i));
+		}
+	}	
+	
+
+	protected void processPreloadPolylines()
+	{
+		ArrayList<PolylineProxy> polylines = ((ViewProxy) proxy).getPreloadPolylines();
+		for (int i = 0; i < polylines.size(); i++) {
+			addPolyline(polylines.get(i));
+		}
+	}	
+		
+	
 	protected void onViewCreated()
 	{
 		map = acquireMap();
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
+		processPreloadPolygons();
+		processPreloadPolylines();
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
@@ -110,10 +134,22 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if (d.containsKey(TiC.PROPERTY_REGION)) {
 			updateCamera(d.getKrollDict(TiC.PROPERTY_REGION));
 		}
+		
 		if (d.containsKey(TiC.PROPERTY_ANNOTATIONS)) {
 			Object[] annotations = (Object[]) d.get(TiC.PROPERTY_ANNOTATIONS);
 			addAnnotations(annotations);
 		}
+		
+		if (d.containsKey(MapModule.PROPERTY_POLYGONS)) {
+			Object[] polygons = (Object[]) d.get(MapModule.PROPERTY_POLYGONS);
+			addPolygons(polygons);
+		}
+		
+		if (d.containsKey(MapModule.PROPERTY_POLYLINES)) {
+			Object[] polylines = (Object[]) d.get(MapModule.PROPERTY_POLYLINES);
+			addPolylines(polylines);
+		}
+		
 		if (d.containsKey(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(d, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, true));
 		}
@@ -389,6 +425,79 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		r.setRoute(null);
 	}
 
+	
+	/**
+	 * Polygon
+	 */	
+	public void addPolygon(PolygonProxy p)
+	{
+		Log.w("mapView.addPolygon", "Add Polygon");
+		// check if polygon already added.
+		if (p.getPolygon() != null) {
+			return;
+		}
+		Log.e("mapView.addPolygon", "Polygon ADDDED!!!!");
+				
+		p.processOptions();
+		p.setPolygon(map.addPolygon(p.getOptions()));
+	}	
+	
+	protected void addPolygons(Object[] polygons)
+	{
+		for (int i = 0; i < polygons.length; i++) {
+			Object obj = polygons[i];
+			if (obj instanceof PolygonProxy) {
+				PolygonProxy polygon = (PolygonProxy) obj;
+				addPolygon(polygon);
+			}
+		}
+	}
+	
+	public void removePolygon(PolygonProxy p)
+	{
+		if (p.getPolygon() == null) {
+			return;
+		}
+
+		p.getPolygon().remove();
+		p.setPolygon(null);
+	}
+
+	/**
+	 * Polyline
+	 */	
+	public void addPolyline(PolylineProxy p)
+	{
+		Log.w("mapView.addPolyline", "Add Polygon");
+		// check if polygon already added.
+		if (p.getPolyline() != null) {
+			return;
+		}
+		p.processOptions();
+		p.setPolyline(map.addPolyline(p.getOptions()));
+	}	
+
+	protected void addPolylines(Object[] polylines)
+	{
+		for (int i = 0; i < polylines.length; i++) {
+			Object obj = polylines[i];
+			if (obj instanceof PolylineProxy) {
+				PolylineProxy polyline = (PolylineProxy) obj;
+				addPolyline(polyline);
+			}
+		}
+	}
+		
+	public void removePolyline(PolylineProxy p)
+	{
+		if (p.getPolyline() == null) {
+			return;
+		}
+
+		p.getPolyline().remove();
+		p.setPolyline(null);
+	}	
+	
 	public void changeZoomLevel(int delta)
 	{
 		CameraUpdate camUpdate = CameraUpdateFactory.zoomBy(delta);
