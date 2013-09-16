@@ -485,8 +485,15 @@
     MKPolyline* routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] autorelease];
     free(pointArray);
     
-	// construct the MKPolylineView
-    MKPolylineView* routeView = [[MKPolylineView alloc] initWithPolyline:routeLine];
+    // Using the TiMKOverlayPathUniversal protocol so Xcode can resolve methods without crying
+    id <TiMKOverlayPathUniversal> routeView;
+	// construct the MKPolylineView or MKPolylineRenderer
+    if ([TiUtils isIOS7OrGreater]) {
+        routeView = (id <TiMKOverlayPathUniversal>)[[MKPolylineRenderer alloc] initWithPolyline:routeLine];
+    } else {
+        // MKPolylineView deprecated in iOS 7
+        routeView = (id <TiMKOverlayPathUniversal>)[[MKPolylineView alloc] initWithPolyline:routeLine];
+    }
     routeView.fillColor = routeView.strokeColor = color ? [color _color] : [UIColor blueColor];
     routeView.lineWidth = width;
     
@@ -516,6 +523,13 @@
 
 #pragma mark Delegates
 
+// Delegate for >= iOS 7
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
+{
+    return (MKOverlayRenderer *)CFDictionaryGetValue(mapLine2View, overlay);
+}
+
+// Delegate for < iOS 7
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {	
     return (MKOverlayView *)CFDictionaryGetValue(mapLine2View, overlay);
