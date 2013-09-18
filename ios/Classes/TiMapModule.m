@@ -6,6 +6,9 @@
  */
 
 #import "TiMapModule.h"
+#import "TiMapViewProxy.h"
+#import "TiMapIOS7ViewProxy.h"
+#import "TiMapCameraProxy.h"
 #import <MapKit/MapKit.h>
 
 @implementation TiMapModule
@@ -24,7 +27,32 @@
 	return @"ti.map";
 }
 
+#pragma mark Utils
+
++(void)logAddedIniOS7Warning:(NSString*)name
+{
+    NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
+}
+
+#pragma mark Public APIs
+
+-(TiMapViewProxy*)createView:(id)args
+{
+    Class mapViewProxyClass = ([TiUtils isIOS7OrGreater]) ? [TiMapIOS7ViewProxy class] : [TiMapViewProxy class];
+    return [[[mapViewProxyClass alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+}
+
+-(TiMapCameraProxy*)createCamera:(id)args
+{
+    if (![TiUtils isIOS7OrGreater]) {
+        [TiMapModule logAddedIniOS7Warning:@"createCamera()"];
+        return nil;
+    }
+    return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+}
+
 MAKE_SYSTEM_PROP(STANDARD_TYPE,MKMapTypeStandard);
+MAKE_SYSTEM_PROP(NORMAL_TYPE,MKMapTypeStandard); // For parity with Android
 MAKE_SYSTEM_PROP(SATELLITE_TYPE,MKMapTypeSatellite);
 MAKE_SYSTEM_PROP(HYBRID_TYPE,MKMapTypeHybrid);
 MAKE_SYSTEM_PROP(ANNOTATION_RED,MKPinAnnotationColorRed);
@@ -36,5 +64,8 @@ MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START,MKAnnotationViewDragStateStarting);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_DRAG,MKAnnotationViewDragStateDragging);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_CANCEL,MKAnnotationViewDragStateCanceling);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_END,MKAnnotationViewDragStateEnding);
+
+MAKE_IOS7_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_LABELS,MKOverlayLevelAboveLabels);
+MAKE_IOS7_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_ROADS,MKOverlayLevelAboveRoads);
 
 @end

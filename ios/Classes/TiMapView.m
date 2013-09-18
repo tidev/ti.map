@@ -8,6 +8,7 @@
 #import "TiBase.h"
 #import "TiMapView.h"
 #import "TiUtils.h"
+#import "TiMapModule.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapPinAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
@@ -471,6 +472,11 @@
 	}
     TiColor* color = [TiUtils colorValue:@"color" properties:args];
     float width = [TiUtils floatValue:@"width" properties:args def:2];
+    
+    // level is not supported before iOS 7 but it doesn't hurt to capture it.
+    id levelObj = [args objectForKey:@"level"];
+    // level defaults to MKOverlayLevelAboveLabels to for consistency with previous versions of iOS.
+    NSUInteger level = (levelObj != nil) ? [[TiUtils numberFromObject:levelObj] unsignedIntegerValue] : MKOverlayLevelAboveLabels;
 
     // construct the MKPolyline 
     MKMapPoint* pointArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
@@ -485,15 +491,8 @@
     MKPolyline* routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] autorelease];
     free(pointArray);
     
-    // Using the TiMKOverlayPathUniversal protocol so Xcode can resolve methods without crying
-    id <TiMKOverlayPathUniversal> routeView;
-	// construct the MKPolylineView or MKPolylineRenderer
-    if ([TiUtils isIOS7OrGreater]) {
-        routeView = (id <TiMKOverlayPathUniversal>)[[MKPolylineRenderer alloc] initWithPolyline:routeLine];
-    } else {
-        // MKPolylineView deprecated in iOS 7
-        routeView = (id <TiMKOverlayPathUniversal>)[[MKPolylineView alloc] initWithPolyline:routeLine];
-    }
+    // Using the TiMKOverlayPathUniversal protocol so Xcode can resolve methods
+    id <TiMKOverlayPathUniversal> routeView = [self polylineRendererWithPolyline:routeLine];
     routeView.fillColor = routeView.strokeColor = color ? [color _color] : [UIColor blueColor];
     routeView.lineWidth = width;
     
@@ -501,7 +500,7 @@
     CFDictionaryAddValue(mapName2Line, name, routeLine);
     CFDictionaryAddValue(mapLine2View, routeLine, routeView);
     // finally add our new overlay
-    [map addOverlay:routeLine];
+    [self addOverlay:routeLine level:level];
 }
 
 -(void)removeRoute:(id)args
@@ -520,6 +519,52 @@
     }
 }
 
+#pragma mark Public APIs iOS 7
+
+-(void)setTintColor_:(id)color
+{
+    [TiMapModule logAddedIniOS7Warning:@"tintColor"];
+}
+
+-(void)setCamera_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"camera"];
+}
+
+-(void)setPitchEnabled_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"pitchEnabled"];
+}
+
+-(void)setRotateEnabled_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"rotateEnabled"];
+}
+
+-(void)setShowsBuildings_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsBuildings"];
+}
+
+-(void)setShowsPointsOfInterest_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsPointsOfInterest"];
+}
+
+#pragma mark Utils
+// Using these utility functions allows us to override them for different versions of iOS
+
+-(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level
+{
+    [map addOverlay:polyline];
+}
+
+-(id <TiMKOverlayPathUniversal>)polylineRendererWithPolyline:(MKPolyline*)polyline
+{
+    // Deprecated in iOS 7, still here for backward compatibility.
+    // Can be removed when support is dropped for iOS 6 and below.
+    return (id <TiMKOverlayPathUniversal>)[[MKPolylineView alloc] initWithPolyline:polyline];
+}
 
 #pragma mark Delegates
 
@@ -559,28 +604,10 @@
 								[NSNumber numberWithDouble:region.center.latitude],@"latitude",
 								[NSNumber numberWithDouble:region.center.longitude],@"longitude",
 								[NSNumber numberWithDouble:region.span.latitudeDelta],@"latitudeDelta",
-								[NSNumber numberWithDouble:region.span.longitudeDelta],@"longitudeDelta",nil];
+								[NSNumber numberWithDouble:region.span.longitudeDelta],@"longitudeDelta",
+								NUMBOOL(animated),@"animated",nil];
 		[self.proxy fireEvent:@"regionchanged" withObject:props];
 	}
-    
-    //TODO:Remove all this code when we drop support for iOS 4.X
-    
-    //SELECT ANNOTATION WILL NOT ALWAYS WORK IF THE MAPVIEW IS ANIMATING.
-    //THIS FORCES A RESELCTION OF THE ANNOTATIONS WITHOUT SENDING OUT EVENTS
-    //SEE TIMOB-8431 (IOS 4.3)
-    ignoreClicks = YES;
-    NSArray* currentSelectedAnnotations = [[mapView selectedAnnotations] retain];
-    for (id annotation in currentSelectedAnnotations) {
-        //Only Annotations that are hidden at this point should be 
-        //made visible here.
-        if ([mapView viewForAnnotation:annotation].hidden) {
-            [mapView deselectAnnotation:annotation animated:NO];
-            [mapView selectAnnotation:annotation animated:NO];
-        }
-    }
-    [currentSelectedAnnotations release];
-    ignoreClicks = NO;
-     
 }
 
 - (void)mapViewWillStartLoadingMap:(MKMapView *)mapView
@@ -611,11 +638,6 @@
 		NSDictionary *event = [NSDictionary dictionaryWithObject:message forKey:@"message"];
 		[self.proxy fireEvent:@"error" withObject:event errorCode:[error code] message:message];
 	}
-}
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
-{
-	[map addAnnotation:placemark];
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState

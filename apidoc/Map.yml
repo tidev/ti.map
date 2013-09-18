@@ -1,7 +1,9 @@
 ---
 name: Modules.Map
-summary: Add-on map module using the Google Maps Android API v2.
+summary: Add-on Map module
 description: |
+    ## Android
+
     This module is a replacement for the built-in Titanium.Map module on Android, which uses the Google Maps API v1.
     The Google Maps API v1 is deprecated and Google will no longer issue new Maps API v1 keys after March 3rd, 2013. New
     applications should use this module on Android.
@@ -71,15 +73,41 @@ description: |
                 </android>
             ...
 
-    -    Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
-         the new map object.
+    -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
+        the new map object.
 
-            var MapModule = require('ti.map');
-            var mapview = MapModule.createView({mapType:MapModule.NORMAL_TYPE});
+            var Map = require('ti.map');
+            var mapview = Map.createView({mapType:Map.NORMAL_TYPE});
+
+    ## iOS
+
+    This module is a replacement for the built-in Titanium.Map module on iOS.
+
+    ### Requirements
+
+    -   Applications using this module must be built using Xcode 5 or later.
+
+    ### Getting Started
+
+    -   Edit the `modules` section of your tiapp.xml file to include this module:
+
+            ...
+                <modules>
+                    <!-- Add this line to your modules section -->
+                    <module platform="iphone">ti.map</module>
+                </modules>
+            ...
+
+    -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
+        the new map object.
+
+            var Map = require('ti.map');
+            var mapview = Map.createView({mapType:Map.NORMAL_TYPE});
+
 
 extends: Titanium.Module
 since: "3.1.0"
-platforms: [android]
+platforms: [android, iphone, ipad]
 excludes:
     methods: [addEventListener, fireEvent, removeEventListener]
     properties: [bubbleParent]
@@ -114,6 +142,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_AZURE
     summary: |
@@ -121,6 +150,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_CYAN
     summary: |
@@ -128,6 +158,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_MAGENTA
     summary: |
@@ -135,6 +166,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_ORANGE
     summary: |
@@ -142,6 +174,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_ROSE
     summary: |
@@ -149,6 +182,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_YELLOW
     summary: |
@@ -156,6 +190,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
 
   - name: ANNOTATION_VIOLET
     summary: |
@@ -163,6 +198,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: ANNOTATION_RED
     summary: |
@@ -185,6 +221,7 @@ properties:
     summary: Used with [mapType](Modules.Map.View.mapType) to display the terrain that shows the position of all roads and some road names.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: HYBRID_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display a satellite image of the area with road and road name information layered on top.
@@ -195,26 +232,47 @@ properties:
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is available, and the connection is successful.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: SERVICE_MISSING
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is not installed on the device.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: SERVICE_VERSION_UPDATE_REQUIRED
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is out of date.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: SERVICE_DISABLED
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services has been disabled on this device.
     type: Number
     permission: read-only
+    platforms: [android]
     
   - name: SERVICE_INVALID
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. The version of Google Play services installed on this device is not authentic.
     type: Number
     permission: read-only
+    platforms: [android]
+
+  - name: OVERLAY_LEVEL_ABOVE_LABELS
+    summary: Place the overlay above roadways but below map labels, shields, or point-of-interest icons. Available in iOS 7.0 and later.
+    type: Number
+    permission: read-only
+    since: "3.2.0"
+    platforms: [iphone, ipad]
+    
+  - name: OVERLAY_LEVEL_ABOVE_ROADS
+    summary: |
+        Place the overlay above map labels, shields, or point-of-interest icons but below annotations and 3D projections of buildings. 
+        Available in iOS 7.0 and later.
+    type: Number
+    permission: read-only
+    since: "3.2.0"
+    platforms: [iphone, ipad]
 
 methods:
   - name: isGooglePlayServicesAvailable
@@ -227,6 +285,7 @@ methods:
             <Modules.Map.SERVICE_DISABLED> or <Modules.Map.SERVICE_INVALID>.
     summary: Returns a code to indicate whether Google Play Services is available on the device.
     since: "3.1.1"
+    platforms: [android]
     
     
 examples:
@@ -241,20 +300,20 @@ examples:
         can be useful, for example, if the annotations are dynamically generated 
         and it is not practical to identify them by title.
 
-            var MapModule = require('ti.map');
+            var Map = require('ti.map');
             var win = Titanium.UI.createWindow();
 
-            var mountainView = MapModule.createAnnotation({
+            var mountainView = Map.createAnnotation({
                 latitude:37.390749,
                 longitude:-122.081651,
                 title:"Appcelerator Headquarters",
                 subtitle:'Mountain View, CA',
-                pincolor:MapModule.ANNOTATION_RED,
+                pincolor:Map.ANNOTATION_RED,
                 myid:1 // Custom property to uniquely identify this annotation.
             });
 
-            var mapview = MapModule.createView({
-                mapType: MapModule.NORMAL_TYPE,
+            var mapview = Map.createView({
+                mapType: Map.NORMAL_TYPE,
                 region: {latitude:33.74511, longitude:-84.38993,
                         latitudeDelta:0.01, longitudeDelta:0.01},
                 animate:true,

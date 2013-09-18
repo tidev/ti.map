@@ -8,7 +8,7 @@ description: |
     Use the <Modules.Map.createRoute> method to create a route.
 extends: Titanium.Proxy
 since: "3.0.2"
-platforms: [android]
+platforms: [android, iphone, ipad]
 
 properties:
 
@@ -30,3 +30,14 @@ properties:
     type: Number
     default: 10
 
+  - name: level
+    summary: |
+        The map level at which to place the route. Available in iOS 7.0 and later.
+    description: |
+        Specify one of the following levels:
+            <Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS>,
+            <Modules.Map.OVERLAY_LEVEL_ABOVE_ROADS>.
+    type: Number
+    since: "3.2.0"
+    default: <Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS>
+    platforms: [iphone, ipad]

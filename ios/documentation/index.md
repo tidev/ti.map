@@ -32,7 +32,7 @@ See documentation
 
 ## Author
 
-Jeff Haynie
+Jeff Haynie & Jon Alter
 
 ## Module History
 
