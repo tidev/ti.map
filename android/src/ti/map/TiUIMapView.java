@@ -64,14 +64,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 	}
 
-	protected void processPreloadAnnotations()
-	{
-		ArrayList<AnnotationProxy> annotations = ((ViewProxy) proxy).getPreloadAnnotations();
-		for (int i = 0; i < annotations.size(); i++) {
-			addAnnotation(annotations.get(i));
-		}
-	}
-
 	protected void processPreloadRoutes()
 	{
 		ArrayList<RouteProxy> routes = ((ViewProxy) proxy).getPreloadRoutes();
@@ -84,7 +76,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	{
 		map = acquireMap();
 		processMapProperties(proxy.getProperties());
-		processPreloadAnnotations();
 		processPreloadRoutes();
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
