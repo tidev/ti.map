@@ -318,9 +318,7 @@
     }
     
 	if ([self viewAttached]) {
-        TiThreadPerformOnMainThread(^{
-            [(TiMapView*)[self view] removeAnnotations:arg];
-        }, NO);
+        [(TiMapView*)[self view] removeAnnotations:arg];
 	}
 	else {
 		for (id annotation in arg) {

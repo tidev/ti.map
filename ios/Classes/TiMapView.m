@@ -183,13 +183,12 @@
 -(void)removeAnnotation:(id)args
 {
 	ENSURE_SINGLE_ARG(args,NSObject);
-	ENSURE_UI_THREAD(removeAnnotation,args);
 
 	id<MKAnnotation> doomedAnnotation = nil;
 	
 	if ([args isKindOfClass:[NSString class]])
 	{
-		// for pre 0.9, we supporting removing by passing the annotation title
+		// for pre 0.9, we supported removing by passing the annotation title
 		NSString *title = [TiUtils stringValue:args];
 		for (id<MKAnnotation>an in self.customAnnotations)
 		{
@@ -205,14 +204,39 @@
 		doomedAnnotation = args;
 	}
 	
-	[[self map] removeAnnotation:doomedAnnotation];
+    TiThreadPerformOnMainThread(^{
+        [[self map] removeAnnotation:doomedAnnotation];
+    }, NO);
 }
 
 -(void)removeAnnotations:(id)args
 {
-	ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy classes
-	ENSURE_UI_THREAD(removeAnnotations,args);
-	[[self map] removeAnnotations:args];
+	ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy, and NSString classes
+    
+    // Test for annotation title strings
+    NSMutableArray *doomedAnnotations = [NSMutableArray arrayWithArray:args];
+    NSUInteger count = [doomedAnnotations count];
+    id doomedAn;
+    for (int i = 0; i < count; i++)
+    {
+        doomedAn = [doomedAnnotations objectAtIndex:i];
+        if ([doomedAn isKindOfClass:[NSString class]])
+        {
+            // for pre 0.9, we supported removing by passing the annotation title
+            NSString *title = [TiUtils stringValue:doomedAn];
+            for (id<MKAnnotation>an in self.customAnnotations)
+            {
+                if ([title isEqualToString:an.title])
+                {
+                    [doomedAnnotations replaceObjectAtIndex:i withObject:an];
+                }
+            }
+        }
+    }
+    
+    TiThreadPerformOnMainThread(^{
+        [[self map] removeAnnotations:doomedAnnotations];
+    }, NO);
 }
 
 -(void)removeAllAnnotations:(id)args
