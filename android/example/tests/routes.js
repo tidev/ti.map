@@ -1,7 +1,6 @@
 
 exports.title = 'Routes';
 exports.run = function(UI, Map) {
-    var IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
     var win = UI.createWindow();
     var w = 5.0;
     
@@ -9,6 +8,7 @@ exports.run = function(UI, Map) {
         {
             title: '+1 width',
             run: function(){
+                // iOS Note: changing the width of an existing route will only work on iOS 7+ 
                 route.width = w + 1.0;
                 w = w + 1.0;
             }
@@ -16,13 +16,18 @@ exports.run = function(UI, Map) {
         {
             title: 'change color',
             run: function(){
+                // iOS Note: changing the color of an existing route will only work on iOS 7+ 
                 route.color = 'red';
             }
         },
         {
             title: 'change routes',
             run: function(){
-                route.points = route2;
+                map.removeRoute(route);
+                route = Map.createRoute({
+                    points: route2
+                });
+                map.addRoute(route);
             }
         },
         {
@@ -61,18 +66,11 @@ exports.run = function(UI, Map) {
     var route1 = [{latitude: -33.87365, longitude: 151.20689}, {latitude: -33.87469, longitude: 151.20689}, {latitude: -33.87375, longitude: 151.20589}];
     var route2 = [{latitude: -33.87565, longitude: 151.20789}, {latitude: -33.87469, longitude: 151.20689}, {latitude: -33.86375, longitude: 151.20589}];
     
-    var route = {
-        name: 'example route',
+    var route = Map.createRoute({
         points: route1,
         color: 'blue',
         width: 5.0
-    };
-    // iOS currently does not have a createRoute function.
-    // Route data is passed directly to addRoute.
-    // Because of this, the examples that set properties of the route will not work on iOS.
-    if (!IOS) {
-        route = Map.createRoute(route);
-    }
+    });
     
     map.addRoute(route);
     

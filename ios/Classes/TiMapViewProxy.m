@@ -8,6 +8,7 @@
 #import "TiMapViewProxy.h"
 #import "TiMapView.h"
 #import "TiMapModule.h"
+#import "TiMapRouteProxy.h"
 
 @implementation TiMapViewProxy
 
@@ -357,7 +358,7 @@
 
 -(void)addRoute:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSDictionary);
+	ENSURE_SINGLE_ARG(arg,TiMapRouteProxy);
     
 	if ([self viewAttached]) 
 	{
@@ -382,8 +383,9 @@
 
 -(void)removeRoute:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSDictionary);
-	if ([self viewAttached]) 
+	ENSURE_SINGLE_ARG(arg,TiMapRouteProxy);
+    
+	if ([self viewAttached])
 	{
 		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeRoute:arg];}, NO);
 	}

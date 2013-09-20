@@ -7,7 +7,7 @@
 
 #import <MapKit/MapKit.h>
 
-@protocol TiMKOverlayPathUniversal
+@protocol TiMKOverlayPathUniversal<NSObject>
 
 @property (retain) UIColor *fillColor;
 @property (retain) UIColor *strokeColor;

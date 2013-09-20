@@ -45,11 +45,7 @@ methods:
         type: Array<Modules.Map.Annotation>
 
   - name: addRoute
-    summary: |
-        Adds a route to the map.
-
-        * **Android:** Takes a Modules.Map.Route object created by <Modules.Map.createRoute>.
-        * **iOS:** Takes a dictionary of Modules.Map.Route properties.
+    summary: Adds a route to the map.
     parameters:
       - name: route
         summary: Modules.Map.Route

@@ -13,6 +13,7 @@
 #import "TiMapPinAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapRouteProxy.h"
 
 @implementation TiMapView
 
@@ -28,10 +29,6 @@
     if (mapLine2View) {
         CFRelease(mapLine2View);
         mapLine2View = nil;
-    }
-    if (mapName2Line) {
-        CFRelease(mapName2Line);
-        mapName2Line = nil;
     }
 	[super dealloc];
 }
@@ -69,7 +66,6 @@
         map.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self addSubview:map];
         mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        mapName2Line = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
         loaded = YES;
     }
@@ -454,69 +450,17 @@
 	[self render];
 }
 
--(void)addRoute:(id)args
+-(void)addRoute:(TiMapRouteProxy*)route
 {
-	// process args
-    ENSURE_DICT(args);
-	
-	NSArray *points = [args objectForKey:@"points"];
-	if (!points) {
-		[self throwException:@"missing required points key" subreason:nil location:CODELOCATION];
-	}
-    if (![points count]) {
-		[self throwException:@"missing required points data" subreason:nil location:CODELOCATION];
-    }
-	NSString *name = [TiUtils stringValue:@"name" properties:args];
-	if (!name) {
-		[self throwException:@"missing required name key" subreason:nil location:CODELOCATION];
-	}
-    TiColor* color = [TiUtils colorValue:@"color" properties:args];
-    float width = [TiUtils floatValue:@"width" properties:args def:2];
-    
-    // level is not supported before iOS 7 but it doesn't hurt to capture it.
-    id levelObj = [args objectForKey:@"level"];
-    // level defaults to MKOverlayLevelAboveLabels to for consistency with previous versions of iOS.
-    NSUInteger level = (levelObj != nil) ? [[TiUtils numberFromObject:levelObj] unsignedIntegerValue] : MKOverlayLevelAboveLabels;
-
-    // construct the MKPolyline 
-    MKMapPoint* pointArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
-    for (int i = 0; i < [points count]; ++i) {
-        NSDictionary* entry = [points objectAtIndex:i];
-        CLLocationDegrees lat = [TiUtils doubleValue:[entry objectForKey:@"latitude"]];
-        CLLocationDegrees lon = [TiUtils doubleValue:[entry objectForKey:@"longitude"]];
-        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(lat, lon);
-        MKMapPoint pt = MKMapPointForCoordinate(coord);
-        pointArray[i] = pt;             
-    }
-    MKPolyline* routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] autorelease];
-    free(pointArray);
-    
-    // Using the TiMKOverlayPathUniversal protocol so Xcode can resolve methods
-    id <TiMKOverlayPathUniversal> routeView = [self polylineRendererWithPolyline:routeLine];
-    routeView.fillColor = routeView.strokeColor = color ? [color _color] : [UIColor blueColor];
-    routeView.lineWidth = width;
-    
-    // update our mappings
-    CFDictionaryAddValue(mapName2Line, name, routeLine);
-    CFDictionaryAddValue(mapLine2View, routeLine, routeView);
-    // finally add our new overlay
-    [self addOverlay:routeLine level:level];
+    CFDictionaryAddValue(mapLine2View, [route routeLine], [route routeRenderer]);
+    [self addOverlay:[route routeLine] level:[route level]];
 }
 
--(void)removeRoute:(id)args
+-(void)removeRoute:(TiMapRouteProxy*)route
 {
-    ENSURE_DICT(args);
-    NSString* name = [TiUtils stringValue:@"name" properties:args];
-	if (!name) {
-		[self throwException:@"missing required name key" subreason:nil location:CODELOCATION];
-	}
-    
-    MKPolyline* routeLine = (MKPolyline*)CFDictionaryGetValue(mapName2Line, name);
-    if (routeLine) {
-        CFDictionaryRemoveValue(mapLine2View, routeLine);
-        CFDictionaryRemoveValue(mapName2Line, name);
-        [map removeOverlay:routeLine];
-    }
+    MKPolyline *routeLine = [route routeLine];
+    CFDictionaryRemoveValue(mapLine2View, routeLine);
+    [map removeOverlay:routeLine];
 }
 
 #pragma mark Public APIs iOS 7
@@ -559,13 +503,6 @@
     [map addOverlay:polyline];
 }
 
--(id <TiMKOverlayPathUniversal>)polylineRendererWithPolyline:(MKPolyline*)polyline
-{
-    // Deprecated in iOS 7, still here for backward compatibility.
-    // Can be removed when support is dropped for iOS 6 and below.
-    return (id <TiMKOverlayPathUniversal>)[[MKPolylineView alloc] initWithPolyline:polyline];
-}
-
 #pragma mark Delegates
 
 // Delegate for >= iOS 7
@@ -575,6 +512,8 @@
 }
 
 // Delegate for < iOS 7
+// MKPolylineView is deprecated in iOS 7, still here for backward compatibility.
+// Can be removed when support is dropped for iOS 6 and below.
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {	
     return (MKOverlayView *)CFDictionaryGetValue(mapLine2View, overlay);

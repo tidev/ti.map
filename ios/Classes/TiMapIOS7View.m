@@ -114,11 +114,6 @@
     [map addOverlay:polyline level:level];
 }
 
--(id <TiMKOverlayPathUniversal>)polylineRendererWithPolyline:(MKPolyline*)polyline
-{
-    return (id <TiMKOverlayPathUniversal>)[[MKPolylineRenderer alloc] initWithPolyline:polyline];
-}
-
 #pragma mark Delegates
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated

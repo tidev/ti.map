@@ -13,8 +13,6 @@
     KrollCallback *cameraAnimationCallback;
 }
 
--(id <TiMKOverlayPathUniversal>)polylineRendererWithPolyline:(MKPolyline*)polyline;
-
 -(TiMapCameraProxy*)camera;
 -(void)animateCamera:(id)args;
 -(void)showAnnotations:(id)args;

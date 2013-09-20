@@ -30,9 +30,7 @@
 	
     // routes
     // dictionaries for object tracking and association
-    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)
-    CFMutableDictionaryRef mapName2Line;   // NSString(name) -> MKPolyline(route line)
-    
+    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)    
 }
 
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;
@@ -60,7 +58,6 @@
 
 #pragma mark Utils
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level;
--(id <TiMKOverlayPathUniversal>)polylineRendererWithPolyline:(MKPolyline*)polyline;
 
 #pragma mark Framework
 -(void)refreshAnnotation:(TiMapAnnotationProxy*)proxy readd:(BOOL)yn;
