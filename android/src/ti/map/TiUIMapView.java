@@ -550,6 +550,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.clear();
 		map = null;
 		timarkers.clear();
+		super.release();
 	}
 
 	@Override
