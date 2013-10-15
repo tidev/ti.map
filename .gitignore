@@ -2,7 +2,8 @@
 tmp
 bin
 build
-*.zip
+dist
+
 */*/modules
 */*/modules*
 .apt_generated
