@@ -664,7 +664,7 @@ public class ViewProxy extends TiViewProxy
 		
 	
 	@Kroll.method
-	public void zoom(int delta)
+	public void setZoom(int delta)
 	{
 		if (TiApplication.isUIThread()) {
 			handleZoom(delta);

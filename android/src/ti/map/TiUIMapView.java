@@ -432,12 +432,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	 */	
 	public void addPolygon(PolygonProxy p)
 	{
-		Log.w("mapView.addPolygon", "Add Polygon");
 		// check if polygon already added.
 		if (p.getPolygon() != null) {
 			return;
 		}
-		Log.e("mapView.addPolygon", "Polygon ADDDED!!!!");
 				
 		p.processOptions();
 		p.setPolygon(map.addPolygon(p.getOptions()));
@@ -469,7 +467,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	 */	
 	public void addPolyline(PolylineProxy p)
 	{
-		Log.w("mapView.addPolyline", "Add Polygon");
 		// check if polygon already added.
 		if (p.getPolyline() != null) {
 			return;
