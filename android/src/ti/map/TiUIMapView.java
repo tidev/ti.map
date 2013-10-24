@@ -462,8 +462,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
 		selectedAnnotation = annoProxy;
+		boolean showInfoWindow = TiConvert.toBoolean(annoProxy.getProperty(MapModule.PROPERTY_SHOW_INFO_WINDOW), true);
 		//Returning false here will enable native behavior, which shows the info window.
-		if (annoProxy.getShowInfoWindow()) {
+		if (showInfoWindow) {
 			return false;
 		} else {
 			return true;
