@@ -19,10 +19,14 @@ import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,6 +55,24 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		timarkers = new ArrayList<TiMarker>();
 	}
 
+	/**
+	 * Traverses through the view hierarchy to locate the SurfaceView and set the background to transparent.
+	 * @param v the root view
+	 */
+	private void setBackgroundTransparent(View v) {
+	    if (v instanceof SurfaceView) {
+	        SurfaceView sv = (SurfaceView) v;
+	        sv.setBackgroundColor(Color.TRANSPARENT);
+	    }
+
+	    if (v instanceof ViewGroup) {
+	        ViewGroup viewGroup = (ViewGroup) v;
+	        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+	            setBackgroundTransparent(viewGroup.getChildAt(i));
+	        }
+	    }
+	}
+
 	@Override
 	protected Fragment createFragment()
 	{
@@ -68,6 +90,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected void onViewCreated()
 	{
 		map = acquireMap();
+		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
+		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
+		if (Build.VERSION.SDK_INT < 16) {
+			View rootView = proxy.getActivity().findViewById(android.R.id.content);
+			setBackgroundTransparent(rootView);
+		}
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
 		map.setOnMarkerClickListener(this);
