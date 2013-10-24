@@ -2,6 +2,7 @@
 <pre>
 v2.1.3    Fixed memory leak when removing map instance from window [TIMOB-14772]
           Added longClick event support [TIMOB-13989]
+          Added support for showInfoWindow property for annotations [TIMOB-12787]
           
 v2.1.2    Clicking on an annotation should center it in map view [TIMOB-13778].
           Fixed a bug where removing an annotation using its title crashed the app [TIMOB-14502].

@@ -163,13 +163,15 @@ events:
 
   - name: click
     summary: |
-        Fired when the user selects, deselects, or clicks on an annotation.
+        Fired when the user selects or deselects an annotation.
     description: |
         Note that the `click` event is not fired every time the user clicks on the map.
         It is fired in two circumstances:
 
-        - If the user clicks on an annotation to select it.
-        - The user deselects an annotation.
+        - The user clicks on the annotation. This will select the annotation.
+        - The user deselects an annotation either by clicking on the map or another annotation.
+        
+        Note that only one annotation can be selected at any given time.
 
         The `click` event includes a value, `clicksource`, which describes the part of the 
         annotation that was clicked. The `clicksource` can be one of `pin`, `title`,
