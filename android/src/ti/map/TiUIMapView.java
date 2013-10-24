@@ -460,10 +460,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
 			return true;
 		}
-
-		selectedAnnotation = annoProxy;
 		fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
-		return false;
+		selectedAnnotation = annoProxy;
+		//Returning false here will enable native behavior, which shows the info window.
+		if (annoProxy.getShowInfoWindow()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
