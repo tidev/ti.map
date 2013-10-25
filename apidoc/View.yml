@@ -287,6 +287,9 @@ properties:
     
   - name: zOrderOnTop
     summary: Controls wether the map view's surface is placed on top of its window.
+    description: |
+        Please refer to [zOrderOnTop](https://developers.google.com/maps/documentation/android/reference/com/google/android/gms/maps/GoogleMapOptions#zOrderOnTop(boolean))
+        for more details.
     type: Boolean
     default: false
     availability: creation
