@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -76,7 +77,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	@Override
 	protected Fragment createFragment()
 	{
-		return SupportMapFragment.newInstance();
+		if (proxy == null) {
+			return SupportMapFragment.newInstance();
+		} else {
+			boolean zOrderOnTop = TiConvert.toBoolean(proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP), false);
+			GoogleMapOptions gOptions = new GoogleMapOptions();
+			gOptions.zOrderOnTop(zOrderOnTop);
+			return SupportMapFragment.newInstance(gOptions);
+		}
 	}
 
 	protected void processPreloadRoutes()
