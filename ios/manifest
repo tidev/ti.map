@@ -2,10 +2,10 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.1.3
+version: 1.0.0
 apiversion: 2
-description: External version of Map module to support new Google Map v2 sdk
-author: Hieu Pham
+description: External version of Map module
+author: Jeff Haynie
 license: Apache Public License v2
 copyright: Copyright (c) 2013 by Appcelerator, Inc.
 
@@ -14,5 +14,5 @@ copyright: Copyright (c) 2013 by Appcelerator, Inc.
 name: map
 moduleid: ti.map
 guid: f0d8fd44-86d2-4730-b67d-bd454577aeee
-platform: android
-minsdk: 3.1.0
+platform: iphone
+minsdk: 3.1.2.GA
