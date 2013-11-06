@@ -125,3 +125,15 @@ properties:
         This is ignored if the `rightButton` property is set.
     type: Titanium.UI.View
     since: "3.1.0"
+  
+  - name: showInfoWindow
+    summary: Show or hide the view that is displayed on the annotation when clicked.
+    description: |
+        When this is false, clicking on the annotation will not center it on the map, but the
+        annotation will still be selected, thus triggering the click event.
+        If the annotation is selected, and the info window is hidden, then the next click
+        will deselect the annotation, thus will NOT show the info window, regardless of the current state of this property.
+    type: Boolean
+    default: true
+    since: "3.2.0"
+    

@@ -19,14 +19,19 @@ import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -34,7 +39,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
-	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter
+	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
+	GoogleMap.OnMapLongClickListener
 {
 	private static final String TAG = "TiUIMapView";
 	private GoogleMap map;
@@ -50,10 +56,35 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		timarkers = new ArrayList<TiMarker>();
 	}
 
+	/**
+	 * Traverses through the view hierarchy to locate the SurfaceView and set the background to transparent.
+	 * @param v the root view
+	 */
+	private void setBackgroundTransparent(View v) {
+	    if (v instanceof SurfaceView) {
+	        SurfaceView sv = (SurfaceView) v;
+	        sv.setBackgroundColor(Color.TRANSPARENT);
+	    }
+
+	    if (v instanceof ViewGroup) {
+	        ViewGroup viewGroup = (ViewGroup) v;
+	        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+	            setBackgroundTransparent(viewGroup.getChildAt(i));
+	        }
+	    }
+	}
+
 	@Override
 	protected Fragment createFragment()
 	{
-		return SupportMapFragment.newInstance();
+		if (proxy == null) {
+			return SupportMapFragment.newInstance();
+		} else {
+			boolean zOrderOnTop = TiConvert.toBoolean(proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP), false);
+			GoogleMapOptions gOptions = new GoogleMapOptions();
+			gOptions.zOrderOnTop(zOrderOnTop);
+			return SupportMapFragment.newInstance(gOptions);
+		}
 	}
 
 	protected void processPreloadRoutes()
@@ -67,6 +98,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected void onViewCreated()
 	{
 		map = acquireMap();
+		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
+		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
+		if (Build.VERSION.SDK_INT < 16) {
+			View rootView = proxy.getActivity().findViewById(android.R.id.content);
+			setBackgroundTransparent(rootView);
+		}
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
 		map.setOnMarkerClickListener(this);
@@ -75,6 +112,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setOnMarkerDragListener(this);
 		map.setOnInfoWindowClickListener(this);
 		map.setInfoWindowAdapter(this);
+		map.setOnMapLongClickListener(this);
 		((ViewProxy) proxy).clearPreloadObjects();
 		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
@@ -416,6 +454,17 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
+	
+	public void fireLongClickEvent(LatLng point)
+	{
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
+		d.put(TiC.PROPERTY_LONGITUDE, point.longitude);
+		d.put(MapModule.PROPERTY_MAP, proxy);
+		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_LONGCLICK);
+		d.put(TiC.PROPERTY_SOURCE, proxy);
+		proxy.fireEvent(TiC.EVENT_LONGCLICK, d);
+	}
 
 	public void firePinChangeDragStateEvent(Marker marker, AnnotationProxy annoProxy, int dragState)
 	{
@@ -447,10 +496,15 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
 			return true;
 		}
-
-		selectedAnnotation = annoProxy;
 		fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
-		return false;
+		selectedAnnotation = annoProxy;
+		boolean showInfoWindow = TiConvert.toBoolean(annoProxy.getProperty(MapModule.PROPERTY_SHOW_INFO_WINDOW), true);
+		//Returning false here will enable native behavior, which shows the info window.
+		if (showInfoWindow) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -464,6 +518,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			selectedAnnotation = null;
 		}
 
+	}
+	
+	@Override
+	public void onMapLongClick(LatLng point)
+	{
+		fireLongClickEvent(point);
 	}
 
 	@Override
@@ -531,6 +591,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.clear();
 		map = null;
 		timarkers.clear();
+		super.release();
 	}
 
 	@Override
