@@ -27,6 +27,11 @@
 	return @"ti.map";
 }
 
+-(NSString*)apiName
+{
+    return @"Ti.Map";
+}
+
 #pragma mark Utils
 
 +(void)logAddedIniOS7Warning:(NSString*)name

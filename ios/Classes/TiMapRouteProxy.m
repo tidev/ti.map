@@ -40,6 +40,11 @@
 	[super _initWithProperties:properties];
 }
 
+-(NSString*)apiName
+{
+    return @"Ti.Map.Route";
+}
+
 -(void)processPoints:(NSArray*)points
 {
     if (routeLine != nil) {

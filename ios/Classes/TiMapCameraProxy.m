@@ -49,6 +49,11 @@
 	[super _initWithProperties:properties];
 }
 
+-(NSString*)apiName
+{
+    return @"Ti.Map.Camera";
+}
+
 -(MKMapCamera*)camera
 {
     if (camera_ == nil) {

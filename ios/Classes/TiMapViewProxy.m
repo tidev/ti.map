@@ -33,6 +33,11 @@
 	[super _destroy];
 }
 
+-(NSString*)apiName
+{
+    return @"Ti.Map.View";
+}
+
 -(NSNumber*) longitudeDelta
 {
 	__block CLLocationDegrees delta = 0.0;
