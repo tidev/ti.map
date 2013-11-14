@@ -5,7 +5,7 @@ exports.run = function(UI, Map) {
     
     var rows = [
         {
-            title: 'set camera',
+            title: 'Set Camera',
             run: function(){
                 map.camera = Map.createCamera({
                     centerCoordinate: {
@@ -19,7 +19,7 @@ exports.run = function(UI, Map) {
         {
             title: 'Zoom out',
             run: function(){
-                // Camera may not exist if run on pre iOS 7
+                // Camera will not exist if run on pre iOS 7
                 if (map.camera) {
                     map.camera.altitude = map.camera.altitude*2;
                 }

@@ -1,7 +1,9 @@
 
 function init(rows, onClick) {
+	Ti.UI.backgroundColor = '#FFF';
     var win = Ti.UI.createWindow({
-        backgroundColor: '#FFF'
+        backgroundColor: '#FFF',
+        top: top
     });
     
     var tableView = Ti.UI.createTableView({
@@ -20,7 +22,8 @@ function init(rows, onClick) {
 function createWindow() {
     var win  = Ti.UI.createWindow({
         backgroundColor: '#FFF',
-        fullscreen: false
+        fullscreen: false,
+        top: top
     });
     
     var backButton = Ti.UI.createLabel({

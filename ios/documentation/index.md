@@ -28,7 +28,7 @@ Applications using this module must be built using Xcode 5 or later.
 See documentation
 
 ## Documentation
-* [Map Module API Reference Documentation](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.Map)
+* [Map Module API Reference Documentation](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map)
 
 ## Author
 
