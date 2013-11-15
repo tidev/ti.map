@@ -7,6 +7,8 @@
 
 #import "TiMapViewProxy.h"
 #import "TiMapView.h"
+#import "TiMapModule.h"
+#import "TiMapRouteProxy.h"
 
 @implementation TiMapViewProxy
 
@@ -29,6 +31,11 @@
 	RELEASE_TO_NIL(routesToAdd);
 	RELEASE_TO_NIL(routesToRemove);
 	[super _destroy];
+}
+
+-(NSString*)apiName
+{
+    return @"Ti.Map.View";
 }
 
 -(NSNumber*) longitudeDelta
@@ -121,7 +128,7 @@
 
 -(void)zoom:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSObject)
+	ENSURE_SINGLE_ARG(arg,NSObject);
 	if ([self viewAttached]) {
 		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] zoom:arg];}, NO);
 	}
@@ -142,7 +149,7 @@
 
 -(void)selectAnnotation:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSObject)
+	ENSURE_SINGLE_ARG(arg,NSObject);
 	if ([self viewAttached]) {
 		 TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] selectAnnotation:arg];}, NO);
 	}
@@ -156,7 +163,7 @@
 
 -(void)deselectAnnotation:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSObject)
+	ENSURE_SINGLE_ARG(arg,NSObject);
 	if ([self viewAttached]) {
 		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] deselectAnnotation:arg];}, NO);
 	}
@@ -167,7 +174,7 @@
 
 -(void)addAnnotation:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSObject)
+	ENSURE_SINGLE_ARG(arg,NSObject);
     TiMapAnnotationProxy* annProxy = [self annotationFromArg:arg];
     [self rememberProxy:annProxy];
     
@@ -193,7 +200,7 @@
 
 -(void)addAnnotations:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSArray)
+	ENSURE_SINGLE_ARG(arg,NSArray);
     NSMutableArray* newAnnotations = [NSMutableArray arrayWithCapacity:[arg count]];
     for (id ann in arg) {
         TiMapAnnotationProxy* annotation = [self annotationFromArg:ann];
@@ -212,7 +219,7 @@
 }
 
 -(void)setAnnotations:(id)arg{
-    ENSURE_TYPE(arg,NSArray)
+    ENSURE_TYPE(arg,NSArray);
     
     NSMutableArray* newAnnotations = [NSMutableArray arrayWithCapacity:[arg count]];
     for (id ann in arg) {
@@ -275,7 +282,7 @@
 
 -(void)removeAnnotation:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSObject)
+	ENSURE_SINGLE_ARG(arg,NSObject);
     
     // For legacy reasons, we can apparently allow the arg here to be a string (0.8 compatibility?!?)
     // and so only need to convert/remember/forget if it is an annotation instead.
@@ -308,7 +315,7 @@
 
 -(void)removeAnnotations:(id)arg
 {
-    ENSURE_SINGLE_ARG(arg,NSArray)
+    ENSURE_SINGLE_ARG(arg,NSArray);
     for (id ann in arg) {
         if ([ann isKindOfClass:[TiMapAnnotationProxy class]]) {
             [self forgetProxy:ann];
@@ -316,9 +323,7 @@
     }
     
 	if ([self viewAttached]) {
-        TiThreadPerformOnMainThread(^{
-            [(TiMapView*)[self view] removeAnnotations:arg];
-        }, NO);
+        [(TiMapView*)[self view] removeAnnotations:arg];
 	}
 	else {
 		for (id annotation in arg) {
@@ -356,7 +361,8 @@
 
 -(void)addRoute:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSDictionary)
+	ENSURE_SINGLE_ARG(arg,TiMapRouteProxy);
+    
 	if ([self viewAttached]) 
 	{
 		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addRoute:arg];}, NO);
@@ -380,8 +386,9 @@
 
 -(void)removeRoute:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSDictionary)
-	if ([self viewAttached]) 
+	ENSURE_SINGLE_ARG(arg,TiMapRouteProxy);
+    
+	if ([self viewAttached])
 	{
 		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeRoute:arg];}, NO);
 	}
@@ -402,5 +409,22 @@
 	}
 }
 
+#pragma mark Public APIs iOS 7
+
+-(id)camera
+{
+    [TiMapModule logAddedIniOS7Warning:@"camera"];
+    return nil;
+}
+
+-(void)animateCamera:(id)args
+{
+    [TiMapModule logAddedIniOS7Warning:@"animateCamera()"];
+}
+
+-(void)showAnnotations:(id)args
+{
+    [TiMapModule logAddedIniOS7Warning:@"showAnnotations()"];
+}
 
 @end

@@ -8,10 +8,12 @@
 #import "TiBase.h"
 #import "TiMapView.h"
 #import "TiUtils.h"
+#import "TiMapModule.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapPinAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapRouteProxy.h"
 
 @implementation TiMapView
 
@@ -27,10 +29,6 @@
     if (mapLine2View) {
         CFRelease(mapLine2View);
         mapLine2View = nil;
-    }
-    if (mapName2Line) {
-        CFRelease(mapName2Line);
-        mapName2Line = nil;
     }
 	[super dealloc];
 }
@@ -68,7 +66,6 @@
         map.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self addSubview:map];
         mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        mapName2Line = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
         loaded = YES;
     }
@@ -186,13 +183,12 @@
 -(void)removeAnnotation:(id)args
 {
 	ENSURE_SINGLE_ARG(args,NSObject);
-	ENSURE_UI_THREAD(removeAnnotation,args);
 
 	id<MKAnnotation> doomedAnnotation = nil;
 	
 	if ([args isKindOfClass:[NSString class]])
 	{
-		// for pre 0.9, we supporting removing by passing the annotation title
+		// for pre 0.9, we supported removing by passing the annotation title
 		NSString *title = [TiUtils stringValue:args];
 		for (id<MKAnnotation>an in self.customAnnotations)
 		{
@@ -208,14 +204,39 @@
 		doomedAnnotation = args;
 	}
 	
-	[[self map] removeAnnotation:doomedAnnotation];
+    TiThreadPerformOnMainThread(^{
+        [[self map] removeAnnotation:doomedAnnotation];
+    }, NO);
 }
 
 -(void)removeAnnotations:(id)args
 {
-	ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy classes
-	ENSURE_UI_THREAD(removeAnnotations,args);
-	[[self map] removeAnnotations:args];
+	ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy, and NSString classes
+    
+    // Test for annotation title strings
+    NSMutableArray *doomedAnnotations = [NSMutableArray arrayWithArray:args];
+    NSUInteger count = [doomedAnnotations count];
+    id doomedAn;
+    for (int i = 0; i < count; i++)
+    {
+        doomedAn = [doomedAnnotations objectAtIndex:i];
+        if ([doomedAn isKindOfClass:[NSString class]])
+        {
+            // for pre 0.9, we supported removing by passing the annotation title
+            NSString *title = [TiUtils stringValue:doomedAn];
+            for (id<MKAnnotation>an in self.customAnnotations)
+            {
+                if ([title isEqualToString:an.title])
+                {
+                    [doomedAnnotations replaceObjectAtIndex:i withObject:an];
+                }
+            }
+        }
+    }
+    
+    TiThreadPerformOnMainThread(^{
+        [[self map] removeAnnotations:doomedAnnotations];
+    }, NO);
 }
 
 -(void)removeAllAnnotations:(id)args
@@ -453,69 +474,70 @@
 	[self render];
 }
 
--(void)addRoute:(id)args
+-(void)addRoute:(TiMapRouteProxy*)route
 {
-	// process args
-    ENSURE_DICT(args);
-	
-	NSArray *points = [args objectForKey:@"points"];
-	if (!points) {
-		[self throwException:@"missing required points key" subreason:nil location:CODELOCATION];
-	}
-    if (![points count]) {
-		[self throwException:@"missing required points data" subreason:nil location:CODELOCATION];
-    }
-	NSString *name = [TiUtils stringValue:@"name" properties:args];
-	if (!name) {
-		[self throwException:@"missing required name key" subreason:nil location:CODELOCATION];
-	}
-    TiColor* color = [TiUtils colorValue:@"color" properties:args];
-    float width = [TiUtils floatValue:@"width" properties:args def:2];
-
-    // construct the MKPolyline 
-    MKMapPoint* pointArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
-    for (int i = 0; i < [points count]; ++i) {
-        NSDictionary* entry = [points objectAtIndex:i];
-        CLLocationDegrees lat = [TiUtils doubleValue:[entry objectForKey:@"latitude"]];
-        CLLocationDegrees lon = [TiUtils doubleValue:[entry objectForKey:@"longitude"]];
-        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(lat, lon);
-        MKMapPoint pt = MKMapPointForCoordinate(coord);
-        pointArray[i] = pt;             
-    }
-    MKPolyline* routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] autorelease];
-    free(pointArray);
-    
-	// construct the MKPolylineView
-    MKPolylineView* routeView = [[MKPolylineView alloc] initWithPolyline:routeLine];
-    routeView.fillColor = routeView.strokeColor = color ? [color _color] : [UIColor blueColor];
-    routeView.lineWidth = width;
-    
-    // update our mappings
-    CFDictionaryAddValue(mapName2Line, name, routeLine);
-    CFDictionaryAddValue(mapLine2View, routeLine, routeView);
-    // finally add our new overlay
-    [map addOverlay:routeLine];
+    CFDictionaryAddValue(mapLine2View, [route routeLine], [route routeRenderer]);
+    [self addOverlay:[route routeLine] level:[route level]];
 }
 
--(void)removeRoute:(id)args
+-(void)removeRoute:(TiMapRouteProxy*)route
 {
-    ENSURE_DICT(args);
-    NSString* name = [TiUtils stringValue:@"name" properties:args];
-	if (!name) {
-		[self throwException:@"missing required name key" subreason:nil location:CODELOCATION];
-	}
-    
-    MKPolyline* routeLine = (MKPolyline*)CFDictionaryGetValue(mapName2Line, name);
-    if (routeLine) {
-        CFDictionaryRemoveValue(mapLine2View, routeLine);
-        CFDictionaryRemoveValue(mapName2Line, name);
-        [map removeOverlay:routeLine];
-    }
+    MKPolyline *routeLine = [route routeLine];
+    CFDictionaryRemoveValue(mapLine2View, routeLine);
+    [map removeOverlay:routeLine];
 }
 
+#pragma mark Public APIs iOS 7
+
+-(void)setTintColor_:(id)color
+{
+    [TiMapModule logAddedIniOS7Warning:@"tintColor"];
+}
+
+-(void)setCamera_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"camera"];
+}
+
+-(void)setPitchEnabled_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"pitchEnabled"];
+}
+
+-(void)setRotateEnabled_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"rotateEnabled"];
+}
+
+-(void)setShowsBuildings_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsBuildings"];
+}
+
+-(void)setShowsPointsOfInterest_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsPointsOfInterest"];
+}
+
+#pragma mark Utils
+// Using these utility functions allows us to override them for different versions of iOS
+
+-(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level
+{
+    [map addOverlay:polyline];
+}
 
 #pragma mark Delegates
 
+// Delegate for >= iOS 7
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
+{
+    return (MKOverlayRenderer *)CFDictionaryGetValue(mapLine2View, overlay);
+}
+
+// Delegate for < iOS 7
+// MKPolylineView is deprecated in iOS 7, still here for backward compatibility.
+// Can be removed when support is dropped for iOS 6 and below.
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {	
     return (MKOverlayView *)CFDictionaryGetValue(mapLine2View, overlay);
@@ -545,28 +567,10 @@
 								[NSNumber numberWithDouble:region.center.latitude],@"latitude",
 								[NSNumber numberWithDouble:region.center.longitude],@"longitude",
 								[NSNumber numberWithDouble:region.span.latitudeDelta],@"latitudeDelta",
-								[NSNumber numberWithDouble:region.span.longitudeDelta],@"longitudeDelta",nil];
+								[NSNumber numberWithDouble:region.span.longitudeDelta],@"longitudeDelta",
+								NUMBOOL(animated),@"animated",nil];
 		[self.proxy fireEvent:@"regionchanged" withObject:props];
 	}
-    
-    //TODO:Remove all this code when we drop support for iOS 4.X
-    
-    //SELECT ANNOTATION WILL NOT ALWAYS WORK IF THE MAPVIEW IS ANIMATING.
-    //THIS FORCES A RESELCTION OF THE ANNOTATIONS WITHOUT SENDING OUT EVENTS
-    //SEE TIMOB-8431 (IOS 4.3)
-    ignoreClicks = YES;
-    NSArray* currentSelectedAnnotations = [[mapView selectedAnnotations] retain];
-    for (id annotation in currentSelectedAnnotations) {
-        //Only Annotations that are hidden at this point should be 
-        //made visible here.
-        if ([mapView viewForAnnotation:annotation].hidden) {
-            [mapView deselectAnnotation:annotation animated:NO];
-            [mapView selectAnnotation:annotation animated:NO];
-        }
-    }
-    [currentSelectedAnnotations release];
-    ignoreClicks = NO;
-     
 }
 
 - (void)mapViewWillStartLoadingMap:(MKMapView *)mapView
@@ -597,11 +601,6 @@
 		NSDictionary *event = [NSDictionary dictionaryWithObject:message forKey:@"message"];
 		[self.proxy fireEvent:@"error" withObject:event errorCode:[error code] message:message];
 	}
-}
-
-- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
-{
-	[map addAnnotation:placemark];
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState
@@ -746,7 +745,7 @@
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }
-        annView.canShowCallout = YES;
+        annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];;
         annView.enabled = YES;
         annView.centerOffset = ann.offset;
         UIView *left = [ann leftViewAccessory];
