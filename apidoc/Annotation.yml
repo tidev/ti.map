@@ -40,7 +40,7 @@ description: |
 
     Use the <Modules.Map.createAnnotation> method to create an annotation.
 extends: Titanium.Proxy
-since: "3.0.2"
+since: { android: "3.0.2", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
 
 properties:

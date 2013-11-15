@@ -25,7 +25,7 @@ excludes: {
     events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
     'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
 }
-since: "3.0.2"
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
 methods:
 
@@ -272,9 +272,10 @@ events:
         type: Number
 
       - name: animated
-        summary: The regionchanged event was caused by an animation, such as a animating the camera.
+        summary: |
+            The regionchanged event was caused by an `animation`, such as a animating the camera.
+            (Since Release 3.2.0.)
         type: Boolean
-        since: "3.2.0"
         platforms: [iphone, ipad]
 
   - name: longclick
@@ -425,7 +426,7 @@ properties:
     description: |
         When this property is set to `true` and the camera has a pitch angle greater than zero, 
         the map extrudes buildings so that they extend above the map plane, creating a 3D effect. 
-        The mapType property must be set to <Modules.Map.NORMAL_TYPE> for extruded buildings to be displayed.
+        The `mapType` property must be set to <Modules.Map.NORMAL_TYPE> for extruded buildings to be displayed.
     type: Boolean
     default: true
     since: "3.2.0"

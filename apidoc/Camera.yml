@@ -54,9 +54,9 @@ properties:
     summary: |
         The coordinate point at which to place the camera. Only used on creation when `altitude` 
         and `centerCoordinate` are also provided. Setting this property at anytime other time will
-        have no affect.
+        have no effect.
     description: |
-        If the value for this parameter is equal to the value in the centerCoordinate parameter, 
+        If the value for this parameter is equal to the value in the `centerCoordinate` parameter, 
         the map is displayed as if the camera is looking straight down. If this point is offset 
-        from the centerCoordinate value, the map is displayed with an appropriate heading and pitch angle.
+        from the `centerCoordinate` value, the map is displayed with an appropriate heading and pitch angle.
     type: MapPointType

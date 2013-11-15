@@ -5,35 +5,35 @@ exports.run = function(UI, Map) {
     
     var rows = [
         {
-            title: 'pitchEnabled',
+            title: 'pitchEnabled: true',
             run: function(e){
                 map.pitchEnabled = !map.pitchEnabled;
                 // Display the current value of the property in the row
-                tableView.data[0].rows[e.index].title = rows[e.index].title + ": " + map.pitchEnabled;
+                tableView.data[0].rows[e.index].title = rows[e.index].title.split(":")[0] + ": " + map.pitchEnabled;
             }
         },
         {
-            title: 'rotateEnabled',
+            title: 'rotateEnabled: true',
             run: function(e){
                 map.rotateEnabled = !map.rotateEnabled;
                 // Display the current value of the property in the row
-                tableView.data[0].rows[e.index].title = rows[e.index].title + ": " + map.rotateEnabled;
+                tableView.data[0].rows[e.index].title = rows[e.index].title.split(":")[0] + ": " + map.rotateEnabled;
             }
         },
         {
-            title: 'showsBuildings',
+            title: 'showsBuildings: true',
             run: function(e){
                 map.showsBuildings = !map.showsBuildings;
                 // Display the current value of the property in the row
-                tableView.data[0].rows[e.index].title = rows[e.index].title + ": " + map.showsBuildings;
+                tableView.data[0].rows[e.index].title = rows[e.index].title.split(":")[0] + ": " + map.showsBuildings;
             }
         },
         {
-            title: 'showsPointsOfInterest',
+            title: 'showsPointsOfInterest: true',
             run: function(e){
                 map.showsPointsOfInterest = !map.showsPointsOfInterest;
                 // Display the current value of the property in the row
-                tableView.data[0].rows[e.index].title = rows[e.index].title + ": " + map.showsPointsOfInterest;
+                tableView.data[0].rows[e.index].title = rows[e.index].title.split(":")[0] + ": " + map.showsPointsOfInterest;
             }
         },
     ];

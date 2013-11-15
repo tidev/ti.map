@@ -6,8 +6,12 @@ description: |
     [map view](Modules.Map.View). A route must have its `points` property set to appear on a map.
 
     Use the <Modules.Map.createRoute> method to create a route.
+
+    ### iOS Platform Notes
+
+    The `addRoute` method no longer accepts a dictionary as a parameter. Pass a <Modules.Map.Route> object instead.
 extends: Titanium.Proxy
-since: "3.0.2"
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
 
 properties:
