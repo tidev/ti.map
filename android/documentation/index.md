@@ -39,8 +39,7 @@ View the [change log](changelog.html) for this module.
 
 ## Feedback and Support
 
-Please direct all questions, feedback, and concerns to info@appcelerator.com.
-
+Please direct all questions, feedback, and concerns to [info@appcelerator.com](mailto:info@appcelerator.com?subject=Android%20Map%20Module).
 
 ## Author
 

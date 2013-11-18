@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 2.0.0
+apiversion: 2
+description: External version of Map module
+author: Jeff Haynie & Jon Alter
+license: Apache Public License v2
+copyright: Copyright (c) 2013 by Appcelerator, Inc.
+
+
+# these should not be edited
+name: map
+moduleid: ti.map
+guid: fee93b77-8eb3-418c-8f04-013664c4af83
+platform: iphone
+minsdk: 3.2.0.GA
