@@ -1,9 +1,9 @@
 ---
 name: Modules.Map.Camera
-summary: A camera object defines a point above the map’s surface from which to view the map. Available in iOS 7.0 and later.
+summary: A camera object defines a point above the map's surface from which to view the map. Available in iOS 7.0 and later.
 description: |
-    Applying a camera to a map has the effect of giving the map a 3D-like appearance. 
-    You can use a camera to rotate the map so that it is oriented to match the user’s 
+    Applying a camera to a map has the effect of giving the map a 3D-like appearance.
+    You can use a camera to rotate the map so that it is oriented to match the user's
     heading or to apply a pitch angle to tilt the plane of the map.
 
     If the app is run on pre iOS 7, camera functionality will not be available.
