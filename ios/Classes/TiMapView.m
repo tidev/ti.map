@@ -63,7 +63,7 @@
         map.delegate = self;
         map.userInteractionEnabled = YES;
         map.showsUserLocation = YES; // defaults
-        map.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        map.autoresizingMask = UIViewAutoresizingNone;
         [self addSubview:map];
         mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
@@ -102,8 +102,8 @@
     //Here we update the region property which is not what we want.
     //Instead we set a forceRender flag and render in frameSizeChanged and capture updated
     //region there.
-    CGRect oldBounds = (map == nil) ? [self bounds]:[map bounds];
-    forceRender = !CGRectEqualToRect(oldBounds, bounds);
+    CGRect oldBounds = (map != nil) ? [map bounds] : CGRectZero;
+    forceRender = (oldBounds.size.width == 0 || oldBounds.size.height==0);
     ignoreRegionChanged = YES;
     [super setBounds:bounds];
     ignoreRegionChanged = NO;
@@ -111,7 +111,7 @@
 
 -(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 {
-    [TiUtils setView:[self map] positionRect:bounds];
+    [[self map] setFrame:bounds];
     [super frameSizeChanged:frame bounds:bounds];
     if (forceRender) {
         //Set this to NO so that region gets captured.
