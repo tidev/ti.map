@@ -137,7 +137,7 @@ methods:
 
   - name: animateCamera
     summary: |
-        Changes the camera used for determining the map’s viewing parameters and animates the change. 
+        Changes the camera used for determining the map's viewing parameters and animates the change.
         Available in iOS 7.0 and later.
     parameters:
       - name: animationParams
@@ -386,36 +386,36 @@ properties:
   - name: camera
     summary: The camera used for determining the appearance of the map. Available in iOS 7.0 and later.
     description: |
-        A camera object defines a point above the map’s surface from which to view the map. Applying a camera to a map has the 
-        effect of giving the map a 3D-like appearance. You can use a camera to rotate the map so that it is oriented to match 
-        the user’s heading or to apply a pitch angle to tilt the plane of the map.
+        A camera object defines a point above the map's surface from which to view the map. Applying a camera to a map has the
+        effect of giving the map a 3D-like appearance. You can use a camera to rotate the map so that it is oriented to match
+        the user's heading or to apply a pitch angle to tilt the plane of the map.
 
         Assigning a new camera to this property updates the map immediately and without animating the change. If you want to
         animate changes in camera position, use the `animateCamera` method instead.
 
-        You must not set this property to null. To restore the map to a flat appearance, apply a camera with a pitch angle of 0, 
+        You must not set this property to null. To restore the map to a flat appearance, apply a camera with a pitch angle of 0,
         which yields a camera looking straight down onto the map surface.
     type: Modules.Map.Camera
     since: "3.2.0"
     platforms: [iphone, ipad]
 
   - name: pitchEnabled
-    summary: A Boolean value indicating whether the map camera’s pitch information is used. Available in iOS 7.0 and later.
+    summary: A Boolean value indicating whether the map camera's pitch information is used. Available in iOS 7.0 and later.
     description: |
-        When this property is set to `true` and a valid camera is associated with the map, 
-        the camera’s pitch angle is used to tilt the plane of the map. When this property 
-        is set to `false`, the camera’s pitch angle is ignored and the map is always displayed 
+        When this property is set to `true` and a valid camera is associated with the map,
+        the camera's pitch angle is used to tilt the plane of the map. When this property
+        is set to `false`, the camera's pitch angle is ignored and the map is always displayed
         as if the user is looking straight down onto it.
     type: Boolean
     since: "3.2.0"
     platforms: [iphone, ipad]
 
   - name: rotateEnabled
-    summary: A Boolean value indicating whether the map camera’s heading information is used. Available in iOS 7.0 and later.
+    summary: A Boolean value indicating whether the map camera's heading information is used. Available in iOS 7.0 and later.
     description: |
-        When this property is set to `true` and a valid camera is associated with the map, 
-        the camera’s heading angle is used to rotate the plane of the map around its center 
-        point. When this property is set to `false`, the camera’s heading angle is ignored and the 
+        When this property is set to `true` and a valid camera is associated with the map,
+        the camera's heading angle is used to rotate the plane of the map around its center
+        point. When this property is set to `false`, the camera's heading angle is ignored and the
         map is always oriented so that true north is situated at the top of the map view.
     type: Boolean
     since: "3.2.0"
