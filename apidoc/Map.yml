@@ -180,6 +180,14 @@ properties:
     permission: read-only
     platforms: [android]
     
+  - name: ANNOTATION_PURPLE
+    summary: |
+        Color constant used to set a map annotation to purple via the
+        <Modules.Map.Annotation.pincolor> property.
+    type: Number
+    permission: read-only
+    platforms: [iphone, ipad]
+
   - name: ANNOTATION_ROSE
     summary: |
         Color constant used to set a map annotation to rose via the 
