@@ -28,6 +28,15 @@
 		24DE9E1211C5FE74003F90F6 /* TiMapModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* TiMapModuleAssets.m */; };
 		AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		CE92EC1D17DF7B2F0082E943 /* TiMapIOS7View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */; };
+		CE92EC1E17DF7B2F0082E943 /* TiMapIOS7View.m in Sources */ = {isa = PBXBuildFile; fileRef = CE92EC1A17DF7B2F0082E943 /* TiMapIOS7View.m */; };
+		CE92EC1F17DF7B2F0082E943 /* TiMapIOS7ViewProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = CE92EC1B17DF7B2F0082E943 /* TiMapIOS7ViewProxy.h */; };
+		CE92EC2017DF7B2F0082E943 /* TiMapIOS7ViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = CE92EC1C17DF7B2F0082E943 /* TiMapIOS7ViewProxy.m */; };
+		CE92EC2217DF8B020082E943 /* TiMKOverlayPathUniversal.h in Headers */ = {isa = PBXBuildFile; fileRef = CE92EC2117DF8B020082E943 /* TiMKOverlayPathUniversal.h */; };
+		CE92EC2517DF9A640082E943 /* TiMapCameraProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = CE92EC2317DF9A640082E943 /* TiMapCameraProxy.h */; };
+		CE92EC2617DF9A640082E943 /* TiMapCameraProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = CE92EC2417DF9A640082E943 /* TiMapCameraProxy.m */; };
+		CEC39B4617EB97BA00DCE1EE /* TiMapRouteProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = CEC39B4417EB97BA00DCE1EE /* TiMapRouteProxy.h */; };
+		CEC39B4717EB97BA00DCE1EE /* TiMapRouteProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC39B4517EB97BA00DCE1EE /* TiMapRouteProxy.m */; };
 		CED651C617D7AA21007C2954 /* TiMapAnnotationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = CED651BA17D7AA21007C2954 /* TiMapAnnotationProxy.h */; };
 		CED651C717D7AA21007C2954 /* TiMapAnnotationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = CED651BB17D7AA21007C2954 /* TiMapAnnotationProxy.m */; };
 		CED651C817D7AA21007C2954 /* TiMapCustomAnnotationView.h in Headers */ = {isa = PBXBuildFile; fileRef = CED651BC17D7AA21007C2954 /* TiMapCustomAnnotationView.h */; };
@@ -60,6 +69,15 @@
 		24DE9E1011C5FE74003F90F6 /* TiMapModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapModuleAssets.m; path = Classes/TiMapModuleAssets.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiMap_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapIOS7View.h; path = Classes/TiMapIOS7View.h; sourceTree = "<group>"; };
+		CE92EC1A17DF7B2F0082E943 /* TiMapIOS7View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapIOS7View.m; path = Classes/TiMapIOS7View.m; sourceTree = "<group>"; };
+		CE92EC1B17DF7B2F0082E943 /* TiMapIOS7ViewProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapIOS7ViewProxy.h; path = Classes/TiMapIOS7ViewProxy.h; sourceTree = "<group>"; };
+		CE92EC1C17DF7B2F0082E943 /* TiMapIOS7ViewProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapIOS7ViewProxy.m; path = Classes/TiMapIOS7ViewProxy.m; sourceTree = "<group>"; };
+		CE92EC2117DF8B020082E943 /* TiMKOverlayPathUniversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMKOverlayPathUniversal.h; path = Classes/TiMKOverlayPathUniversal.h; sourceTree = "<group>"; };
+		CE92EC2317DF9A640082E943 /* TiMapCameraProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapCameraProxy.h; path = Classes/TiMapCameraProxy.h; sourceTree = "<group>"; };
+		CE92EC2417DF9A640082E943 /* TiMapCameraProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapCameraProxy.m; path = Classes/TiMapCameraProxy.m; sourceTree = "<group>"; };
+		CEC39B4417EB97BA00DCE1EE /* TiMapRouteProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapRouteProxy.h; path = Classes/TiMapRouteProxy.h; sourceTree = "<group>"; };
+		CEC39B4517EB97BA00DCE1EE /* TiMapRouteProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapRouteProxy.m; path = Classes/TiMapRouteProxy.m; sourceTree = "<group>"; };
 		CED651BA17D7AA21007C2954 /* TiMapAnnotationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapAnnotationProxy.h; path = Classes/TiMapAnnotationProxy.h; sourceTree = "<group>"; };
 		CED651BB17D7AA21007C2954 /* TiMapAnnotationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapAnnotationProxy.m; path = Classes/TiMapAnnotationProxy.m; sourceTree = "<group>"; };
 		CED651BC17D7AA21007C2954 /* TiMapCustomAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapCustomAnnotationView.h; path = Classes/TiMapCustomAnnotationView.h; sourceTree = "<group>"; };
@@ -117,8 +135,15 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CE92EC2117DF8B020082E943 /* TiMKOverlayPathUniversal.h */,
+				24DD6CF71134B3F500162E58 /* TiMapModule.h */,
+				24DD6CF81134B3F500162E58 /* TiMapModule.m */,
 				CED651BA17D7AA21007C2954 /* TiMapAnnotationProxy.h */,
 				CED651BB17D7AA21007C2954 /* TiMapAnnotationProxy.m */,
+				CE92EC2317DF9A640082E943 /* TiMapCameraProxy.h */,
+				CE92EC2417DF9A640082E943 /* TiMapCameraProxy.m */,
+				CEC39B4417EB97BA00DCE1EE /* TiMapRouteProxy.h */,
+				CEC39B4517EB97BA00DCE1EE /* TiMapRouteProxy.m */,
 				CED651BC17D7AA21007C2954 /* TiMapCustomAnnotationView.h */,
 				CED651BD17D7AA21007C2954 /* TiMapCustomAnnotationView.m */,
 				CED651BE17D7AA21007C2954 /* TiMapImageAnnotationView.h */,
@@ -129,10 +154,12 @@
 				CED651C317D7AA21007C2954 /* TiMapView.m */,
 				CED651C417D7AA21007C2954 /* TiMapViewProxy.h */,
 				CED651C517D7AA21007C2954 /* TiMapViewProxy.m */,
+				CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */,
+				CE92EC1A17DF7B2F0082E943 /* TiMapIOS7View.m */,
+				CE92EC1B17DF7B2F0082E943 /* TiMapIOS7ViewProxy.h */,
+				CE92EC1C17DF7B2F0082E943 /* TiMapIOS7ViewProxy.m */,
 				24DE9E0F11C5FE74003F90F6 /* TiMapModuleAssets.h */,
 				24DE9E1011C5FE74003F90F6 /* TiMapModuleAssets.m */,
-				24DD6CF71134B3F500162E58 /* TiMapModule.h */,
-				24DD6CF81134B3F500162E58 /* TiMapModule.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -154,14 +181,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */,
+				CE92EC2217DF8B020082E943 /* TiMKOverlayPathUniversal.h in Headers */,
 				24DD6CF91134B3F500162E58 /* TiMapModule.h in Headers */,
+				CE92EC1F17DF7B2F0082E943 /* TiMapIOS7ViewProxy.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* TiMapModuleAssets.h in Headers */,
 				CED651C617D7AA21007C2954 /* TiMapAnnotationProxy.h in Headers */,
+				CE92EC2517DF9A640082E943 /* TiMapCameraProxy.h in Headers */,
+				CEC39B4617EB97BA00DCE1EE /* TiMapRouteProxy.h in Headers */,
 				CED651C817D7AA21007C2954 /* TiMapCustomAnnotationView.h in Headers */,
 				CED651CA17D7AA21007C2954 /* TiMapImageAnnotationView.h in Headers */,
 				CED651CC17D7AA21007C2954 /* TiMapPinAnnotationView.h in Headers */,
 				CED651CE17D7AA21007C2954 /* TiMapView.h in Headers */,
 				CED651D017D7AA21007C2954 /* TiMapViewProxy.h in Headers */,
+				CE92EC1D17DF7B2F0082E943 /* TiMapIOS7View.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +222,8 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "map" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -236,8 +270,12 @@
 				24DE9E1211C5FE74003F90F6 /* TiMapModuleAssets.m in Sources */,
 				CED651C717D7AA21007C2954 /* TiMapAnnotationProxy.m in Sources */,
 				CED651C917D7AA21007C2954 /* TiMapCustomAnnotationView.m in Sources */,
+				CEC39B4717EB97BA00DCE1EE /* TiMapRouteProxy.m in Sources */,
+				CE92EC2617DF9A640082E943 /* TiMapCameraProxy.m in Sources */,
 				CED651CB17D7AA21007C2954 /* TiMapImageAnnotationView.m in Sources */,
+				CE92EC1E17DF7B2F0082E943 /* TiMapIOS7View.m in Sources */,
 				CED651CD17D7AA21007C2954 /* TiMapPinAnnotationView.m in Sources */,
+				CE92EC2017DF7B2F0082E943 /* TiMapIOS7ViewProxy.m in Sources */,
 				CED651CF17D7AA21007C2954 /* TiMapView.m in Sources */,
 				CED651D117D7AA21007C2954 /* TiMapViewProxy.m in Sources */,
 			);

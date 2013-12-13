@@ -7,6 +7,7 @@
  
 #import "TiBase.h"
 #import "TiUIView.h"
+#import "TiMKOverlayPathUniversal.h"
 #import <MapKit/MapKit.h>
 
 @class TiMapAnnotationProxy;
@@ -18,7 +19,6 @@
 
 
 @interface TiMapView : TiUIView<MKMapViewDelegate> {
-@private
 	MKMapView *map;
 	BOOL regionFits;
 	BOOL animate;
@@ -30,9 +30,7 @@
 	
     // routes
     // dictionaries for object tracking and association
-    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)
-    CFMutableDictionaryRef mapName2Line;   // NSString(name) -> MKPolyline(route line)
-    
+    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)    
 }
 
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;
@@ -42,6 +40,7 @@
 #pragma mark Private APIs
 -(TiMapAnnotationProxy*)annotationFromArg:(id)arg;
 -(NSArray*)annotationsFromArgs:(id)value;
+-(MKMapView*)map;
 
 #pragma mark Public APIs
 -(void)addAnnotation:(id)args;
@@ -57,8 +56,13 @@
 -(void)removeRoute:(id)args;
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 
+#pragma mark Utils
+-(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level;
+
 #pragma mark Framework
 -(void)refreshAnnotation:(TiMapAnnotationProxy*)proxy readd:(BOOL)yn;
 -(void)fireClickEvent:(MKAnnotationView *) pinview source:(NSString *)source;
 
 @end
+
+

@@ -34,6 +34,11 @@
 	[super _configure];
 }
 
+-(NSString*)apiName
+{
+    return @"Ti.Map.Annotation";
+}
+
 -(NSMutableDictionary*)langConversionTable
 {
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:@"title",@"titleid",@"subtitle",@"subtitleid",nil];

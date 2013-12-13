@@ -6,14 +6,19 @@ description: |
     [map view](Modules.Map.View). A route must have its `points` property set to appear on a map.
 
     Use the <Modules.Map.createRoute> method to create a route.
+
+    ### iOS Platform Notes
+
+    The `addRoute` method no longer accepts a dictionary as a parameter. Pass a <Modules.Map.Route> object instead.
 extends: Titanium.Proxy
-since: "3.0.2"
-platforms: [android]
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
+platforms: [android, iphone, ipad]
 
 properties:
 
   - name: points
     summary: Array of map points making up the route.
+    availability: creation
     type: Array<MapPointType>
     optional: false
 
@@ -21,12 +26,28 @@ properties:
     summary: |
         Color to use when drawing the route, as a color name or hex triplet.
     description: |
-        For information about color values, see the "Colors" section of <Titanium.UI>. 
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+
+        **iOS Note:** Changing the color of an existing route will only work on iOS 7 and later 
     type: String
     default: black
 
   - name: width
     summary: Line width in pixels to use when drawing the route.
+    description: |
+        **iOS Note:** Changing the width of an existing route will only work on iOS 7 and later
     type: Number
     default: 10
 
+  - name: level
+    summary: |
+        The map level at which to place the route. Available in iOS 7.0 and later.
+    description: |
+        Specify one of the following levels:
+            <Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS>,
+            <Modules.Map.OVERLAY_LEVEL_ABOVE_ROADS>.
+    availability: creation
+    type: Number
+    since: "3.2.0"
+    default: <Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS>
+    platforms: [iphone, ipad]

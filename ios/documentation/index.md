@@ -21,16 +21,18 @@ started with using this module in your application.
 
 Must be run using a Titanium SDK that has had Maps removed. Running against a version of the SDK that still has the Maps module will result in a build failure.
 
+Applications using this module must be built using Xcode 5 or later.
+
 ## Usage
 
 See documentation
 
 ## Documentation
-* [Map Module API Reference Documentation](http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.Map)
+* [Map Module API Reference Documentation](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map)
 
 ## Author
 
-Jeff Haynie
+Jeff Haynie & Jon Alter
 
 ## Module History
 

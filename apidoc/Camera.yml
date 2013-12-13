@@ -1,0 +1,62 @@
+---
+name: Modules.Map.Camera
+summary: A camera object defines a point above the map's surface from which to view the map. Available in iOS 7.0 and later.
+description: |
+    Applying a camera to a map has the effect of giving the map a 3D-like appearance.
+    You can use a camera to rotate the map so that it is oriented to match the user's
+    heading or to apply a pitch angle to tilt the plane of the map.
+
+    If the app is run on pre iOS 7, camera functionality will not be available.
+    After creating a `Camera` object, it can be applied to the map by setting the `camera` property of the 
+    [map view](Modules.Map.View).
+
+    Use the <Modules.Map.createCamera> method to create a camera.
+
+    If `altitude`, `eyeCoordinate`, and `centerCoordinate` are passed in on creation, a camera will be
+    returned using the specified viewing angle information.
+
+extends: Titanium.Proxy
+since: "3.2.0"
+platforms: [iphone, ipad]
+
+properties:
+
+  - name: altitude
+    summary: The altitude above the ground, measured in meters.
+    type: Number
+
+  - name: centerCoordinate
+    summary: |
+        The coordinate point on which the map should be centered.
+    type: MapPointType
+
+  - name: heading
+    summary: |
+        The heading of the camera (measured in degrees) relative to true north.
+    description: |
+        The value 0 means that the top edge of the map view corresponds to true north. 
+        The value 90 means the top of the map is pointing due east. The value 180 means 
+        the top of the map points due south, and so on.
+    type: Number
+
+  - name: pitch
+    summary: |
+        The viewing angle of the camera, measured in degrees.
+    description: |
+        A value of 0 results in a camera pointed straight down at the map. Angles greater than 
+        0 result in a camera that is pitched toward the horizon by the specified number of degrees.
+        The value in this property may be clamped to a maximum value to maintain map readability.
+        There is no fixed maximum value, though, because the actual maximum value is dependent on
+        the current altitude of the camera.
+    type: Number
+
+  - name: eyeCoordinate
+    summary: |
+        The coordinate point at which to place the camera. Only used on creation when `altitude` 
+        and `centerCoordinate` are also provided. Setting this property at anytime other time will
+        have no effect.
+    description: |
+        If the value for this parameter is equal to the value in the `centerCoordinate` parameter, 
+        the map is displayed as if the camera is looking straight down. If this point is offset 
+        from the `centerCoordinate` value, the map is displayed with an appropriate heading and pitch angle.
+    type: MapPointType
