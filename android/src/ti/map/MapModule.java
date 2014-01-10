@@ -37,6 +37,9 @@ public class MapModule extends KrollModule
 	
 	public static final String PROPERTY_POLYGONS = "polygons";
 	public static final String PROPERTY_POLYLINES = "polylines";
+	public static final String PROPERTY_CENTER = "center";
+    public static final String PROPERTY_RADIUS = "radius";	
+	
 	
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
 	@Kroll.constant public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
