@@ -49,11 +49,13 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected LatLngBounds preLayoutUpdateBounds;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
+	private ArrayList<CircleProxy> currentCircles;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
 		super(proxy, activity);
 		timarkers = new ArrayList<TiMarker>();
+		currentCircles = new ArrayList<CircleProxy>();
 	}
 
 	/**
@@ -94,6 +96,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			addRoute(routes.get(i));
 		}
 	}
+	
+	protected void processPreloadCircles()
+	{
+		ArrayList<CircleProxy> circles = ((ViewProxy) proxy).getPreloadCircles();
+		for (int i = 0; i < circles.size(); i++) {
+			addCircle(circles.get(i));
+		}
+	}
 
 	protected void onViewCreated()
 	{
@@ -106,6 +116,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
+		processPreloadCircles();
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
@@ -425,6 +436,37 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 		r.getRoute().remove();
 		r.setRoute(null);
+	}
+	
+	public void addCircle(CircleProxy c)
+	{
+		if (currentCircles.contains(c)){
+			return;
+		}
+
+		c.processOptions();
+		c.setCircle(map.addCircle(c.getOptions()));
+		currentCircles.add(c);
+	}
+
+	public void removeCircle(CircleProxy c)
+	{
+		if (!currentCircles.contains(c)){
+			return;
+		}
+
+		c.getCircle().remove();
+		c.setCircle(null);
+		currentCircles.remove(c);
+	}
+	
+	public void removeAllCircles()
+	{
+		for (CircleProxy circleProxy : currentCircles) {
+			circleProxy.getCircle().remove();
+			circleProxy.setCircle(null);
+		}
+		currentCircles.clear();
 	}
 
 	public void changeZoomLevel(int delta)

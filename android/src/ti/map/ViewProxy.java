@@ -51,12 +51,17 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_REMOVE_ROUTE = MSG_FIRST_ID + 508;
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
+	private static final int MSG_ADD_CIRCLE = MSG_FIRST_ID + 511;	
+	private static final int MSG_REMOVE_CIRCLE = MSG_FIRST_ID + 512;
+	private static final int MSG_REMOVE_ALL_CIRCLES = MSG_FIRST_ID + 513;
 	
 	private ArrayList<RouteProxy> preloadRoutes;
+	private ArrayList<CircleProxy> preloadCircles;
 	
 	public ViewProxy() {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
+		preloadCircles = new ArrayList<CircleProxy>();
 	}
 	
 	public TiUIView createView(Activity activity) {
@@ -65,7 +70,10 @@ public class ViewProxy extends TiViewProxy
 	
 	public void clearPreloadObjects() {
 		preloadRoutes.clear();
+		preloadCircles.clear();
 	}
+	
+	
 
 	@Override
 	public boolean handleMessage(Message msg) 
@@ -132,6 +140,27 @@ public class ViewProxy extends TiViewProxy
 		case MSG_REMOVE_ROUTE: {
 			result = (AsyncResult) msg.obj;
 			handleRemoveRoute((RouteProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_ADD_CIRCLE: {
+			result = (AsyncResult) msg.obj;
+			handleAddCircle((CircleProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_REMOVE_CIRCLE: {
+			result = (AsyncResult) msg.obj;
+			handleRemoveCircle((CircleProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_REMOVE_ALL_CIRCLES: {
+			result = (AsyncResult) msg.obj;
+			handleRemoveAllCircles();
 			result.setResult(null);
 			return true;
 		}
@@ -456,6 +485,100 @@ public class ViewProxy extends TiViewProxy
 	
 	public ArrayList<RouteProxy> getPreloadRoutes() {
 		return preloadRoutes;
+	}
+	
+	@Kroll.method
+	public void addCircle(CircleProxy circle) {
+		
+		if (TiApplication.isUIThread()) {
+			handleAddCircle(circle);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_CIRCLE), circle);
+		}
+	}
+	
+	public void handleAddCircle(CircleProxy circle) {
+		if (circle == null) {
+			return;
+		}
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addCircle(circle);
+			} else {
+				addPreloadCircle(circle);
+			}
+		} else {
+			addPreloadCircle(circle);
+		}
+
+	}
+	
+	public void addPreloadCircle(CircleProxy c) {
+		if (!preloadCircles.contains(c)) {
+			preloadCircles.add(c);
+		}
+	}
+	
+	public void removePreloadCircle(CircleProxy c) {
+		if (preloadCircles.contains(c)) {
+			preloadCircles.remove(c);
+		}
+	}
+	
+	@Kroll.method
+	public void removeCircle(CircleProxy circle) {
+		if (TiApplication.isUIThread()) {
+			handleRemoveCircle(circle);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_CIRCLE), circle);
+
+		}
+	}
+	
+	public void handleRemoveCircle(CircleProxy circle) {
+		if (circle == null) {
+			return;
+		}
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removeCircle(circle);
+			} else {
+				removePreloadCircle(circle);
+			}
+		} else {
+			removePreloadCircle(circle);
+		}
+	}
+	
+	@Kroll.method
+	public void removeAllCircles() {
+		if (TiApplication.isUIThread()) {
+			handleRemoveAllCircles();
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_CIRCLES));
+		}
+	}
+	
+	public void handleRemoveAllCircles() {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removeAllCircles();
+			} else {
+				preloadCircles.clear();
+			}
+		} else {
+			preloadCircles.clear();
+		}
+	}
+	
+	public ArrayList<CircleProxy> getPreloadCircles() {
+		return preloadCircles;
 	}
 
 	@Kroll.method
