@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -54,12 +55,18 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected AnnotationProxy selectedAnnotation;
 	
 	private ArrayList<CircleProxy> currentCircles;	
+	private ArrayList<PolygonProxy> currentPolygons;
+	private ArrayList<PolylineProxy> currentPolylines;
 	
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
+		
 		super(proxy, activity);
+		
 		timarkers = new ArrayList<TiMarker>();
-		currentCircles = new ArrayList<CircleProxy>();		
+		currentCircles = new ArrayList<CircleProxy>();
+		currentPolygons = new ArrayList<PolygonProxy>();
+		currentPolylines = new ArrayList<PolylineProxy>();
 	}
 
 	/**
@@ -544,6 +551,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				
 		p.processOptions();
 		p.setPolygon(map.addPolygon(p.getOptions()));
+		
+		currentPolygons.add(p);
 	}	
 	
 	protected void addPolygons(Object[] polygons)
@@ -562,11 +571,22 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if (p.getPolygon() == null) {
 			return;
 		}
+		
+		if(currentPolygons.contains(p)) {
+			p.getPolygon().remove();
+			p.setPolygon(null);			
+		}
 
-		p.getPolygon().remove();
-		p.setPolygon(null);
 	}
-
+	
+	public void removeAllPolygons()
+	{
+		for (int i = 0; i < currentPolygons.size(); i++) {
+			removePolygon(currentPolygons.get(i));
+		}
+		currentPolygons.clear();
+	}
+	
 	/**
 	 * Polyline
 	 */	
@@ -599,6 +619,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 		p.getPolyline().remove();
 		p.setPolyline(null);
+	}	
+	
+	public void removeAllPolylines()
+	{
+		for (int i = 0; i < currentPolylines.size(); i++) {
+			removePolyline(currentPolylines.get(i));
+		}
+		currentPolylines.clear();
 	}	
 	
 	public void changeZoomLevel(int delta)

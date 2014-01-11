@@ -26,6 +26,7 @@ import ti.map.PolygonProxy;
 import ti.map.PolylineProxy;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.Message;
 
 @Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {

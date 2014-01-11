@@ -10,7 +10,7 @@
 	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/thirdparty.jar"/>
 	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/kroll-apt.jar"/>
 	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/kroll-common.jar"/>
-	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/titanium.jar" sourcepath="/home/l/git/github.com/titanium_mobile/android/titanium/src/java"/>
+	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/titanium.jar" sourcepath="/home/l/git/github.com/titanium_mobile/android/titanium/src/java/org/appcelerator/titanium/view"/>
 	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/json_simple-1.1.jar"/>
 	<classpathentry kind="lib" path="/home/l/.titanium/mobilesdk/linux/3.1.2.GA/android/freemarker.jar"/>
 	<classpathentry kind="lib" path="/home/l/android-sdk-linux/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar"/>
