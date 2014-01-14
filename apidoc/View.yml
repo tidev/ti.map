@@ -363,6 +363,13 @@ properties:
     default: true
     since: "3.1.1"
     platforms: [android]
+    
+  - name: compassEnabled
+    summary: Enable or disables the compass button.
+    type: Boolean
+    default: true
+    since: "3.3.0"
+    platforms: [android]
 
   - name: enableZoomControls
     summary: |
@@ -461,6 +468,27 @@ properties:
 
   - name: latitudeDelta
     summary: The amount of north-to-south distance displayed on the map, measured in decimal degrees.
+    type: Number
+    
+  - name: zoom
+    summary: The zoom level of the map.
+    description: |
+             Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#zoom) for more details.
+             Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+    type: Number
+    
+  - name: tilt
+    summary: The camera's position on an arc between directly over the map's center position and the surface of the Earth, measured in degrees from the nadir.
+    description: |
+             Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position) for more details.
+             Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+    type: Number
+    
+  - name: bearing
+    summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
+    description: |
+             Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position) for more details.
+             Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
     type: Number
 
 ---
