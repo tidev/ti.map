@@ -476,6 +476,7 @@ properties:
              Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#zoom) for more details.
              Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
     type: Number
+    since: "3.3.0"
     
   - name: tilt
     summary: The camera's position on an arc between directly over the map's center position and the surface of the Earth, measured in degrees from the nadir.
@@ -483,6 +484,7 @@ properties:
              Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position) for more details.
              Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
     type: Number
+    since: "3.3.0"
     
   - name: bearing
     summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
@@ -490,6 +492,7 @@ properties:
              Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position) for more details.
              Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
     type: Number
+    since: "3.3.0"
 
 ---
 name: MapLocationTypeV2
