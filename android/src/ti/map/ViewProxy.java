@@ -32,7 +32,8 @@ import android.os.Message;
 	TiC.PROPERTY_ANNOTATIONS,
 	TiC.PROPERTY_ANIMATE,
 	MapModule.PROPERTY_TRAFFIC,
-	TiC.PROPERTY_ENABLE_ZOOM_CONTROLS
+	TiC.PROPERTY_ENABLE_ZOOM_CONTROLS,
+	MapModule.PROPERTY_COMPASS_ENABLED
 })
 public class ViewProxy extends TiViewProxy
 {
@@ -59,6 +60,7 @@ public class ViewProxy extends TiViewProxy
 	public ViewProxy() {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
+		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
 	}
 	
 	public TiUIView createView(Activity activity) {
