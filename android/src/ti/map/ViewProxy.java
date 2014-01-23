@@ -52,6 +52,8 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_REMOVE_ROUTE = MSG_FIRST_ID + 508;
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
+	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
+	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 512;
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
 	
 	private ArrayList<RouteProxy> preloadRoutes;
@@ -136,6 +138,18 @@ public class ViewProxy extends TiViewProxy
 			result = (AsyncResult) msg.obj;
 			handleRemoveRoute((RouteProxy)result.getArg());
 			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_MAX_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(getMaxZoom());
+			return true;
+		}
+		
+		case MSG_MIN_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(getMinZoom());
 			return true;
 		}
 
@@ -454,6 +468,47 @@ public class ViewProxy extends TiViewProxy
 			preloadRoutes.remove(r);
 		}
 	}
+	
+	public float getMaxZoom()
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			return ((TiUIMapView) view).getMaxZoomLevel();
+		} else {
+			return 0;
+		}
+	}
+	
+	public float getMinZoom()
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			return ((TiUIMapView) view).getMinZoomLevel();
+		} else {
+			return 0;
+		}
+	}
+
+	@Kroll.method @Kroll.getProperty
+	public float getMaxZoomLevel() 
+	{
+		if (TiApplication.isUIThread()) {
+			return getMaxZoom();
+		} else {
+			return (Float) TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_MAX_ZOOM));
+		}
+	}
+	
+	@Kroll.method @Kroll.getProperty
+	public float getMinZoomLevel() 
+	{
+		if (TiApplication.isUIThread()) {
+			return getMinZoom();
+		} else {
+			return (Float) TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_MIN_ZOOM));
+		}
+	}
+	
 	
 	@Kroll.method
 	public void removeRoute(RouteProxy route) {
