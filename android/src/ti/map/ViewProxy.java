@@ -52,6 +52,7 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_REMOVE_ROUTE = MSG_FIRST_ID + 508;
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
+	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
 	
 	private ArrayList<RouteProxy> preloadRoutes;
 	
@@ -148,6 +149,11 @@ public class ViewProxy extends TiViewProxy
 			return true;
 		}
 
+		case MSG_SNAP_SHOT: {
+			handleSnapshot();
+			return true;
+		}
+
 		default : {
 			return super.handleMessage(msg);
 		}
@@ -217,6 +223,24 @@ public class ViewProxy extends TiViewProxy
 		}
 	}
 	
+	@Kroll.method
+	public void snapshot()
+	{
+		if (TiApplication.isUIThread()) {
+			handleSnapshot();
+		} else {
+			getMainHandler().obtainMessage(MSG_SNAP_SHOT).sendToTarget();
+		}
+	}
+	
+	private void handleSnapshot() 
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).snapshot();
+		}
+	}
+
 	@Kroll.method
 	public void removeAllAnnotations() {
 		//Update the JS object

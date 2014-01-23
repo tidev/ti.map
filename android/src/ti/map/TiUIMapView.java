@@ -13,12 +13,14 @@ import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
@@ -660,5 +662,23 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			}
 		}
 		return false;
+	}
+	
+	
+	public void snapshot() 
+	{
+		map.snapshot(new GoogleMap.SnapshotReadyCallback()
+		{
+			
+			@Override
+			public void onSnapshotReady(Bitmap snapshot)
+			{
+				TiBlob sblob = TiBlob.blobFromImage(snapshot);
+				KrollDict data = new KrollDict();
+				data.put("blob", sblob);
+				data.put("source", proxy);
+				proxy.callPropertyAsync("onsnapshot", new Object[] { data });
+			}
+		});
 	}
 }
