@@ -134,31 +134,6 @@ methods:
         summary: Relative zoom level (positive to zoom in, negative to zoom out).
         type: Number
     since: "3.1.0"
-    
-  - name: getMaxZoomLevel
-    summary: Returns the maximum zoom level available at the current camera position.
-    description: |
-        Returns the maximum zoom level for the current camera position. 
-        This takes into account what map type is currently being used.
-        For example, satellite or terrain may have a lower max zoom level than the base map tiles.
-        
-        This method must be used after the 'complete' event is fired.
-    since: "3.3.0"
-    returns:
-      - type: Number
-    platforms: [android]
-    
-  - name: getMinZoomLevel
-    summary: Returns the minimum zoom level available at the current camera position.
-    description: |
-        Returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level) 
-        but may vary between devices and map sizes.
-        
-        This method must be used after the 'complete' event is fired.
-    since: "3.3.0"
-    returns:
-      - type: Number
-    platforms: [android]
 
   - name: animateCamera
     summary: |
@@ -405,6 +380,31 @@ properties:
     type: Boolean
     default: true
     platforms: [android]
+    
+  - name: maxZoomLevel
+    summary: Returns the maximum zoom level available at the current camera position.
+    description: |
+        Returns the maximum zoom level for the current camera position. 
+        This takes into account what map type is currently being used.
+        For example, satellite or terrain may have a lower max zoom level than the base map tiles.
+        
+        This will only give the correct value after the 'complete' event is fired.
+    since: "3.3.0"
+    type: Number
+    platforms: [android]
+    permission: read-only
+    
+  - name: minZoomLevel
+    summary: Returns the minimum zoom level available at the current camera position.
+    description: |
+        Returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level) 
+        but may vary between devices and map sizes.
+        
+        This will only give the correct value after the 'complete' event is fired.
+    since: "3.3.0"
+    type: Number
+    platforms: [android]
+    permission: read-only
 
   - name: traffic
     summary: Toggles the traffic layer on or off.

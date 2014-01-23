@@ -1,7 +1,7 @@
 # Change Log
 <pre>
 v2.1.4    Implement tilt, bearing, zoom, compassEnabled properties [TIMOB-16180].
-          Implement getMaxZoomLevel, getMinZoomLevel, update Google Play Services SDK [TIMOB-16180].
+          Implement maxZoomLevel, minZoomLevel, update Google Play Services SDK [TIMOB-16180].
 
 v2.1.3    Fixed memory leak when removing map instance from window [TIMOB-14772].
           Added longClick event support [TIMOB-13989].

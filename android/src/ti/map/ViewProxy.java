@@ -465,7 +465,7 @@ public class ViewProxy extends TiViewProxy
 		}
 	}
 
-	@Kroll.method
+	@Kroll.method @Kroll.getProperty
 	public float getMaxZoomLevel() 
 	{
 		if (TiApplication.isUIThread()) {
@@ -475,7 +475,7 @@ public class ViewProxy extends TiViewProxy
 		}
 	}
 	
-	@Kroll.method
+	@Kroll.method @Kroll.getProperty
 	public float getMinZoomLevel() 
 	{
 		if (TiApplication.isUIThread()) {
