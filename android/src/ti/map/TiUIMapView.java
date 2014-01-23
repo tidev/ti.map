@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -41,7 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
-	GoogleMap.OnMapLongClickListener
+	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 {
 	private static final String TAG = "TiUIMapView";
 	private GoogleMap map;
@@ -114,8 +115,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setOnInfoWindowClickListener(this);
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
+		map.setOnMapLoadedCallback(this);
 		((ViewProxy) proxy).clearPreloadObjects();
-		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
 
 	@Override
@@ -211,6 +212,16 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected void setUserLocationButtonEnabled(boolean enabled)
 	{
 		map.getUiSettings().setMyLocationButtonEnabled(enabled);
+	}
+
+	public float getMaxZoomLevel() 
+	{
+		return map.getMaxZoomLevel();
+	}
+		
+	public float getMinZoomLevel() 
+	{
+		return map.getMinZoomLevel();
 	}
 
 	protected void setMapType(int type)
@@ -660,5 +671,11 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public void onMapLoaded()
+	{
+		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
 }

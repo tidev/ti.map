@@ -86,6 +86,11 @@ exports.run = function(UI, Map) {
 		Ti.API.info("Longitude: " + e.longitude);
 		Ti.API.info("Type: " + e.type);
 	});
+	
+	map.addEventListener('complete', function(e) {
+		Ti.API.info("Max Zoom Level: " + map.getMaxZoomLevel());
+		Ti.API.info("Min Zoom Level: " + map.getMinZoomLevel());
+	});
 
 	win.add(map);
 	win.add(tiltButton);
