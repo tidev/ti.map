@@ -685,11 +685,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			{
 				TiBlob sblob = TiBlob.blobFromImage(snapshot);
 				KrollDict data = new KrollDict();
-				data.put("blob", sblob);
+				data.put("snapshot", sblob);
 				data.put("source", proxy);
-				proxy.callPropertyAsync("onsnapshot", new Object[] { data });
+				proxy.callPropertyAsync("onsnapshotready", new Object[] { data });
 			}
 		});
+	}
 
 	@Override
 	public void onMapLoaded()

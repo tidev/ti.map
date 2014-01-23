@@ -134,6 +134,13 @@ methods:
         summary: Relative zoom level (positive to zoom in, negative to zoom out).
         type: Number
     since: "3.1.0"
+    
+  - name: snapshot
+    summary: Takes a snapshot of the map
+    description: |
+         Takes a snapshot of the current map and returns the image via 'onsnapshot' callback.
+    since: "3.3.0"
+    platforms: [android]
 
   - name: animateCamera
     summary: |
@@ -168,7 +175,7 @@ methods:
     platforms: [iphone, ipad]
 
 events:
-
+    
   - name: pinchangedragstate
     summary: Fired when the user interacts with a draggable annotation.
     properties:
@@ -414,6 +421,16 @@ properties:
     type: Boolean
     default: false
     platforms: [android]
+    
+  - name: onsnapshotready
+    summary: Function to be called for each invocation of [snapshot](Modules.Map.View.snapshot).
+    description: |
+           This property must be set before invoking [snapshot](Modules.Map.View.snapshot).
+           The callback's argument is an object with a single property, `snapshot`, containing
+        the bitmap in the form of a blob[Titanium.Blob].
+    type: Callback<Object>
+    platforms: [android]
+    since: "3.3.0"
 
   - name: camera
     summary: The camera used for determining the appearance of the map. Available in iOS 7.0 and later.
