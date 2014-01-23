@@ -141,7 +141,11 @@ methods:
         Returns the maximum zoom level for the current camera position. 
         This takes into account what map type is currently being used.
         For example, satellite or terrain may have a lower max zoom level than the base map tiles.
+        
+        This method must be used after the 'complete' event is fired.
     since: "3.3.0"
+    returns:
+      - type: Number
     platforms: [android]
     
   - name: getMinZoomLevel
@@ -149,7 +153,11 @@ methods:
     description: |
         Returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level) 
         but may vary between devices and map sizes.
+        
+        This method must be used after the 'complete' event is fired.
     since: "3.3.0"
+    returns:
+      - type: Number
     platforms: [android]
 
   - name: animateCamera
