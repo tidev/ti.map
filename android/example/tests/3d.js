@@ -95,10 +95,11 @@ exports.run = function(UI, Map) {
 			bearing : bearing,
 			zoom : zoom
 		}, //Sydney
-		top : '50%',
-		onsnapshotready: function(e) {
-			snapshotView.image = e.snapshot;
-		}
+		top : '50%'
+	});
+
+	map.addEventListener('onsnapshotready', function(e) {
+		snapshotView.image = e.snapshot;
 	});
 
 	map.addEventListener('regionchanged', function(e) {
