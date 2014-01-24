@@ -26,7 +26,14 @@ exports.run = function(UI, Map) {
 	
 	var compassButton = Ti.UI.createButton({
 		top:'20%',
-		title: 'Toggle Compass'
+		title: 'Toggle Compass',
+		left: 0
+	});
+	
+	var snapshotButton = Ti.UI.createButton({
+		top: '20%',
+		title: 'Snapshot',
+		right: 0
 	});
 
 	tiltButton.addEventListener('click', function(e) {
@@ -67,6 +74,16 @@ exports.run = function(UI, Map) {
 	compassButton.addEventListener('click', function(e) {
 		map.compassEnabled = !map.compassEnabled;
 	});
+	
+	snapshotButton.addEventListener('click', function(e) {
+		map.snapshot();
+	});
+
+	var snapshotView = Ti.UI.createImageView({
+		top: '30%',
+		height: '15%',
+		defaultImage: 'map_pin.png'
+	});
 
 	var map = Map.createView({
 		userLocation : true,
@@ -78,7 +95,11 @@ exports.run = function(UI, Map) {
 			bearing : bearing,
 			zoom : zoom
 		}, //Sydney
-		top : '30%'
+		top : '50%'
+	});
+
+	map.addEventListener('onsnapshotready', function(e) {
+		snapshotView.image = e.snapshot;
 	});
 
 	map.addEventListener('regionchanged', function(e) {
@@ -97,5 +118,7 @@ exports.run = function(UI, Map) {
 	win.add(bearingButton);
 	win.add(zoomButton);
 	win.add(compassButton);
+	win.add(snapshotButton);
+	win.add(snapshotView);
 	win.open();
 }

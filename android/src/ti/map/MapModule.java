@@ -38,6 +38,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_ZOOM = "zoom";
 	public static final String PROPERTY_ZORDER_ON_TOP = "zOrderOnTop";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
+	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
 	@Kroll.constant public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
