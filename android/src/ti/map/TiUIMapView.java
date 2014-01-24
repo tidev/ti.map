@@ -687,7 +687,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				KrollDict data = new KrollDict();
 				data.put("snapshot", sblob);
 				data.put("source", proxy);
-				proxy.fireEvent("onsnapshotready", data);
+				proxy.fireEvent(MapModule.EVENT_ON_SNAPSHOT_READY, data);
 			}
 		});
 	}
