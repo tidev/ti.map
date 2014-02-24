@@ -56,10 +56,9 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_REMOVE_ROUTE = MSG_FIRST_ID + 508;
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
-    private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
+	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
 	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 512;
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
-	
 	
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 511;	
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 512;
@@ -75,9 +74,12 @@ public class ViewProxy extends TiViewProxy
 	public ViewProxy() {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
-        defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
+<<<<<<< HEAD
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();		
+=======
+		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
+>>>>>>> e7f48a59f9aa4d1219db992c853e5e8da1e508e8
 	}
 	
 	public TiUIView createView(Activity activity) {
@@ -158,6 +160,18 @@ public class ViewProxy extends TiViewProxy
 			result.setResult(null);
 			return true;
 		}
+		
+		case MSG_MAX_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(getMaxZoom());
+			return true;
+		}
+		
+		case MSG_MIN_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(getMinZoom());
+			return true;
+		}
 
 		case MSG_CHANGE_ZOOM: {
 			handleZoom(msg.arg1);
@@ -169,12 +183,7 @@ public class ViewProxy extends TiViewProxy
 			return true;
 		}
 
-
-		case MSG_SNAP_SHOT: {
-			handleSnapshot();
-			return true;
-		}
-
+<<<<<<< HEAD
 
 		case MSG_ADD_POLYGON: {
 			result = (AsyncResult) msg.obj;
@@ -204,6 +213,13 @@ public class ViewProxy extends TiViewProxy
 			return true;
 		}				
 		
+=======
+		case MSG_SNAP_SHOT: {
+			handleSnapshot();
+			return true;
+		}
+
+>>>>>>> e7f48a59f9aa4d1219db992c853e5e8da1e508e8
 		default : {
 			return super.handleMessage(msg);
 		}

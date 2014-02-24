@@ -56,16 +56,16 @@
 	}
 	else 
 	{
-//		UIImage *image = [[ImageLoader sharedLoader] loadImmediateImage:[TiUtils toURL:button proxy:self]];
-//		if (image!=nil)
-//		{
-//			CGSize size = [image size];
-//			UIButton *bview = [UIButton buttonWithType:UIButtonTypeCustom];
-//			[TiUtils setView:bview positionRect:CGRectMake(0,0,size.width,size.height)];
-//			bview.backgroundColor = [UIColor clearColor];
-//			[bview setImage:image forState:UIControlStateNormal];
-//			button_view = bview;
-//		}
+		UIImage *image = [[ImageLoader sharedLoader] loadImmediateImage:[TiUtils toURL:button proxy:self]];
+		if (image!=nil)
+		{
+			CGSize size = [image size];
+			UIButton *bview = [UIButton buttonWithType:UIButtonTypeCustom];
+			[TiUtils setView:bview positionRect:CGRectMake(0,0,size.width,size.height)];
+			bview.backgroundColor = [UIColor clearColor];
+			[bview setImage:image forState:UIControlStateNormal];
+			button_view = bview;
+		}
 	}
 	if (button_view!=nil)
 	{

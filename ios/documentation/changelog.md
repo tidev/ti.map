@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.0.1  Fixed annotation not showing leftButton rightButton [TC-3524]
+
 v2.0.0  Fixed methods deprecated in iOS 7 [MOD-1521]
         Add Support for iOS7 MapCamera [MOD-1523]
         Expose new iOS7 properties and methods of MapView [MOD-1522]
