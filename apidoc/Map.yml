@@ -298,7 +298,78 @@ methods:
     summary: Returns a code to indicate whether Google Play Services is available on the device.
     since: "3.1.1"
     platforms: [android]
-    
+
+  - name: createPolygon
+    summary: |
+        Creates a polygon shape object.
+    parameters:
+      - name: points
+        summary: |
+            An array of <Modules.Map.Point> to display.
+        type: Array<Modules.Map.LatLng>
+      - name: strokeColor
+        summary: |
+            The border color
+        type: 
+      - name: strokeWidth
+        summary: |
+            Width of the border
+        type: 
+      - name: fillColor
+        summary: |
+            The filling color
+        type: 
+
+    since: "3.2.0"
+    platforms: [android]
+
+  - name: createPolyline
+    summary: |
+        Creates a polyline shape object.
+    parameters:
+      - name: points
+        summary: |
+            An array of <Modules.Map.LatLng> to display.
+        type: Array<Modules.Map.LatLng>
+      - name: strokeColor
+        summary: |
+            The border color
+        type: 
+      - name: strokeWidth
+        summary: |
+            Width of the border
+        type: 
+      - name: fillColor
+        summary: |
+            The filling color
+        type: 
+
+    since: "3.2.0"
+    platforms: [android]
+
+  - name: createCircle
+    summary: |
+        Creates a circle shape object.
+    parameters:
+      - name: points
+        summary: |
+            An array of <Modules.Map.LatLng> to display.
+        type: Array<Modules.Map.LatLng>
+      - name: strokeColor
+        summary: |
+            The border color
+        type: 
+      - name: strokeWidth
+        summary: |
+            Width of the border
+        type: 
+      - name: fillColor
+        summary: |
+            The filling color
+        type: 
+
+    since: "3.2.0"
+    platforms: [android]
     
 examples:
   - title: Map Example

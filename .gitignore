@@ -26,3 +26,5 @@ android/clean
 android/ant_clean
 android/.classpath
 android/.settings
+
+android/launch-app

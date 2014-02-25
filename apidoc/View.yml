@@ -51,6 +51,23 @@ methods:
         summary: Modules.Map.Route
         type: Modules.Map.Route
 
+  - name: addPolygon
+    summary: Adds a new annotation to the map.
+    parameters:
+      - name: polygon
+        summary: a <Modules.Map.Polygon> instance.
+        type: Modules.Map.Polygon
+    platforms: [android]
+
+  - name: addPolygons
+    summary: Adds one or more new polygons to the map.
+    parameters:
+      - name: polygons
+        summary: |
+            Array of [Polygons](Modules.Map.Polygons) objects
+        type: Array<Modules.Map.Polygons>
+    platforms: [android]
+
   - name: deselectAnnotation
     summary: |
         Deselects the specified annotation, so the main annotation is hidden and only

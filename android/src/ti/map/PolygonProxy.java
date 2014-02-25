@@ -89,6 +89,12 @@ public class PolygonProxy extends KrollProxy {
 				result.setResult(null);
 				return true;
 			}
+			case MSG_SET_HOLES: {
+				result = (AsyncResult) msg.obj;
+				polygon.setHoles(processHoles(result.getArg(), true));
+				result.setResult(null);
+				return true;
+			}
 			case MSG_SET_FILL_COLOR: {
 				result = (AsyncResult) msg.obj;
 				options.fillColor((Integer)result.getArg());
@@ -112,13 +118,7 @@ public class PolygonProxy extends KrollProxy {
 				options.zIndex((Float)result.getArg());
 				result.setResult(null);
 				return true;
-			}
-			case MSG_SET_HOLES: {
-				result = (AsyncResult) msg.obj;
-				polygon.setHoles(processHoles(result.getArg()));
-				result.setResult(null);
-				return true;
-			}			
+			}		
 			default : {
 				return super.handleMessage(msg);
 			}
@@ -138,7 +138,7 @@ public class PolygonProxy extends KrollProxy {
 		}
 		
 		if (hasProperty(PolygonProxy.PROPERTY_HOLES)) {
-			 polygon.setHoles(processHoles(getProperty(PolygonProxy.PROPERTY_HOLES)));
+			 processHoles(getProperty(PolygonProxy.PROPERTY_HOLES), false);
 		}
 		
 		op = PolygonProxy.PROPERTY_STROKE_COLOR;
@@ -203,7 +203,7 @@ public class PolygonProxy extends KrollProxy {
 	 * ]
 	 * 
 	 */
-	public ArrayList<ArrayList<LatLng>> processHoles(Object holesList) {
+	public ArrayList<ArrayList<LatLng>> processHoles(Object holesList, boolean list) {
 		
 		ArrayList<ArrayList<LatLng>> holesArray = new ArrayList<ArrayList<LatLng>>();
 
@@ -224,18 +224,45 @@ public class PolygonProxy extends KrollProxy {
 						}
 					}
 				}
+
 				if (holeContainerArray.size() > 0) {
-					holesArray.add(holeContainerArray);
+					if(!list) {
+						if(polygon == null) {
+							// Log.e("TiApplicationMapDBG", "add holes to options");
+							options.addHole(holeContainerArray);
+						}
+					}
+					else {
+						holesArray.add(holeContainerArray);
+					}
 				}
 			}
 		}
 		
-		return holesArray;
+		
+		if(!list) {
+			// Log.e("TiApplicationMapDBG", "polygon exists?");
+			if(polygon != null) {
+				// Log.e("TiApplicationMapDBG", "Yes, add holes to polygon");
+				polygon.setHoles(holesArray);
+			}
+
+			return null;
+		}
+		else
+			return holesArray;
+		
 	}
 	
 	public PolygonOptions getOptions() {
 		return options;
 	}
+	
+	@Kroll.method
+	public void setHoles(Object[] holesList) {
+		TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HOLES), holesList);
+	}
+	
 	
 	public void setPolygon(Polygon r) {
 		polygon = r;
@@ -257,7 +284,9 @@ public class PolygonProxy extends KrollProxy {
 		else if (name.equals(MapModule.PROPERTY_POINTS)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_POINTS), value);
 		}
-
+		else if (name.equals(PolygonProxy.PROPERTY_HOLES)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HOLES), value);
+		}
 		else if (name.equals(PolygonProxy.PROPERTY_STROKE_WIDTH)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH), TiConvert.toFloat(value));
 		}
