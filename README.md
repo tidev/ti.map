@@ -24,10 +24,10 @@ var MapModule = require('ti.map');
 var map = MapModule.createView({
     mapType: MapModule.SATELLITE_TYPE,
     region: {
-        latitude: 46.50,
-        longitude: 11.75, 
-        latitudeDelta: 5, 
-        longitudeDelta: 5 
+        latitude: 46.20,
+        longitude: 11.20, 
+        latitudeDelta: 0.8, 
+        longitudeDelta: 0.8 
     }, 
     
     width: 'auto',
@@ -56,7 +56,7 @@ win1.addEventListener('open', function() {
 	]
     ];
     
-    var polyline = [
+    var line = [
 	{latitude: 46.15, longitude: 12.8},
 	{latitude: 46.25, longitude: 12.16},
 	{latitude: 46.27, longitude: 12.28},
@@ -72,7 +72,7 @@ win1.addEventListener('open', function() {
     map.addPolygon(polygon);
     
     var polyline = MapModule.createPolyline({
-        points: holes[0],
+        points: line,
         strokeColor: "green",
         strokeWidth: 2.0,
         fillColor: "yellow",
