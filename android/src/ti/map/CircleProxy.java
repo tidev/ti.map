@@ -12,21 +12,25 @@ import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.util.TiConvert;
 
+import ti.map.MapModule;
+import ti.map.Shape.IShape;
 import android.graphics.Color;
 import android.os.Message;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
-@Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {
+@Kroll.proxy(name="Circle", creatableInModule = MapModule.class, propertyAccessors = {
 		MapModule.PROPERTY_CENTER, MapModule.PROPERTY_RADIUS,
 		TiC.PROPERTY_BORDER_WIDTH, TiC.PROPERTY_BORDER_COLOR,
 		TiC.PROPERTY_BACKGROUND_COLOR, TiC.PROPERTY_ZINDEX,
 		TiC.PROPERTY_VISIBLE, TiC.PROPERTY_OPACITY })
-public class CircleProxy extends KrollProxy {
+public class CircleProxy  extends KrollProxy implements IShape 
+{
+	
 	private CircleOptions options;
 	private Circle circle;
 	
@@ -217,4 +221,27 @@ public class CircleProxy extends KrollProxy {
 	public Circle getCircle() {
 		return circle;
 	}
+	
+	protected TiMarker marker;
+	
+	/**
+	 * Handle timarker reference
+	 * */
+	public void setTiMarker(TiMarker marker) {
+		this.marker = marker;
+	}
+	
+	public TiMarker getTiMarker() {
+		return this.marker;
+	}
+	
+	public Marker getMarker() {
+		return this.marker != null ? this.marker.getMarker() : null;
+	}
+
+	public AnnotationProxy getAnnotation() {
+		return this.marker != null ? this.marker.getProxy() : null;
+	}	
+	
+	
 }

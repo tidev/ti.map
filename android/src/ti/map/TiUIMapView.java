@@ -24,7 +24,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -34,17 +33,19 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 
+import ti.map.Shape.Boundary;
+import ti.map.Shape.IShape;
+import ti.map.Shape.PolylineBoundary;
 import ti.map.PolygonProxy;
 import ti.map.PolylineProxy;
+import ti.map.CircleProxy;
 
 public class TiUIMapView extends TiUIFragment implements
 		GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
@@ -62,7 +63,7 @@ public class TiUIMapView extends TiUIFragment implements
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
-
+	
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
 		super(proxy, activity);
 		timarkers = new ArrayList<TiMarker>();
@@ -570,6 +571,7 @@ public class TiUIMapView extends TiUIFragment implements
 		if (currentPolygons.contains(p)) {
 			p.getPolygon().remove();
 			p.setPolygon(null);
+			currentPolygons.remove(p);
 		}
 
 	}
@@ -591,6 +593,8 @@ public class TiUIMapView extends TiUIFragment implements
 		}
 		p.processOptions();
 		p.setPolyline(map.addPolyline(p.getOptions()));
+
+		currentPolylines.add(p);
 	}
 
 	protected void addPolylines(Object[] polylines) {
@@ -608,8 +612,11 @@ public class TiUIMapView extends TiUIFragment implements
 			return;
 		}
 
-		p.getPolyline().remove();
-		p.setPolyline(null);
+		if(currentPolylines.contains(p)) {
+			p.getPolyline().remove();
+			p.setPolyline(null);
+			currentPolylines.remove(p);
+		}
 	}
 
 	public void removeAllPolylines() {
@@ -624,6 +631,42 @@ public class TiUIMapView extends TiUIFragment implements
 		moveCamera(camUpdate, animate);
 	}
 
+	public void fireShapeClickEvent(LatLng clickPosition, IShape shapeProxy, String clickSource) {
+		
+		KrollDict d = new KrollDict();
+
+		TiMarker tiMarker = shapeProxy.getTiMarker();
+		String title = null;
+		String subtitle = null;
+		
+		if(tiMarker != null) {
+			AnnotationProxy annoProxy = tiMarker.getProxy(); 
+			TiMapInfoWindow infoWindow = annoProxy.getMapInfoWindow();
+			if (infoWindow != null) {
+				title = infoWindow.getTitle();
+				subtitle = infoWindow.getSubtitle();
+			}
+			
+			d.put(TiC.PROPERTY_ANNOTATION, annoProxy);
+			d.put(TiC.PROPERTY_TITLE, title);
+			d.put(TiC.PROPERTY_SUBTITLE, subtitle);
+		}
+		
+		d.put(TiC.PROPERTY_LATITUDE, clickPosition.latitude);
+		d.put(TiC.PROPERTY_LONGITUDE, clickPosition.longitude);		
+
+		d.put(MapModule.PROPERTY_MAP, proxy);
+		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
+		d.put(TiC.PROPERTY_SOURCE, shapeProxy);
+		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
+		
+		// Log.e("TiApplication", "*****************");
+		// Log.e("TiApplication", TiC.EVENT_CLICK);
+		// Log.e("TiApplication", d.toString());
+		
+		proxy.fireEvent(TiC.EVENT_CLICK, d);
+	}	
+	
 	public void fireClickEvent(Marker marker, AnnotationProxy annoProxy,
 			String clickSource) {
 		KrollDict d = new KrollDict();
@@ -645,7 +688,7 @@ public class TiUIMapView extends TiUIFragment implements
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
-
+		
 	public void fireLongClickEvent(LatLng point) {
 		KrollDict d = new KrollDict();
 		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
@@ -703,13 +746,54 @@ public class TiUIMapView extends TiUIFragment implements
 
 	@Override
 	public void onMapClick(LatLng point) {
+
 		if (selectedAnnotation != null) {
 			TiMarker tiMarker = selectedAnnotation.getTiMarker();
 			if (tiMarker != null) {
 				fireClickEvent(tiMarker.getMarker(), selectedAnnotation, null);
 			}
 			selectedAnnotation = null;
+			return;
 		}
+		
+		//	currentPolygons
+		if(currentPolygons.size() > 0) {
+			Boundary boundary = new Boundary();
+			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(currentPolygons, point);
+			boundary = null;
+			if(clickedPolygon.size() > 0) {
+				//Log.e("TiApplicationDBG", "********** POLGON CLICKED! *********");
+				fireShapeClickEvent(point, clickedPolygon.get(0), MapModule.PROPERTY_POLYGON);
+				return;
+			}
+		}
+
+//		currentPolylines
+		if(currentPolylines.size() > 0) {
+			PolylineBoundary boundary = new PolylineBoundary();
+			
+			double baseVal = 2;
+			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
+			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude); 
+			double side2 =  b.northeast.longitude > b.southwest.longitude ? (b.northeast.longitude - b.southwest.longitude ) : (b.southwest.longitude - b.northeast.longitude );
+			double diagonal = Math.sqrt((side1*side1)+(side2*side2));
+			double val = diagonal / map.getCameraPosition().zoom;
+
+			//Log.e("TiApplicationDBG", "visible area " + map.getProjection().getVisibleRegion().latLngBounds.toString());
+//			Log.e("TiApplicationDBG", "zoom is " + map.getCameraPosition().zoom + " and distance is " + val);
+			//Log.e("TiApplicationDBG", "max/min zoom is " + map.getMaxZoomLevel() + " / " + map.getMinZoomLevel());
+					
+			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(currentPolylines, point, val);
+		
+			boundary = null;
+			if(clickedPolylines.size() > 0) {
+//				Log.e("TiApplicationDBG", "********** POLYLINE CLICKED! *********");
+				fireShapeClickEvent(point, clickedPolylines.get(0), MapModule.PROPERTY_POLYLINE);
+				return;
+			}
+		}
+
+//		currentCircles
 
 	}
 

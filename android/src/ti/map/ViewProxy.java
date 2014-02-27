@@ -23,9 +23,9 @@ import org.appcelerator.titanium.view.TiUIView;
 import ti.map.TiUIMapView;
 import ti.map.PolygonProxy;
 import ti.map.PolylineProxy;
+import ti.map.CircleProxy;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.os.Message;
 
 @Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {

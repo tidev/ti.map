@@ -11,11 +11,14 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.util.TiConvert;
 
+import ti.map.MapModule;
+import ti.map.Shape.IShape;
+import ti.map.Shape.Shape;
 import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -29,7 +32,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 	MapModule.PROPERTY_POINTS,
 
 })
-public class PolylineProxy extends KrollProxy {
+public class PolylineProxy extends KrollProxy implements IShape
+{
 	
 	private PolylineOptions options;
 	private Polyline polyline;
@@ -196,5 +200,28 @@ public class PolylineProxy extends KrollProxy {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
 
+	}
+
+	protected TiMarker marker;
+	
+	/**
+	 * Handle timarker reference
+	 * */
+	public void setTiMarker(TiMarker marker) {
+		this.marker = marker;
+	}
+	
+	public TiMarker getTiMarker() {
+		return this.marker;
+	}
+	
+	public Marker getMarker() {
+		return this.marker != null ? this.marker.getMarker() : null;
+	}
+
+	public AnnotationProxy getAnnotation() {
+		return this.marker != null ? this.marker.getProxy() : null;
 	}	
+	
+	
 }

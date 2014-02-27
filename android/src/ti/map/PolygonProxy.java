@@ -2,6 +2,7 @@ package ti.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -11,11 +12,14 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.util.TiConvert;
 
+import ti.map.MapModule;
+import ti.map.Shape.IShape;
+import ti.map.Shape.Shape;
 import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -31,7 +35,8 @@ import com.google.android.gms.maps.model.PolygonOptions;
 //	TiC.PROPERTY_COLOR,
 //	TiC.PROPERTY_WIDTH
 })
-public class PolygonProxy extends KrollProxy {
+public class PolygonProxy extends KrollProxy implements IShape 
+{
 	
 	private PolygonOptions options;
 	private Polygon polygon;
@@ -70,6 +75,7 @@ public class PolygonProxy extends KrollProxy {
 	public PolygonProxy(TiContext tiContext) {
 		this();
 	}
+	
 	
 	@Override
 	public boolean handleMessage(Message msg) 
@@ -272,6 +278,10 @@ public class PolygonProxy extends KrollProxy {
 		return polygon;
 	}
 	
+	public List<? extends List<LatLng>> getHoles() {
+		return polygon.getHoles();
+	}
+	
 	@Override
 	public void onPropertyChanged(String name, Object value) {
 		
@@ -303,5 +313,28 @@ public class PolygonProxy extends KrollProxy {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
 
+	}
+
+	protected TiMarker marker;
+	
+	/**
+	 * Handle timarker reference
+	 * */
+	public void setTiMarker(TiMarker marker) {
+		this.marker = marker;
+	}
+	
+	public TiMarker getTiMarker() {
+		return this.marker;
+	}
+	
+	public Marker getMarker() {
+		return this.marker != null ? this.marker.getMarker() : null;
+	}
+
+	public AnnotationProxy getAnnotation() {
+		return this.marker != null ? this.marker.getProxy() : null;
 	}	
+	
+	
 }
