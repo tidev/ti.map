@@ -606,6 +606,7 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState
 {
 	[self firePinChangeDragState:annotationView newState:newState fromOldState:oldState];
+	if (newState == MKAnnotationViewDragStateEnding) annotationView.dragState = MKAnnotationViewDragStateNone;
 }
 
 - (void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
