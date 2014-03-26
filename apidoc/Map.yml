@@ -38,8 +38,9 @@ description: |
                 </modules>
             ...
 
-    -   Obtain a Google Maps API key.  For instructions, refer to
-        [Google Maps Android API v2: The Google Maps API Key](https://developers.google.com/maps/documentation/android/start#the_google_maps_api_key)
+    -   Obtain a Google Maps API key.  For instructions, refer to the "Obtain and Add a Google API Key"
+        section in the
+       [Google Maps v2 for Android guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Google_Maps_v2_for_Android).
 
     -   Add the following settings and permissions to the Android manifest section of the tiapp.xml
         file. Replace the two instances of `<com.domain.appid>` with your application's ID (package name)
@@ -82,6 +83,9 @@ description: |
     ## iOS
 
     This module is a replacement for the built-in Titanium.Map module on iOS.
+
+    For more instructions and examples of using the module, refer to the
+    [iOS Map Kit guide](http://docs.appcelerator.com/titanium/latest/#!/guide/iOS_Map_Kit).
 
     ### Requirements
 
