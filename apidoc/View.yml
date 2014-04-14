@@ -139,7 +139,7 @@ methods:
     summary: Takes a snapshot of the map
     description: |
          Takes a snapshot of the current map and returns the image via [onsnapshotready](Modules.Map.View.onsnapshotready) event.
-    since: "3.3.0"
+    since: "3.2.3"
     platforms: [android]
 
   - name: animateCamera
@@ -184,7 +184,7 @@ events:
         summary: snapshot of the current map
         type: Titanium.Blob
     platforms: [android]
-    since: "3.3.0"
+    since: "3.2.3"
 
   - name: pinchangedragstate
     summary: Fired when the user interacts with a draggable annotation.
@@ -385,7 +385,7 @@ properties:
     summary: Enable or disables the compass button.
     type: Boolean
     default: true
-    since: "3.3.0"
+    since: "3.2.3"
     platforms: [android]
 
   - name: enableZoomControls
@@ -406,7 +406,7 @@ properties:
         For example, satellite or terrain may have a lower max zoom level than the base map tiles.
         
         This will only give the correct value after the 'complete' event is fired.
-    since: "3.3.0"
+    since: "3.2.3"
     type: Number
     platforms: [android]
     permission: read-only
@@ -418,7 +418,7 @@ properties:
         but may vary between devices and map sizes.
         
         This will only give the correct value after the 'complete' event is fired.
-    since: "3.3.0"
+    since: "3.2.3"
     type: Number
     platforms: [android]
     permission: read-only
@@ -496,6 +496,15 @@ name: MapRegionTypev2
 summary: Simple object representing a map location and zoom level.
 properties:
 
+  - name: bearing
+    summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
+    description: |
+        For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position).
+        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+    type: Number
+    since: "3.2.3"
+    platforms: [android]
+
   - name: longitude
     summary: Longitude value for the center point of the map, in decimal degrees.
     type: Number
@@ -512,31 +521,22 @@ properties:
     summary: The amount of north-to-south distance displayed on the map, measured in decimal degrees.
     type: Number
     
-  - name: zoom
-    summary: The zoom level of the map.
-    description: |
-             Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#zoom) for more details.
-             Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
-    type: Number
-    since: "3.3.0"
-    platforms: [android]
-    
   - name: tilt
     summary: The camera's position on an arc between directly over the map's center position and the surface of the Earth, measured in degrees from the nadir.
     description: |
-             Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position) for more details.
-             Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+        For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position).
+        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
     type: Number
-    since: "3.3.0"
+    since: "3.2.3"
     platforms: [android]
     
-  - name: bearing
-    summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
+  - name: zoom
+    summary: The zoom level of the map.
     description: |
-             Please see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position) for more details.
-             Can not be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+        For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#zoom).
+        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
     type: Number
-    since: "3.3.0"
+    since: "3.2.3"
     platforms: [android]
 
 ---
