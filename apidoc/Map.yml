@@ -364,7 +364,7 @@ examples:
         `app/views/index.xml`:
 
             <Alloy>
-                <Window class='container'>
+                <Window>
                     <Module id="mapview" module="ti.map" method="createView" onClick="report">
                         <!-- Starting with Alloy 1.4.0, use the Annotation tag to define an annotation -->
                         <!-- Prior to Alloy 1.4.0, create annotations in the controller -->
