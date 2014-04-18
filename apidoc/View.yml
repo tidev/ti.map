@@ -7,6 +7,11 @@ description: |
     displayed, the user can pan, zoom and tilt the map using the native control gestures.
     
     Use the <Modules.Map.createView> method to create a map view.
+
+    In Alloy, use the **`<Module>`** element with the `module` attribute set to `ti.map`
+    and `method` attribute set to `createView` to create a map view in XML markup:
+
+        <Module module="ti.map" method="createView" />
     
     All latitude and longitude values are specified in decimal degrees. Values in degrees,
     minutes and seconds (DMS) must be converted to decimal degrees before being passed to

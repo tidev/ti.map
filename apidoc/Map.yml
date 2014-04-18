@@ -349,10 +349,12 @@ examples:
     example: |
         Previous example as an Alloy view.
 
-        This example loads the Google Maps v2 module and assigns it to the `Alloy.Globals.Map` namespace
-        in the initializer file.  In the XML markup, add a View element with its `ns`
-        (namespace) attribute set to `Alloy.Globals.Map`.  In the controller, use
-        the `Alloy.Globals.Map` namespace to reference the map module.
+        In XML markup, use the `Module` element to create an instance of a map view, then use
+        the `Annotation` element to define an annotation.
+
+        In the initializer file, load the map module and assign it to the `Alloy.Globals.Map` namespace.
+        This variable can be used to reference map module constants in the project, as seen in the TSS
+        file to assign the `pincolor` attribute.
 
         `alloy.js`:
 
@@ -362,31 +364,39 @@ examples:
         `app/views/index.xml`:
 
             <Alloy>
-                <Window>
-                    <!-- Use the Alloy.Globals.Map namespace to create a map module view -->
-                    <View id="mapview" ns="Alloy.Globals.Map" onClick="report" />
+                <Window class='container'>
+                    <Module id="mapview" module="ti.map" method="createView" onClick="report">
+                        <!-- Starting with Alloy 1.4.0, use the Annotation tag to define an annotation -->
+                        <!-- Prior to Alloy 1.4.0, create annotations in the controller -->
+                        <Annotation id='appcHQ' myid='1' />
+                    </Module>
                 </Window>
             </Alloy>
+
+        `app/styles/index.tss`:
+
+            "#mapview" : {
+                region : {
+                    latitude:33.74511,
+                    longitude:-84.38993,
+                    latitudeDelta:0.01,
+                    longitudeDelta:0.01
+                }
+            },
+            "#appcHQ" : {
+                latitude: 37.390749,
+                longitude: -122.081651,
+                title: "Appcelerator Headquarters",
+                subtitle: "Mountain View, CA",
+                pincolor: Alloy.Globals.Map.ANNOTATION_RED
+            }
+
 
         `app/controllers/index.js`:
 
             function report(evt) {
                 Ti.API.info("Annotation " + evt.title + " clicked, id: " + evt.annotation.myid);
             }
-
-            // API calls to the map module need to use the Alloy.Globals.Map reference
-            var mountainView = Alloy.Globals.Map.createAnnotation({
-                latitude:37.390749,
-                longitude:-122.081651,
-                title:"Appcelerator Headquarters",
-                subtitle:'Mountain View, CA',
-                pincolor:Alloy.Globals.Map.ANNOTATION_RED,
-                myid:1 // Custom property to uniquely identify this annotation.
-            });
-
-            $.mapview.region = {latitude:33.74511, longitude:-84.38993,
-                                latitudeDelta:0.01, longitudeDelta:0.01};
-            $.mapview.addAnnotation(mountainView);
 
             $.index.open();
 
