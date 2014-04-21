@@ -715,6 +715,20 @@ public class ViewProxy extends TiViewProxy {
 		}
 	}
 
+
+	@Kroll.method
+	public void removeAllPolygons() {
+		// Update the JS object
+		setProperty(MapModule.PROPERTY_POLYGONS, new Object[0]);
+
+		if (TiApplication.isUIThread()) {
+			handleRemoveAllPolygons();
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(
+					MSG_REMOVE_ALL_POLYGONS));
+		}
+	}	
+	
 	/**
 	 * EOF Polygons
 	 */
@@ -807,6 +821,20 @@ public class ViewProxy extends TiViewProxy {
 		}
 	}
 
+	@Kroll.method
+	public void removeAllPolylines() {
+		// Update the JS object
+		setProperty(MapModule.PROPERTY_POLYLINES, new Object[0]);
+
+		if (TiApplication.isUIThread()) {
+			handleRemoveAllPolylines();
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(
+					MSG_REMOVE_ALL_POLYLINES));
+		}
+	}
+	
+	
 	/**
 	 * EOF Polylines
 	 */
