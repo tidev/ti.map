@@ -6,6 +6,9 @@ description: |
     [map view](Modules.Map.View). An annotation must have its `latitude` and `longitude`
     properties set to appear on a map.
 
+    Use the <Modules.Map.createAnnotation> method to create an annotation.  Starting with Alloy
+    1.4.0, use the **`<Annotation>`** Alloy element to define one in XML markup.
+
     An annotation can also have a title, a subtitle, and two inset buttons or views on the left
     and right side of the title. All of these items are optional.
 
@@ -38,7 +41,6 @@ description: |
     On Android, you must add the click event listener to the map view; the annotation
     itself does not generate these events. 
 
-    Use the <Modules.Map.createAnnotation> method to create an annotation.
 extends: Titanium.Proxy
 since: { android: "3.0.2", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
