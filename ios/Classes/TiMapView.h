@@ -1,4 +1,4 @@
-/**
+    /**
  * Appcelerator Titanium Mobile
  * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
@@ -27,10 +27,12 @@
 	BOOL ignoreRegionChanged;
 	BOOL forceRender;
 	MKCoordinateRegion region;
+    NSMutableArray *polygonProxies;
+    
 	
     // routes
     // dictionaries for object tracking and association
-    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)    
+    CFMutableDictionaryRef mapObjects2View;   // MKOverlay Object -> MKOverlay Object's renderer    
 }
 
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;
@@ -55,6 +57,11 @@
 -(void)addRoute:(id)args;
 -(void)removeRoute:(id)args;
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
+-(void)addPolygon:(id)args;
+-(void)addPolygons:(id)args;
+-(void)removePolygon:(id)args;
+-(void)removePolygon:(id)args remove:(BOOL)r;
+-(void)removeAllPolygons;
 
 #pragma mark Utils
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level;

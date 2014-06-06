@@ -75,4 +75,4 @@ exports.run = function(UI, Map) {
     map.addRoute(route);
     
     win.open();
-}
+};

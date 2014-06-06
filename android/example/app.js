@@ -39,7 +39,8 @@ var rows = [
     require('tests/multiMap'),
     require('tests/annotations'),
     require('tests/routes'),
-    require('tests/3d')
+    require('tests/3d'),
+    require('tests/polygons')
 ];
 
 if (IOS) {
@@ -64,3 +65,5 @@ function startUI() {
         rows[e.index].run && rows[e.index].run(UI, Map);
     });
 }
+
+

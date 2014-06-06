@@ -14,6 +14,7 @@
 #import "TiMapImageAnnotationView.h"
 #import "TiMapCustomAnnotationView.h"
 #import "TiMapRouteProxy.h"
+#import "TiMapPolygonProxy.h"
 
 @implementation TiMapView
 
@@ -26,10 +27,11 @@
 		map.delegate = nil;
 		RELEASE_TO_NIL(map);
 	}
-    if (mapLine2View) {
-        CFRelease(mapLine2View);
-        mapLine2View = nil;
+    if (mapObjects2View) {
+        CFRelease(mapObjects2View);
+        mapObjects2View = nil;
     }
+    RELEASE_TO_NIL(polygonProxies);
 	[super dealloc];
 }
 
@@ -65,7 +67,7 @@
         map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"]]; // defaults
         map.autoresizingMask = UIViewAutoresizingNone;
         [self addSubview:map];
-        mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        mapObjects2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
         loaded = YES;
     }
@@ -476,16 +478,60 @@
 
 -(void)addRoute:(TiMapRouteProxy*)route
 {
-    CFDictionaryAddValue(mapLine2View, [route routeLine], [route routeRenderer]);
+    CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
     [self addOverlay:[route routeLine] level:[route level]];
 }
 
 -(void)removeRoute:(TiMapRouteProxy*)route
 {
     MKPolyline *routeLine = [route routeLine];
-    CFDictionaryRemoveValue(mapLine2View, routeLine);
+    CFDictionaryRemoveValue(mapObjects2View, routeLine);
     [map removeOverlay:routeLine];
 }
+
+-(void)addPolygons:(NSMutableArray*)polygons
+{    
+    for (TiMapPolygonProxy *poly in polygons)
+    {
+        [self addPolygon:poly];
+    }
+}
+
+
+-(void)addPolygon:(TiMapPolygonProxy*)polygonProxy
+{
+    MKPolygon *poly = [polygonProxy polygon];
+    CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
+    [map addOverlay:poly];
+    if (polygonProxies == nil) {
+        polygonProxies = [[NSMutableArray alloc] init];
+    }
+    [polygonProxies addObject:polygonProxy];
+}
+
+-(void)removePolygon:(TiMapPolygonProxy*)polygonProxy
+{
+    [self removePolygon:polygonProxy remove:YES];
+}
+
+-(void)removePolygon:(TiMapPolygonProxy*)polygonProxy remove:(BOOL)r
+{
+    MKPolygon *poly = [polygonProxy polygon];
+    CFDictionaryRemoveValue(mapObjects2View, poly);
+    [map removeOverlay:poly];
+    if (r) {
+        [polygonProxies removeObject:polygonProxy];
+    }
+}
+
+-(void)removeAllPolygons {
+    for (int i=0; i < [polygonProxies count]; i++) {
+        TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
+        [self removePolygon:proxy remove:NO];
+    }
+    [polygonProxies removeAllObjects];
+}
+
 
 #pragma mark Public APIs iOS 7
 
@@ -532,7 +578,7 @@
 // Delegate for >= iOS 7
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
 {
-    return (MKOverlayRenderer *)CFDictionaryGetValue(mapLine2View, overlay);
+    return (MKOverlayRenderer *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
 // Delegate for < iOS 7
@@ -540,7 +586,7 @@
 // Can be removed when support is dropped for iOS 6 and below.
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {	
-    return (MKOverlayView *)CFDictionaryGetValue(mapLine2View, overlay);
+    return (MKOverlayView *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated

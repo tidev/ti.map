@@ -13,7 +13,9 @@
 	NSMutableArray* annotationsToAdd; // Annotations to add on initial display
 	NSMutableArray* annotationsToRemove; // Annotations to remove on initial display
 	NSMutableArray* routesToAdd; 
-	NSMutableArray* routesToRemove; 
+	NSMutableArray* routesToRemove;
+    NSMutableArray* polygonsToAdd;
+	NSMutableArray* polygonsToRemove;
 	int zoomCount; // Number of times to zoom in/out on initial display
 }
 
@@ -32,5 +34,8 @@
 -(void)zoom:(id)args;
 -(void)addRoute:(id)args;
 -(void)removeRoute:(id)args;
+-(void)addPolygon:(id)args;
+-(void)removePolygon:(id)args;
+-(void)removeAllPolygons:(id)args;
 
 @end

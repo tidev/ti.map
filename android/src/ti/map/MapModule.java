@@ -21,7 +21,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 public class MapModule extends KrollModule
 {
 	public static final String PROPERTY_DRAGGABLE = "draggable";
+	public static final String PROPERTY_POLYGONS = "polygons";
 	public static final String PROPERTY_POINTS = "points";
+	public static final String PROPERTY_HOLES = "holes";
+	public static final String PROPERTY_FILL_COLOR = "fillColor";
+	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
+	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
+	public static final String PROPERTY_GEODESIC_STATUS = "geodesicStatus";
 	public static final String PROPERTY_TRAFFIC = "traffic";
 	public static final String PROPERTY_MAP = "map";
 	public static final String PROPERTY_NEWSTATE = "newState";

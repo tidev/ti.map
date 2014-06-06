@@ -33,14 +33,13 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polygon;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
@@ -53,11 +52,13 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected LatLngBounds preLayoutUpdateBounds;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
+	protected ArrayList<TiPolygon> tipolygons;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
 		super(proxy, activity);
 		timarkers = new ArrayList<TiMarker>();
+		tipolygons = new ArrayList<TiPolygon>();
 	}
 
 	/**
@@ -99,11 +100,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 	}
 
+	@Override
 	protected void onViewCreated()
 	{
 		map = acquireMap();
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
-		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
+		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
 		if (Build.VERSION.SDK_INT < 16) {
 			View rootView = proxy.getActivity().findViewById(android.R.id.content);
 			setBackgroundTransparent(rootView);
@@ -162,6 +164,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if (d.containsKey(MapModule.PROPERTY_COMPASS_ENABLED)) {
 			setCompassEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_COMPASS_ENABLED, true));
 		}
+		if (d.containsKey(MapModule.PROPERTY_POLYGONS)) {
+			Object[] polygons = (Object[]) d.get(MapModule.PROPERTY_POLYGONS);
+			addPolygons(polygons);
+		}
 	}
 
 	@Override
@@ -205,8 +211,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	{
 		map.setMyLocationEnabled(enabled);
 	}
-	
-	protected void setCompassEnabled(boolean enabled) 
+
+	protected void setCompassEnabled(boolean enabled)
 	{
 		map.getUiSettings().setCompassEnabled(enabled);
 	}
@@ -216,12 +222,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.getUiSettings().setMyLocationButtonEnabled(enabled);
 	}
 
-	public float getMaxZoomLevel() 
+	public float getMaxZoomLevel()
 	{
 		return map.getMaxZoomLevel();
 	}
-		
-	public float getMinZoomLevel() 
+
+	public float getMinZoomLevel()
 	{
 		return map.getMinZoomLevel();
 	}
@@ -252,7 +258,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		float zoom = 0;
 
 		// In the setLocation() method, the old map module allows the user to provide two more properties - "animate" and "regionFit".
-		// In this map module, no matter "regionFit" is set to true or false, we will always make sure the specified 
+		// In this map module, no matter "regionFit" is set to true or false, we will always make sure the specified
 		// latitudeDelta / longitudeDelta bounds are centered on screen at the greatest possible zoom level.
 		boolean anim = animate;
 		if (dict.containsKey(TiC.PROPERTY_ANIMATE)) {
@@ -465,6 +471,64 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		r.setRoute(null);
 	}
 
+	protected void addPolygons(Object[] polygons)
+	{
+		for (int i = 0; i < polygons.length; i++) {
+			Object obj = polygons[i];
+			if (obj instanceof PolygonProxy) {
+				PolygonProxy poly = (PolygonProxy) obj;
+				addPolygon(poly);
+			}
+		}
+	}
+
+	public void addPolygon(PolygonProxy p)
+	{
+		TiPolygon tiPolygon = p.getTiPolygon();
+		// check if polygon already added.
+		if (tiPolygon != null) {
+			removePolygon(tiPolygon);
+		}
+
+		p.processOptions();
+		Polygon polygon = map.addPolygon(p.getOptions());
+		tiPolygon = new TiPolygon(polygon, p);
+		p.setTiPolygon(tiPolygon);
+		tipolygons.add(tiPolygon);
+	}
+
+	public void removePolygon(Object p)
+	{
+		TiPolygon tipolygon = null;
+		if (p instanceof TiPolygon) {
+			tipolygon = (TiPolygon) p;
+		} else if (p instanceof PolygonProxy) {
+			tipolygon = ((PolygonProxy) p).getTiPolygon();
+		}
+
+		if (tipolygon != null && tipolygons.remove(tipolygon)) {
+			tipolygon.getPolygon().remove();
+			PolygonProxy proxy = tipolygon.getProxy();
+			if (proxy != null) {
+				proxy.setTiPolygon(null);
+			}
+		}
+	}
+
+	protected void removeAllPolygons()
+	{
+		for (int i = 0; i < tipolygons.size(); i++) {
+			TiPolygon tipolygon = tipolygons.get(i);
+			tipolygon.getPolygon().remove();
+			PolygonProxy proxy = tipolygon.getProxy();
+			if (proxy != null) {
+				proxy.setTiPolygon(null);
+			}
+		}
+		tipolygons.clear();
+	}
+
+
 	public void changeZoomLevel(int delta)
 	{
 		CameraUpdate camUpdate = CameraUpdateFactory.zoomBy(delta);
@@ -492,7 +556,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
-	
+
 	public void fireLongClickEvent(LatLng point)
 	{
 		KrollDict d = new KrollDict();
@@ -557,7 +621,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 
 	}
-	
+
 	@Override
 	public void onMapLongClick(LatLng point)
 	{
@@ -674,12 +738,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		return false;
 	}
-	
-	public void snapshot() 
+
+	public void snapshot()
 	{
 		map.snapshot(new GoogleMap.SnapshotReadyCallback()
 		{
-			
+
 			@Override
 			public void onSnapshotReady(Bitmap snapshot)
 			{

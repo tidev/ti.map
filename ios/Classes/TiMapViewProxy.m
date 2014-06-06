@@ -9,6 +9,7 @@
 #import "TiMapView.h"
 #import "TiMapModule.h"
 #import "TiMapRouteProxy.h"
+#import "TiMapPolygonProxy.h"
 
 @implementation TiMapViewProxy
 
@@ -30,6 +31,8 @@
 	RELEASE_TO_NIL(annotationsToRemove);
 	RELEASE_TO_NIL(routesToAdd);
 	RELEASE_TO_NIL(routesToRemove);
+    RELEASE_TO_NIL(polygonsToAdd);
+	RELEASE_TO_NIL(polygonsToRemove);
 	[super _destroy];
 }
 
@@ -88,6 +91,16 @@
         [ourView removeRoute:arg];
     }
     
+    for (id arg in polygonsToAdd)
+    {
+        [ourView addPolygon:arg];
+    }
+    
+    for (id arg in polygonsToRemove)
+    {
+        [ourView removePolygon:arg];
+    }
+    
 	[ourView selectAnnotation:selectedAnnotation];
 	if (zoomCount > 0) {
 		for (int i=0; i < zoomCount; i++) {
@@ -105,6 +118,8 @@
 	RELEASE_TO_NIL(annotationsToRemove);
 	RELEASE_TO_NIL(routesToAdd);
 	RELEASE_TO_NIL(routesToRemove);
+    RELEASE_TO_NIL(polygonsToAdd);
+	RELEASE_TO_NIL(polygonsToRemove);
 	
 	[super viewDidAttach];
 }
@@ -408,6 +423,93 @@
 		}
 	}
 }
+
+-(void)addPolygon:(id)arg
+{
+	ENSURE_SINGLE_ARG(arg,TiMapPolygonProxy);
+    
+	if ([self viewAttached])
+	{
+		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolygon:arg];}, NO);
+	}
+	else
+	{
+		if (polygonsToAdd==nil)
+		{
+			polygonsToAdd = [[NSMutableArray alloc] init];
+		}
+		if (polygonsToRemove!=nil && [polygonsToRemove containsObject:arg])
+		{
+			[polygonsToRemove removeObject:arg];
+		}
+		else
+		{
+			[polygonsToAdd addObject:arg];
+		}
+	}
+}
+
+-(void)removePolygon:(id)arg
+{
+	ENSURE_SINGLE_ARG(arg,TiMapPolygonProxy);
+    
+	if ([self viewAttached])
+	{
+		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removePolygon:arg];}, NO);
+	}
+	else
+	{
+		if (polygonsToRemove==nil)
+		{
+			polygonsToRemove = [[NSMutableArray alloc] init];
+		}
+		if (polygonsToAdd!=nil && [polygonsToAdd containsObject:arg])
+		{
+			[polygonsToAdd removeObject:arg];
+		}
+		else
+		{
+			[polygonsToRemove addObject:arg];
+		}
+	}
+}
+
+-(void)removeAllPolygons:(id)args
+{
+    if ([self viewAttached])
+	{
+		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllPolygons];}, NO);
+	}
+}
+
+-(void)setPolygons:(id)arg{
+    ENSURE_TYPE(arg,NSArray);
+    
+    NSMutableArray* initialPolygons = [NSMutableArray arrayWithCapacity:[arg count]];
+    for (id poly in arg) {
+        ENSURE_TYPE(poly, TiMapPolygonProxy);
+        [initialPolygons addObject:poly];
+    }
+    
+    BOOL attached = [self viewAttached];
+ 
+    if(attached) {
+        TiThreadPerformOnMainThread(^{
+            [(TiMapView*)[self view] addPolygons:polygonsToAdd];
+        }, NO);
+        [initialPolygons release];
+    }
+    else {
+        RELEASE_TO_NIL(polygonsToAdd);
+        RELEASE_TO_NIL(polygonsToRemove);
+        
+        polygonsToAdd = [[NSMutableArray alloc] initWithArray:initialPolygons];
+    }
+}
+
+
+
+
 
 #pragma mark Public APIs iOS 7
 
