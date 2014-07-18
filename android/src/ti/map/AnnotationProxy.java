@@ -294,11 +294,17 @@ public class AnnotationProxy extends KrollProxy
 	}
 
 	@Override
+	public boolean hasProperty(String name)
+	{
+		return (super.getProperty(name) != null);
+	}
+
+	@Override
 	public void onPropertyChanged(String name, Object value)
 	{
 		super.onPropertyChanged(name, value);
 
-		if (marker == null) {
+		if (marker == null || value == null) {
 			return;
 		}
 
