@@ -168,6 +168,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy)
 	{
 
+		if (newValue == null) {
+			return;
+		}
+
 		if (key.equals(TiC.PROPERTY_USER_LOCATION)) {
 			setUserLocationEnabled(TiConvert.toBoolean(newValue));
 		} else if (key.equals(MapModule.PROPERTY_USER_LOCATION_BUTTON)) {
@@ -256,21 +260,22 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		// latitudeDelta / longitudeDelta bounds are centered on screen at the greatest possible zoom level.
 		boolean anim = animate;
 		if (dict.containsKey(TiC.PROPERTY_ANIMATE)) {
-			anim = TiConvert.toBoolean(dict, TiC.PROPERTY_ANIMATE);
+			anim = TiConvert.toBoolean(dict, TiC.PROPERTY_ANIMATE, animate);
 		}
 		if (dict.containsKey(MapModule.PROPERTY_BEARING)) {
-			bearing = TiConvert.toFloat(dict, MapModule.PROPERTY_BEARING);
+			bearing = TiConvert.toFloat(dict, MapModule.PROPERTY_BEARING, 0);
 		}
 		if (dict.containsKey(MapModule.PROPERTY_TILT)) {
-			tilt = TiConvert.toFloat(dict, MapModule.PROPERTY_TILT);
+			tilt = TiConvert.toFloat(dict, MapModule.PROPERTY_TILT, 0);
 		}
 		if (dict.containsKey(MapModule.PROPERTY_ZOOM)) {
-			zoom = TiConvert.toFloat(dict, MapModule.PROPERTY_ZOOM);
+			zoom = TiConvert.toFloat(dict, MapModule.PROPERTY_ZOOM, 0);
 		}
-		if (dict.containsKey(TiC.PROPERTY_LATITUDE)) {
+		// Workaround for toDouble since there is no method that allows you to set defaults
+		if (dict.containsKey(TiC.PROPERTY_LATITUDE) && dict.get(TiC.PROPERTY_LATITUDE) != null) {
 			latitude = TiConvert.toDouble(dict, TiC.PROPERTY_LATITUDE);
 		}
-		if (dict.containsKey(TiC.PROPERTY_LONGITUDE)) {
+		if (dict.containsKey(TiC.PROPERTY_LONGITUDE) && dict.get(TiC.PROPERTY_LONGITUDE) != null) {
 			longitude = TiConvert.toDouble(dict, TiC.PROPERTY_LONGITUDE);
 		}
 
@@ -281,11 +286,11 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		cameraBuilder.tilt(tilt);
 		cameraBuilder.zoom(zoom);
 
-		if (dict.containsKey(TiC.PROPERTY_LATITUDE_DELTA)) {
+		if (dict.containsKey(TiC.PROPERTY_LATITUDE_DELTA) && dict.get(TiC.PROPERTY_LATITUDE_DELTA) != null) {
 			latitudeDelta = TiConvert.toDouble(dict, TiC.PROPERTY_LATITUDE_DELTA);
 		}
 
-		if (dict.containsKey(TiC.PROPERTY_LONGITUDE_DELTA)) {
+		if (dict.containsKey(TiC.PROPERTY_LONGITUDE_DELTA) && dict.get(TiC.PROPERTY_LONGITUDE_DELTA) != null) {
 			longitudeDelta = TiConvert.toDouble(dict, TiC.PROPERTY_LONGITUDE_DELTA);
 		}
 

@@ -93,11 +93,15 @@ public class RouteProxy extends KrollProxy{
 	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
 		if (loc instanceof HashMap) {
 			HashMap<String, String> point = (HashMap<String, String>) loc;
-			LatLng location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
-			if (list) {
-				locationArray.add(location);
-			} else {
-				options.add(location);
+			Object latitude = point.get(TiC.PROPERTY_LATITUDE);
+			Object longitude = point.get(TiC.PROPERTY_LONGITUDE);
+			if (longitude != null && latitude != null) {
+				LatLng location = new LatLng(TiConvert.toDouble(latitude), TiConvert.toDouble(longitude));
+				if (list) {
+					locationArray.add(location);
+				} else {
+					options.add(location);
+				}
 			}
 		}
 	}
@@ -151,6 +155,12 @@ public class RouteProxy extends KrollProxy{
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_WIDTH), TiConvert.toFloat(value));
 		}
 		
+	}
+
+	@Override
+	public boolean hasProperty(String name)
+	{
+		return (super.getProperty(name) != null);
 	}
 	
 }
