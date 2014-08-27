@@ -1,7 +1,11 @@
 # Change Log
 <pre>
+v2.2.0    Bumping minsdk to 3.3.0 [TIMOB-17048]
+
 v2.1.6    Handle null values for attributes. [TIMOB-16562]
+
 v2.1.5    Update Google Play Services library and its assets. [TIMOB-16510]
+
 v2.1.4    Implement tilt, bearing, zoom, compassEnabled properties [TIMOB-16180].
           Implement maxZoomLevel, minZoomLevel, update Google Play Services SDK [TIMOB-16180].
           Implement support for taking snapshots of the map [TIMOB-16180]
