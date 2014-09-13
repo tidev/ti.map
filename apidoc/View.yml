@@ -25,7 +25,7 @@ description: |
     You can add [Route](Modules.Map.Route) objects to the map to create paths between
     two or more points of interest.
     
-    To use the `userLocation` proerty in iOS 8 and later, add either the
+    To use the `userLocation` property in iOS 8 and later, add either the
     [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26)
     or
     [`NSLocationAlwaysUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18)
@@ -392,7 +392,7 @@ properties:
         map.
     description: |
         If `true`, the user's location is marked with a pin, and the My Location button will appear in the top
-        right corner of the screen. Starting in iOS 8, permissions must be added to tiapp.xml. Details in description
+        right corner of the screen. Starting in iOS 8, permissions must be added to tiapp.xml. Details in description.
     type: Boolean
     default: false
 
