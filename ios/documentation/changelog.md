@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.0.3  Fixed "userLocation" permissions for iOS 8 [TIMOB-17665]
+
 v2.0.2  Fixed ignoring userLocation property during view creation [TIMOB-12733]
 
 v2.0.1  Fixed annotation not showing leftButton rightButton [TC-3524]
