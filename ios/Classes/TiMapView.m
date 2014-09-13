@@ -64,9 +64,9 @@
         map.delegate = self;
         map.userInteractionEnabled = YES;
         map.autoresizingMask = UIViewAutoresizingNone;
-		if ([TiUtils isIOS8OrGreater]) {
-			map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
-		}
+        if (![TiUtils isIOS8OrGreater]) {
+            map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
+        }
         [self addSubview:map];
         mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
