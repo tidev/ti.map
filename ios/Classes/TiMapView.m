@@ -30,6 +30,7 @@
         CFRelease(mapLine2View);
         mapLine2View = nil;
     }
+	RELEASE_TO_NIL(locationManager);
 	[super dealloc];
 }
 
@@ -62,8 +63,10 @@
         map = [[MKMapView alloc] initWithFrame:CGRectZero];
         map.delegate = self;
         map.userInteractionEnabled = YES;
-        map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"]]; // defaults
         map.autoresizingMask = UIViewAutoresizingNone;
+        if (![TiUtils isIOS8OrGreater]) {
+            map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
+        }
         [self addSubview:map];
         mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
@@ -434,7 +437,29 @@
 -(void)setUserLocation_:(id)value
 {
 	ENSURE_SINGLE_ARG(value,NSObject);
-	[self map].showsUserLocation = [TiUtils boolValue:value];
+
+	// Release the locationManager in case it was already created
+	RELEASE_TO_NIL(locationManager);
+	BOOL userLocation = [TiUtils boolValue:value def:NO];
+	// if userLocation is true and this is iOS 8 or greater, then ask for permission
+	if (userLocation && [TiUtils isIOS8OrGreater]) {
+		// the locationManager needs to be created to permissions
+		locationManager = [[CLLocationManager alloc] init];
+		// set the "userLocation" on the delegate callback to avoid console warnings from the OS
+		locationManager.delegate = self;
+		if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationAlwaysUsageDescription"]){
+			[locationManager requestAlwaysAuthorization];
+		} else if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"]){
+			[locationManager requestWhenInUseAuthorization];
+		} else {
+			NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml.  Starting with iOS8 this is required.");
+		}
+		// Create the map
+		[self map];
+	} else {
+		// else, just apply the userLocation
+		[self map].showsUserLocation = userLocation;
+	}
 }
 
 -(void)setLocation_:(id)location
@@ -528,6 +553,13 @@
 }
 
 #pragma mark Delegates
+
+// Delegate for >= iOS 8
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+	if(status != kCLAuthorizationStatusAuthorized) return;
+	self.map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
+}
 
 // Delegate for >= iOS 7
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
