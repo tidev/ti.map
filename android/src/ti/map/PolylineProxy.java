@@ -75,7 +75,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 		switch (msg.what) {
 			case MSG_SET_POINTS: {
 				result = (AsyncResult) msg.obj;
-				Log.e("PolylineProxy.handleMessage.MSG_SET_POINTS", result.getArg().toString());
+				//Log.e("PolylineProxy.handleMessage.MSG_SET_POINTS", result.getArg().toString());
 				polyline.setPoints(processPoints(result.getArg(), true));
 				result.setResult(null);
 				return true;
@@ -134,7 +134,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	}
 	
 	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
-		if (loc instanceof HashMap) {
+//		if (loc instanceof HashMap) {
 //			HashMap<String, String> point = (HashMap<String, String>) loc;
 //			LatLng location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 			LatLng location = parseLocation(loc);
@@ -143,7 +143,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 			} else {
 				options.add(location);
 			}
-		}
+//		}
 	}
 
 	public ArrayList<LatLng> processPoints(Object points, boolean list) {
@@ -237,8 +237,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 					.get(TiC.PROPERTY_LONGITUDE)));
 		} else if (loc instanceof Object[]) {
 			Object[] temp = (Object[]) loc;
-			location = new LatLng(TiConvert.toDouble(temp[1]),
-					TiConvert.toDouble(temp[0]));
+			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
 		}
 		return location;
 	}

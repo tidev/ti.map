@@ -163,22 +163,12 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 	}
 
-	public void addLocation(Object loc, ArrayList<LatLng> locationArray,
-			boolean list) {
-		if (loc instanceof HashMap) {
-			HashMap<String, String> point = (HashMap<String, String>) loc;
-			
-//			LatLng location = new LatLng(TiConvert.toDouble(point
-//					.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point
-//					.get(TiC.PROPERTY_LONGITUDE)));
-			
-			LatLng location = parseLocation(point);
-			
-			if (list) {
-				locationArray.add(location);
-			} else {
-				options.add(location);
-			}
+	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
+		LatLng location = parseLocation(loc);
+		if (list) {
+			locationArray.add(location);
+		} else {
+			options.add(location);
 		}
 	}
 
@@ -187,7 +177,7 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
 		// multiple points
 		if (points instanceof Object[]) {
-			Object[] pointsArray = (Object[]) points;
+			Object[] pointsArray = (Object[]) points;		
 			for (int i = 0; i < pointsArray.length; i++) {
 				Object obj = pointsArray[i];
 				addLocation(obj, locationArray, list);
@@ -362,8 +352,7 @@ public class PolygonProxy extends KrollProxy implements IShape {
 					.get(TiC.PROPERTY_LONGITUDE)));
 		} else if (loc instanceof Object[]) {
 			Object[] temp = (Object[]) loc;
-			location = new LatLng(TiConvert.toDouble(temp[1]),
-					TiConvert.toDouble(temp[0]));
+			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
 		}
 		return location;
 	}

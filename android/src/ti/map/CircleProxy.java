@@ -79,7 +79,8 @@ public class CircleProxy  extends KrollProxy implements IShape
 		switch (msg.what) {
 			case MSG_SET_CENTER: {
 				result = (AsyncResult) msg.obj;
-				circle.setCenter(parseLocation(result.getArg()));
+				LatLng location = parseLocation(result.getArg());
+				circle.setCenter(location);
 				result.setResult(null);
 				return true;
 			}
@@ -255,8 +256,7 @@ public class CircleProxy  extends KrollProxy implements IShape
 			location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 		} else if (loc instanceof Object[]) {
 			Object[] temp = (Object[]) loc;
-			location = new LatLng(TiConvert.toDouble(temp[1]),
-					TiConvert.toDouble(temp[0]));
+			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
 		}
 //		Log.w("TiApp MAP", "center lat lng " + location.latitude + ", " + location.longitude);
 		return location;
