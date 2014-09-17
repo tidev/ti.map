@@ -16,6 +16,7 @@ import ti.map.MapModule;
 import ti.map.Shape.IShape;
 import android.graphics.Color;
 import android.os.Message;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.model.Circle;
@@ -54,10 +55,11 @@ public class CircleProxy  extends KrollProxy implements IShape
 		this();
 	}
 	
-	private LatLng hashMapToLatLng(Object loc){
-		HashMap<String, String> point = (HashMap<String, String>) loc;
-		return new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
-	}
+//	private LatLng addLocation(Object loc){
+//		HashMap<String, String> point = (HashMap<String, String>) loc;
+//		return new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
+//		return parseLocation(loc);		
+//	}
 	
 	private int toPx(Object size){
 		ViewGroup rootViewGroup = (ViewGroup)TiApplication.getAppCurrentActivity().getWindow().getDecorView().findViewById(android.R.id.content);
@@ -77,7 +79,7 @@ public class CircleProxy  extends KrollProxy implements IShape
 		switch (msg.what) {
 			case MSG_SET_CENTER: {
 				result = (AsyncResult) msg.obj;
-				circle.setCenter(hashMapToLatLng(result.getArg()));
+				circle.setCenter(parseLocation(result.getArg()));
 				result.setResult(null);
 				return true;
 			}
@@ -142,7 +144,7 @@ public class CircleProxy  extends KrollProxy implements IShape
 		options = new CircleOptions();
 
 		if (hasProperty(MapModule.PROPERTY_CENTER)) {
-			options.center(hashMapToLatLng(getProperty(MapModule.PROPERTY_CENTER)));
+			options.center(parseLocation(getProperty(MapModule.PROPERTY_CENTER)));
 		}
 		
 		if (hasProperty(MapModule.PROPERTY_RADIUS)) {
@@ -162,11 +164,11 @@ public class CircleProxy  extends KrollProxy implements IShape
 		}
 		
 		if (hasProperty(TiC.PROPERTY_ZINDEX)) {
-			options.zIndex(TiConvert.toFloat((String)getProperty(TiC.PROPERTY_ZINDEX)));
+			options.zIndex(TiConvert.toFloat(getProperty(TiC.PROPERTY_ZINDEX)));
 		}
 		
 		if (hasProperty(TiC.PROPERTY_VISIBLE)) {
-			options.visible(TiConvert.toBoolean((String)getProperty(TiC.PROPERTY_VISIBLE)));
+			options.visible(TiConvert.toBoolean(getProperty(TiC.PROPERTY_VISIBLE)));
 		}	
 	}
 	
@@ -243,5 +245,21 @@ public class CircleProxy  extends KrollProxy implements IShape
 		return this.marker != null ? this.marker.getProxy() : null;
 	}	
 	
+	// A location can either be a an array of longitude, latitude pairings or
+	// an array of longitude, latitude objects.
+	// e.g. [123.33, 34.44], OR {longitude: 123.33, latitude, 34.44}
+	private LatLng parseLocation(Object loc) {
+		LatLng location = null;
+		if (loc instanceof HashMap) {
+			HashMap<String, String> point = (HashMap<String, String>) loc;
+			location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
+		} else if (loc instanceof Object[]) {
+			Object[] temp = (Object[]) loc;
+			location = new LatLng(TiConvert.toDouble(temp[1]),
+					TiConvert.toDouble(temp[0]));
+		}
+//		Log.w("TiApp MAP", "center lat lng " + location.latitude + ", " + location.longitude);
+		return location;
+	}
 	
 }

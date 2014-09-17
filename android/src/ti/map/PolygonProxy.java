@@ -220,10 +220,10 @@ public class PolygonProxy extends KrollProxy implements IShape {
 				ArrayList<LatLng> holeContainerArray = new ArrayList<LatLng>();
 				
 				Object[] pointsArray = (Object[]) singleHoleArray[h];
-
-//				if (pointsArray instanceof Object[]) {
-//					for (int i = 0; i < pointsArray.length; i++) {
-//						Object obj = pointsArray[i];
+				if (pointsArray instanceof Object[]) {
+					for (int i = 0; i < pointsArray.length; i++) {
+						Object obj = pointsArray[i];
+						
 //						if (obj instanceof HashMap) {
 //							HashMap<String, String> point = (HashMap<String, String>) obj;
 //							LatLng location = new LatLng(
@@ -233,10 +233,11 @@ public class PolygonProxy extends KrollProxy implements IShape {
 //											.get(TiC.PROPERTY_LONGITUDE)));
 //							holeContainerArray.add(location);
 //						}
-//					}
-//				}
 
-				holeContainerArray.add(parseLocation(pointsArray));				
+						holeContainerArray.add(parseLocation(obj));
+						
+					}
+				}	
 				
 				if (holeContainerArray.size() > 0) {
 					if (!list) {

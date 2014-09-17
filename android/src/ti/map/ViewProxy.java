@@ -911,8 +911,7 @@ public class ViewProxy extends TiViewProxy {
 		if (TiApplication.isUIThread()) {
 			handleRemoveAllCircles();
 		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(
-					MSG_REMOVE_ALL_CIRCLES));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_CIRCLES));
 		}
 	}
 

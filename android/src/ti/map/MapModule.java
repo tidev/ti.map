@@ -43,6 +43,7 @@ public class MapModule extends KrollModule
 
 	public static final String PROPERTY_POLYGON = "polygon";
 	public static final String PROPERTY_POLYLINE = "polyline";
+	public static final String PROPERTY_CIRCLE = "circle";	
 	public static final String PROPERTY_POLYGONS = "polygons";
 	public static final String PROPERTY_POLYLINES = "polylines";
 	public static final String PROPERTY_CENTER = "center";
