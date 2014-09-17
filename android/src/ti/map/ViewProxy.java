@@ -626,7 +626,6 @@ public class ViewProxy extends TiViewProxy {
 
 	/**
 	 * Polygons
-	 * 
 	 **/
 	@Kroll.method
 	public void addPolygon(PolygonProxy polygon) {
