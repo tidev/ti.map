@@ -28,3 +28,5 @@ android/.classpath
 android/.settings
 
 android/launch-app
+nbproject
+
