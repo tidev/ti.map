@@ -327,6 +327,7 @@
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
 					"$(TITANIUM_BASE_SDK3)",
+					"$(TITANIUM_BASE_SDK4)",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_SEARCH_PATHS = "";
@@ -378,6 +379,7 @@
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
 					"$(TITANIUM_BASE_SDK3)",
+					"$(TITANIUM_BASE_SDK4)",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
