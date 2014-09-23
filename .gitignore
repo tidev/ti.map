@@ -27,6 +27,6 @@ android/ant_clean
 android/.classpath
 android/.settings
 
-android/launch-app
+android/launch-*
 nbproject
 

@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-@Kroll.proxy(name = "Polygon", creatableInModule = MapModule.class, propertyAccessors = {
+@Kroll.proxy(name = "Polygon", creatableInModule=MapModule.class, propertyAccessors = {
 
 PolygonProxy.PROPERTY_FILL_COLOR, PolygonProxy.PROPERTY_STROKE_COLOR,
 		PolygonProxy.PROPERTY_STROKE_WIDTH, PolygonProxy.PROPERTY_ZINDEX,
