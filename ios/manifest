@@ -15,4 +15,4 @@ name: map
 moduleid: ti.map
 guid: fee93b77-8eb3-418c-8f04-013664c4af83
 platform: iphone
-minsdk: 3.2.0.GA
+minsdk: 3.4.0
