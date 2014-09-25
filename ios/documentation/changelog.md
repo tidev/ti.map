@@ -1,6 +1,6 @@
 # Change Log
 <pre>
-v2.0.3  Fixed "userLocation" permissions for iOS 8 [TIMOB-17665]
+v2.0.4  Fixed "userLocation" permissions for iOS 8 [TIMOB-17665]
         Bumping minsdk to 3.4.0 [TIMODOPEN-437]
 
 v2.0.2  Fixed ignoring userLocation property during view creation [TIMOB-12733]
