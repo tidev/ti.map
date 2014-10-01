@@ -1,5 +1,4 @@
 # Titanium Map Module [![Build Status](https://travis-ci.org/appcelerator-modules/ti.map.svg)](https://travis-ci.org/appcelerator-modules/ti.map)
-======
 
 This is the Map Module for Titanium.
 
