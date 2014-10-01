@@ -5,9 +5,8 @@ This is the Map Module for Titanium.
 
 ## Contributors
 
-Please see https://github.com/appcelerator-modules/ti.map/graphs/contributors
-
-Interested in contributing? Read the [contributors/committer's](https://wiki.appcelerator.org/display/community/Home) guide.
+* Please see https://github.com/appcelerator-modules/ti.map/graphs/contributors
+* Interested in contributing? Read the [contributors/committer's](https://wiki.appcelerator.org/display/community/Home) guide.
 
 ## Legal
 
