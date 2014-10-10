@@ -82,19 +82,19 @@ public class PolylineProxy extends KrollProxy implements IShape
 			}
 			case MSG_SET_STROKE_WIDTH: {
 				result = (AsyncResult) msg.obj;
-				options.width((Float)result.getArg());
+				polyline.setWidth((Float)result.getArg());
 				result.setResult(null);
 				return true;
 			}
 			case MSG_SET_STROKE_COLOR: {
 				result = (AsyncResult) msg.obj;
-				options.color((Integer)result.getArg());
+				polyline.setColor((Integer)result.getArg());
 				result.setResult(null);
 				return true;
 			}
 			case MSG_SET_ZINDEX: {
 				result = (AsyncResult) msg.obj;
-				options.zIndex((Float)result.getArg());
+				polyline.setZIndex((Float)result.getArg());
 				result.setResult(null);
 				return true;
 			}
