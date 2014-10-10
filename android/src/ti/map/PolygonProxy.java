@@ -96,25 +96,25 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		}
 		case MSG_SET_FILL_COLOR: {
 			result = (AsyncResult) msg.obj;
-			options.fillColor((Integer) result.getArg());
+			polygon.setFillColor((Integer) result.getArg());
 			result.setResult(null);
 			return true;
 		}
 		case MSG_SET_STROKE_WIDTH: {
 			result = (AsyncResult) msg.obj;
-			options.strokeWidth((Float) result.getArg());
+			polygon.setStrokeWidth((Float) result.getArg());
 			result.setResult(null);
 			return true;
 		}
 		case MSG_SET_STROKE_COLOR: {
 			result = (AsyncResult) msg.obj;
-			options.strokeColor((Integer) result.getArg());
+			polygon.setStrokeColor((Integer) result.getArg());
 			result.setResult(null);
 			return true;
 		}
 		case MSG_SET_ZINDEX: {
 			result = (AsyncResult) msg.obj;
-			options.zIndex((Float) result.getArg());
+			polygon.setZIndex((Float) result.getArg());
 			result.setResult(null);
 			return true;
 		}
