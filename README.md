@@ -12,9 +12,7 @@ This is the Map Module for Titanium.
 This module is Copyright (c) 2010-2014 by Appcelerator, Inc. All Rights Reserved. Usage of this module is subject to 
 the Terms of Service agreement with Appcelerator, Inc.  
 
-
-
-
+#About this fork
 
 This is a fork of the original ti.map modules which add Shape support for maps on Android.
 
