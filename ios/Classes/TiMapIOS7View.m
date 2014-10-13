@@ -6,6 +6,7 @@
  */
 
 #import "TiMapIOS7View.h"
+#import "TiMapUtils.h"
 
 @implementation TiMapIOS7View
 
@@ -37,31 +38,43 @@
 
 -(void)setCamera_:(TiMapCameraProxy*)value
 {
-    [self map].camera = [value camera];
+    TiThreadPerformOnMainThread(^{
+        [self map].camera = [value camera];
+    }, YES);
 }
 -(TiMapCameraProxy*)camera
 {
-    return [[[TiMapCameraProxy alloc] initWithCamera:[self map].camera] autorelease];
+    return [TiMapUtils returnValueOnMainThread:^id{
+        return [[TiMapCameraProxy alloc] initWithCamera:[self map].camera];
+    }];
 }
 
 -(void)setPitchEnabled_:(id)value
 {
-    [self map].pitchEnabled = [TiUtils boolValue:value];
+    TiThreadPerformOnMainThread(^{
+        [self map].pitchEnabled = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setRotateEnabled_:(id)value
 {
-    [self map].rotateEnabled = [TiUtils boolValue:value];
+    TiThreadPerformOnMainThread(^{
+        [self map].rotateEnabled = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsBuildings_:(id)value
 {
-    [self map].showsBuildings = [TiUtils boolValue:value];
+    TiThreadPerformOnMainThread(^{
+        [self map].showsBuildings = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsPointsOfInterest_:(id)value
 {
-    [self map].showsPointsOfInterest = [TiUtils boolValue:value];
+    TiThreadPerformOnMainThread(^{
+        [self map].showsPointsOfInterest = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)animateCamera:(id)args
@@ -85,13 +98,15 @@
     
     // Apple says to use `mapView:regionDidChangeAnimated:` instead of `completion`
     // to know when the camera animation has completed
-    [UIView animateWithDuration:(duration / 1000)
-                          delay:(delay / 1000)
-                        options:curve
-                     animations:^{
-                         [self map].camera = [cameraProxy camera];
-                     }
-                     completion:nil];
+    TiThreadPerformOnMainThread(^{
+        [UIView animateWithDuration:(duration / 1000)
+                              delay:(delay / 1000)
+                            options:curve
+                         animations:^{
+                             [self map].camera = [cameraProxy camera];
+                         }
+                         completion:nil];
+    }, NO);
 }
 
 -(void)showAnnotations:(id)args

@@ -7,22 +7,29 @@
 
 #import "TiMapIOS7ViewProxy.h"
 #import "TiMapIOS7View.h"
+#import "TiMapUtils.h"
 
 @implementation TiMapIOS7ViewProxy
 
 -(TiMapCameraProxy*)camera
 {
-    return [(TiMapIOS7View *)[self view] camera];
+    return [TiMapUtils returnValueOnMainThread:^id{
+        return [(TiMapIOS7View *)[self view] camera];
+    }];
 }
 
 -(void)animateCamera:(id)args
 {
-    [(TiMapIOS7View *)[self view] animateCamera:args];
+    TiThreadPerformOnMainThread(^{
+        [(TiMapIOS7View *)[self view] animateCamera:args];
+    }, NO);
 }
 
 -(void)showAnnotations:(id)args
 {
-    [(TiMapIOS7View *)[self view] showAnnotations:args];
+    TiThreadPerformOnMainThread(^{
+        [(TiMapIOS7View *)[self view] showAnnotations:args];
+    }, NO);
 }
 
 @end
