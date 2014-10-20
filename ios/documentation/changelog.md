@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.1.0  Added support for polygons, polylines, an circles.
+
 v2.0.6  Fixed map not responding to touch after animating camera [TIMOB-17749]
 
 v2.0.5  Fixed exception when setting "centerCoordinate" on camera [TIMOB-17659]

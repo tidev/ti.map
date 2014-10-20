@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.4.0  Added support for polygons, polylines, an circles.
+
 v2.2.0    Bumping minsdk to 3.3.0 [TIMOB-17048]
 
 v2.1.6    Handle null values for attributes. [TIMOB-16562]

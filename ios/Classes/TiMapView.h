@@ -27,10 +27,10 @@
 	BOOL ignoreRegionChanged;
 	BOOL forceRender;
 	MKCoordinateRegion region;
-	
-    // routes
-    // dictionaries for object tracking and association
-    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)
+    NSMutableArray *polygonProxies;
+
+    // dictionary for object tracking and association
+    CFMutableDictionaryRef mapObjects2View;   // MKOverlay Object -> MKOverlay Object's renderer
 	
 	// Location manager needed for iOS 8 permissions
 	CLLocationManager *locationManager;
@@ -57,6 +57,11 @@
 -(void)zoom:(id)args;
 -(void)addRoute:(id)args;
 -(void)removeRoute:(id)args;
+-(void)addPolygon:(id)args;
+-(void)addPolygons:(id)args;
+-(void)removePolygon:(id)args;
+-(void)removePolygon:(id)args remove:(BOOL)r;
+-(void)removeAllPolygons;
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 
 #pragma mark Utils

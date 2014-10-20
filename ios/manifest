@@ -3,7 +3,7 @@
 # during compilation, packaging, distribution, etc.
 #
 
-version: 2.0.6
+version: 2.1.0
 apiversion: 2
 description: External version of Map module
 author: Jeff Haynie & Jon Alter
