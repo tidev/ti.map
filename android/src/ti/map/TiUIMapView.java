@@ -69,7 +69,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
-	
+
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
 		super(proxy, activity);
 		timarkers = new ArrayList<TiMarker>();
@@ -81,7 +81,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	/**
 	 * Traverses through the view hierarchy to locate the SurfaceView and set
 	 * the background to transparent.
-	 * 
+	 *
 	 * @param v
 	 *            the root view
 	 */
@@ -596,7 +596,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	 * Polyline
 	 */
 	public void addPolyline(PolylineProxy p) {
-		// check if polygon already added.
+		// check if polyline already added.
 		if (p.getPolyline() != null) {
 			return;
 		}
@@ -641,41 +641,41 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	}
 
 	public void fireShapeClickEvent(LatLng clickPosition, IShape shapeProxy, String clickSource) {
-		
+
 		KrollDict d = new KrollDict();
 
 		TiMarker tiMarker = shapeProxy.getTiMarker();
 		String title = null;
 		String subtitle = null;
-		
+
 		if(tiMarker != null) {
-			AnnotationProxy annoProxy = tiMarker.getProxy(); 
+			AnnotationProxy annoProxy = tiMarker.getProxy();
 			TiMapInfoWindow infoWindow = annoProxy.getMapInfoWindow();
 			if (infoWindow != null) {
 				title = infoWindow.getTitle();
 				subtitle = infoWindow.getSubtitle();
 			}
-			
+
 			d.put(TiC.PROPERTY_ANNOTATION, annoProxy);
 			d.put(TiC.PROPERTY_TITLE, title);
 			d.put(TiC.PROPERTY_SUBTITLE, subtitle);
 		}
-		
+
 		d.put(TiC.PROPERTY_LATITUDE, clickPosition.latitude);
-		d.put(TiC.PROPERTY_LONGITUDE, clickPosition.longitude);		
+		d.put(TiC.PROPERTY_LONGITUDE, clickPosition.longitude);
 
 		d.put(MapModule.PROPERTY_MAP, proxy);
 		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
 		d.put(TiC.PROPERTY_SOURCE, shapeProxy);
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
-		
+
 		// Log.e("TiApplication", "*****************");
 		// Log.e("TiApplication", TiC.EVENT_CLICK);
 		// Log.e("TiApplication", d.toString());
-		
+
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
-	}	
-	
+	}
+
 	public void fireClickEvent(Marker marker, AnnotationProxy annoProxy,
 			String clickSource) {
 		KrollDict d = new KrollDict();
@@ -697,7 +697,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
-		
+
 	public void fireLongClickEvent(LatLng point) {
 		KrollDict d = new KrollDict();
 		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
@@ -764,14 +764,14 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 			selectedAnnotation = null;
 			return;
 		}
-		
+
 		// currentCircles
 		if(currentCircles.size() > 0) {
 			for (CircleProxy circleProxy : currentCircles) {
-				
+
 				Circle circle = circleProxy.getCircle();
 			    LatLng center = circle.getCenter();
-			    
+
 			    double radius = circle.getRadius();
 			    float[] distance = new float[1];
 			    Location.distanceBetween(point.latitude, point.longitude, center.latitude, center.longitude, distance);
@@ -779,7 +779,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 				if(clicked) {
 					fireShapeClickEvent(point, circleProxy, MapModule.PROPERTY_CIRCLE);
 				}
-			}		
+			}
 			return;
 		}
 
@@ -802,13 +802,13 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 
 			double baseVal = 2;
 			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
-			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude); 
+			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude);
 			double side2 =  b.northeast.longitude > b.southwest.longitude ? (b.northeast.longitude - b.southwest.longitude ) : (b.southwest.longitude - b.northeast.longitude );
 			double diagonal = Math.sqrt((side1*side1)+(side2*side2));
 			double val = diagonal / map.getCameraPosition().zoom;
-	
+
 			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(currentPolylines, point, val);
-		
+
 			boundary = null;
 			if(clickedPolylines.size() > 0) {
 				for (PolylineProxy polylineProxy : clickedPolylines) {

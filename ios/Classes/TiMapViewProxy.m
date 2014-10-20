@@ -69,7 +69,7 @@
 
 -(void)viewDidAttach
 {
-	ENSURE_UI_THREAD_0_ARGS;
+    ENSURE_UI_THREAD_0_ARGS;
 	TiMapView * ourView = (TiMapView *)[self view];
 
     for (id arg in annotationsToAdd) {

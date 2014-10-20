@@ -4,9 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
- 
-#import "TiBase.h"
+
+
 #import "TiMapView.h"
+#import "TiBase.h"
 #import "TiUtils.h"
 #import "TiMapModule.h"
 #import "TiMapAnnotationProxy.h"
@@ -31,6 +32,7 @@
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
+    RELEASE_TO_NIL(tapInterceptor);
 	RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
 	[super dealloc];
@@ -71,10 +73,26 @@
         }
         [self addSubview:map];
         mapObjects2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        [self registerTouchEvents];
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
         loaded = YES;
     }
     return map;
+}
+
+-(void)registerTouchEvents
+{
+    tapInterceptor = [[WildcardGestureRecognizer alloc] init];
+    tapInterceptor.touchesBeganCallback = ^(NSSet * touches, UIEvent * event) {
+        UITouch *touch = [touches anyObject];
+        CGPoint point = [touch locationInView:map];
+
+        CLLocationCoordinate2D coord = [map convertPoint:point toCoordinateFromView:map];
+        MKMapPoint mapPoint = MKMapPointForCoordinate(coord);
+        [self handlePolygonClick:mapPoint];
+
+    };
+    [map addGestureRecognizer:tapInterceptor];
 }
 
 - (id)accessibilityElement
@@ -907,6 +925,23 @@
 
 #pragma mark Event generation
 
+-(BOOL)handlePolygonClick:(MKMapPoint)point
+{
+    for (int i=0; i < [polygonProxies count]; i++) {
+        TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
+
+        MKPolygon *poly = proxy.polygon;
+        MKPolygonRenderer *polygonRenderer = proxy.polygonRenderer;
+
+        CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
+        BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
+        if (inPolygon) {
+            [self fireShapeClickEvent:poly point:point sourceType:VIEW_TYPE_POLYGON];
+        }
+    }
+}
+
+
 - (void)fireClickEvent:(MKAnnotationView *) pinview source:(NSString *)source
 {
 	if (ignoreClicks)
@@ -920,13 +955,7 @@
 		return;
 	}
 
-	TiProxy * ourProxy = [self proxy];
-	BOOL parentWants = [ourProxy _hasListeners:@"click"];
-	BOOL viewWants = [viewProxy _hasListeners:@"click"];
-	if(!parentWants && !viewWants)
-	{
-		return;
-	}
+    TiProxy * mapProxy = [self proxy];
 	
 	id title = [viewProxy title];
 	if (title == nil)
@@ -938,17 +967,50 @@
 	id clicksource = source ? source : (id)[NSNull null];
 	
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
-			clicksource,@"clicksource",	viewProxy,@"annotation",	ourProxy,@"map",
-			title,@"title",			indexNumber,@"index",		nil];
+			clicksource,@"clicksource",	viewProxy,@"annotation", mapProxy,@"map",
+			title,@"title",	indexNumber,@"index", nil];
 
-	if (parentWants)
-	{
-		[ourProxy fireEvent:@"click" withObject:event];
-	}
-	if (viewWants)
-	{
-		[viewProxy fireEvent:@"click" withObject:event];
-	}
+    [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
+}
+
+- (void)fireShapeClickEvent:(id)proxy point:(MKMapPoint)point sourceType:(NSString*)sourceType {
+    if (ignoreClicks)
+    {
+        return;
+    }
+
+    TiProxy * mapProxy = [self proxy];
+    CLLocationCoordinate2D coord = MKCoordinateForMapPoint(point);
+
+    NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
+    NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
+
+    NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:sourceType,@"clicksource",
+                            mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+
+    [self doClickEvent:proxy mapProxy:mapProxy event:event];
+}
+
+// Common functionality to fire event on map proxy and view proxy objects
+- (void)doClickEvent:(id)viewProxy mapProxy:(id)mapProxy event:(NSDictionary*)event
+{
+
+    BOOL parentWants = [mapProxy _hasListeners:@"click"];
+    BOOL viewWants;
+    if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
+        viewWants = [viewProxy _hasListeners:@"click"];
+    } else {
+        viewWants = FALSE;
+    }
+
+    if (parentWants)
+    {
+        [mapProxy fireEvent:@"click" withObject:event];
+    }
+    if (viewWants)
+    {
+        [viewProxy fireEvent:@"click" withObject:event];
+    }
 }
 
 
