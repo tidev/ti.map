@@ -27,8 +27,8 @@ properties:
     type: String
     default: black
 
-  - name: width
-    summary: Line width in pixels to use when drawing the polyline.
+  - name: strokeWidth
+    summary: Line width to use when drawing the polyline.
     type: Number
     default: 10
 

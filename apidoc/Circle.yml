@@ -22,7 +22,7 @@ properties:
   - name: radius
     summary: The radius of the circle, specified in meters. It should be zero or greater.
     availability: creation
-    type: Array<Array<MapPointType>>
+    type: Integer
     optional: true
 
   - name: fillColor
@@ -33,7 +33,7 @@ properties:
     type: String
     default: black
 
-  - name: borderColor
+  - name: strokeColor
     summary: |
         Color to use for the border of the circle, as a color name or hex triplet.
     description: |
@@ -41,8 +41,8 @@ properties:
     type: String
     default: black
 
-  - name: borderWidth
-    summary: Line width in pixels to use when drawing the circle.
+  - name: strokeWidth
+    summary: Line width to use when drawing the circle.
     type: Number
     default: 10
 

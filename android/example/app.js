@@ -40,7 +40,7 @@ var rows = [
     require('tests/annotations'),
     require('tests/routes'),
     require('tests/3d'),
-    require('tests/shapes')
+    require('tests/drawing')
 ];
 
 if (IOS) {
