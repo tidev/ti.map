@@ -18,7 +18,6 @@
     MKPolygon *polygon;
     MKPolygonRenderer *polygonRenderer;
 
-//    unsigned int zIndex;
     float strokeWidth;
     TiColor *fillColor;
     TiColor *strokeColor;

@@ -34,6 +34,8 @@
     RELEASE_TO_NIL(polygonsToRemove);
     RELEASE_TO_NIL(circlesToAdd);
     RELEASE_TO_NIL(circlesToRemove);
+    RELEASE_TO_NIL(polylinesToAdd);
+    RELEASE_TO_NIL(polylinesToRemove);
 	[super _destroy];
 }
 
@@ -111,6 +113,17 @@
     {
         [ourView removeCircle:arg];
     }
+
+    for (id arg in polylinesToAdd)
+    {
+        [ourView addPolyline:arg];
+    }
+
+    for (id arg in polylinesToRemove)
+    {
+        [ourView removePolyline:arg];
+    }
+
     
 	[ourView selectAnnotation:selectedAnnotation];
 	if (zoomCount > 0) {
@@ -133,6 +146,8 @@
     RELEASE_TO_NIL(polygonsToRemove);
     RELEASE_TO_NIL(circlesToAdd);
     RELEASE_TO_NIL(circlesToRemove);
+    RELEASE_TO_NIL(polylinesToAdd);
+    RELEASE_TO_NIL(polylinesToRemove);
 	
 	[super viewDidAttach];
 }
@@ -631,6 +646,104 @@
         circlesToAdd = [[NSMutableArray alloc] initWithArray:initialCircles];
     }
 }
+
+-(void)addPolylines:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,NSArray);
+
+    if ([self viewAttached]) {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolylines:arg];}, NO);
+    }
+    else {
+        for (id poly in arg) {
+            [self addPolyline:poly];
+        }
+    }
+}
+
+-(void)addPolyline:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapPolylineProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolyline:arg];}, NO);
+    }
+    else
+    {
+        if (polylinesToAdd==nil)
+        {
+            polylinesToAdd = [[NSMutableArray alloc] init];
+        }
+        if (polylinesToRemove!=nil && [polylinesToRemove containsObject:arg])
+        {
+            [polylinesToRemove removeObject:arg];
+        }
+        else
+        {
+            [polylinesToAdd addObject:arg];
+        }
+    }
+}
+
+-(void)removePolyline:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapPolylineProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removePolyline:arg];}, NO);
+    }
+    else
+    {
+        if (polylinesToRemove==nil)
+        {
+            polylinesToRemove = [[NSMutableArray alloc] init];
+        }
+        if (polylinesToAdd!=nil && [polylinesToAdd containsObject:arg])
+        {
+            [polylinesToAdd removeObject:arg];
+        }
+        else
+        {
+            [polylinesToRemove addObject:arg];
+        }
+    }
+}
+
+-(void)removeAllPolylines:(id)args
+{
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllPolylines];}, NO);
+    }
+}
+
+-(void)setPolylines:(id)arg{
+    ENSURE_TYPE(arg,NSArray);
+
+    NSMutableArray* initialPolylines = [NSMutableArray arrayWithCapacity:[arg count]];
+    for (id poly in arg) {
+        ENSURE_TYPE(poly, TiMapPolylineProxy);
+        [initialPolylines addObject:poly];
+    }
+
+    BOOL attached = [self viewAttached];
+
+    if(attached) {
+        TiThreadPerformOnMainThread(^{
+            [(TiMapView*)[self view] addPolylines:polylinesToAdd];
+        }, NO);
+        [initialPolylines release];
+    }
+    else {
+        RELEASE_TO_NIL(polylinesToAdd);
+        RELEASE_TO_NIL(polylinesToRemove);
+
+        polylinesToAdd = [[NSMutableArray alloc] initWithArray:initialPolylines];
+    }
+}
+
 
 
 #pragma mark Public APIs iOS 7

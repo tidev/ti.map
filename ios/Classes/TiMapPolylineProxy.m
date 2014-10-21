@@ -6,26 +6,25 @@
 //
 //
 
-#import "TiMapPolygonProxy.h"
+#import "TiMapPolylineProxy.h"
 
 
 
 
-@implementation TiMapPolygonProxy
+@implementation TiMapPolylineProxy
 
 
-@synthesize polygon, polygonRenderer;
+@synthesize polyline, polylineRenderer;
 
 
 -(void)dealloc
 {
 
-    RELEASE_TO_NIL(polygon);
-    RELEASE_TO_NIL(polygonRenderer);
-    RELEASE_TO_NIL(fillColor);
+    RELEASE_TO_NIL(polyline);
+    RELEASE_TO_NIL(polylineRenderer);
     RELEASE_TO_NIL(strokeColor);
 
-	[super dealloc];
+    [super dealloc];
 }
 
 -(void)_initWithProperties:(NSDictionary*)properties
@@ -34,9 +33,9 @@
         [self throwException:@"missing required points property" subreason:nil location:CODELOCATION];
     }
 
-	[super _initWithProperties:properties];
+    [super _initWithProperties:properties];
 
-    [self setupPolygon];
+    [self setupPolyline];
 }
 
 
@@ -45,11 +44,11 @@
 
 -(NSString*)apiName
 {
-    return @"Ti.Map.Polygon";
+    return @"Ti.Map.Polyline";
 }
 
 
--(void)setupPolygon
+-(void)setupPolyline
 {
     id points = [self valueForKey:@"points"];
     CLLocationCoordinate2D* coordArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
@@ -60,35 +59,10 @@
         coordArray[i] = coord;
     }
 
-    id holes = [self valueForKey:@"holes"];
-    if (holes != nil && [holes count] > 0) {
-        // Holes is a 3-d array containing arrays of lng/lat pairings defining each hole or arrays of
-        // lat/lng objects defining each hole.
-        NSMutableArray *holePolygons = [NSMutableArray array];
-        for (int i=0; i < [holes count]; i++) {
-            id holeObj = [holes objectAtIndex:i];
-            CLLocationCoordinate2D* hole = malloc(sizeof(CLLocationCoordinate2D) * [holeObj count]);
-
-            for (int j=0; j < [holeObj count]; ++j) {
-                id obj = [holeObj objectAtIndex:j];
-                CLLocationCoordinate2D coord = [self processLocation:obj];
-                hole[j] = coord;
-            }
-
-            MKPolygon *interiorPolygon = [MKPolygon polygonWithCoordinates:hole count:[holeObj count]];
-            free(hole);
-            [holePolygons addObject:interiorPolygon];
-        }
-
-        polygon = [[MKPolygon polygonWithCoordinates:coordArray count:[points count] interiorPolygons:holePolygons] retain];
-    } else {
-        polygon = [[MKPolygon polygonWithCoordinates:coordArray count:[points count]] retain];
-    }
-
+    polyline = [[MKPolyline polylineWithCoordinates:coordArray count:[points count]] retain];
     free(coordArray);
-    polygonRenderer = [[[MKPolygonRenderer alloc] initWithPolygon:polygon] retain];
+    polylineRenderer = [[[MKPolylineRenderer alloc] initWithPolyline:polyline] retain];
 
-    [self applyFillColor];
     [self applyStrokeColor];
     [self applyStrokeWidth];
 
@@ -116,24 +90,19 @@
     return coord;
 }
 
--(void)applyFillColor
-{
-    if (polygonRenderer != nil) {
-         polygonRenderer.fillColor = fillColor == nil ? [UIColor blackColor] : [fillColor color];
-    }
-}
+
 
 -(void)applyStrokeColor
 {
-    if (polygonRenderer != nil) {
-        polygonRenderer.strokeColor = strokeColor == nil? [UIColor blackColor] : [strokeColor color];
+    if (polylineRenderer != nil) {
+        polylineRenderer.strokeColor = strokeColor == nil? [UIColor blackColor] : [strokeColor color];
     }
 }
 
 -(void)applyStrokeWidth
 {
-    if (polygonRenderer != nil) {
-        polygonRenderer.lineWidth = strokeWidth;
+    if (polylineRenderer != nil) {
+        polylineRenderer.lineWidth = strokeWidth;
     }
 }
 
@@ -148,14 +117,6 @@
     [self replaceValue:value forKey:@"points" notification:NO];
 }
 
--(void)setFillColor:(id)value
-{
-    if (fillColor != nil) {
-        RELEASE_TO_NIL(fillColor);
-    }
-    fillColor = [[TiColor colorNamed:value] retain];
-    [self applyFillColor];
-}
 
 -(void)setStrokeColor:(id)value
 {

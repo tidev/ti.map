@@ -18,8 +18,9 @@
 -(NSString *)lastHitName;
 @end
 
-NSString * const VIEW_TYPE_POLYGON = @"polygon";
-NSString * const VIEW_TYPE_CIRCLE  = @"circle";
+NSString * const VIEW_TYPE_POLYGON  = @"polygon";
+NSString * const VIEW_TYPE_CIRCLE   = @"circle";
+NSString * const VIEW_TYPE_POLYLINE = @"polyline";
 
 @interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate> {
 	MKMapView *map;
@@ -32,6 +33,7 @@ NSString * const VIEW_TYPE_CIRCLE  = @"circle";
 	MKCoordinateRegion region;
     NSMutableArray *polygonProxies;
     NSMutableArray *circleProxies;
+    NSMutableArray *polylineProxies;
 
     // capture touch events
     WildcardGestureRecognizer * tapInterceptor;
@@ -76,6 +78,11 @@ NSString * const VIEW_TYPE_CIRCLE  = @"circle";
 -(void)removeCircle:(id)args;
 -(void)removeCircle:(id)args remove:(BOOL)r;
 -(void)removeAllCircles;
+-(void)addPolyline:(id)args;
+-(void)addPolylines:(id)args;
+-(void)removePolyline:(id)args;
+-(void)removePolyline:(id)args remove:(BOOL)r;
+-(void)removeAllPolylines;
 
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 

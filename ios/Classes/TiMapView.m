@@ -17,6 +17,7 @@
 #import "TiMapRouteProxy.h"
 #import "TiMapPolygonProxy.h"
 #import "TiMapCircleProxy.h"
+#import "TiMapPolylineProxy.h"
 
 @implementation TiMapView
 
@@ -36,6 +37,7 @@
     RELEASE_TO_NIL(tapInterceptor);
 	RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
+    RELEASE_TO_NIL(polylineProxies);
 	[super dealloc];
 }
 
@@ -92,6 +94,7 @@
         MKMapPoint mapPoint = MKMapPointForCoordinate(coord);
         [self handlePolygonClick:mapPoint];
         [self handleCircleClick:mapPoint];
+        [self handlePolylineClick:mapPoint];
 
     };
     [map addGestureRecognizer:tapInterceptor];
@@ -616,6 +619,50 @@
     [circleProxies removeAllObjects];
 }
 
+-(void)addPolylines:(NSMutableArray*)polylines
+{
+    for (TiMapPolylineProxy *poly in polylines)
+    {
+        [self addPolyline:poly];
+    }
+}
+
+-(void)addPolyline:(TiMapPolylineProxy*)polylineProxy
+{
+    MKPolyline *poly = [polylineProxy polyline];
+    CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
+    [map addOverlay:poly];
+    if (polylineProxies == nil) {
+        polylineProxies = [[NSMutableArray alloc] init];
+    }
+    [polylineProxies addObject:polylineProxy];
+}
+
+-(void)removePolyline:(TiMapPolylineProxy*)polylineProxy
+{
+    [self removePolyline:polylineProxy remove:YES];
+}
+
+-(void)removePolyline:(TiMapPolylineProxy*)polylineProxy remove:(BOOL)r
+{
+    MKPolyline *poly = [polylineProxy polyline];
+    CFDictionaryRemoveValue(mapObjects2View, poly);
+    [map removeOverlay:poly];
+    if (r) {
+        [polylineProxies removeObject:polylineProxy];
+    }
+}
+
+-(void)removeAllPolylines {
+    for (int i=0; i < [polylineProxies count]; i++) {
+        TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
+        [self removePolyline:proxy remove:NO];
+    }
+    [polylineProxies removeAllObjects];
+}
+
+
+
 
 
 #pragma mark Public APIs iOS 7
@@ -994,6 +1041,21 @@
         BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
         if (inCircle) {
             [self fireShapeClickEvent:circ point:point sourceType:VIEW_TYPE_CIRCLE];
+        }
+    }
+}
+-(void)handlePolylineClick:(MKMapPoint)point
+{
+    for (int i=0; i < [polylineProxies count]; i++) {
+        TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
+
+        MKPolyline *poly = proxy.polyline;
+        MKPolylineRenderer *polylineRenderer = proxy.polylineRenderer;
+
+        CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
+        BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
+        if (onPolyline) {
+            [self fireShapeClickEvent:poly point:point sourceType:VIEW_TYPE_POLYLINE];
         }
     }
 }
