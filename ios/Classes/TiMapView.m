@@ -91,6 +91,7 @@
         CLLocationCoordinate2D coord = [map convertPoint:point toCoordinateFromView:map];
         MKMapPoint mapPoint = MKMapPointForCoordinate(coord);
         [self handlePolygonClick:mapPoint];
+        [self handleCircleClick:mapPoint];
 
     };
     [map addGestureRecognizer:tapInterceptor];
@@ -966,7 +967,7 @@
 
 #pragma mark Event generation
 
--(BOOL)handlePolygonClick:(MKMapPoint)point
+-(void)handlePolygonClick:(MKMapPoint)point
 {
     for (int i=0; i < [polygonProxies count]; i++) {
         TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
@@ -981,7 +982,21 @@
         }
     }
 }
+-(void)handleCircleClick:(MKMapPoint)point
+{
+    for (int i=0; i < [circleProxies count]; i++) {
+        TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
 
+        MKCircle *circ = circle.circle;
+        MKCircleRenderer *circRenderer = circle.circleRenderer;
+
+        CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
+        BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
+        if (inCircle) {
+            [self fireShapeClickEvent:circ point:point sourceType:VIEW_TYPE_CIRCLE];
+        }
+    }
+}
 
 - (void)fireClickEvent:(MKAnnotationView *) pinview source:(NSString *)source
 {
