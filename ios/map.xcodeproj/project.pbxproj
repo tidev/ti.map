@@ -29,6 +29,7 @@
 		27A609E619F54FC300CA150A /* TiMapPolygonProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 27A609E419F54FC300CA150A /* TiMapPolygonProxy.h */; };
 		27A609E719F54FC300CA150A /* TiMapPolygonProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609E519F54FC300CA150A /* TiMapPolygonProxy.m */; };
 		27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609E919F5927000CA150A /* WildcardGestureRecognizer.m */; };
+		27A609EC19F5B84000CA150A /* TiMapCircleProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609EB19F5B84000CA150A /* TiMapCircleProxy.m */; };
 		AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		CE92EC1D17DF7B2F0082E943 /* TiMapIOS7View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */; };
@@ -76,6 +77,8 @@
 		27A609E519F54FC300CA150A /* TiMapPolygonProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapPolygonProxy.m; path = Classes/TiMapPolygonProxy.m; sourceTree = "<group>"; };
 		27A609E819F5922B00CA150A /* WildcardGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WildcardGestureRecognizer.h; path = Classes/WildcardGestureRecognizer.h; sourceTree = "<group>"; };
 		27A609E919F5927000CA150A /* WildcardGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WildcardGestureRecognizer.m; path = Classes/WildcardGestureRecognizer.m; sourceTree = "<group>"; };
+		27A609EB19F5B84000CA150A /* TiMapCircleProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapCircleProxy.m; path = Classes/TiMapCircleProxy.m; sourceTree = "<group>"; };
+		27A609ED19F5B85900CA150A /* TiMapCircleProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapCircleProxy.h; path = Classes/TiMapCircleProxy.h; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiMap_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapIOS7View.h; path = Classes/TiMapIOS7View.h; sourceTree = "<group>"; };
@@ -177,6 +180,8 @@
 				CEE33CF219EC4C150005E745 /* TiMapUtils.m */,
 				27A609E819F5922B00CA150A /* WildcardGestureRecognizer.h */,
 				27A609E919F5927000CA150A /* WildcardGestureRecognizer.m */,
+				27A609EB19F5B84000CA150A /* TiMapCircleProxy.m */,
+				27A609ED19F5B85900CA150A /* TiMapCircleProxy.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -297,6 +302,7 @@
 				CE92EC1E17DF7B2F0082E943 /* TiMapIOS7View.m in Sources */,
 				CED651CD17D7AA21007C2954 /* TiMapPinAnnotationView.m in Sources */,
 				CE92EC2017DF7B2F0082E943 /* TiMapIOS7ViewProxy.m in Sources */,
+				27A609EC19F5B84000CA150A /* TiMapCircleProxy.m in Sources */,
 				CEE33CF419EC4C150005E745 /* TiMapUtils.m in Sources */,
 				CED651CF17D7AA21007C2954 /* TiMapView.m in Sources */,
 				CED651D117D7AA21007C2954 /* TiMapViewProxy.m in Sources */,

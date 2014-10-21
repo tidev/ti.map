@@ -8,6 +8,7 @@
 #import "TiViewProxy.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapPolygonProxy.h"
+#import "TiMapCircleProxy.h"
 
 @interface TiMapViewProxy : TiViewProxy {
 	TiMapAnnotationProxy* selectedAnnotation; // Annotation to select on initial display
@@ -17,6 +18,8 @@
 	NSMutableArray* routesToRemove;
     NSMutableArray* polygonsToAdd;
     NSMutableArray* polygonsToRemove;
+    NSMutableArray* circlesToAdd;
+    NSMutableArray* circlesToRemove;
 	int zoomCount; // Number of times to zoom in/out on initial display
 }
 
@@ -39,5 +42,9 @@
 -(void)addPolygon:(id)args;
 -(void)removePolygon:(id)args;
 -(void)removeAllPolygons:(id)args;
+-(void)addCircles:(id)args;
+-(void)addCircle:(id)args;
+-(void)removeCircle:(id)args;
+-(void)removeAllCircles:(id)args;
 
 @end

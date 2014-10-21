@@ -16,6 +16,7 @@
 #import "TiMapCustomAnnotationView.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapPolygonProxy.h"
+#import "TiMapCircleProxy.h"
 
 @implementation TiMapView
 
@@ -574,6 +575,46 @@
     }
     [polygonProxies removeAllObjects];
 }
+
+-(void)addCircle:(TiMapCircleProxy*)circleProxy {
+    MKCircle *circle = [circleProxy circle];
+    CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
+    [map addOverlay:circle];
+    if (circleProxies == nil) {
+        circleProxies = [[NSMutableArray alloc] init];
+    }
+    [circleProxies addObject:circleProxy];
+}
+-(void)addCircles:(NSMutableArray*)circles
+{
+    for (TiMapCircleProxy *circle in circles)
+    {
+        [self addCircle:circle];
+    }
+}
+
+-(void)removeCircle:(TiMapCircleProxy*)circleProxy
+{
+    [self removeCircle:circleProxy remove:YES];
+}
+
+-(void)removeCircle:(TiMapCircleProxy*)circleProxy remove:(BOOL)r
+{
+    MKCircle *circle = [circleProxy circle];
+    CFDictionaryRemoveValue(mapObjects2View, circle);
+    [map removeOverlay:circle];
+    if (r) {
+        [circleProxies removeObject:circleProxy];
+    }
+}
+-(void)removeAllCircles {
+    for (int i=0; i < [circleProxies count]; i++) {
+        TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
+        [self removeCircle:circle remove:NO];
+    }
+    [circleProxies removeAllObjects];
+}
+
 
 
 #pragma mark Public APIs iOS 7

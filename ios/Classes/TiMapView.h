@@ -19,6 +19,7 @@
 @end
 
 NSString * const VIEW_TYPE_POLYGON = @"polygon";
+NSString * const VIEW_TYPE_CIRCLE  = @"circle";
 
 @interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate> {
 	MKMapView *map;
@@ -30,6 +31,7 @@ NSString * const VIEW_TYPE_POLYGON = @"polygon";
 	BOOL forceRender;
 	MKCoordinateRegion region;
     NSMutableArray *polygonProxies;
+    NSMutableArray *circleProxies;
 
     // capture touch events
     WildcardGestureRecognizer * tapInterceptor;
@@ -69,6 +71,12 @@ NSString * const VIEW_TYPE_POLYGON = @"polygon";
 -(void)removePolygon:(id)args;
 -(void)removePolygon:(id)args remove:(BOOL)r;
 -(void)removeAllPolygons;
+-(void)addCircle:(id)args;
+-(void)addCircles:(id)args;
+-(void)removeCircle:(id)args;
+-(void)removeCircle:(id)args remove:(BOOL)r;
+-(void)removeAllCircles;
+
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 
 #pragma mark Utils

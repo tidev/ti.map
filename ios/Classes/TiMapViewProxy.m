@@ -32,6 +32,8 @@
 	RELEASE_TO_NIL(routesToRemove);
     RELEASE_TO_NIL(polygonsToAdd);
     RELEASE_TO_NIL(polygonsToRemove);
+    RELEASE_TO_NIL(circlesToAdd);
+    RELEASE_TO_NIL(circlesToRemove);
 	[super _destroy];
 }
 
@@ -99,6 +101,16 @@
     {
         [ourView removePolygon:arg];
     }
+
+    for (id arg in circlesToAdd)
+    {
+        [ourView addCircle:arg];
+    }
+
+    for (id arg in circlesToRemove)
+    {
+        [ourView removeCircle:arg];
+    }
     
 	[ourView selectAnnotation:selectedAnnotation];
 	if (zoomCount > 0) {
@@ -119,6 +131,8 @@
 	RELEASE_TO_NIL(routesToRemove);
     RELEASE_TO_NIL(polygonsToAdd);
     RELEASE_TO_NIL(polygonsToRemove);
+    RELEASE_TO_NIL(circlesToAdd);
+    RELEASE_TO_NIL(circlesToRemove);
 	
 	[super viewDidAttach];
 }
@@ -521,6 +535,103 @@
         polygonsToAdd = [[NSMutableArray alloc] initWithArray:initialPolygons];
     }
 }
+
+-(void)addCircles:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,NSArray);
+
+    if ([self viewAttached]) {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addCircles:arg];}, NO);
+    }
+    else {
+        for (id circle in arg) {
+            [self addCircle:circle];
+        }
+    }
+}
+
+-(void)addCircle:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapCircleProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addCircle:arg];}, NO);
+    }
+    else
+    {
+        if (circlesToAdd==nil)
+        {
+            circlesToAdd = [[NSMutableArray alloc] init];
+        }
+        if (circlesToRemove!=nil && [circlesToRemove containsObject:arg])
+        {
+            [circlesToRemove removeObject:arg];
+        }
+        else
+        {
+            [circlesToAdd addObject:arg];
+        }
+    }
+}
+
+-(void)removeCircle:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapCircleProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeCircle:arg];}, NO);
+    }
+    else
+    {
+        if (circlesToRemove==nil)
+        {
+            circlesToRemove = [[NSMutableArray alloc] init];
+        }
+        if (circlesToAdd!=nil && [circlesToAdd containsObject:arg])
+        {
+            [circlesToAdd removeObject:arg];
+        }
+        else
+        {
+            [circlesToRemove addObject:arg];
+        }
+    }
+}
+
+-(void)removeAllCircles:(id)args
+{
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllCircles];}, NO);
+    }
+}
+
+-(void)setCircles:(id)arg{
+    ENSURE_TYPE(arg,NSArray);
+
+    NSMutableArray* initialCircles = [NSMutableArray arrayWithCapacity:[arg count]];
+    for (id circle in arg) {
+        ENSURE_TYPE(circle, TiMapCircleProxy);
+        [initialCircles addObject:circle];
+    }
+
+    BOOL attached = [self viewAttached];
+
+    if(attached) {
+        TiThreadPerformOnMainThread(^{
+            [(TiMapView*)[self view] addCircles:circlesToAdd];
+        }, NO);
+        [initialCircles release];
+    }
+    else {
+        RELEASE_TO_NIL(circlesToAdd);
+        RELEASE_TO_NIL(circlesToRemove);
+        circlesToAdd = [[NSMutableArray alloc] initWithArray:initialCircles];
+    }
+}
+
 
 #pragma mark Public APIs iOS 7
 
