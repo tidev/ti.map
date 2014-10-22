@@ -173,35 +173,6 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
 
-	public void addCircle(CircleProxy c)
-	{
-		if (currentCircles.contains(c)) {
-			return;
-		}
-		c.processOptions();
-		c.setCircle(map.addCircle(c.getOptions()));
-		currentCircles.add(c);
-	}
-
-	public void removeCircle(CircleProxy c)
-	{
-		if (!currentCircles.contains(c)) {
-			return;
-		}
-		c.getCircle().remove();
-		c.setCircle(null);
-		currentCircles.remove(c);
-	}
-
-	public void removeAllCircles()
-	{
-		for (CircleProxy circleProxy : currentCircles) {
-			circleProxy.getCircle().remove();
-			circleProxy.setCircle(null);
-		}
-		currentCircles.clear();
-	}
-
 	@Override
 	public void processProperties(KrollDict d) {
 		super.processProperties(d);
@@ -246,6 +217,11 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		if (d.containsKey(MapModule.PROPERTY_POLYLINES)) {
 			Object[] polylines = (Object[]) d.get(MapModule.PROPERTY_POLYLINES);
 			addPolylines(polylines);
+		}
+
+		if (d.containsKey(MapModule.PROPERTY_CIRCLES)) {
+			Object[] circles = (Object[]) d.get(MapModule.PROPERTY_CIRCLES);
+			addCircles(circles);
 		}
 
 		if (d.containsKey(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
@@ -634,6 +610,50 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		}
 		currentPolylines.clear();
 	}
+
+
+	/**
+	 * Circle
+	 */
+	protected void addCircles(Object[] circles) {
+		for (int i = 0; i < circles.length; i++) {
+			Object obj = circles[i];
+			if (obj instanceof CircleProxy) {
+				CircleProxy circle = (CircleProxy) obj;
+				addCircle(circle);
+			}
+		}
+	}
+
+	public void addCircle(CircleProxy c)
+	{
+		if (currentCircles.contains(c)) {
+			return;
+		}
+		c.processOptions();
+		c.setCircle(map.addCircle(c.getOptions()));
+		currentCircles.add(c);
+	}
+
+	public void removeCircle(CircleProxy c)
+	{
+		if (!currentCircles.contains(c)) {
+			return;
+		}
+		c.getCircle().remove();
+		c.setCircle(null);
+		currentCircles.remove(c);
+	}
+
+	public void removeAllCircles()
+	{
+		for (CircleProxy circleProxy : currentCircles) {
+			circleProxy.getCircle().remove();
+			circleProxy.setCircle(null);
+		}
+		currentCircles.clear();
+	}
+
 
 	public void changeZoomLevel(int delta) {
 		CameraUpdate camUpdate = CameraUpdateFactory.zoomBy(delta);
