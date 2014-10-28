@@ -885,6 +885,9 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	public void release() {
 		selectedAnnotation = null;
 		map.clear();
+		currentCircles = null;
+		currentPolygons = null;
+		currentPolylines = null;		
 		map = null;
 		timarkers.clear();
 		super.release();
