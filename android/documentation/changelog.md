@@ -1,5 +1,8 @@
 # Change Log
 <pre>
+
+v2.2.1    Update Google Play Services library and assets. [TIMOB-17884]
+
 v2.2.0    Bumping minsdk to 3.3.0 [TIMOB-17048]
 
 v2.1.6    Handle null values for attributes. [TIMOB-16562]
