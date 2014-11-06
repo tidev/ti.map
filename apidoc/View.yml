@@ -280,6 +280,25 @@ events:
         type: Modules.Map.Annotation
 
       - name: latitude
+        summary: Latitude of the clicked annotation.
+        type: Number
+
+      - name: longitude
+        summary: Longitude of the clicked annotation.
+        type: Number
+
+  - name: complete
+    summary: Fired when the map completes loading.
+
+  - name: regionchanged
+    summary: |
+        Fired when the mapping region changes.
+    properties:
+      - name: longitude
+        summary: Longitude value for the center point of the map, in decimal degrees.
+        type: Number
+
+      - name: latitude
         summary: Latitude value for the center point of the map, in decimal degrees.
         type: Number
 
