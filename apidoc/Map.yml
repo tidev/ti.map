@@ -22,13 +22,6 @@ description: |
 
     ### Getting Started
 
-    -   Download the ti.map module from
-        [https://marketplace.appcelerator.com/apps/5005](https://marketplace.appcelerator.com/apps/5005).
-          - Unpack the module to your Titanium SDK home directory, for example,
-            `/Users/.../Library/Application Support/Titanium`, which make the module available to all your
-            projects.
-          - Alternatively, you can copy the ZIP file to your `Resources` folder, which makes the module
-            available to a single project.
     -   Edit the `modules` section of your tiapp.xml file to include this module:
 
             ...
