@@ -2,6 +2,13 @@
 <pre>
 v2.2.0 [TIMOB-17928] Updated to build for 64-bit
 
+v2.0.6  Fixed map not responding to touch after animating camera [TIMOB-17749]
+
+v2.0.5  Fixed exception when setting "centerCoordinate" on camera [TIMOB-17659]
+
+v2.0.4  Fixed "userLocation" permissions for iOS 8 [TIMOB-17665]
+        Bumping minsdk to 3.4.0 [TIMODOPEN-437]
+
 v2.0.2  Fixed ignoring userLocation property during view creation [TIMOB-12733]
 
 v2.0.1  Fixed annotation not showing leftButton rightButton [TC-3524]

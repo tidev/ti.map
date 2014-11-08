@@ -18,7 +18,7 @@
 @end
 
 
-@interface TiMapView : TiUIView<MKMapViewDelegate> {
+@interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate> {
 	MKMapView *map;
 	BOOL regionFits;
 	BOOL animate;
@@ -30,7 +30,10 @@
 	
     // routes
     // dictionaries for object tracking and association
-    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)    
+    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)
+	
+	// Location manager needed for iOS 8 permissions
+	CLLocationManager *locationManager;
 }
 
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;

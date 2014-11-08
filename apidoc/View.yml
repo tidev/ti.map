@@ -25,11 +25,32 @@ description: |
     You can add [Route](Modules.Map.Route) objects to the map to create paths between
     two or more points of interest.
     
+    To use the `userLocation` property in iOS 8 and later, add either the
+    [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26)
+    or
+    [`NSLocationAlwaysUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18)
+    key to the iOS plist section of the project's `tiapp.xml` file.
+
+        <ti:app>
+            <ios>
+                <plist>
+                    <dict>
+                        <key>NSLocationAlwaysUsageDescription</key>
+                        <string>
+                            Specify the reason for accessing the user's location information.
+                            This appears in the alert dialog when asking the user for permission to
+                            access their location.
+                        </string>
+                    </dict>
+                </plist>
+            </ios>
+        </ti:app>
+
 extends: Titanium.UI.View
-excludes: {
+excludes:
     events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
-    'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
-}
+              'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
+
 since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
 methods:
@@ -261,14 +282,14 @@ events:
       - name: latitude
         summary: Latitude of the clicked annotation.
         type: Number
-    
+
       - name: longitude
         summary: Longitude of the clicked annotation.
         type: Number
 
   - name: complete
     summary: Fired when the map completes loading.
-    
+
   - name: regionchanged
     summary: |
         Fired when the mapping region changes.
@@ -371,7 +392,7 @@ properties:
         map.
     description: |
         If `true`, the user's location is marked with a pin, and the My Location button will appear in the top
-        right corner of the screen. 
+        right corner of the screen. Starting in iOS 8, permissions must be added to tiapp.xml. Details in description.
     type: Boolean
     default: false
 
@@ -505,7 +526,7 @@ properties:
     summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
     description: |
         For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position).
-        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2.longitudeDelta) or [latitudeDelta](MapRegionTypev2.latitudeDelta)
     type: Number
     since: "3.2.3"
     platforms: [android]
@@ -530,7 +551,7 @@ properties:
     summary: The camera's position on an arc between directly over the map's center position and the surface of the Earth, measured in degrees from the nadir.
     description: |
         For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#the_camera_position).
-        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2.longitudeDelta) or [latitudeDelta](MapRegionTypev2.latitudeDelta)
     type: Number
     since: "3.2.3"
     platforms: [android]
@@ -539,7 +560,7 @@ properties:
     summary: The zoom level of the map.
     description: |
         For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#zoom).
-        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2-property-longitudeDelta) or [latitudeDelta](MapRegionTypev2-property-latitudeDelta)
+        Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2.longitudeDelta) or [latitudeDelta](MapRegionTypev2.latitudeDelta)
     type: Number
     since: "3.2.3"
     platforms: [android]
