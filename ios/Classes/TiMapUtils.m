@@ -6,6 +6,7 @@
  */
 
 #import "TiMapUtils.h"
+#import "TiBase.h"
 
 @implementation TiMapUtils
 
