@@ -21,10 +21,10 @@
     <string name="common_google_play_services_network_error_title" msgid="3827284619958211114">"नेटवर्क त्रुटि"</string>
     <string name="common_google_play_services_network_error_text" msgid="9038847255613537209">"Google Play सेवाओं से कनेक्ट करने के लिए डेटा कनेक्शन की आवश्यकता है."</string>
     <string name="common_google_play_services_invalid_account_title" msgid="1066672360770936753">"अमान्य खाता"</string>
-    <string name="common_google_play_services_invalid_account_text" msgid="4983316348021735578">"निर्दिष्ट खाता इस उपकरण पर मौजूद नहीं है. कृपया कोई भिन्न खाता चुनें."</string>
+    <string name="common_google_play_services_invalid_account_text" msgid="4983316348021735578">"निर्दिष्ट खाता इस डिवाइस पर मौजूद नहीं है. कृपया कोई भिन्न खाता चुनें."</string>
     <string name="common_google_play_services_unknown_issue" msgid="4762332809710093730">"Google Play सेवाओं के साथ अज्ञात समस्या."</string>
     <string name="common_google_play_services_unsupported_title" msgid="6334768798839376943">"Google Play सेवाएं"</string>
-    <string name="common_google_play_services_unsupported_text" msgid="3542578567569488671">"Google Play सेवाएं, जिन पर आपके कुछ ऐप्स  निर्भर करते हैं, आपके उपकरण द्वारा समर्थित नहीं हैं. कृपया सहायता के लिए निर्माता से संपर्क करें."</string>
+    <string name="common_google_play_services_unsupported_text" msgid="3542578567569488671">"Google Play सेवाएं, जिन पर आपके कुछ ऐप्स  निर्भर करते हैं, आपके डिवाइस द्वारा समर्थित नहीं हैं. कृपया सहायता के लिए निर्माता से संपर्क करें."</string>
     <string name="common_google_play_services_update_button" msgid="8932944190611227642">"नई जानकारी पाएं"</string>
     <string name="common_signin_button_text" msgid="9071884888741449141">"प्रवेश करें"</string>
     <string name="common_signin_button_text_long" msgid="2429381841831957106">"Google से प्रवेश करें"</string>
