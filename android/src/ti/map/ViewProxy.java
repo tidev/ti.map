@@ -20,11 +20,6 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
 
-import ti.map.TiUIMapView;
-import ti.map.PolygonProxy;
-import ti.map.PolylineProxy;
-import ti.map.CircleProxy;
-
 import android.app.Activity;
 import android.os.Message;
 
@@ -65,10 +60,10 @@ public class ViewProxy extends TiViewProxy {
 	private static final int MSG_REMOVE_CIRCLE = MSG_FIRST_ID + 922;
 	private static final int MSG_REMOVE_ALL_CIRCLES = MSG_FIRST_ID + 923;
 
-	private ArrayList<RouteProxy> preloadRoutes;
-	private ArrayList<PolygonProxy> preloadPolygons;
-	private ArrayList<PolylineProxy> preloadPolylines;
-	private ArrayList<CircleProxy> preloadCircles;
+	private final ArrayList<RouteProxy> preloadRoutes;
+	private final ArrayList<PolygonProxy> preloadPolygons;
+	private final ArrayList<PolylineProxy> preloadPolylines;
+	private final ArrayList<CircleProxy> preloadCircles;
 
 	public ViewProxy() {
 		super();
@@ -79,6 +74,7 @@ public class ViewProxy extends TiViewProxy {
 		preloadCircles = new ArrayList<CircleProxy>();
 	}
 
+	@Override
 	public TiUIView createView(Activity activity) {
 		return new TiUIMapView(this, activity);
 	}
@@ -146,7 +142,7 @@ public class ViewProxy extends TiViewProxy {
 
 		case MSG_ADD_ROUTE: {
 			result = (AsyncResult) msg.obj;
-			handleAddRoute((RouteProxy) result.getArg());
+			handleAddRoute(result.getArg());
 			result.setResult(null);
 			return true;
 		}
@@ -175,7 +171,7 @@ public class ViewProxy extends TiViewProxy {
 
 		case MSG_ADD_POLYGON: {
 			result = (AsyncResult) msg.obj;
-			handleAddPolygon((PolygonProxy) result.getArg());
+			handleAddPolygon(result.getArg());
 			result.setResult(null);
 			return true;
 		}
@@ -196,7 +192,7 @@ public class ViewProxy extends TiViewProxy {
 		
 		case MSG_ADD_POLYLINE: {
 			result = (AsyncResult) msg.obj;
-			handleAddPolyline((PolylineProxy) result.getArg());
+			handleAddPolyline(result.getArg());
 			result.setResult(null);
 			return true;
 		}
@@ -274,15 +270,23 @@ public class ViewProxy extends TiViewProxy {
 	}
 
 	@Kroll.method
-	public void addAnnotations(AnnotationProxy[] annos) {
-		// Update the JS object
+	public void addAnnotations(Object annoObject) {
+		if (!(annoObject instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to addAnnotations",  Log.DEBUG_MODE);
+			return;
+		}
+		Object[] annos = (Object[])annoObject;
+
+		//Update the JS object
 		Object annotations = getProperty(TiC.PROPERTY_ANNOTATIONS);
 		if (annotations instanceof Object[]) {
 			ArrayList<Object> annoList = new ArrayList<Object>(
 					Arrays.asList((Object[]) annotations));
 			for (int i = 0; i < annos.length; i++) {
-				AnnotationProxy annotation = annos[i];
-				annoList.add(annotation);
+				Object annotationObject = annos[i];
+				if (annotationObject instanceof AnnotationProxy) {
+					annoList.add(annotationObject);
+				}
 			}
 			setProperty(TiC.PROPERTY_ANNOTATIONS, annoList.toArray());
 		} else {
