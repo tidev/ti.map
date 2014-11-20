@@ -41,6 +41,11 @@ public class MapModule extends KrollModule
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 
+	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
+	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
+	public static final String PROPERTY_FILL_COLOR = "fillColor";
+	public static final String PROPERTY_ZINDEX = "zIndex";
+
 	public static final String PROPERTY_POLYGON = "polygon";
 	public static final String PROPERTY_POLYGONS = "polygons";
 	public static final String PROPERTY_POLYLINE = "polyline";
@@ -48,7 +53,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_CIRCLE = "circle";
 	public static final String PROPERTY_CIRCLES = "circles";
 	public static final String PROPERTY_CENTER = "center";
-  public static final String PROPERTY_RADIUS = "radius";
+	public static final String PROPERTY_RADIUS = "radius";
 
 
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;

@@ -21,12 +21,10 @@ import com.google.android.gms.maps.model.PolygonOptions;
 
 @Kroll.proxy(name = "Polygon", creatableInModule=MapModule.class, propertyAccessors = {
 
-PolygonProxy.PROPERTY_FILL_COLOR, PolygonProxy.PROPERTY_STROKE_COLOR,
-		PolygonProxy.PROPERTY_STROKE_WIDTH, PolygonProxy.PROPERTY_ZINDEX,
+MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR,
+		MapModule.PROPERTY_STROKE_WIDTH, MapModule.PROPERTY_ZINDEX,
 		MapModule.PROPERTY_POINTS, PolygonProxy.PROPERTY_HOLES,
 
-// TiC.PROPERTY_COLOR,
-// TiC.PROPERTY_WIDTH
 })
 public class PolygonProxy extends KrollProxy implements IShape {
 
@@ -35,11 +33,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
-	// int MSG_SET_POINTS
-	// int MSG_SET_FILL_COLOR
-	// int MSG_SET_STROKE_COLOR
-	// int MSG_SET_STROKE_WIDTH
-	// int MSG_SET_ZINDEX
 	private static final int MSG_SET_POINTS = MSG_FIRST_ID + 699;
 	private static final int MSG_SET_FILL_COLOR = MSG_FIRST_ID + 700;
 	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 701;
@@ -47,15 +40,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 703;
 	private static final int MSG_SET_HOLES = MSG_FIRST_ID + 704;
 
-	// points (MapView)
-	// (int) strokeColor
-	// (float) strokeWidth
-	// (int) fillColor
-	// (float) zIndex
-	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
-	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
-	public static final String PROPERTY_FILL_COLOR = "fillColor";
-	public static final String PROPERTY_ZINDEX = "zIndex";
 	public static final String PROPERTY_HOLES = "holes";
 
 	public PolygonProxy() {
@@ -78,8 +62,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		switch (msg.what) {
 		case MSG_SET_POINTS: {
 			result = (AsyncResult) msg.obj;
-			// Log.e("PolygonProxy.handleMessage.MSG_SET_POINTS",
-			// result.getArg().toString());
 			polygon.setPoints(processPoints(result.getArg(), true));
 			result.setResult(null);
 			return true;
@@ -133,22 +115,22 @@ public class PolygonProxy extends KrollProxy implements IShape {
 			processHoles(getProperty(PolygonProxy.PROPERTY_HOLES), false);
 		}
 
-		op = PolygonProxy.PROPERTY_STROKE_COLOR;
+		op = MapModule.PROPERTY_STROKE_COLOR;
 		if (hasProperty(op)) {
 			options.strokeColor(TiConvert.toColor((String) getProperty(op)));
 		}
 
-		op = PolygonProxy.PROPERTY_STROKE_WIDTH;
+		op = MapModule.PROPERTY_STROKE_WIDTH;
 		if (hasProperty(op)) {
 			options.strokeWidth(TiConvert.toFloat(getProperty(op)));
 		}
 
-		op = PolygonProxy.PROPERTY_FILL_COLOR;
+		op = MapModule.PROPERTY_FILL_COLOR;
 		if (hasProperty(op)) {
 			options.fillColor(TiConvert.toColor((String) getProperty(op)));
 		}
 
-		op = PolygonProxy.PROPERTY_ZINDEX;
+		op = MapModule.PROPERTY_ZINDEX;
 		if (hasProperty(op)) {
 			options.zIndex(TiConvert.toFloat(getProperty(op)));
 		}
@@ -169,7 +151,7 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
 		// multiple points
 		if (points instanceof Object[]) {
-			Object[] pointsArray = (Object[]) points;		
+			Object[] pointsArray = (Object[]) points;
 			for (int i = 0; i < pointsArray.length; i++) {
 				Object obj = pointsArray[i];
 				addLocation(obj, locationArray, list);
@@ -184,9 +166,9 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 	/**
 	 * Add holes as a list of list
-	 * 
+	 *
 	 * holes: [ [ { latitude: .., longitude: .. } ] ]
-	 * 
+	 *
 	 */
 	public ArrayList<ArrayList<LatLng>> processHoles(Object holesList,
 			boolean list) {
@@ -198,18 +180,18 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 			Object[] singleHoleArray = (Object[]) holesList;
 			for (int h = 0; h < singleHoleArray.length; h++) {
-				
+
 				ArrayList<LatLng> holeContainerArray = new ArrayList<LatLng>();
-				
+
 				Object[] pointsArray = (Object[]) singleHoleArray[h];
 				if (pointsArray instanceof Object[]) {
 					for (int i = 0; i < pointsArray.length; i++) {
 						Object obj = pointsArray[i];
 						holeContainerArray.add(parseLocation(obj));
-						
+
 					}
-				}	
-				
+				}
+
 				if (holeContainerArray.size() > 0) {
 					if (!list) {
 						if (polygon == null) {
@@ -274,25 +256,25 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		} else if (name.equals(PolygonProxy.PROPERTY_HOLES)) {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_SET_HOLES), value);
-		} else if (name.equals(PolygonProxy.PROPERTY_STROKE_WIDTH)) {
+		} else if (name.equals(MapModule.PROPERTY_STROKE_WIDTH)) {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH),
 					TiConvert.toFloat(value));
 		}
 
-		else if (name.equals(PolygonProxy.PROPERTY_STROKE_COLOR)) {
+		else if (name.equals(MapModule.PROPERTY_STROKE_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
 					TiConvert.toColor((String) value));
 		}
 
-		else if (name.equals(PolygonProxy.PROPERTY_FILL_COLOR)) {
+		else if (name.equals(MapModule.PROPERTY_FILL_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_SET_FILL_COLOR),
 					TiConvert.toColor((String) value));
 		}
 
-		else if (name.equals(PolygonProxy.PROPERTY_ZINDEX)) {
+		else if (name.equals(MapModule.PROPERTY_ZINDEX)) {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_SET_ZINDEX),
 					TiConvert.toFloat(value));
