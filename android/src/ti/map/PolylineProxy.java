@@ -26,6 +26,10 @@ import com.google.android.gms.maps.model.PolylineOptions;
 	
 	PolylineProxy.PROPERTY_STROKE_COLOR,
 	PolylineProxy.PROPERTY_STROKE_WIDTH,
+	
+	PolylineProxy.PROPERTY_STROKE_COLOR2,
+	PolylineProxy.PROPERTY_STROKE_WIDTH2,	
+	
 	PolylineProxy.PROPERTY_ZINDEX,
 	
 	MapModule.PROPERTY_POINTS,
@@ -205,11 +209,19 @@ public class PolylineProxy extends KrollProxy implements IShape
 		else if (name.equals(PolylineProxy.PROPERTY_STROKE_WIDTH)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH), TiConvert.toFloat(value));
 		}
-
+		// normalized API
+		else if (name.equals(PolylineProxy.PROPERTY_STROKE_WIDTH2)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH), TiConvert.toFloat(value));
+		}
+		
 		else if (name.equals(PolylineProxy.PROPERTY_STROKE_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR), TiConvert.toColor((String)value));
 		}
-
+		// normalized API
+		else if (name.equals(PolylineProxy.PROPERTY_STROKE_COLOR2)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR), TiConvert.toColor((String)value));
+		}
+		
 		else if (name.equals(PolylineProxy.PROPERTY_ZINDEX)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
