@@ -1,6 +1,8 @@
 # Change Log
 <pre>
-v2.1.0  Added support for polygons, polylines, an circles.
+v2.3.0  Added support for polygons, polylines, an circles.
+
+v2.2.0 [TIMOB-17928] Updated to build for 64-bit
 
 v2.0.6  Fixed map not responding to touch after animating camera [TIMOB-17749]
 

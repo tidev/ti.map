@@ -14,12 +14,12 @@ import org.appcelerator.titanium.util.TiConvert;
 
 import ti.map.MapModule;
 import ti.map.Shape.IShape;
-import ti.map.Shape.Shape;
+
 import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -317,27 +317,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 					TiConvert.toFloat(value));
 		}
 
-	}
-
-	protected TiMarker marker;
-
-	/**
-	 * Handle timarker reference
-	 * */
-	public void setTiMarker(TiMarker marker) {
-		this.marker = marker;
-	}
-
-	public TiMarker getTiMarker() {
-		return this.marker;
-	}
-
-	public Marker getMarker() {
-		return this.marker != null ? this.marker.getMarker() : null;
-	}
-
-	public AnnotationProxy getAnnotation() {
-		return this.marker != null ? this.marker.getProxy() : null;
 	}
 
 	// A location can either be a an array of longitude, latitude pairings or

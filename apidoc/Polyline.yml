@@ -19,7 +19,7 @@ properties:
     type: Array<MapPointType>
     optional: false
 
-  - name: color
+  - name: strokeColor
     summary: |
         Color to use for the the polyline, as a color name or hex triplet.
     description: |

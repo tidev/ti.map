@@ -43,21 +43,14 @@ public class Boundary {
 		int npoints = p.getPolygon().getPoints().size();
 		this.points = new Point[npoints];
 
-		// Log.e("TiApplication", "points -- " + npoints);
-
 		for (int i = 0; i < npoints; i++) {
 
 			LatLng ll = p.getPolygon().getPoints().get(i);
-
-			// Log.e("TiApplication", "set point " + i);
-			// Log.e("TiApplication", "ll " + ll.toString());
 
 			int x = (int) (ll.longitude * precision);
 			int y = (int) (ll.latitude * precision);
 
 			this.points[i] = new Point(x, y);
-
-			// Log.e("TiApplication", "ok for " + i);
 		}
 
 		return this;
@@ -92,7 +85,7 @@ public class Boundary {
 	
 	public boolean containsCircle(Point[] points, Point test) {
 		for(int i=0; i < points.length; i++) {
-			if(isPointInCircle((double) test.x, (double) test.y, this.radius, (double) points[i].x, (double) points[i].y)) {
+			if(isPointInCircle((double) test.x, (double) test.y, Boundary.radius, (double) points[i].x, (double) points[i].y)) {
 				return true;
 			}
 		}

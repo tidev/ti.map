@@ -664,23 +664,6 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 
 		KrollDict d = new KrollDict();
 
-		TiMarker tiMarker = shapeProxy.getTiMarker();
-		String title = null;
-		String subtitle = null;
-
-		if(tiMarker != null) {
-			AnnotationProxy annoProxy = tiMarker.getProxy();
-			TiMapInfoWindow infoWindow = annoProxy.getMapInfoWindow();
-			if (infoWindow != null) {
-				title = infoWindow.getTitle();
-				subtitle = infoWindow.getSubtitle();
-			}
-
-			d.put(TiC.PROPERTY_ANNOTATION, annoProxy);
-			d.put(TiC.PROPERTY_TITLE, title);
-			d.put(TiC.PROPERTY_SUBTITLE, subtitle);
-		}
-
 		d.put(TiC.PROPERTY_LATITUDE, clickPosition.latitude);
 		d.put(TiC.PROPERTY_LONGITUDE, clickPosition.longitude);
 
@@ -688,10 +671,6 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
 		d.put(TiC.PROPERTY_SOURCE, shapeProxy);
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
-
-		// Log.e("TiApplication", "*****************");
-		// Log.e("TiApplication", TiC.EVENT_CLICK);
-		// Log.e("TiApplication", d.toString());
 
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
@@ -905,6 +884,9 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	public void release() {
 		selectedAnnotation = null;
 		map.clear();
+		currentCircles = null;
+		currentPolygons = null;
+		currentPolylines = null;
 		map = null;
 		timarkers.clear();
 		super.release();

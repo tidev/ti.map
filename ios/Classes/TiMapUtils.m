@@ -14,7 +14,7 @@
     if ([NSThread isMainThread]) {
         return block();
     }
-    
+
     __block id result = nil;
     TiThreadPerformOnMainThread(^{
         result = [block() retain];

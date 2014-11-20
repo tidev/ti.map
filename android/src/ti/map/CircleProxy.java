@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 @Kroll.proxy(name="Circle", creatableInModule = MapModule.class, propertyAccessors = {
 		MapModule.PROPERTY_CENTER, MapModule.PROPERTY_RADIUS,
@@ -224,28 +223,7 @@ public class CircleProxy  extends KrollProxy implements IShape
 	public Circle getCircle() {
 		return circle;
 	}
-	
-	protected TiMarker marker;
-	
-	/**
-	 * Handle timarker reference
-	 * */
-	public void setTiMarker(TiMarker marker) {
-		this.marker = marker;
-	}
-	
-	public TiMarker getTiMarker() {
-		return this.marker;
-	}
-	
-	public Marker getMarker() {
-		return this.marker != null ? this.marker.getMarker() : null;
-	}
-
-	public AnnotationProxy getAnnotation() {
-		return this.marker != null ? this.marker.getProxy() : null;
-	}	
-	
+		
 	// A location can either be a an array of longitude, latitude pairings or
 	// an array of longitude, latitude objects.
 	// e.g. [123.33, 34.44], OR {longitude: 123.33, latitude, 34.44}
