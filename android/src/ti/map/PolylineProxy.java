@@ -49,8 +49,13 @@ public class PolylineProxy extends KrollProxy implements IShape
 	// (float)	 strokeWidth 
 	// (int) 	 fillColor 
 	// (float)	 zIndex	
+	
 	public static final String PROPERTY_STROKE_COLOR = "color";
 	public static final String PROPERTY_STROKE_WIDTH = "width";
+	
+	public static final String PROPERTY_STROKE_COLOR2 = "strokeColor";
+	public static final String PROPERTY_STROKE_WIDTH2 = "strokeWidth";
+	
 	public static final String PROPERTY_ZINDEX = "zIndex";	
 	
 	public PolylineProxy() {
@@ -74,7 +79,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 		switch (msg.what) {
 			case MSG_SET_POINTS: {
 				result = (AsyncResult) msg.obj;
-				//Log.e("PolylineProxy.handleMessage.MSG_SET_POINTS", result.getArg().toString());
 				polyline.setPoints(processPoints(result.getArg(), true));
 				result.setResult(null);
 				return true;
@@ -118,9 +122,19 @@ public class PolylineProxy extends KrollProxy implements IShape
 		op = PolylineProxy.PROPERTY_STROKE_COLOR;
 		if (hasProperty(op)) {
 			options.color(TiConvert.toColor((String)getProperty(op)));
+		}	
+		// normalized API
+		op = PolylineProxy.PROPERTY_STROKE_COLOR2;
+		if (hasProperty(op)) {
+			options.color(TiConvert.toColor((String)getProperty(op)));
 		}
 		
 		op = PolylineProxy.PROPERTY_STROKE_WIDTH;
+		if (hasProperty(op)) {
+			options.width(TiConvert.toFloat(getProperty(op)));
+		}
+		// normalized API
+		op = PolylineProxy.PROPERTY_STROKE_WIDTH2;
 		if (hasProperty(op)) {
 			options.width(TiConvert.toFloat(getProperty(op)));
 		}
