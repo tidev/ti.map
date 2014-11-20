@@ -204,14 +204,22 @@ public class ViewProxy extends TiViewProxy
 	}
 
 	@Kroll.method
-	public void addAnnotations(AnnotationProxy[] annos) {
+	public void addAnnotations(Object annoObject) {
+		if (!(annoObject instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to addAnnotations",  Log.DEBUG_MODE);
+			return;
+		}
+		Object[] annos = (Object[])annoObject;
+
 		//Update the JS object
 		Object annotations = getProperty(TiC.PROPERTY_ANNOTATIONS);
 		if (annotations instanceof Object[]) {
 			ArrayList<Object> annoList = new ArrayList<Object>(Arrays.asList((Object[])annotations));
 			for (int i = 0; i < annos.length; i++) {
-				AnnotationProxy annotation = annos[i];
-				annoList.add(annotation);
+				Object annotationObject = annos[i];
+				if (annotationObject instanceof AnnotationProxy) {
+					annoList.add((AnnotationProxy)annotationObject);
+				}
 			}
 			setProperty(TiC.PROPERTY_ANNOTATIONS, annoList.toArray());
 		} else {

@@ -1,6 +1,8 @@
 # Change Log
 <pre>
 
+v2.2.3    Update signature of addAnnotations method.[TIMOB-17988]
+
 v2.2.2    Update Google Play Services library and assets. [TIMODOPEN-451]
 
 v2.2.1    Update Google Play Services library and assets. [TIMOB-17884]
