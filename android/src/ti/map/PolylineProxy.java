@@ -29,7 +29,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 	
 	PolylineProxy.PROPERTY_STROKE_COLOR2,
 	PolylineProxy.PROPERTY_STROKE_WIDTH2,	
-	
+
 	PolylineProxy.PROPERTY_ZINDEX,
 	
 	MapModule.PROPERTY_POINTS,
