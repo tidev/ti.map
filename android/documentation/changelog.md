@@ -2,6 +2,8 @@
 <pre>
 v2.4.0  Added support for polygons, polylines, an circles.
 
+v2.2.2    Update Google Play Services library and assets. [TIMODOPEN-451]
+
 v2.2.1    Update Google Play Services library and assets. [TIMOB-17884]
 
 v2.2.0    Bumping minsdk to 3.3.0 [TIMOB-17048]
