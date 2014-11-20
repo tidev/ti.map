@@ -42,7 +42,7 @@ properties:
     default: black
 
   - name: strokeWidth
-    summary: Line width to use when drawing the circle.
+    summary: Line width in pixels to use when drawing the circle.
     type: Number
     default: 10
 

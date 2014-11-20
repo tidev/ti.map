@@ -28,7 +28,7 @@ properties:
     default: black
 
   - name: strokeWidth
-    summary: Line width to use when drawing the polyline.
+    summary: Line width in pixels to use when drawing the polyline.
     type: Number
     default: 10
 

@@ -12,14 +12,10 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.util.TiConvert;
 
-import ti.map.MapModule;
 import ti.map.Shape.IShape;
-
 import android.os.Message;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -128,10 +124,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 		options = new PolygonOptions();
 		String op;
-		// (int) strokeColor
-		// (float) strokeWidth
-		// (int) fillColor
-		// (float) zIndex
 
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
 			processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
@@ -213,17 +205,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 				if (pointsArray instanceof Object[]) {
 					for (int i = 0; i < pointsArray.length; i++) {
 						Object obj = pointsArray[i];
-						
-//						if (obj instanceof HashMap) {
-//							HashMap<String, String> point = (HashMap<String, String>) obj;
-//							LatLng location = new LatLng(
-//									TiConvert.toDouble(point
-//											.get(TiC.PROPERTY_LATITUDE)),
-//									TiConvert.toDouble(point
-//											.get(TiC.PROPERTY_LONGITUDE)));
-//							holeContainerArray.add(location);
-//						}
-
 						holeContainerArray.add(parseLocation(obj));
 						
 					}

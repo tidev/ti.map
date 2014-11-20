@@ -140,7 +140,7 @@ exports.run = function (UI, Map) {
     var circ1 = Map.createCircle({
         center: { latitude: -33.87365, longitude: 151.20689 },
         radius: 1000,
-        strokeWidth: '2dp',
+        strokeWidth: 2,
         strokeColor: '#D2BE1F',
         fillColor: '#BFFFE725' // 75% opacity
     }),
@@ -148,7 +148,7 @@ exports.run = function (UI, Map) {
     circ2 = Map.createCircle({
         center: [151.185220, -33.868997],
         radius: 250,
-        strokeWidth: '1dp',
+        strokeWidth: 1,
         strokeColor: '#AD5A00',
         fillColor: '#FF8400',
         zIndex: 2 // should be on top of circle 3 (purple) on android
@@ -157,7 +157,7 @@ exports.run = function (UI, Map) {
     circ3 = Map.createCircle({
       center: [151.185220, -33.868997],
       radius: 500,
-      strokeWidth: '1dp',
+      strokeWidth: 1,
       strokeColor: '#52089C',
       fillColor: '#BF943BED' // purple
     });
@@ -172,7 +172,7 @@ exports.run = function (UI, Map) {
         {latitude: -33.886783, longitude: 151.218033}
       ],
       strokeColor: "#60FF0000",
-      strokeWidth: "2dp",
+      strokeWidth: 2,
       zIndex: 10
     });
 
