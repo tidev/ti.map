@@ -19,7 +19,7 @@ properties:
     type: Array<MapPointType>
     optional: false
 
-  - name: color
+  - name: strokeColor
     summary: |
         Color to use for the the polyline, as a color name or hex triplet.
     description: |
@@ -27,7 +27,7 @@ properties:
     type: String
     default: black
 
-  - name: width
+  - name: strokeWidth
     summary: Line width in pixels to use when drawing the polyline.
     type: Number
     default: 10
