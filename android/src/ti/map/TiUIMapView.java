@@ -19,6 +19,9 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 
+import ti.map.Shape.Boundary;
+import ti.map.Shape.IShape;
+import ti.map.Shape.PolylineBoundary;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -34,22 +37,13 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-
-import ti.map.Shape.Boundary;
-import ti.map.Shape.IShape;
-import ti.map.Shape.PolylineBoundary;
-import ti.map.PolygonProxy;
-import ti.map.PolylineProxy;
-import ti.map.CircleProxy;
 
 
 
@@ -145,6 +139,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		}
 	}
 
+	@Override
 	protected void onViewCreated() {
 		map = acquireMap();
 		// A workaround for
@@ -562,8 +557,9 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	}
 
 	public void removeAllPolygons() {
-		for (int i = 0; i < currentPolygons.size(); i++) {
-			removePolygon(currentPolygons.get(i));
+		for (PolygonProxy polygonProxy : currentPolygons) {
+			polygonProxy.getPolygon().remove();
+			polygonProxy.setPolygon(null);
 		}
 		currentPolygons.clear();
 	}
@@ -605,8 +601,9 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	}
 
 	public void removeAllPolylines() {
-		for (int i = 0; i < currentPolylines.size(); i++) {
-			removePolyline(currentPolylines.get(i));
+		for (PolylineProxy polylineProxy : currentPolylines) {
+			polylineProxy.getPolyline().remove();
+			polylineProxy.setPolyline(null);
 		}
 		currentPolylines.clear();
 	}
