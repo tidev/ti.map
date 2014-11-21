@@ -4,6 +4,7 @@
 #
 version: 2.2.3
 apiversion: 2
+architectures: armeabi armeabi-v7a x86
 description: External version of Map module to support new Google Map v2 sdk
 author: Hieu Pham
 license: Apache Public License v2
