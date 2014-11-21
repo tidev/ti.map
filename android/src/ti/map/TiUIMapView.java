@@ -756,7 +756,6 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 
 	@Override
 	public void onMapClick(LatLng point) {
-		Log.d(TAG, "MAP CLICK");
 
 		if (selectedAnnotation != null) {
 			TiMarker tiMarker = selectedAnnotation.getTiMarker();
@@ -764,7 +763,6 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 				fireClickEvent(tiMarker.getMarker(), selectedAnnotation, null);
 			}
 			selectedAnnotation = null;
-			return;
 		}
 
 		// currentCircles
@@ -782,21 +780,19 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 					fireShapeClickEvent(point, circleProxy, MapModule.PROPERTY_CIRCLE);
 				}
 			}
-			return;
 		}
 
 		//	currentPolygons
 		if(currentPolygons.size() > 0) {
+
 			Boundary boundary = new Boundary();
 			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(currentPolygons, point);
 			boundary = null;
 
-			Log.d(TAG, "SIZE: " + clickedPolygon.size());
 			if(clickedPolygon.size() > 0) {
 				for (PolygonProxy polygonProxy : clickedPolygon) {
 					fireShapeClickEvent(point, polygonProxy, MapModule.PROPERTY_POLYGON);
 				}
-				return;
 			}
 		}
 
@@ -818,7 +814,6 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 				for (PolylineProxy polylineProxy : clickedPolylines) {
 					fireShapeClickEvent(point, polylineProxy, MapModule.PROPERTY_POLYLINE);
 				}
-				return;
 			}
 		}
 
