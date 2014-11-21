@@ -1025,7 +1025,7 @@
         CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
         BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
         if (inPolygon) {
-            [self fireShapeClickEvent:poly point:point sourceType:VIEW_TYPE_POLYGON];
+            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYGON];
         }
     }
 }
@@ -1040,7 +1040,7 @@
         CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
         BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
         if (inCircle) {
-            [self fireShapeClickEvent:circ point:point sourceType:VIEW_TYPE_CIRCLE];
+            [self fireShapeClickEvent:circle point:point sourceType:VIEW_TYPE_CIRCLE];
         }
     }
 }
@@ -1055,7 +1055,7 @@
         CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
         BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
         if (onPolyline) {
-            [self fireShapeClickEvent:poly point:point sourceType:VIEW_TYPE_POLYLINE];
+            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYLINE];
         }
     }
 }
@@ -1091,7 +1091,7 @@
     [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
 }
 
-- (void)fireShapeClickEvent:(id)proxy point:(MKMapPoint)point sourceType:(NSString*)sourceType {
+- (void)fireShapeClickEvent:(id)sourceProxy point:(MKMapPoint)point sourceType:(NSString*)sourceType {
     if (ignoreClicks)
     {
         return;
@@ -1103,10 +1103,12 @@
     NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
     NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
 
+    // In iOS, sometimes the source property is forced to the mapProxy and so we have to send along
+    // a more robust message via 'shape' and 'shapeType'.
     NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:sourceType,@"clicksource",
-                            mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+                            mapProxy,@"map",lat,@"latitude",lng,@"longitude",sourceProxy,@"source",sourceProxy,@"shape",sourceType,@"shapeType", nil];
 
-    [self doClickEvent:proxy mapProxy:mapProxy event:event];
+    [self doClickEvent:sourceProxy mapProxy:mapProxy event:event];
 }
 
 // Common functionality to fire event on map proxy and view proxy objects

@@ -24,6 +24,8 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_POINTS = "points";
 	public static final String PROPERTY_TRAFFIC = "traffic";
 	public static final String PROPERTY_MAP = "map";
+	public static final String PROPERTY_SHAPE = "shape";
+	public static final String PROPERTY_SHAPE_TYPE = "shapeType";
 	public static final String PROPERTY_NEWSTATE = "newState";
 	public static final String PROPERTY_CUSTOM_VIEW = "customView";
 	public static final String PROPERTY_PIN = "pin";

@@ -668,6 +668,11 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
 		d.put(TiC.PROPERTY_SOURCE, shapeProxy);
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
+		// In iOS, sometimes the source property is forced to the mapProxy and
+		// so we have to send along a more robust message via 'shape' and
+		// 'shapeType'.
+		d.put(MapModule.PROPERTY_SHAPE, shapeProxy);
+		d.put(MapModule.PROPERTY_SHAPE_TYPE, clickSource);
 
 		proxy.fireEvent(TiC.EVENT_CLICK, d);
 	}
@@ -751,6 +756,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 
 	@Override
 	public void onMapClick(LatLng point) {
+		Log.d(TAG, "MAP CLICK");
 
 		if (selectedAnnotation != null) {
 			TiMarker tiMarker = selectedAnnotation.getTiMarker();
@@ -784,6 +790,8 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 			Boundary boundary = new Boundary();
 			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(currentPolygons, point);
 			boundary = null;
+
+			Log.d(TAG, "SIZE: " + clickedPolygon.size());
 			if(clickedPolygon.size() > 0) {
 				for (PolygonProxy polygonProxy : clickedPolygon) {
 					fireShapeClickEvent(point, polygonProxy, MapModule.PROPERTY_POLYGON);
