@@ -1,6 +1,7 @@
 # Change Log
 <pre>
-v2.2.0 [TIMOB-17928] Updated to build for 64-bit
+v2.2.0  Updated to build for 64-bit [TIMOB-17928]
+        Adding architectures to manifest [TIMOB-18065]
 
 v2.0.6  Fixed map not responding to touch after animating camera [TIMOB-17749]
 
