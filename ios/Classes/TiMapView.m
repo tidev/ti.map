@@ -35,6 +35,7 @@
         mapObjects2View = nil;
     }
     RELEASE_TO_NIL(tapInterceptor);
+    RELEASE_TO_NIL(longPressInterceptor);
 	RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
@@ -85,6 +86,11 @@
 
 -(void)registerTouchEvents
 {
+
+    longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+
+
+    // Any press to see if shape intersection
     tapInterceptor = [[WildcardGestureRecognizer alloc] init];
     tapInterceptor.touchesBeganCallback = ^(NSSet * touches, UIEvent * event) {
         UITouch *touch = [touches anyObject];
@@ -97,6 +103,8 @@
         [self handlePolylineClick:mapPoint];
 
     };
+
+    [map addGestureRecognizer:longPressInterceptor];
     [map addGestureRecognizer:tapInterceptor];
 }
 
@@ -1013,6 +1021,23 @@
 }
 
 #pragma mark Event generation
+-(void)handleLongPress:(UIGestureRecognizer *)sender
+{
+    if(sender.state == UIGestureRecognizerStateBegan) {
+        TiProxy * mapProxy = [self proxy];
+        CGPoint location = [sender locationInView:map];
+        CLLocationCoordinate2D coord = [map convertPoint:location toCoordinateFromView:map];
+        NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
+        NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
+        NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+        if ([mapProxy _hasListeners:@"longclick"]) {
+            [mapProxy fireEvent:@"longclick" withObject:event];
+        }
+
+    }
+
+}
 
 -(void)handlePolygonClick:(MKMapPoint)point
 {

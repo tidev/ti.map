@@ -36,6 +36,7 @@ NSString * const VIEW_TYPE_POLYLINE = @"polyline";
     NSMutableArray *polylineProxies;
 
     // capture touch events
+    UILongPressGestureRecognizer *longPressInterceptor;
     WildcardGestureRecognizer * tapInterceptor;
 
     // dictionary for object tracking and association
