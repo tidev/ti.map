@@ -87,7 +87,7 @@
 -(void)registerTouchEvents
 {
 
-    longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
 
 
     // Any press to see if shape intersection
@@ -107,6 +107,7 @@
     [map addGestureRecognizer:longPressInterceptor];
     [map addGestureRecognizer:tapInterceptor];
 }
+
 
 - (id)accessibilityElement
 {
@@ -1021,7 +1022,9 @@
 }
 
 #pragma mark Event generation
--(void)handleLongPress:(UIGestureRecognizer *)sender
+
+
+-(void)handleLongPressOnMap:(UIGestureRecognizer *)sender
 {
     if(sender.state == UIGestureRecognizerStateBegan) {
         TiProxy * mapProxy = [self proxy];
