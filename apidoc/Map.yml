@@ -349,7 +349,7 @@ examples:
     example: |
         Previous example as an Alloy view.
 
-        In XML markup, use the `Module` element to create an instance of a map view, then use
+        In XML markup, use the `module` attribute to create an instance of a map view, then use
         the `Annotation` element to define an annotation.
 
         In the initializer file, load the map module and assign it to the `Alloy.Globals.Map` namespace.
@@ -365,7 +365,7 @@ examples:
 
             <Alloy>
                 <Window>
-                    <Module id="mapview" module="ti.map" method="createView" onClick="report">
+                    <View id="mapview" module="ti.map" onClick="report">
                         <!-- Starting with Alloy 1.4.0, use the Annotation tag to define an annotation -->
                         <!-- Prior to Alloy 1.4.0, create annotations in the controller -->
                         <Annotation id='appcHQ' myid='1' />
