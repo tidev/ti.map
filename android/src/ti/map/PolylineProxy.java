@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 @Kroll.proxy(name="Polyline",creatableInModule=MapModule.class, propertyAccessors = {
 
-MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
+	MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
 
 	PolylineProxy.PROPERTY_STROKE_COLOR2,
 	PolylineProxy.PROPERTY_STROKE_WIDTH2,
@@ -119,7 +119,8 @@ public class PolylineProxy extends KrollProxy implements IShape
 		if (hasProperty(op)) {
 			options.color(TiConvert.toColor((String)getProperty(op)));
 		}
-
+		
+		op = MapModule.PROPERTY_STROKE_WIDTH;		
 		if (hasProperty(op)) {
 			options.width(TiConvert.toFloat(getProperty(op)));
 		}
