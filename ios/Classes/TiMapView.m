@@ -34,11 +34,11 @@
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
-    RELEASE_TO_NIL(tapInterceptor);
-    RELEASE_TO_NIL(longPressInterceptor);
+
 	RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
+    RELEASE_TO_NIL(circleProxies);
 	[super dealloc];
 }
 
@@ -87,25 +87,28 @@
 -(void)registerTouchEvents
 {
 
-    longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
-
+    UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
 
     // Any press to see if shape intersection
-    tapInterceptor = [[WildcardGestureRecognizer alloc] init];
+    WildcardGestureRecognizer * tapInterceptor = [[WildcardGestureRecognizer alloc] init];
+    __block TiMapView *weakSelf = self; // to avoid leaking inside touchesBeganCallback
+    __block MKMapView *weakMap  = map;
     tapInterceptor.touchesBeganCallback = ^(NSSet * touches, UIEvent * event) {
         UITouch *touch = [touches anyObject];
-        CGPoint point = [touch locationInView:map];
+        CGPoint point = [touch locationInView:weakMap];
 
-        CLLocationCoordinate2D coord = [map convertPoint:point toCoordinateFromView:map];
+        CLLocationCoordinate2D coord = [weakMap convertPoint:point toCoordinateFromView:weakMap];
         MKMapPoint mapPoint = MKMapPointForCoordinate(coord);
-        [self handlePolygonClick:mapPoint];
-        [self handleCircleClick:mapPoint];
-        [self handlePolylineClick:mapPoint];
-
+        [weakSelf handlePolygonClick:mapPoint];
+        [weakSelf handleCircleClick:mapPoint];
+        [weakSelf handlePolylineClick:mapPoint];
     };
 
     [map addGestureRecognizer:longPressInterceptor];
     [map addGestureRecognizer:tapInterceptor];
+
+    [longPressInterceptor release];
+    [tapInterceptor release];
 }
 
 

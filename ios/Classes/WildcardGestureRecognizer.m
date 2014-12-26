@@ -7,7 +7,8 @@
 #import "WildcardGestureRecognizer.h"
 
 @implementation WildcardGestureRecognizer
-@synthesize touchesBeganCallback;
+//@synthesize touchesBeganCallback;
+
 
 -(id) init{
     if (self = [super init])
