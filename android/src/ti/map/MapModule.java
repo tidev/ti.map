@@ -37,6 +37,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_BEARING = "bearing";
 	public static final String PROPERTY_ZOOM = "zoom";
 	public static final String PROPERTY_ZORDER_ON_TOP = "zOrderOnTop";
+	public static final String PROPERTY_CENTER_OFFSET = "centerOffset";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	
