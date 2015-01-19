@@ -1,5 +1,5 @@
-
 exports.title = 'Multi Maps';
+exports.color = 'black';
 exports.run = function(UI, Map) {
     var win = UI.createWindow();
     
