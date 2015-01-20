@@ -9,6 +9,7 @@
 @implementation WildcardGestureRecognizer
 @synthesize touchesBeganCallback;
 
+
 -(id) init{
     if (self = [super init])
     {

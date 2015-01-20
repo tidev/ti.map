@@ -34,10 +34,11 @@
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
-    RELEASE_TO_NIL(tapInterceptor);
+
 	RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
+    RELEASE_TO_NIL(circleProxies);
 	[super dealloc];
 }
 
@@ -85,20 +86,31 @@
 
 -(void)registerTouchEvents
 {
-    tapInterceptor = [[WildcardGestureRecognizer alloc] init];
+
+    UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
+
+    // Any press to see if shape intersection
+    WildcardGestureRecognizer * tapInterceptor = [[WildcardGestureRecognizer alloc] init];
+    __block TiMapView *weakSelf = self; // to avoid leaking inside touchesBeganCallback
+    __block MKMapView *weakMap  = map;
     tapInterceptor.touchesBeganCallback = ^(NSSet * touches, UIEvent * event) {
         UITouch *touch = [touches anyObject];
-        CGPoint point = [touch locationInView:map];
+        CGPoint point = [touch locationInView:weakMap];
 
-        CLLocationCoordinate2D coord = [map convertPoint:point toCoordinateFromView:map];
+        CLLocationCoordinate2D coord = [weakMap convertPoint:point toCoordinateFromView:weakMap];
         MKMapPoint mapPoint = MKMapPointForCoordinate(coord);
-        [self handlePolygonClick:mapPoint];
-        [self handleCircleClick:mapPoint];
-        [self handlePolylineClick:mapPoint];
-
+        [weakSelf handlePolygonClick:mapPoint];
+        [weakSelf handleCircleClick:mapPoint];
+        [weakSelf handlePolylineClick:mapPoint];
     };
+
+    [map addGestureRecognizer:longPressInterceptor];
     [map addGestureRecognizer:tapInterceptor];
+
+    [longPressInterceptor release];
+    [tapInterceptor release];
 }
+
 
 - (id)accessibilityElement
 {
@@ -1013,6 +1025,25 @@
 }
 
 #pragma mark Event generation
+
+
+-(void)handleLongPressOnMap:(UIGestureRecognizer *)sender
+{
+    if(sender.state == UIGestureRecognizerStateBegan) {
+        TiProxy * mapProxy = [self proxy];
+        CGPoint location = [sender locationInView:map];
+        CLLocationCoordinate2D coord = [map convertPoint:location toCoordinateFromView:map];
+        NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
+        NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
+        NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+        if ([mapProxy _hasListeners:@"longclick"]) {
+            [mapProxy fireEvent:@"longclick" withObject:event];
+        }
+
+    }
+
+}
 
 -(void)handlePolygonClick:(MKMapPoint)point
 {

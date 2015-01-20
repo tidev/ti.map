@@ -915,6 +915,12 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 					(bounds.northeast.latitude - bounds.southwest.latitude));
 			d.put(TiC.PROPERTY_LONGITUDE_DELTA,
 					(bounds.northeast.longitude - bounds.southwest.longitude));
+
+			// In iOS, the region property is updated in the
+			// 'regionDidChangeAnimated' method.
+			// This allows a user to call getRegion and receive the current map
+			// bounds
+			proxy.setProperty(TiC.PROPERTY_REGION, d);
 			proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
 		}
 

@@ -35,9 +35,6 @@ NSString * const VIEW_TYPE_POLYLINE = @"polyline";
     NSMutableArray *circleProxies;
     NSMutableArray *polylineProxies;
 
-    // capture touch events
-    WildcardGestureRecognizer * tapInterceptor;
-
     // dictionary for object tracking and association
     CFMutableDictionaryRef mapObjects2View;   // MKOverlay Object -> MKOverlay Object's renderer
 	
