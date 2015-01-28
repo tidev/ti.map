@@ -1,5 +1,5 @@
-
 exports.title = 'Routes';
+exports.color = 'black';
 exports.run = function(UI, Map) {
     var win = UI.createWindow();
     var w = 5.0;
@@ -7,6 +7,7 @@ exports.run = function(UI, Map) {
     var rows = [
         {
             title: '+1 width',
+            color: 'black',
             run: function(){
                 // iOS Note: changing the width of an existing route will only work on iOS 7+ 
                 route.width = w + 1.0;
@@ -15,6 +16,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'change color',
+            color: 'black',
             run: function(){
                 // iOS Note: changing the color of an existing route will only work on iOS 7+ 
                 route.color = 'red';
@@ -22,6 +24,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'change routes',
+            color: 'black',
             run: function(){
                 map.removeRoute(route);
                 route = Map.createRoute({
@@ -32,12 +35,14 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'remove route',
+            color: 'black',
             run: function(){
                 map.removeRoute(route);
             }
         },
         {
             title: 'add route',
+            color: 'black',
             run: function(){
                 map.addRoute(route);
             }

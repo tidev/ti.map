@@ -1,6 +1,8 @@
 # Change Log
 <pre>
 
+v2.2.5    Fixed the example. [MOD-2073]
+
 v2.2.4    Added support for density-specific images for leftButton and rightButton properties. [MOD-1771]
 
 v2.2.3    Update signature of addAnnotations method.[TIMOB-17988]

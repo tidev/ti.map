@@ -1,4 +1,5 @@
 exports.title = '3D features';
+exports.color = 'black';
 exports.run = function(UI, Map) {
 	var tilt = 90;
 	var bearing = 45;
