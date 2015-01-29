@@ -1,11 +1,12 @@
-
 exports.title = 'Camera';
+exports.color = 'black';
 exports.run = function(UI, Map) {
     var win = UI.createWindow();
     
     var rows = [
         {
             title: 'Set Camera',
+            color: 'black',
             run: function(){
                 map.camera = Map.createCamera({
                     centerCoordinate: {
@@ -18,6 +19,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'Zoom out',
+            color: 'black',
             run: function(){
                 // Camera will not exist if run on pre iOS 7
                 if (map.camera) {
@@ -27,6 +29,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'Go to Melbourne animated',
+            color: 'black',
             run: function(){
                 
                 map.animateCamera({
@@ -43,6 +46,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'Go to Sydney animated',
+            color: 'black',
             run: function(){
                 map.animateCamera({
                     camera: midpointCam,

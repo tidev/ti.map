@@ -1,41 +1,47 @@
-
 exports.title = 'Annotations';
+exports.color = 'black';
 exports.run = function(UI, Map) {
     var win = UI.createWindow();
     
     var rows = [
         {
             title: 'Go Mt. View',
+            color: 'black',
             run: function(){
                 map.region = {latitude: 37.3689, longitude: -122.0353, latitudeDelta: 0.1, longitudeDelta: 0.1 }; //Mountain View
             }
         },
         {
             title: 'add anno3',
+            color: 'black',
             run: function(){
                 map.addAnnotation(anno3);
             }
         },
         {
             title: 'rm anno3',
+            color: 'black',
             run: function(){
                 map.removeAnnotation(anno3);
             }
         },
         {
             title: 'add anno1, 2, 4',
+            color: 'black',
             run: function(){
                 map.annotations = [anno, anno2, anno4];
             }
         },
         {
             title: 'rm all',
+            color: 'black',
             run: function(){
                 map.removeAllAnnotations();
             }
         },
         {
             title: 'remove annos: Sydney, anno2',
+            color: 'black',
             run: function(){
                 Ti.API.info(anno.getTitle());
                 map.removeAnnotations(["Sydney", anno2]);
@@ -43,18 +49,21 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'select anno2',
+            color: 'black',
             run: function(){
                 map.selectAnnotation(anno2);
             }
         },
         {
             title: 'desel anno2',
+            color: 'black',
             run: function(){
                 map.deselectAnnotation(anno2);
             }
         },
         {
             title: 'modify anno2',
+            color: 'black',
             run: function(){
                 anno2.title = "Hello";
                 anno2.subtitle = "Hi there.";

@@ -354,7 +354,7 @@ public class AnnotationProxy extends KrollProxy
 	private TiMapInfoWindow getOrCreateMapInfoWindow()
 	{
 		if (infoWindow == null) {
-			infoWindow = new TiMapInfoWindow(TiApplication.getInstance().getApplicationContext());
+			infoWindow = new TiMapInfoWindow(TiApplication.getInstance().getApplicationContext(), this);
 		}
 		return infoWindow;
 	}
