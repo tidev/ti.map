@@ -639,6 +639,11 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState
 {
 	[self firePinChangeDragState:annotationView newState:newState fromOldState:oldState];
+	if (newState == MKAnnotationViewDragStateStarting) {
+		[annotationView setDragState: MKAnnotationViewDragStateDragging];
+	} else if (newState == MKAnnotationViewDragStateEnding || newState == MKAnnotationViewDragStateCanceling) {
+		[annotationView setDragState: MKAnnotationViewDragStateNone];
+	}
 }
 
 - (void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
