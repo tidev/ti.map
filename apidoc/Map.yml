@@ -24,22 +24,21 @@ description: |
 
     -   Edit the `modules` section of your tiapp.xml file to include this module:
 
-            ...
+            <ti:app>
                 <modules>
                     <!-- Add this line to your modules section -->
                     <module platform="android">ti.map</module>
                 </modules>
-            ...
+            </ti:app>
 
     -   Obtain a Google Maps API key.  For instructions, refer to the "Obtain and Add a Google API Key"
         section in the
         [Google Maps v2 for Android guide](http://docs.appcelerator.com/titanium/latest/#!/guide/Google_Maps_v2_for_Android).
 
-    -   Add the following settings and permissions to the Android manifest section of the tiapp.xml
-        file. Replace the two instances of `<com.domain.appid>` with your application's ID (package name)
-        and replace "PASTE YOUR GOOGLE MAPS API KEY HERE" with the Google API key you obtained:
+    -   Add the following `meta-tag` element to the Android manifest section of the tiapp.xml
+        file. You may need to add the `manifest` and `application` elements.
 
-            ...
+            <ti:app>
                 <android xmlns:android="http://schemas.android.com/apk/res/android">
                     <manifest>
                         <application>
@@ -49,7 +48,7 @@ description: |
                         </application>
                     </manifest>
                 </android>
-            ...
+            </ti:app>
 
     -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
         the new map object.
@@ -72,12 +71,12 @@ description: |
 
     -   Edit the `modules` section of your tiapp.xml file to include this module:
 
-            ...
+            <ti:app>
                 <modules>
                     <!-- Add this line to your modules section -->
                     <module platform="iphone">ti.map</module>
                 </modules>
-            ...
+            </ti:app>
 
     -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
         the new map object.
@@ -326,8 +325,8 @@ examples:
     example: |
         Previous example as an Alloy view.
 
-        In XML markup, use the `Module` element to create an instance of a map view, then use
-        the `Annotation` element to define an annotation.
+        In XML markup, use the `View` element with the `module` attribute set to `ti.map` to create an
+        instance of a map view, then use the `Annotation` element to define an annotation.
 
         In the initializer file, load the map module and assign it to the `Alloy.Globals.Map` namespace.
         This variable can be used to reference map module constants in the project, as seen in the TSS
@@ -342,7 +341,7 @@ examples:
 
             <Alloy>
                 <Window>
-                    <View id="mapview" ns="Ti.Map" onClick="report">
+                    <View id="mapview" module="ti.map" onClick="report">
                         <!-- Starting with Alloy 1.4.0, use the Annotation tag to define an annotation -->
                         <!-- Prior to Alloy 1.4.0, create annotations in the controller -->
                         <Annotation id='appcHQ' myid='1' />
