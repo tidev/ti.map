@@ -66,7 +66,7 @@ properties:
         Positive offset values move the annotation view down and right, while negative values
         move it up and left.
     type: Point
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
 
   - name: customView
     summary: Defines a custom view to be used by the annotation.
