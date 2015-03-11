@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.2.1  Fixed map draggable map pins [TIMOB-18510]
+
 v2.2.0  Updated to build for 64-bit [TIMOB-17928]
         Adding architectures to manifest [TIMOB-18065]
 

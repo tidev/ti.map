@@ -639,6 +639,11 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState
 {
 	[self firePinChangeDragState:annotationView newState:newState fromOldState:oldState];
+	if (newState == MKAnnotationViewDragStateStarting) {
+		[annotationView setDragState: MKAnnotationViewDragStateDragging];
+	} else if (newState == MKAnnotationViewDragStateEnding || newState == MKAnnotationViewDragStateCanceling) {
+		[annotationView setDragState: MKAnnotationViewDragStateNone];
+	}
 }
 
 - (void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
@@ -790,10 +795,7 @@
             annView.rightCalloutAccessoryView = right;
         }
 
-        BOOL draggable = [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]];
-        if (draggable && [[MKAnnotationView class] instancesRespondToSelector:NSSelectorFromString(@"isDraggable")])
-            [annView performSelector:NSSelectorFromString(@"setDraggable:") withObject:[NSNumber numberWithBool:YES]];
-
+        [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
         annView.tag = [ann tag];
         return annView;
