@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -791,9 +791,21 @@
         if (left!=nil) {
             annView.leftCalloutAccessoryView = left;
         }
+		else {
+			//ios7 requires this to be explicitly set as nil if nil
+			if (![TiUtils isIOS8OrGreater]) {
+				annView.leftCalloutAccessoryView = nil;
+			}
+		}
         if (right!=nil) {
             annView.rightCalloutAccessoryView = right;
         }
+		else {
+			//ios7 requires this to be explicitly set as nil if nil			
+			if (![TiUtils isIOS8OrGreater]) {
+				annView.rightCalloutAccessoryView = nil;
+			}
+		}
 
         [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
