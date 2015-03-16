@@ -791,21 +791,21 @@
         if (left!=nil) {
             annView.leftCalloutAccessoryView = left;
         }
-		else {
-			//ios7 requires this to be explicitly set as nil if nil
-			if (![TiUtils isIOS8OrGreater]) {
-				annView.leftCalloutAccessoryView = nil;
-			}
-		}
+        else {
+            //ios7 requires this to be explicitly set as nil if nil
+            if (![TiUtils isIOS8OrGreater]) {
+                annView.leftCalloutAccessoryView = nil;
+            }
+        }
         if (right!=nil) {
             annView.rightCalloutAccessoryView = right;
         }
-		else {
-			//ios7 requires this to be explicitly set as nil if nil			
-			if (![TiUtils isIOS8OrGreater]) {
-				annView.rightCalloutAccessoryView = nil;
-			}
-		}
+        else {
+            //ios7 requires this to be explicitly set as nil if nil
+            if (![TiUtils isIOS8OrGreater]) {
+                annView.rightCalloutAccessoryView = nil;
+            }
+        }
 
         [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
