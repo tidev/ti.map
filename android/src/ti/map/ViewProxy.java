@@ -591,4 +591,9 @@ public class ViewProxy extends TiViewProxy
 			Log.e(TAG, "Unable set location since the map view has not been created yet. Use setRegion() instead.");
 		}
 	}
+	
+	public String getApiName()
+	{
+		return "Ti.Map";
+	}
 }
