@@ -192,7 +192,8 @@ exports.run = function (UI, Map) {
 
 
     map.addEventListener('click', function(e) {
-      Ti.API.info("Click Event: " + JSON.stringify(e));
+      Ti.API.info("Click Event: " + e.source);
+      Ti.API.info(JSON.stringify(e));
     });
 
     win.open();
