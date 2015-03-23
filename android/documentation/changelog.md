@@ -1,6 +1,7 @@
 # Change Log
 <pre>
-v2.4.0  Added support for polygons, polylines, an circles.
+v2.3.0    Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
+          Ensure region property is set after mapMove on android to match behavior of ios. [TIMOB-17857]
 
 v2.2.5    Fixed the example. [MOD-2073]
 

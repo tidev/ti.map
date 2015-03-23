@@ -1,6 +1,7 @@
 # Change Log
 <pre>
-v3.0.0  Added support for polygons, polylines, and circles.
+v2.3.0  Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
+        Fixes longclick event on iOS. [Github #41]
 
 v2.2.1  Fixed map draggable map pins [TIMOB-18510]
 
