@@ -6,7 +6,7 @@ version: 3.0.0
 apiversion: 2
 architectures: armv7 arm64 i386 x86_64
 description: External version of Map module
-author: Jeff Haynie & Jon Alter
+author: Jeff Haynie, Jon Alter, & Pedro Enrique
 license: Apache Public License v2
 copyright: Copyright (c) 2013 by Appcelerator, Inc.
 
