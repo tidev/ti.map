@@ -24,6 +24,8 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_POINTS = "points";
 	public static final String PROPERTY_TRAFFIC = "traffic";
 	public static final String PROPERTY_MAP = "map";
+	public static final String PROPERTY_SHAPE = "shape";
+	public static final String PROPERTY_SHAPE_TYPE = "shapeType";
 	public static final String PROPERTY_NEWSTATE = "newState";
 	public static final String PROPERTY_CUSTOM_VIEW = "customView";
 	public static final String PROPERTY_PIN = "pin";
@@ -37,9 +39,25 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_BEARING = "bearing";
 	public static final String PROPERTY_ZOOM = "zoom";
 	public static final String PROPERTY_ZORDER_ON_TOP = "zOrderOnTop";
+
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
-	
+
+	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
+	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
+	public static final String PROPERTY_FILL_COLOR = "fillColor";
+	public static final String PROPERTY_ZINDEX = "zIndex";
+
+	public static final String PROPERTY_POLYGON = "polygon";
+	public static final String PROPERTY_POLYGONS = "polygons";
+	public static final String PROPERTY_POLYLINE = "polyline";
+	public static final String PROPERTY_POLYLINES = "polylines";
+	public static final String PROPERTY_CIRCLE = "circle";
+	public static final String PROPERTY_CIRCLES = "circles";
+	public static final String PROPERTY_CENTER = "center";
+	public static final String PROPERTY_RADIUS = "radius";
+
+
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
 	@Kroll.constant public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
 	@Kroll.constant public static final int SATELLITE_TYPE = GoogleMap.MAP_TYPE_SATELLITE;
@@ -52,7 +70,7 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final int SERVICE_VERSION_UPDATE_REQUIRED = 2;
 	@Kroll.constant public static final int SERVICE_DISABLED = 3;
 	@Kroll.constant public static final int SERVICE_INVALID = 9;
-	
+
 	@Kroll.constant public static final float ANNOTATION_AZURE = BitmapDescriptorFactory.HUE_AZURE;
 	@Kroll.constant public static final float ANNOTATION_BLUE = BitmapDescriptorFactory.HUE_BLUE;
 	@Kroll.constant public static final float ANNOTATION_CYAN = BitmapDescriptorFactory.HUE_CYAN;
@@ -63,7 +81,8 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final float ANNOTATION_ROSE = BitmapDescriptorFactory.HUE_ROSE;
 	@Kroll.constant public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
 	@Kroll.constant public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
-	
+
+
 	public MapModule()
 	{
 		super();
