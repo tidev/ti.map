@@ -55,12 +55,20 @@ public class ViewProxy extends TiViewProxy
 	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
 	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 512;
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
+	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 514;
+	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 515;
+	private static final int MSG_ADD_CIRCLE = MSG_FIRST_ID + 516;
+	private static final int MSG_REMOVE_CIRCLE = MSG_FIRST_ID + 517;
 	
 	private ArrayList<RouteProxy> preloadRoutes;
+	private ArrayList<PolygonProxy> preloadPolygons;
+	private ArrayList<CircleProxy> preloadCircles;
 	
 	public ViewProxy() {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
+		preloadPolygons = new ArrayList<PolygonProxy>();
+		preloadCircles = new ArrayList<CircleProxy>();
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
 	}
 	
@@ -70,6 +78,8 @@ public class ViewProxy extends TiViewProxy
 	
 	public void clearPreloadObjects() {
 		preloadRoutes.clear();
+		preloadPolygons.clear();
+		preloadCircles.clear();
 	}
 
 	@Override
@@ -165,6 +175,34 @@ public class ViewProxy extends TiViewProxy
 
 		case MSG_SNAP_SHOT: {
 			handleSnapshot();
+			return true;
+		}
+		
+		case MSG_ADD_POLYGON: {
+			result = (AsyncResult) msg.obj;
+			handleAddPolygon((PolygonProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_REMOVE_POLYGON: {
+			result = (AsyncResult) msg.obj;
+			handleRemovePolygon((PolygonProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_ADD_CIRCLE: {
+			result = (AsyncResult) msg.obj;
+			handleAddCircle((CircleProxy)result.getArg());
+			result.setResult(null);
+			return true;
+		}
+		
+		case MSG_REMOVE_CIRCLE: {
+			result = (AsyncResult) msg.obj;
+			handleRemoveCircle((CircleProxy)result.getArg());
+			result.setResult(null);
 			return true;
 		}
 
@@ -590,6 +628,150 @@ public class ViewProxy extends TiViewProxy
 		} else {
 			Log.e(TAG, "Unable set location since the map view has not been created yet. Use setRegion() instead.");
 		}
+	}
+
+	@Kroll.method
+	public void addPolygon(PolygonProxy polygon) {
+		
+		if (TiApplication.isUIThread()) {
+			handleAddPolygon(polygon);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_POLYGON), polygon);
+
+		}
+	}
+	
+	public void handleAddPolygon(Object polygon) {
+		if (polygon == null) {
+			return;
+		}
+		PolygonProxy p = (PolygonProxy) polygon;
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addPolygon(p);
+
+			} else {
+				addPreloadPolygon(p);
+			}
+		} else {
+			addPreloadPolygon(p);
+		}
+
+	}
+	
+	public void addPreloadPolygon(PolygonProxy p) {
+		if (!preloadPolygons.contains(p)) {
+			preloadPolygons.add(p);
+		}
+	}
+	
+	public void removePreloadPolygon(PolygonProxy p) {
+		if (preloadPolygons.contains(p)) {
+			preloadPolygons.remove(p);
+		}
+	}
+	
+	@Kroll.method
+	public void removePolygon(PolygonProxy polygon) {
+		if (TiApplication.isUIThread()) {
+			handleRemovePolygon(polygon);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_POLYGON), polygon);
+
+		}
+	}
+	
+	public void handleRemovePolygon(PolygonProxy polygon) {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removePolygon(polygon);
+
+			} else {
+				removePreloadPolygon(polygon);
+			}
+		} else {
+			removePreloadPolygon(polygon);
+		}
+	}
+	
+	public ArrayList<PolygonProxy> getPreloadPolygons() {
+		return preloadPolygons;
+	}
+
+	@Kroll.method
+	public void addCircle(CircleProxy circle) {
+		
+		if (TiApplication.isUIThread()) {
+			handleAddCircle(circle);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_CIRCLE), circle);
+
+		}
+	}
+	
+	public void handleAddCircle(Object circle) {
+		if (circle == null) {
+			return;
+		}
+		CircleProxy c = (CircleProxy) circle;
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addCircle(c);
+
+			} else {
+				addPreloadCircle(c);
+			}
+		} else {
+			addPreloadCircle(c);
+		}
+
+	}
+	
+	public void addPreloadCircle(CircleProxy c) {
+		if (!preloadCircles.contains(c)) {
+			preloadCircles.add(c);
+		}
+	}
+	
+	public void removePreloadCircle(CircleProxy c) {
+		if (preloadCircles.contains(c)) {
+			preloadCircles.remove(c);
+		}
+	}
+	
+	@Kroll.method
+	public void removeCircle(CircleProxy circle) {
+		if (TiApplication.isUIThread()) {
+			handleRemoveCircle(circle);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_CIRCLE), circle);
+
+		}
+	}
+	
+	public void handleRemoveCircle(CircleProxy circle) {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removeCircle(circle);
+
+			} else {
+				removePreloadCircle(circle);
+			}
+		} else {
+			removePreloadCircle(circle);
+		}
+	}
+	
+	public ArrayList<CircleProxy> getPreloadCircles() {
+		return preloadCircles;
 	}
 	
 	public String getApiName()

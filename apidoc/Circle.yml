@@ -1,0 +1,57 @@
+---
+name: Modules.Map.Circle
+summary: Represents a Circle on the earth's surface
+description: |
+    The `Circle` object gives you low-level control over circles that can be added to a
+    [map view](Modules.Map.View). A polygon must have its `center` property set to appear on a map.
+
+    Use the <Modules.Map.createCircle> method to create a circle.
+
+extends: Titanium.Proxy
+since: { android: "4.0.0" }
+platforms: [android]
+
+properties:
+
+  - name: center
+    summary: A set of map points for the center of the circle.
+    availability: creation
+    type: MapPointType
+    optional: false
+
+  - name: radius
+    summary: Sets the radius in meters. The radius must be zero or greater.
+    type: Number
+
+  - name: fillColor
+    summary: |
+        Sets the fill color of this circle as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+
+  - name: strokeColor
+    summary: |
+        Sets the stroke color of this circle as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+
+  - name: strokeWidth
+    summary: Sets the stroke width of this circle.
+    description: |
+        Sets the stroke width of this circle.
+    type: Number
+
+  - name: visible
+    summary: Sets the visibility of this circle.
+    description: |
+        Sets the visibility of this circle. When not visible, a circle is not drawn, but it keeps all its other properties.
+    type: Boolean
+    default: true
+
+  - name: zIndex
+    summary: Sets the zIndex of this circle.
+    description: |
+        Sets the zIndex of this circle. Circles with higher zIndices are drawn above those with lower indices.
+    type: Number

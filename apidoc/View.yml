@@ -24,6 +24,9 @@ description: |
 
     You can add [Route](Modules.Map.Route) objects to the map to create paths between
     two or more points of interest.
+
+    You can add [Polygon](Modules.Map.Polygon) objects and [Circle](Modules.Map.Circle)
+    to mark areas on the map.
     
     To use the `userLocation` property in iOS 8 and later, add either the
     [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26)
@@ -77,6 +80,23 @@ methods:
         summary: Modules.Map.Route
         type: Modules.Map.Route
 
+  - name: addPolygon
+    summary: Adds a polygon to the map.
+    since: { android: "4.0.0" }
+    platforms: [android]
+    parameters:
+      - name: polygon
+        summary: Modules.Map.Polygon
+        type: Modules.Map.Polygon
+
+  - name: addCircle
+    summary: Adds a circle to the map.
+    since: { android: "4.0.0" }
+    platforms: [android]
+    parameters: circle
+        summary: Modules.Map.Circle
+        type: Modules.Map.Circle
+
   - name: deselectAnnotation
     summary: |
         Deselects the specified annotation, so the main annotation is hidden and only
@@ -112,6 +132,23 @@ methods:
       - name: route
         summary: An instance of <Modules.Map.Route>
         type: Modules.Map.Route
+
+  - name: removePolygon
+    summary: Remove a previously added polygon.
+    since: { android: "4.0.0" }
+    platforms: [android]
+    parameters:
+      - name: polygon
+        summary: An instance of <Modules.Map.Polygon>
+        type: Modules.Map.Polygon
+
+  - name: removeCircle
+    summary: Remove a previously added circle.
+    since: { android: "4.0.0" }
+    platforms: [android]
+    parameters: circle
+        summary: An instance of <Modules.Map.Circle>
+        type: Modules.Map.Circle
 
   - name: selectAnnotation
     summary: Selects the annotation, showing the full annotation.
