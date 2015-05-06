@@ -20,6 +20,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 @Kroll.module(name="Map", id="ti.map")
 public class MapModule extends KrollModule
 {
+	public static final String PROPERTY_FILL_COLOR = "fillColor";
+	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
+	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
+	public static final String PROPERTY_CENTER = "center";
+	public static final String PROPERTY_RADIUS = "radius";
 	public static final String PROPERTY_DRAGGABLE = "draggable";
 	public static final String PROPERTY_POINTS = "points";
 	public static final String PROPERTY_TRAFFIC = "traffic";

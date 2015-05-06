@@ -99,7 +99,23 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			addRoute(routes.get(i));
 		}
 	}
-
+	
+	protected void processPreloadPolygons()
+	{
+		ArrayList<PolygonProxy> polygons = ((ViewProxy) proxy).getPreloadPolygons();
+		for (int i = 0; i < polygons.size(); i++) {
+			addPolygon(polygons.get(i));
+		}
+	}
+	
+	protected void processPreloadCircles()
+	{
+		ArrayList<CircleProxy> circles = ((ViewProxy) proxy).getPreloadCircles();
+		for (int i = 0; i < circles.size(); i++) {
+			addCircle(circles.get(i));
+		}
+	}
+	
 	protected void onViewCreated()
 	{
 		map = acquireMap();
@@ -127,6 +143,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
+		processPreloadPolygons();
+		processPreloadCircles();
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
@@ -485,6 +503,48 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 		r.getRoute().remove();
 		r.setRoute(null);
+	}
+	
+	public void addPolygon(PolygonProxy p)
+	{
+		// check if polygon already added.
+		if (p.getPolygon() != null) {
+			return;
+		}
+
+		p.processOptions();
+		p.setPolygon(map.addPolygon(p.getOptions()));
+	}
+
+	public void removePolygon(PolygonProxy p)
+	{
+		if (p.getPolygon() == null) {
+			return;
+		}
+
+		p.getPolygon().remove();
+		p.setPolygon(null);
+	}
+	
+	public void addCircle(CircleProxy c)
+	{
+		// check if polygon already added.
+		if (c.getCircle() != null) {
+			return;
+		}
+
+		c.processOptions();
+		c.setCircle(map.addCircle(c.getOptions()));
+	}
+
+	public void removeCircle(CircleProxy c)
+	{
+		if (c.getCircle() == null) {
+			return;
+		}
+
+		c.getCircle().remove();
+		c.setCircle(null);
 	}
 
 	public void changeZoomLevel(int delta)

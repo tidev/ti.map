@@ -1,0 +1,53 @@
+---
+name: Modules.Map.Polygon
+summary: Represents a Polygon with three or more points of interest.
+description: |
+    The `Polygon` object gives you low-level control over polygons that can be added to a
+    [map view](Modules.Map.View). A polygon must have its `points` property set to appear on a map.
+
+    Use the <Modules.Map.createPolygon> method to create a polygon.
+
+extends: Titanium.Proxy
+since: { android: "4.0.0" }
+platforms: [android]
+
+properties:
+
+  - name: points
+    summary: Array of map points making up the polygon.
+    availability: creation
+    type: Array<MapPointType>
+    optional: false
+
+  - name: fillColor
+    summary: |
+        Sets the fill color of this polygon as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+
+  - name: strokeColor
+    summary: |
+        Sets the stroke color of this polygon as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+
+  - name: strokeWidth
+    summary: Sets the stroke width of this polygon.
+    description: |
+        Sets the stroke width of this polygon.
+    type: Number
+
+  - name: visible
+    summary: Sets the visibility of this polygon.
+    description: |
+        Sets the visibility of this polygon. When not visible, a polygon is not drawn, but it keeps all its other properties.
+    type: Boolean
+    default: true
+
+  - name: zIndex
+    summary: Sets the zIndex of this polygon.
+    description: |
+        Sets the zIndex of this polygon. Polygons with higher zIndices are drawn above those with lower indices.
+    type: Number
