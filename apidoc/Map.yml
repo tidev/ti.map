@@ -77,6 +77,27 @@ description: |
                     <module platform="iphone">ti.map</module>
                 </modules>
             </ti:app>
+            
+    -   To use the `userLocation` property in iOS 8 and later, add either the
+        [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26)
+        or
+        [`NSLocationAlwaysUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18)
+        key to the iOS plist section of the project's `tiapp.xml` file.
+
+            <ti:app>
+                <ios>
+                    <plist>
+                        <dict>
+                            <key>NSLocationAlwaysUsageDescription</key>
+                            <string>
+                                Specify the reason for accessing the user's location information.
+                                This appears in the alert dialog when asking the user for permission to
+                                access their location.
+                            </string>
+                        </dict>
+                    </plist>
+                </ios>
+            </ti:app>
 
     -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
         the new map object.
