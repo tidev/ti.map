@@ -6,7 +6,7 @@
  */
 
 #import "TiMapUtils.h"
-#import "TiBase.h"
+#import "TiMapView.h"
 
 @implementation TiMapUtils
 
@@ -15,7 +15,7 @@
     if ([NSThread isMainThread]) {
         return block();
     }
-    
+
     __block id result = nil;
     TiThreadPerformOnMainThread(^{
         result = [block() retain];

@@ -38,7 +38,8 @@ var top = isIOS7Plus() ? 20 : 0;
 var rows = [
     require('tests/multiMap'),
     require('tests/annotations'),
-    require('tests/routes')
+    require('tests/routes'),
+    require('tests/drawing')
 ];
 
 if (IOS) {

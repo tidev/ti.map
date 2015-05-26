@@ -8,6 +8,7 @@
 #import "TiBase.h"
 #import "TiUIView.h"
 #import "TiMKOverlayPathUniversal.h"
+#import "WildcardGestureRecognizer.h"
 #import <MapKit/MapKit.h>
 
 @class TiMapAnnotationProxy;
@@ -17,6 +18,9 @@
 -(NSString *)lastHitName;
 @end
 
+NSString * const VIEW_TYPE_POLYGON  = @"polygon";
+NSString * const VIEW_TYPE_CIRCLE   = @"circle";
+NSString * const VIEW_TYPE_POLYLINE = @"polyline";
 
 @interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate> {
 	MKMapView *map;
@@ -27,13 +31,17 @@
 	BOOL ignoreRegionChanged;
 	BOOL forceRender;
 	MKCoordinateRegion region;
-	
-    // routes
-    // dictionaries for object tracking and association
-    CFMutableDictionaryRef mapLine2View;   // MKPolyline(route line) -> MKPolylineView(route view)
+    NSMutableArray *polygonProxies;
+    NSMutableArray *circleProxies;
+    NSMutableArray *polylineProxies;
+
+    // dictionary for object tracking and association
+    CFMutableDictionaryRef mapObjects2View;   // MKOverlay Object -> MKOverlay Object's renderer
 	
 	// Location manager needed for iOS 8 permissions
 	CLLocationManager *locationManager;
+
+
 }
 
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;
@@ -57,6 +65,22 @@
 -(void)zoom:(id)args;
 -(void)addRoute:(id)args;
 -(void)removeRoute:(id)args;
+-(void)addPolygon:(id)args;
+-(void)addPolygons:(id)args;
+-(void)removePolygon:(id)args;
+-(void)removePolygon:(id)args remove:(BOOL)r;
+-(void)removeAllPolygons;
+-(void)addCircle:(id)args;
+-(void)addCircles:(id)args;
+-(void)removeCircle:(id)args;
+-(void)removeCircle:(id)args remove:(BOOL)r;
+-(void)removeAllCircles;
+-(void)addPolyline:(id)args;
+-(void)addPolylines:(id)args;
+-(void)removePolyline:(id)args;
+-(void)removePolyline:(id)args remove:(BOOL)r;
+-(void)removeAllPolylines;
+
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 
 #pragma mark Utils

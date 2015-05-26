@@ -30,6 +30,12 @@
 	RELEASE_TO_NIL(annotationsToRemove);
 	RELEASE_TO_NIL(routesToAdd);
 	RELEASE_TO_NIL(routesToRemove);
+    RELEASE_TO_NIL(polygonsToAdd);
+    RELEASE_TO_NIL(polygonsToRemove);
+    RELEASE_TO_NIL(circlesToAdd);
+    RELEASE_TO_NIL(circlesToRemove);
+    RELEASE_TO_NIL(polylinesToAdd);
+    RELEASE_TO_NIL(polylinesToRemove);
 	[super _destroy];
 }
 
@@ -67,7 +73,7 @@
 
 -(void)viewDidAttach
 {
-	ENSURE_UI_THREAD_0_ARGS;
+    ENSURE_UI_THREAD_0_ARGS;
 	TiMapView * ourView = (TiMapView *)[self view];
 
     for (id arg in annotationsToAdd) {
@@ -87,6 +93,37 @@
     {
         [ourView removeRoute:arg];
     }
+
+    for (id arg in polygonsToAdd)
+    {
+        [ourView addPolygon:arg];
+    }
+
+    for (id arg in polygonsToRemove)
+    {
+        [ourView removePolygon:arg];
+    }
+
+    for (id arg in circlesToAdd)
+    {
+        [ourView addCircle:arg];
+    }
+
+    for (id arg in circlesToRemove)
+    {
+        [ourView removeCircle:arg];
+    }
+
+    for (id arg in polylinesToAdd)
+    {
+        [ourView addPolyline:arg];
+    }
+
+    for (id arg in polylinesToRemove)
+    {
+        [ourView removePolyline:arg];
+    }
+
     
 	[ourView selectAnnotation:selectedAnnotation];
 	if (zoomCount > 0) {
@@ -105,6 +142,12 @@
 	RELEASE_TO_NIL(annotationsToRemove);
 	RELEASE_TO_NIL(routesToAdd);
 	RELEASE_TO_NIL(routesToRemove);
+    RELEASE_TO_NIL(polygonsToAdd);
+    RELEASE_TO_NIL(polygonsToRemove);
+    RELEASE_TO_NIL(circlesToAdd);
+    RELEASE_TO_NIL(circlesToRemove);
+    RELEASE_TO_NIL(polylinesToAdd);
+    RELEASE_TO_NIL(polylinesToRemove);
 	
 	[super viewDidAttach];
 }
@@ -408,6 +451,300 @@
 		}
 	}
 }
+
+
+
+-(void)addPolygons:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,NSArray);
+    
+    if ([self viewAttached]) {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolygons:arg];}, NO);
+    }
+    else {
+        for (id poly in arg) {
+            [self addPolygon:poly];
+        }
+    }
+}
+
+-(void)addPolygon:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapPolygonProxy);
+    
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolygon:arg];}, NO);
+    }
+    else
+    {
+        if (polygonsToAdd==nil)
+        {
+            polygonsToAdd = [[NSMutableArray alloc] init];
+        }
+        if (polygonsToRemove!=nil && [polygonsToRemove containsObject:arg])
+        {
+            [polygonsToRemove removeObject:arg];
+        }
+        else
+        {
+            [polygonsToAdd addObject:arg];
+        }
+    }
+}
+
+-(void)removePolygon:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapPolygonProxy);
+    
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removePolygon:arg];}, NO);
+    }
+    else
+    {
+        if (polygonsToRemove==nil)
+        {
+            polygonsToRemove = [[NSMutableArray alloc] init];
+        }
+        if (polygonsToAdd!=nil && [polygonsToAdd containsObject:arg])
+        {
+            [polygonsToAdd removeObject:arg];
+        }
+        else
+        {
+            [polygonsToRemove addObject:arg];
+        }
+    }
+}
+
+-(void)removeAllPolygons:(id)args
+{
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllPolygons];}, NO);
+    }
+}
+
+-(void)setPolygons:(id)arg{
+    ENSURE_TYPE(arg,NSArray);
+    
+    NSMutableArray* initialPolygons = [NSMutableArray arrayWithCapacity:[arg count]];
+    for (id poly in arg) {
+        ENSURE_TYPE(poly, TiMapPolygonProxy);
+        [initialPolygons addObject:poly];
+    }
+    
+    BOOL attached = [self viewAttached];
+    
+    if(attached) {
+        TiThreadPerformOnMainThread(^{
+            [(TiMapView*)[self view] addPolygons:polygonsToAdd];
+        }, NO);
+        [initialPolygons release];
+    }
+    else {
+        RELEASE_TO_NIL(polygonsToAdd);
+        RELEASE_TO_NIL(polygonsToRemove);
+        
+        polygonsToAdd = [[NSMutableArray alloc] initWithArray:initialPolygons];
+    }
+}
+
+-(void)addCircles:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,NSArray);
+
+    if ([self viewAttached]) {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addCircles:arg];}, NO);
+    }
+    else {
+        for (id circle in arg) {
+            [self addCircle:circle];
+        }
+    }
+}
+
+-(void)addCircle:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapCircleProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addCircle:arg];}, NO);
+    }
+    else
+    {
+        if (circlesToAdd==nil)
+        {
+            circlesToAdd = [[NSMutableArray alloc] init];
+        }
+        if (circlesToRemove!=nil && [circlesToRemove containsObject:arg])
+        {
+            [circlesToRemove removeObject:arg];
+        }
+        else
+        {
+            [circlesToAdd addObject:arg];
+        }
+    }
+}
+
+-(void)removeCircle:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapCircleProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeCircle:arg];}, NO);
+    }
+    else
+    {
+        if (circlesToRemove==nil)
+        {
+            circlesToRemove = [[NSMutableArray alloc] init];
+        }
+        if (circlesToAdd!=nil && [circlesToAdd containsObject:arg])
+        {
+            [circlesToAdd removeObject:arg];
+        }
+        else
+        {
+            [circlesToRemove addObject:arg];
+        }
+    }
+}
+
+-(void)removeAllCircles:(id)args
+{
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllCircles];}, NO);
+    }
+}
+
+-(void)setCircles:(id)arg{
+    ENSURE_TYPE(arg,NSArray);
+
+    NSMutableArray* initialCircles = [NSMutableArray arrayWithCapacity:[arg count]];
+    for (id circle in arg) {
+        ENSURE_TYPE(circle, TiMapCircleProxy);
+        [initialCircles addObject:circle];
+    }
+
+    BOOL attached = [self viewAttached];
+
+    if(attached) {
+        TiThreadPerformOnMainThread(^{
+            [(TiMapView*)[self view] addCircles:circlesToAdd];
+        }, NO);
+        [initialCircles release];
+    }
+    else {
+        RELEASE_TO_NIL(circlesToAdd);
+        RELEASE_TO_NIL(circlesToRemove);
+        circlesToAdd = [[NSMutableArray alloc] initWithArray:initialCircles];
+    }
+}
+
+-(void)addPolylines:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,NSArray);
+
+    if ([self viewAttached]) {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolylines:arg];}, NO);
+    }
+    else {
+        for (id poly in arg) {
+            [self addPolyline:poly];
+        }
+    }
+}
+
+-(void)addPolyline:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapPolylineProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] addPolyline:arg];}, NO);
+    }
+    else
+    {
+        if (polylinesToAdd==nil)
+        {
+            polylinesToAdd = [[NSMutableArray alloc] init];
+        }
+        if (polylinesToRemove!=nil && [polylinesToRemove containsObject:arg])
+        {
+            [polylinesToRemove removeObject:arg];
+        }
+        else
+        {
+            [polylinesToAdd addObject:arg];
+        }
+    }
+}
+
+-(void)removePolyline:(id)arg
+{
+    ENSURE_SINGLE_ARG(arg,TiMapPolylineProxy);
+
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removePolyline:arg];}, NO);
+    }
+    else
+    {
+        if (polylinesToRemove==nil)
+        {
+            polylinesToRemove = [[NSMutableArray alloc] init];
+        }
+        if (polylinesToAdd!=nil && [polylinesToAdd containsObject:arg])
+        {
+            [polylinesToAdd removeObject:arg];
+        }
+        else
+        {
+            [polylinesToRemove addObject:arg];
+        }
+    }
+}
+
+-(void)removeAllPolylines:(id)args
+{
+    if ([self viewAttached])
+    {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllPolylines];}, NO);
+    }
+}
+
+-(void)setPolylines:(id)arg{
+    ENSURE_TYPE(arg,NSArray);
+
+    NSMutableArray* initialPolylines = [NSMutableArray arrayWithCapacity:[arg count]];
+    for (id poly in arg) {
+        ENSURE_TYPE(poly, TiMapPolylineProxy);
+        [initialPolylines addObject:poly];
+    }
+
+    BOOL attached = [self viewAttached];
+
+    if(attached) {
+        TiThreadPerformOnMainThread(^{
+            [(TiMapView*)[self view] addPolylines:polylinesToAdd];
+        }, NO);
+        [initialPolylines release];
+    }
+    else {
+        RELEASE_TO_NIL(polylinesToAdd);
+        RELEASE_TO_NIL(polylinesToRemove);
+
+        polylinesToAdd = [[NSMutableArray alloc] initWithArray:initialPolylines];
+    }
+}
+
+
 
 #pragma mark Public APIs iOS 7
 

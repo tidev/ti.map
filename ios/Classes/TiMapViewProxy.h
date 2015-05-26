@@ -7,13 +7,22 @@
  
 #import "TiViewProxy.h"
 #import "TiMapAnnotationProxy.h"
+#import "TiMapPolygonProxy.h"
+#import "TiMapCircleProxy.h"
+#import "TiMapPolylineProxy.h"
 
 @interface TiMapViewProxy : TiViewProxy {
 	TiMapAnnotationProxy* selectedAnnotation; // Annotation to select on initial display
 	NSMutableArray* annotationsToAdd; // Annotations to add on initial display
 	NSMutableArray* annotationsToRemove; // Annotations to remove on initial display
 	NSMutableArray* routesToAdd; 
-	NSMutableArray* routesToRemove; 
+	NSMutableArray* routesToRemove;
+    NSMutableArray* polygonsToAdd;
+    NSMutableArray* polygonsToRemove;
+    NSMutableArray* circlesToAdd;
+    NSMutableArray* circlesToRemove;
+    NSMutableArray* polylinesToAdd;
+    NSMutableArray* polylinesToRemove;
 	int zoomCount; // Number of times to zoom in/out on initial display
 }
 
@@ -32,5 +41,17 @@
 -(void)zoom:(id)args;
 -(void)addRoute:(id)args;
 -(void)removeRoute:(id)args;
+-(void)addPolygons:(id)args;
+-(void)addPolygon:(id)args;
+-(void)removePolygon:(id)args;
+-(void)removeAllPolygons:(id)args;
+-(void)addCircles:(id)args;
+-(void)addCircle:(id)args;
+-(void)removeCircle:(id)args;
+-(void)removeAllCircles:(id)args;
+-(void)addPolylines:(id)args;
+-(void)addPolyline:(id)args;
+-(void)removePolyline:(id)args;
+-(void)removeAllPolylines:(id)args;
 
 @end
