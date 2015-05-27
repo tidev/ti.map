@@ -53,11 +53,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 	@Override
 	public boolean handleMessage(Message msg) {
 
-		// MSG_SET_POINTS
-		// MSG_SET_STROKE_WIDTH
-		// MSG_SET_STROKE_COLOR
-		// MSG_SET_FILL_COLOR
-		// MSG_SET_ZINDEX
 		AsyncResult result = null;
 		switch (msg.what) {
 		case MSG_SET_POINTS: {
@@ -105,7 +100,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 	public void processOptions() {
 
 		options = new PolygonOptions();
-		String op;
 
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
 			processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
@@ -115,24 +109,20 @@ public class PolygonProxy extends KrollProxy implements IShape {
 			processHoles(getProperty(PolygonProxy.PROPERTY_HOLES), false);
 		}
 
-		op = MapModule.PROPERTY_STROKE_COLOR;
-		if (hasProperty(op)) {
-			options.strokeColor(TiConvert.toColor((String) getProperty(op)));
+		if (hasProperty(MapModule.PROPERTY_STROKE_COLOR)) {
+			options.strokeColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR)));
 		}
 
-		op = MapModule.PROPERTY_STROKE_WIDTH;
-		if (hasProperty(op)) {
-			options.strokeWidth(TiConvert.toFloat(getProperty(op)));
+		if (hasProperty(MapModule.PROPERTY_STROKE_WIDTH)) {
+			options.strokeWidth(TiConvert.toFloat(getProperty(MapModule.PROPERTY_STROKE_WIDTH)));
 		}
 
-		op = MapModule.PROPERTY_FILL_COLOR;
-		if (hasProperty(op)) {
-			options.fillColor(TiConvert.toColor((String) getProperty(op)));
+		if (hasProperty(MapModule.PROPERTY_FILL_COLOR)) {
+			options.fillColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_FILL_COLOR)));
 		}
 
-		op = MapModule.PROPERTY_ZINDEX;
-		if (hasProperty(op)) {
-			options.zIndex(TiConvert.toFloat(getProperty(op)));
+		if (hasProperty(MapModule.PROPERTY_ZINDEX)) {
+			options.zIndex(TiConvert.toFloat(getProperty(MapModule.PROPERTY_ZINDEX)));
 		}
 
 	}

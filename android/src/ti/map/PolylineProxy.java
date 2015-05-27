@@ -61,11 +61,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 	public boolean handleMessage(Message msg)
 	{
 
-		//	MSG_SET_POINTS
-		//	MSG_SET_STROKE_WIDTH
-		//	MSG_SET_STROKE_COLOR
-		//	MSG_SET_FILL_COLOR
-		//	MSG_SET_ZINDEX
 		AsyncResult result = null;
 		switch (msg.what) {
 			case MSG_SET_POINTS: {
@@ -100,7 +95,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 	public void processOptions() {
 
 		options = new PolylineOptions();
-		String op;
 		// (int) 	 strokeColor
 		// (float)	 strokeWidth
 		// (int) 	 fillColor
@@ -110,29 +104,24 @@ public class PolylineProxy extends KrollProxy implements IShape
 			 processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
 		}
 
-		op = MapModule.PROPERTY_STROKE_COLOR;
-		if (hasProperty(op)) {
-			options.color(TiConvert.toColor((String)getProperty(op)));
+		if (hasProperty(MapModule.PROPERTY_STROKE_COLOR)) {
+			options.color(TiConvert.toColor((String)getProperty(MapModule.PROPERTY_STROKE_COLOR)));
 		}
 		// alternate API
-		op = PolylineProxy.PROPERTY_STROKE_COLOR2;
-		if (hasProperty(op)) {
-			options.color(TiConvert.toColor((String)getProperty(op)));
+		if (hasProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)) {
+			options.color(TiConvert.toColor((String)getProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)));
 		}
-		
-		op = MapModule.PROPERTY_STROKE_WIDTH;		
-		if (hasProperty(op)) {
-			options.width(TiConvert.toFloat(getProperty(op)));
+			
+		if (hasProperty(MapModule.PROPERTY_STROKE_WIDTH)) {
+			options.width(TiConvert.toFloat(getProperty(MapModule.PROPERTY_STROKE_WIDTH)));
 		}
 		// alternate API
-		op = PolylineProxy.PROPERTY_STROKE_WIDTH2;
-		if (hasProperty(op)) {
-			options.width(TiConvert.toFloat(getProperty(op)));
+		if (hasProperty(PolylineProxy.PROPERTY_STROKE_WIDTH2)) {
+			options.width(TiConvert.toFloat(getProperty(PolylineProxy.PROPERTY_STROKE_WIDTH2)));
 		}
 
-		op = PolylineProxy.PROPERTY_ZINDEX;
-		if (hasProperty(op)) {
-			options.zIndex(TiConvert.toFloat(getProperty(op)));
+		if (hasProperty(PolylineProxy.PROPERTY_ZINDEX)) {
+			options.zIndex(TiConvert.toFloat(getProperty(PolylineProxy.PROPERTY_ZINDEX)));
 		}
 
 	}

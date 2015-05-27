@@ -283,7 +283,7 @@ methods:
     summary: |
         Creates a polygon shape object.
     since: "3.2.0"
-    platforms: [android]
+    platforms: [android, iphone, ipad]
     parameters:
         - name: points
           summary: Array of map points making up the polygon. Can also be an array of longitude, latitude touples.
@@ -330,7 +330,7 @@ methods:
     summary: |
         Creates a polyline shape object.
     since: "3.2.0"
-    platforms: [android]
+    platforms: [android, iphone, ipad]
     parameters:
         - name: points
           summary: Array of map points making up the polyline. Can also be an array of longitude, latitude touples.
@@ -363,7 +363,7 @@ methods:
     summary: |
         Creates a circle shape object.
     since: "3.2.0"
-    platforms: [android]
+    platforms: [android, iphone, ipad]
     parameters:
         - name: center
           summary: Array with longitude and latitude values. Can also be an object with longitude and latitude.

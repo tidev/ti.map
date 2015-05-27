@@ -317,13 +317,14 @@ events:
 
   - name: click
     summary: |
-        Fired when the user selects or deselects an annotation.
+        Fired when the user selects or deselects an annotation, a polygon, a polyline or a circle.
     description: |
         Note that the `click` event is not fired every time the user clicks on the map.
         It is fired in two circumstances:
 
         - The user clicks on the annotation. This will select the annotation.
         - The user deselects an annotation either by clicking on the map or another annotation.
+        - The user clicks on a polygon, a polyline or a circle.
 
         Note that only one annotation can be selected at any given time.
 
@@ -334,6 +335,11 @@ events:
         `clicksource` will be `infoWindow`. If the user deselects an annotation
         by clicking on the pin, `clicksource` is `pin`. If the user deselects the
         annotation by clicking elsewhere in the map view, `clicksource` is `null`.
+
+        For polygon, polyline or circle, The `click` event includes the following values.
+        `clicksource` is a string describing the shape type. `map` is the map view instance.
+        `latitude` and `longtitude` is the corresponding coordinates on the map where the user
+        clicked in the shape.
 
     properties:
 
@@ -352,6 +358,7 @@ events:
       - name: clicksource
         summary: |
             Source of the click event. Can be one of `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null`.
+            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`.
         type: String
 
       - name: annotation
@@ -359,11 +366,13 @@ events:
         type: Modules.Map.Annotation
 
       - name: latitude
-        summary: Latitude of the clicked annotation.
+        summary: |
+            Latitude of the clicked annotation or the point clicked in the polygon, polyline and circle.
         type: Number
 
       - name: longitude
-        summary: Longitude of the clicked annotation.
+        summary: |
+            Longitude of the clicked annotation or the point clicked in the polygon, polyline and circle.
         type: Number
 
   - name: complete

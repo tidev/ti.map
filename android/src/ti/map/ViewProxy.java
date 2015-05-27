@@ -153,6 +153,18 @@ public class ViewProxy extends TiViewProxy {
 			result.setResult(null);
 			return true;
 		}
+		
+		case MSG_MAX_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(getMaxZoom());
+			return true;
+		}
+		
+		case MSG_MIN_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(getMinZoom());
+			return true;
+		}
 
 		case MSG_CHANGE_ZOOM: {
 			handleZoom(msg.arg1);

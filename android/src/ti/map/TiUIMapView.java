@@ -48,8 +48,8 @@ import com.google.android.gms.maps.model.Marker;
 
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
-GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
-GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
+	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
+	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 {
 
 	private static final String TAG = "TiUIMapView";

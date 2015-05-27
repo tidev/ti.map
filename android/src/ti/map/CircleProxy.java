@@ -52,12 +52,6 @@ public class CircleProxy  extends KrollProxy implements IShape
 		this();
 	}
 
-//	private LatLng addLocation(Object loc){
-//		HashMap<String, String> point = (HashMap<String, String>) loc;
-//		return new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
-//		return parseLocation(loc);
-//	}
-
 	private int toPx(Object size){
 		ViewGroup rootViewGroup = (ViewGroup)TiApplication.getAppCurrentActivity().getWindow().getDecorView().findViewById(android.R.id.content);
 		return TiConvert.toTiDimension(size, TiDimension.COMPLEX_UNIT_AUTO).getAsPixels(rootViewGroup);

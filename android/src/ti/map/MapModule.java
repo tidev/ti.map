@@ -57,7 +57,6 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_CENTER = "center";
 	public static final String PROPERTY_RADIUS = "radius";
 
-
 	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
 	@Kroll.constant public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
 	@Kroll.constant public static final int SATELLITE_TYPE = GoogleMap.MAP_TYPE_SATELLITE;
@@ -81,7 +80,6 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final float ANNOTATION_ROSE = BitmapDescriptorFactory.HUE_ROSE;
 	@Kroll.constant public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
 	@Kroll.constant public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
-
 
 	public MapModule()
 	{
