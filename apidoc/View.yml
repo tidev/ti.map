@@ -2,21 +2,21 @@
 name: Modules.Map.View
 summary: Map view is used for embedding native mapping capabilities as a view in your application.
 description: |
-    With native maps, you can control the mapping location, the type of map, the zoom level 
+    With native maps, you can control the mapping location, the type of map, the zoom level
     and you can add custom annotations and routes directly to the map. Once the map view is
     displayed, the user can pan, zoom and tilt the map using the native control gestures.
-    
+
     Use the <Modules.Map.createView> method to create a map view.
 
     In Alloy, use the **`<Module>`** element with the `module` attribute set to `ti.map`
     and `method` attribute set to `createView` to create a map view in XML markup:
 
         <Module module="ti.map" method="createView" />
-    
+
     All latitude and longitude values are specified in decimal degrees. Values in degrees,
     minutes and seconds (DMS) must be converted to decimal degrees before being passed to
     the map view.
-    
+
     You can add [Annotation](Modules.Map.Annotation) objects to the map to mark points of
     interest. An annotation has two states: selected and deselected. A deselected annotation
     is marked by a pin image. When selected, the full annotation is displayed, typically
@@ -24,7 +24,7 @@ description: |
 
     You can add [Route](Modules.Map.Route) objects to the map to create paths between
     two or more points of interest.
-    
+
     To use the `userLocation` property in iOS 8 and later, add either the
     [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26)
     or
@@ -107,7 +107,7 @@ methods:
         type: [Array<String>, Array<Modules.Map.Annotation>]
 
   - name: removeRoute
-    summary: Remove a previously added route. 
+    summary: Remove a previously added route.
     parameters:
       - name: route
         summary: An instance of <Modules.Map.Route>
@@ -160,7 +160,7 @@ methods:
         summary: Relative zoom level (positive to zoom in, negative to zoom out).
         type: Number
     since: "3.1.0"
-    
+
   - name: snapshot
     summary: Takes a snapshot of the map
     description: |
@@ -180,8 +180,8 @@ methods:
 
       - name: callback
         summary: |
-            A method that will be called when the camera animation completes. Optionally, the completion 
-            of camera animations can be captured by listening for a `regionchanged` event with `animated` 
+            A method that will be called when the camera animation completes. Optionally, the completion
+            of camera animations can be captured by listening for a `regionchanged` event with `animated`
             set to true.
         type: Callback<Object>
     since: "3.2.0"
@@ -189,7 +189,7 @@ methods:
 
   - name: showAnnotations
     summary: |
-        Sets the visible region so that the map displays the specified annotations. If no array is passed 
+        Sets the visible region so that the map displays the specified annotations. If no array is passed
         annotations on the map will be shown. Available in iOS 7.0 and later.
     parameters:
       - name: annotations
@@ -200,12 +200,91 @@ methods:
     since: "3.2.0"
     platforms: [iphone, ipad]
 
+  - name: addPolygon
+    summary: Adds a new polygon to the map.
+    parameters:
+      - name: polygon
+        summary: a <Modules.Map.Polygon> instance.
+        type: Modules.Map.Polygon
+
+  - name: addPolygons
+    summary: Adds one or more new polygons to the map.
+    parameters:
+      - name: polygons
+        summary: |
+            Array of [Polygons](Modules.Map.Polygon) objects
+        type: Array<Modules.Map.Polygon>
+
+  - name: removePolygon
+    summary: Remove a polygon from the map.
+    parameters:
+      - name: polygon
+        summary: |
+            A [Polygon](Modules.Map.Polygon) object
+        type: Modules.Map.Polygon
+
+  - name: removeAllPolygons
+    summary: Remove all polygons from the map.
+
+  - name: addPolyline
+    summary: Adds a new polylines to the map.
+    parameters:
+      - name: polygon
+        summary: a <Modules.Map.Polyline> instance.
+        type: Modules.Map.Polyline
+
+  - name: addPolylines
+    summary: Adds one or more new polylines to the map.
+    parameters:
+      - name: polylines
+        summary: |
+            Array of [Polyline](Modules.Map.Polyline) objects
+        type: Array<Modules.Map.Polyline>
+
+  - name: removePolyline
+    summary: Remove a polyline from the map.
+    parameters:
+      - name: polyline
+        summary: |
+            An [Polyline](Modules.Map.Polyline) object
+        type: Modules.Map.Polyline
+
+  - name: removeAllPolylines
+    summary: Remove all polylines from the map.
+
+  - name: addCircle
+    summary: Adds a new circle to the map.
+    parameters:
+      - name: circle
+        summary: a <Modules.Map.Circle> instance.
+        type: Modules.Map.Circle
+
+  - name: addCircles
+    summary: Adds one or more new circles to the map.
+    parameters:
+      - name: circles
+        summary: |
+            Array of [Circle](Modules.Map.Circle) objects
+        type: Array<Modules.Map.Circle>
+
+  - name: removeCircle
+    summary: Remove a circle from the map.
+    parameters:
+      - name: circle
+        summary: |
+            An [Circle](Modules.Map.Circle) object
+        type: Modules.Map.Circle
+
+  - name: removeAllCircles
+    summary: Remove all circles from the map.
+
+
 events:
-    
+
   - name: onsnapshotready
     summary: Fired when the snapshot is ready after [snapshot](Modules.Map.View.snapshot) is invoked.
     properties:
-    
+
       - name: snapshot
         summary: snapshot of the current map
         type: Titanium.Blob
@@ -238,34 +317,40 @@ events:
 
   - name: click
     summary: |
-        Fired when the user selects or deselects an annotation.
+        Fired when the user selects or deselects an annotation, a polygon, a polyline or a circle.
     description: |
         Note that the `click` event is not fired every time the user clicks on the map.
         It is fired in two circumstances:
 
         - The user clicks on the annotation. This will select the annotation.
         - The user deselects an annotation either by clicking on the map or another annotation.
-        
+        - The user clicks on a polygon, a polyline or a circle.
+
         Note that only one annotation can be selected at any given time.
 
-        The `click` event includes a value, `clicksource`, which describes the part of the 
+        The `click` event includes a value, `clicksource`, which describes the part of the
         annotation that was clicked. The `clicksource` can be one of `pin`, `title`,
-        `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null`. If the user clicks anywhere in 
-        the info window other than `title`, `subtitle`, `leftPane` or `rightPane`, the 
-        `clicksource` will be `infoWindow`. If the user deselects an annotation 
-        by clicking on the pin, `clicksource` is `pin`. If the user deselects the 
+        `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null`. If the user clicks anywhere in
+        the info window other than `title`, `subtitle`, `leftPane` or `rightPane`, the
+        `clicksource` will be `infoWindow`. If the user deselects an annotation
+        by clicking on the pin, `clicksource` is `pin`. If the user deselects the
         annotation by clicking elsewhere in the map view, `clicksource` is `null`.
+
+        For polygon, polyline or circle, The `click` event includes the following values.
+        `clicksource` is a string describing the shape type. `map` is the map view instance.
+        `latitude` and `longtitude` is the corresponding coordinates on the map where the user
+        clicked in the shape.
 
     properties:
 
       - name: title
         summary: Title of the annotation.
         type: String
-        
+
       - name: subtitle
         summary: Subtitle of the annotation.
         type: String
-        
+
       - name: map
         summary: The map view instance.
         type: Modules.Map.View
@@ -273,6 +358,7 @@ events:
       - name: clicksource
         summary: |
             Source of the click event. Can be one of `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null`.
+            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`.
         type: String
 
       - name: annotation
@@ -280,11 +366,13 @@ events:
         type: Modules.Map.Annotation
 
       - name: latitude
-        summary: Latitude of the clicked annotation.
+        summary: |
+            Latitude of the clicked annotation or the point clicked in the polygon, polyline and circle.
         type: Number
 
       - name: longitude
-        summary: Longitude of the clicked annotation.
+        summary: |
+            Longitude of the clicked annotation or the point clicked in the polygon, polyline and circle.
         type: Number
 
   - name: complete
@@ -326,7 +414,7 @@ events:
         Fired when the user makes a long-press gesture on the map.
     description: |
         A long press is generated by touching and holding on the touch screen.
-        
+
         The event occurs before the finger/button is lifted.
 
         The `longclick` event returns longitude and latitude of the point on the ground that was pressed.
@@ -336,11 +424,11 @@ events:
       - name: latitude
         summary: latitude of the point on the ground that was pressed.
         type: Number
-        
+
       - name: longitude
         summary: longitude of the point on the ground that was pressed.
         type: Number
-        
+
       - name: map
         summary: The map view instance.
         type: Modules.Map.View
@@ -350,8 +438,8 @@ properties:
   - name: animate
     summary: Indicates if changes to the mapping region should be animated.
     description: |
-        Setting this to 'false' will not stop the animation from clicking the My Location button, 
-        since that is native Android behavior. 
+        Setting this to 'false' will not stop the animation from clicking the My Location button,
+        since that is native Android behavior.
     type: Boolean
     default: false
 
@@ -360,7 +448,7 @@ properties:
     description: |
         There is no guarantee that the order of elements in the `annotations` property will be
         maintained when creating, adding or deleting annotations from the Ti.Map.View object.
-        If the application depends on the annotations being in a set order, it should keep 
+        If the application depends on the annotations being in a set order, it should keep
         references to all of the annotations in a separate array.
     type: Array<Modules.Map.Annotation>
 
@@ -370,7 +458,7 @@ properties:
         or <Modules.Map.HYBRID_TYPE>
     type: Number
     default: NORMAL_TYPE
-    
+
   - name: zOrderOnTop
     summary: Controls wether the map view's surface is placed on top of its window.
     description: |
@@ -406,7 +494,7 @@ properties:
     default: true
     since: "3.1.1"
     platforms: [android]
-    
+
   - name: compassEnabled
     summary: Enable or disables the compass button.
     type: Boolean
@@ -418,31 +506,31 @@ properties:
     summary: |
         Enables or disables the built-in zoom controls.
     description: |
-        If enabled, the zoom controls are a pair of buttons (one for zooming in, one for zooming out) that appear on the screen. 
+        If enabled, the zoom controls are a pair of buttons (one for zooming in, one for zooming out) that appear on the screen.
         When pressed, they cause the camera to zoom in (or out) by one zoom level. If disabled, the zoom controls are not shown.
     type: Boolean
     default: true
     platforms: [android]
-    
+
   - name: maxZoomLevel
     summary: Returns the maximum zoom level available at the current camera position.
     description: |
-        Returns the maximum zoom level for the current camera position. 
+        Returns the maximum zoom level for the current camera position.
         This takes into account what map type is currently being used.
         For example, satellite or terrain may have a lower max zoom level than the base map tiles.
-        
+
         This will only give the correct value after the 'complete' event is fired.
     since: "3.2.3"
     type: Number
     platforms: [android]
     permission: read-only
-    
+
   - name: minZoomLevel
     summary: Returns the minimum zoom level available at the current camera position.
     description: |
-        Returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level) 
+        Returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level)
         but may vary between devices and map sizes.
-        
+
         This will only give the correct value after the 'complete' event is fired.
     since: "3.2.3"
     type: Number
@@ -499,8 +587,8 @@ properties:
   - name: showsBuildings
     summary: A Boolean indicating whether the map displays extruded building information. Available in iOS 7.0 and later.
     description: |
-        When this property is set to `true` and the camera has a pitch angle greater than zero, 
-        the map extrudes buildings so that they extend above the map plane, creating a 3D effect. 
+        When this property is set to `true` and the camera has a pitch angle greater than zero,
+        the map extrudes buildings so that they extend above the map plane, creating a 3D effect.
         The `mapType` property must be set to <Modules.Map.NORMAL_TYPE> for extruded buildings to be displayed.
     type: Boolean
     default: true
@@ -510,7 +598,7 @@ properties:
   - name: showsPointsOfInterest
     summary: A Boolean indicating whether the map displays point-of-interest information. Available in iOS 7.0 and later.
     description: |
-        When this property is set to `true`, the map displays icons and labels for restaurants, 
+        When this property is set to `true`, the map displays icons and labels for restaurants,
         schools, and other relevant points of interest.
     type: Boolean
     default: true
@@ -546,7 +634,7 @@ properties:
   - name: latitudeDelta
     summary: The amount of north-to-south distance displayed on the map, measured in decimal degrees.
     type: Number
-    
+
   - name: tilt
     summary: The camera's position on an arc between directly over the map's center position and the surface of the Earth, measured in degrees from the nadir.
     description: |
@@ -555,7 +643,7 @@ properties:
     type: Number
     since: "3.2.3"
     platforms: [android]
-    
+
   - name: zoom
     summary: The zoom level of the map.
     description: |
@@ -612,10 +700,10 @@ properties:
   - name: curve
     summary: Animation curve or easing function to apply to the animation.
     description: |
-        Specify one of the animation constants, 
-        <Titanium.UI.ANIMATION_CURVE_EASE_IN>, 
-        <Titanium.UI.ANIMATION_CURVE_EASE_IN_OUT>, 
-        <Titanium.UI.ANIMATION_CURVE_EASE_OUT>, 
+        Specify one of the animation constants,
+        <Titanium.UI.ANIMATION_CURVE_EASE_IN>,
+        <Titanium.UI.ANIMATION_CURVE_EASE_IN_OUT>,
+        <Titanium.UI.ANIMATION_CURVE_EASE_OUT>,
         or <Titanium.UI.ANIMATION_CURVE_LINEAR>.
     type: Number
 since: "3.2.0"

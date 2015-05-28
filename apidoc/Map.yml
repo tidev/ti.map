@@ -99,7 +99,7 @@ properties:
 
   - name: ANNOTATION_DRAG_STATE_START
     summary: |
-        Used in the [pinchangedragstate](Modules.Map.View.pinchangedragstate) event 
+        Used in the [pinchangedragstate](Modules.Map.View.pinchangedragstate) event
         to indicate that the user started dragging the annotation.
     type: Number
     permission: read-only
@@ -107,7 +107,7 @@ properties:
 
   - name: ANNOTATION_DRAG_STATE_END
     summary: |
-        Used in the [pinchangedragstate](Modules.Map.View.pinchangedragstate) event 
+        Used in the [pinchangedragstate](Modules.Map.View.pinchangedragstate) event
         to indicate that the user finished moving the annotation.
     type: Number
     permission: read-only
@@ -115,51 +115,51 @@ properties:
 
   - name: ANNOTATION_GREEN
     summary: |
-        Color constant used to set a map annotation to green via the 
+        Color constant used to set a map annotation to green via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    
+
   - name: ANNOTATION_BLUE
     summary: |
-        Color constant used to set a map annotation to blue via the 
+        Color constant used to set a map annotation to blue via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_AZURE
     summary: |
-        Color constant used to set a map annotation to azure via the 
+        Color constant used to set a map annotation to azure via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_CYAN
     summary: |
-        Color constant used to set a map annotation to cyan via the 
+        Color constant used to set a map annotation to cyan via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_MAGENTA
     summary: |
-        Color constant used to set a map annotation to magenta via the 
+        Color constant used to set a map annotation to magenta via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_ORANGE
     summary: |
-        Color constant used to set a map annotation to orange via the 
+        Color constant used to set a map annotation to orange via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_PURPLE
     summary: |
         Color constant used to set a map annotation to purple via the
@@ -170,15 +170,15 @@ properties:
 
   - name: ANNOTATION_ROSE
     summary: |
-        Color constant used to set a map annotation to rose via the 
+        Color constant used to set a map annotation to rose via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_YELLOW
     summary: |
-        Color constant used to set a map annotation to yellow via the 
+        Color constant used to set a map annotation to yellow via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
@@ -186,35 +186,35 @@ properties:
 
   - name: ANNOTATION_VIOLET
     summary: |
-        Color constant used to set a map annotation to violet via the 
+        Color constant used to set a map annotation to violet via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: ANNOTATION_RED
     summary: |
-        Color constant used to set a map annotation to red via the 
+        Color constant used to set a map annotation to red via the
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    
+
   - name: SATELLITE_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display satellite imagery of the area.
     type: Number
     permission: read-only
-    
+
   - name: NORMAL_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display a street map that shows the position of all roads and some road names.
     type: Number
     permission: read-only
-    
+
   - name: TERRAIN_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display the terrain that shows the position of all roads and some road names.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: HYBRID_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display a satellite image of the area with road and road name information layered on top.
     type: Number
@@ -225,25 +225,25 @@ properties:
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: SERVICE_MISSING
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is not installed on the device.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: SERVICE_VERSION_UPDATE_REQUIRED
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is out of date.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: SERVICE_DISABLED
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services has been disabled on this device.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: SERVICE_INVALID
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. The version of Google Play services installed on this device is not authentic.
     type: Number
@@ -256,10 +256,10 @@ properties:
     permission: read-only
     since: "3.2.0"
     platforms: [iphone, ipad]
-    
+
   - name: OVERLAY_LEVEL_ABOVE_ROADS
     summary: |
-        Place the overlay above map labels, shields, or point-of-interest icons but below annotations and 3D projections of buildings. 
+        Place the overlay above map labels, shields, or point-of-interest icons but below annotations and 3D projections of buildings.
         Available in iOS 7.0 and later.
     type: Number
     permission: read-only
@@ -278,18 +278,144 @@ methods:
     summary: Returns a code to indicate whether Google Play Services is available on the device.
     since: "3.1.1"
     platforms: [android]
-    
-    
+
+  - name: createPolygon
+    summary: |
+        Creates a polygon shape object.
+    since: "3.2.0"
+    platforms: [android, iphone, ipad]
+    parameters:
+        - name: points
+          summary: Array of map points making up the polygon. Can also be an array of longitude, latitude touples.
+          availability: creation
+          type: Array<MapPointType>
+          optional: false
+
+        - name: holes
+          summary: Array of points arrays that define holes in the polygon.
+          availability: creation
+          type: Array<Array<MapPointType>>
+          optional: true
+
+        - name: fillColor
+          summary: |
+              Color to use when shading the polygon, as a color name or hex triplet.
+          description: |
+              For information about color values, see the "Colors" section of <Titanium.UI>.
+          type: String
+          default: black
+
+        - name: strokeColor
+          summary: |
+              Color to use for the border of the polygon, as a color name or hex triplet.
+          description: |
+              For information about color values, see the "Colors" section of <Titanium.UI>.
+          type: String
+          default: black
+
+        - name: strokeWidth
+          summary: Line width in pixels to use when drawing the polygon.
+          type: Number
+          default: 10
+
+        - name: zIndex
+          summary: |
+              The order (depth) in which to display the polygons.
+          description: |
+              For iOS, the polygons are drawn in the order in which they are added.
+          availability: creation
+          type: Number
+
+  - name: createPolyline
+    summary: |
+        Creates a polyline shape object.
+    since: "3.2.0"
+    platforms: [android, iphone, ipad]
+    parameters:
+        - name: points
+          summary: Array of map points making up the polyline. Can also be an array of longitude, latitude touples.
+          availability: creation
+          type: Array<MapPointType>
+          optional: false
+
+        - name: color
+          summary: |
+              Color to use for the the polyline, as a color name or hex triplet.
+          description: |
+              For information about color values, see the "Colors" section of <Titanium.UI>.
+          type: String
+          default: black
+
+        - name: width
+          summary: Line width in pixels to use when drawing the polyline.
+          type: Number
+          default: 10
+
+        - name: zIndex
+          summary: |
+              The order (depth) in which to display the polylines.
+          description: |
+              For iOS, the polylines are drawn in the order in which they are added.
+          availability: creation
+          type: Number
+
+  - name: createCircle
+    summary: |
+        Creates a circle shape object.
+    since: "3.2.0"
+    platforms: [android, iphone, ipad]
+    parameters:
+        - name: center
+          summary: Array with longitude and latitude values. Can also be an object with longitude and latitude.
+          availability: creation
+          type: Array<MapPointType>
+          optional: false
+
+        - name: radius
+          summary: The radius of the circle, specified in meters. It should be zero or greater.
+          availability: creation
+          type: Array<Array<MapPointType>>
+          optional: true
+
+        - name: fillColor
+          summary: |
+              Color to use when shading the circle, as a color name or hex triplet.
+          description: |
+              For information about color values, see the "Colors" section of <Titanium.UI>.
+          type: String
+          default: black
+
+        - name: borderColor
+          summary: |
+              Color to use for the border of the circle, as a color name or hex triplet.
+          description: |
+              For information about color values, see the "Colors" section of <Titanium.UI>.
+          type: String
+          default: black
+
+        - name: borderWidth
+          summary: Line width in pixels to use when drawing the circle.
+          type: Number
+          default: 10
+
+        - name: zIndex
+          summary: |
+              The order (depth) in which to display the circles.
+          description: |
+              For iOS, the circles are drawn in the order in which they are added.
+          availability: creation
+          type: Number
+
 examples:
   - title: Map Example
     example: |
-        This is a basic map example that places a custom annotation on the map, and 
-        listens for click events on the annotation. 
+        This is a basic map example that places a custom annotation on the map, and
+        listens for click events on the annotation.
 
         In this example, a custom property (`myid`) is added to the annotation object.
         While adding custom members to a Titanium object is not generally recommended,
         in this case it provides a mechanism for uniquely identifying an annotation. This
-        can be useful, for example, if the annotations are dynamically generated 
+        can be useful, for example, if the annotations are dynamically generated
         and it is not practical to identify them by title.
 
             var Map = require('ti.map');
@@ -314,10 +440,17 @@ examples:
                 annotations:[mountainView]
             });
 
+            var circle = Map.createCircle({
+                center: { latitude: 33.74511, longitude: -84.38993 },
+                radius: 1000, //1km
+                fillColor: "#20FF0000"
+            });
+            mapview.addCircle(circle);
+
             win.add(mapview);
             // Handle click events on any annotations on this map.
             mapview.addEventListener('click', function(evt) {
-                Ti.API.info("Annotation " + evt.title + " clicked, id: " + evt.annotation.myid);
+                Ti.API.info("Clicked " + ev.clicksource + " on " + ev.latitude + "," + ev.longitude);
             });
             win.open();
 
