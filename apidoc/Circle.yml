@@ -8,7 +8,7 @@ description: |
     Use the <Modules.Map.createCircle> method to create a circle.
 
 extends: Titanium.Proxy
-since: { android: "3.2.3", iphone: "3.2.3", ipad: "3.2.3" }
+since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
 platforms: [android, iphone, ipad]
 
 properties:
@@ -22,7 +22,7 @@ properties:
   - name: radius
     summary: The radius of the circle, specified in meters. It should be zero or greater.
     availability: creation
-    type: Integer
+    type: Number
     optional: true
 
   - name: fillColor
