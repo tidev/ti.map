@@ -1,0 +1,21 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+
+version: 1.0.0
+apiversion: 2
+architectures: ARM x86
+description: ti.map
+author: Your Name
+license: Specify your license
+copyright: Copyright (c) 2015 by Your Company
+
+# these should not be edited
+name: ti.map
+moduleid: ti.map
+classname: Ti::MapModule
+moduleIdAsIdentifier: TiMap
+guid: 5b10eb04-457b-404c-b6ea-537a730cb591
+platform: windows
+minsdk: 4.1.0.v20150605164428
