@@ -538,15 +538,19 @@
 
 -(void)addRoute:(TiMapRouteProxy*)route
 {
-    CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
-    [self addOverlay:[route routeLine] level:[route level]];
+    TiThreadPerformOnMainThread(^{
+        CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
+        [self addOverlay:[route routeLine] level:[route level]];
+    }, NO);
 }
 
 -(void)removeRoute:(TiMapRouteProxy*)route
 {
-    MKPolyline *routeLine = [route routeLine];
-    CFDictionaryRemoveValue(mapObjects2View, routeLine);
-    [map removeOverlay:routeLine];
+    TiThreadPerformOnMainThread(^{
+        MKPolyline *routeLine = [route routeLine];
+        CFDictionaryRemoveValue(mapObjects2View, routeLine);
+        [map removeOverlay:routeLine];
+    }, NO);
 }
 
 -(void)addPolygons:(NSMutableArray*)polygons
@@ -557,16 +561,18 @@
     }
 }
 
-
 -(void)addPolygon:(TiMapPolygonProxy*)polygonProxy
 {
-    MKPolygon *poly = [polygonProxy polygon];
-    CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
-    [map addOverlay:poly];
-    if (polygonProxies == nil) {
-        polygonProxies = [[NSMutableArray alloc] init];
-    }
-    [polygonProxies addObject:polygonProxy];
+    TiThreadPerformOnMainThread(^{
+        MKPolygon *poly = [polygonProxy polygon];
+        CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
+        [map addOverlay:poly];
+
+        if (polygonProxies == nil) {
+            polygonProxies = [[NSMutableArray alloc] init];
+        }
+        [polygonProxies addObject:polygonProxy];
+    }, NO);
 }
 
 -(void)removePolygon:(TiMapPolygonProxy*)polygonProxy
@@ -576,12 +582,14 @@
 
 -(void)removePolygon:(TiMapPolygonProxy*)polygonProxy remove:(BOOL)r
 {
-    MKPolygon *poly = [polygonProxy polygon];
-    CFDictionaryRemoveValue(mapObjects2View, poly);
-    [map removeOverlay:poly];
-    if (r) {
-        [polygonProxies removeObject:polygonProxy];
-    }
+    TiThreadPerformOnMainThread(^{
+        MKPolygon *poly = [polygonProxy polygon];
+        CFDictionaryRemoveValue(mapObjects2View, poly);
+        [map removeOverlay:poly];
+        if (r) {
+            [polygonProxies removeObject:polygonProxy];
+        }
+    }, NO);
 }
 
 -(void)removeAllPolygons {
@@ -593,14 +601,19 @@
 }
 
 -(void)addCircle:(TiMapCircleProxy*)circleProxy {
-    MKCircle *circle = [circleProxy circle];
-    CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
-    [map addOverlay:circle];
-    if (circleProxies == nil) {
-        circleProxies = [[NSMutableArray alloc] init];
-    }
-    [circleProxies addObject:circleProxy];
+    
+    TiThreadPerformOnMainThread(^{
+        MKCircle *circle = [circleProxy circle];
+        CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
+        [map addOverlay:circle];
+        
+        if (circleProxies == nil) {
+            circleProxies = [[NSMutableArray alloc] init];
+        }
+        [circleProxies addObject:circleProxy];
+    }, NO);
 }
+
 -(void)addCircles:(NSMutableArray*)circles
 {
     for (TiMapCircleProxy *circle in circles)
@@ -616,13 +629,16 @@
 
 -(void)removeCircle:(TiMapCircleProxy*)circleProxy remove:(BOOL)r
 {
-    MKCircle *circle = [circleProxy circle];
-    CFDictionaryRemoveValue(mapObjects2View, circle);
-    [map removeOverlay:circle];
-    if (r) {
-        [circleProxies removeObject:circleProxy];
-    }
+    TiThreadPerformOnMainThread(^{
+        MKCircle *circle = [circleProxy circle];
+        CFDictionaryRemoveValue(mapObjects2View, circle);
+        [map removeOverlay:circle];
+        if (r) {
+            [circleProxies removeObject:circleProxy];
+        }
+    }, NO);
 }
+
 -(void)removeAllCircles {
     for (int i=0; i < [circleProxies count]; i++) {
         TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
@@ -641,13 +657,15 @@
 
 -(void)addPolyline:(TiMapPolylineProxy*)polylineProxy
 {
-    MKPolyline *poly = [polylineProxy polyline];
-    CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
-    [map addOverlay:poly];
-    if (polylineProxies == nil) {
-        polylineProxies = [[NSMutableArray alloc] init];
-    }
-    [polylineProxies addObject:polylineProxy];
+    TiThreadPerformOnMainThread(^{
+        MKPolyline *poly = [polylineProxy polyline];
+        CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
+        [map addOverlay:poly];
+        if (polylineProxies == nil) {
+            polylineProxies = [[NSMutableArray alloc] init];
+        }
+        [polylineProxies addObject:polylineProxy];
+    }, NO);
 }
 
 -(void)removePolyline:(TiMapPolylineProxy*)polylineProxy
@@ -657,12 +675,14 @@
 
 -(void)removePolyline:(TiMapPolylineProxy*)polylineProxy remove:(BOOL)r
 {
-    MKPolyline *poly = [polylineProxy polyline];
-    CFDictionaryRemoveValue(mapObjects2View, poly);
-    [map removeOverlay:poly];
-    if (r) {
-        [polylineProxies removeObject:polylineProxy];
-    }
+    TiThreadPerformOnMainThread(^{
+        MKPolyline *poly = [polylineProxy polyline];
+        CFDictionaryRemoveValue(mapObjects2View, poly);
+        [map removeOverlay:poly];
+        if (r) {
+            [polylineProxies removeObject:polylineProxy];
+        }
+    }, NO);
 }
 
 -(void)removeAllPolylines {
