@@ -1,6 +1,7 @@
 # Change Log
 <pre>
 v2.3.3    Update toImage() signature [TIMOB-19314]
+          Strip down Google Play Services library to include only maps components [TIMOB-18082]
 
 v2.3.2    Update Google Play Services library and assets [TIMOB-18988]
 
