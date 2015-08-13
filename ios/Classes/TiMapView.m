@@ -86,31 +86,30 @@
 
 -(void)registerTouchEvents
 {
-
     UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
-
-    // Any press to see if shape intersection
-    WildcardGestureRecognizer * tapInterceptor = [[WildcardGestureRecognizer alloc] init];
-    __block TiMapView *weakSelf = self; // to avoid leaking inside touchesBeganCallback
-    __block MKMapView *weakMap  = map;
-    tapInterceptor.touchesBeganCallback = ^(NSSet * touches, UIEvent * event) {
-        UITouch *touch = [touches anyObject];
-        CGPoint point = [touch locationInView:weakMap];
-
-        CLLocationCoordinate2D coord = [weakMap convertPoint:point toCoordinateFromView:weakMap];
-        MKMapPoint mapPoint = MKMapPointForCoordinate(coord);
-        [weakSelf handlePolygonClick:mapPoint];
-        [weakSelf handleCircleClick:mapPoint];
-        [weakSelf handlePolylineClick:mapPoint];
-    };
-
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOverlayTap:)];
+    tap.cancelsTouchesInView = NO;
+    
+    [map addGestureRecognizer:tap];
     [map addGestureRecognizer:longPressInterceptor];
-    [map addGestureRecognizer:tapInterceptor];
-
+    
     [longPressInterceptor release];
-    [tapInterceptor release];
+    [tap release];
 }
 
+-(void)handleOverlayTap: (UIGestureRecognizer*)tap
+{
+    CGPoint tapPoint = [tap locationInView:self.map];
+    
+    CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
+    MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
+    CGPoint mapPointAsCGP = CGPointMake(mapPoint.x, mapPoint.y);
+    
+    [self handlePolygonClick:mapPoint];
+    [self handlePolylineClick:mapPoint];
+    [self handleCircleClick:mapPoint];
+}
 
 - (id)accessibilityElement
 {
@@ -885,25 +884,25 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
 	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
+        
 		BOOL isSelected = [view isSelected];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
-		return;
-	}
+    }
 }
+
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view{
 	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
-		BOOL isSelected = [view isSelected];
+		BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
-		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
-		return;
+		[self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
 	}
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)aview calloutAccessoryControlTapped:(UIControl *)control
 {
-	if ([aview conformsToProtocol:@protocol(TiMapAnnotation)])
+    if ([aview conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
 		MKPinAnnotationView *pinview = (MKPinAnnotationView*)aview;
 		NSString * clickSource = @"unknown";
@@ -968,11 +967,13 @@
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }
-        annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];;
+        annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
         annView.enabled = YES;
         annView.centerOffset = ann.offset;
+        
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
+        
         if (left!=nil) {
             annView.leftCalloutAccessoryView = left;
         }
@@ -982,11 +983,13 @@
                 annView.leftCalloutAccessoryView = nil;
             }
         }
+        
         if (right!=nil) {
             annView.rightCalloutAccessoryView = right;
         }
         else {
             //ios7 requires this to be explicitly set as nil if nil
+            
             if (![TiUtils isIOS8OrGreater]) {
                 annView.rightCalloutAccessoryView = nil;
             }
@@ -995,8 +998,10 @@
         [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
         annView.tag = [ann tag];
+        
         return annView;
     }
+    
     return nil;
 }
 
@@ -1040,6 +1045,7 @@
 {
 	id<MKAnnotation> result = nil;
 	for (UIView* subview in [view subviews]) {
+        
 		if (![subview pointInside:[self convertPoint:point toView:subview] withEvent:nil]) {
 			continue;
 		}
