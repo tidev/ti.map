@@ -1,5 +1,6 @@
 # Change Log
 <pre>
+v2.4.0  iOS9: Upgrade map module to support bitcode. [TIMOB-19385]
 v2.3.2  Fixed map crash with polygons when not setting mapType. [TIMOB-19102]
 v2.3.1  Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
         Fixes longclick event on iOS. [Github #41]
