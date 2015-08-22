@@ -779,58 +779,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			selectedAnnotation = null;
 		}
 
-		// currentCircles
-		if(currentCircles.size() > 0) {
-			for (CircleProxy circleProxy : currentCircles) {
-
-				Circle circle = circleProxy.getCircle();
-			    LatLng center = circle.getCenter();
-
-			    double radius = circle.getRadius();
-			    float[] distance = new float[1];
-			    Location.distanceBetween(point.latitude, point.longitude, center.latitude, center.longitude, distance);
-			    boolean clicked = distance[0] < radius;
-				if(clicked) {
-					fireShapeClickEvent(point, circleProxy, MapModule.PROPERTY_CIRCLE);
-				}
-			}
-		}
-
-		//	currentPolygons
-		if(currentPolygons.size() > 0) {
-
-			Boundary boundary = new Boundary();
-			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(currentPolygons, point);
-			boundary = null;
-
-			if(clickedPolygon.size() > 0) {
-				for (PolygonProxy polygonProxy : clickedPolygon) {
-					fireShapeClickEvent(point, polygonProxy, MapModule.PROPERTY_POLYGON);
-				}
-			}
-		}
-
-		// currentPolylines
-		if(currentPolylines.size() > 0) {
-			PolylineBoundary boundary = new PolylineBoundary();
-
-			double baseVal = 2;
-			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
-			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude);
-			double side2 =  b.northeast.longitude > b.southwest.longitude ? (b.northeast.longitude - b.southwest.longitude ) : (b.southwest.longitude - b.northeast.longitude );
-			double diagonal = Math.sqrt((side1*side1)+(side2*side2));
-			double val = diagonal / map.getCameraPosition().zoom;
-
-			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(currentPolylines, point, val);
-
-			boundary = null;
-			if(clickedPolylines.size() > 0) {
-				for (PolylineProxy polylineProxy : clickedPolylines) {
-					fireShapeClickEvent(point, polylineProxy, MapModule.PROPERTY_POLYLINE);
-				}
-			}
-		}
-
 	}
 
 	@Override
