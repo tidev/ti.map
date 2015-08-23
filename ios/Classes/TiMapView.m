@@ -106,9 +106,9 @@
     MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
     CGPoint mapPointAsCGP = CGPointMake(mapPoint.x, mapPoint.y);
     
-    [self handlePolygonClick:mapPoint];
-    [self handlePolylineClick:mapPoint];
-    [self handleCircleClick:mapPoint];
+    //[self handlePolygonClick:mapPoint];
+    //[self handlePolylineClick:mapPoint];
+    //[self handleCircleClick:mapPoint];
 }
 
 - (id)accessibilityElement
