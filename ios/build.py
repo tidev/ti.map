@@ -165,10 +165,14 @@ def build_module(manifest,config):
 	from tools import ensure_dev_path
 	ensure_dev_path()
 
-	rc = os.system("xcodebuild -sdk iphoneos -configuration Release OTHER_CFLAGS=\"-fembed-bitcode\"")
+	#Use this code below when building with xcode 7. This is changed for travis as it does not have xcode 7 at the moment
+	#rc = os.system("xcodebuild -sdk iphoneos -configuration Release OTHER_CFLAGS=\"-fembed-bitcode\"")
+	rc = os.system("xcodebuild -sdk iphoneos -configuration Release")
 	if rc != 0:
 		die("xcodebuild failed")
-	rc = os.system("xcodebuild -sdk iphonesimulator -configuration Release OTHER_CFLAGS=\"-fembed-bitcode\"")
+	#Use this code below when building with xcode 7. This is changed for travis as it does not have xcode 7 at the moment
+	#rc = os.system("xcodebuild -sdk iphonesimulator -configuration Release OTHER_CFLAGS=\"-fembed-bitcode\"")
+	rc = os.system("xcodebuild -sdk iphonesimulator -configuration Release")
 	if rc != 0:
 		die("xcodebuild failed")
     # build the merged library using lipo
