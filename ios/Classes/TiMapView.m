@@ -104,7 +104,6 @@
     
     CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
     MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
-    CGPoint mapPointAsCGP = CGPointMake(mapPoint.x, mapPoint.y);
     
     [self handlePolygonClick:mapPoint];
     [self handlePolylineClick:mapPoint];
@@ -736,12 +735,17 @@
     [map addOverlay:polyline];
 }
 
+-(BOOL)isIOS9OrGreater
+{
+    return [UIImage instancesRespondToSelector:@selector(flipsForRightToLeftLayoutDirection)];
+}
+
 #pragma mark Delegates
 
 // Delegate for >= iOS 8
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-	if((status == kCLAuthorizationStatusAuthorizedWhenInUse) || (status == kCLAuthorizationStatusAuthorizedAlways) || (status == kCLAuthorizationStatusAuthorized)){
+	if((status == kCLAuthorizationStatusAuthorizedWhenInUse) || (status == kCLAuthorizationStatusAuthorizedAlways)){
 		self.map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
 	}
 }
@@ -848,7 +852,7 @@
 	if (title == nil)
 		title = [NSNull null];
 
-	NSNumber * indexNumber = NUMINT([pinview tag]);
+	NSNumber * indexNumber = [pinview tag];
 
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
 								viewProxy,@"annotation",
@@ -872,7 +876,7 @@
 	{
 		if ([annotation isKindOfClass:[TiMapAnnotationProxy class]])
 		{
-			if ([annotation tag] == pinview.tag)
+			if ([(TiMapAnnotationProxy*)annotation tag] == pinview.tag)
 			{
 				return annotation;
 			}
@@ -963,7 +967,18 @@
         }
         else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
-            pinview.pinColor = [ann pinColor];
+            
+            // Remove pinview.pinColor when minimum SDK is >= 9
+            if([self isIOS9OrGreater] == YES) {
+                pinview.pinTintColor = [ann pinColor];
+            } else {
+                
+                #pragma GCC diagnostic push
+                #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+                pinview.pinColor = [ann pinColor];
+                #pragma GCC diagnostic pop
+            }
+            
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }
@@ -1090,7 +1105,6 @@
     for (int i=0; i < [polygonProxies count]; i++) {
         TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
 
-        MKPolygon *poly = proxy.polygon;
         MKPolygonRenderer *polygonRenderer = proxy.polygonRenderer;
 
         CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
@@ -1105,7 +1119,6 @@
     for (int i=0; i < [circleProxies count]; i++) {
         TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
 
-        MKCircle *circ = circle.circle;
         MKCircleRenderer *circRenderer = circle.circleRenderer;
 
         CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
@@ -1120,7 +1133,6 @@
     for (int i=0; i < [polylineProxies count]; i++) {
         TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
 
-        MKPolyline *poly = proxy.polyline;
         MKPolylineRenderer *polylineRenderer = proxy.polylineRenderer;
 
         CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
@@ -1152,7 +1164,7 @@
 		title = [NSNull null];
 	}
 
-	NSNumber * indexNumber = NUMINT([pinview tag]);
+	NSNumber * indexNumber = [pinview tag];
 	id clicksource = source ? source : (id)[NSNull null];
 	
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:

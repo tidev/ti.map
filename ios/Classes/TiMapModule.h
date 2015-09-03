@@ -19,10 +19,11 @@ return [NSNumber numberWithInt:map];\
 }\
 
 @interface TiMapModule : TiModule {
-
+    UIColor *colorRed;
 }
 
 +(void)logAddedIniOS7Warning:(NSString*)name;
+-(BOOL)isIOS9OrGreater;
 
 @property(nonatomic,readonly) NSNumber *STANDARD_TYPE;
 @property(nonatomic,readonly) NSNumber *NORMAL_TYPE; // For parity with Android
