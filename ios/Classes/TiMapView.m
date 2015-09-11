@@ -968,15 +968,16 @@
         else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
             
-            // Remove pinview.pinColor when minimum SDK is >= 9
             if([self isIOS9OrGreater] == YES) {
+#if __IPHONE_9_0
                 pinview.pinTintColor = [ann pinColor];
+#endif
             } else {
                 
-                #pragma GCC diagnostic push
-                #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
                 pinview.pinColor = [ann pinColor];
-                #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
             }
             
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];

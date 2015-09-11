@@ -23,7 +23,6 @@ return [NSNumber numberWithInt:map];\
 }
 
 +(void)logAddedIniOS7Warning:(NSString*)name;
--(BOOL)isIOS9OrGreater;
 
 @property(nonatomic,readonly) NSNumber *STANDARD_TYPE;
 @property(nonatomic,readonly) NSNumber *NORMAL_TYPE; // For parity with Android
