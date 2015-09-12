@@ -32,7 +32,7 @@
 - (NSString *)title;
 - (NSString *)subtitle;
 
-- (MKPinAnnotationColor)pinColor;
+- (UIColor*)pinColor;
 - (BOOL)animatesDrop;
 
 - (UIView*)leftViewAccessory;

@@ -190,7 +190,7 @@
 	}
 }
 
-- (MKPinAnnotationColor)pinColor
+- (UIColor*)pinColor
 {
 	return [TiUtils intValue:[self valueForUndefinedKey:@"pincolor"]];
 }

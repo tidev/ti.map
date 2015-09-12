@@ -53,7 +53,7 @@
     }
     
     // Construct the MKPolyline
-    MKMapPoint* pointArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
+    MKMapPoint* pointArray = malloc(sizeof(MKMapPoint) * points.count);
     for (int i = 0; i < [points count]; ++i) {
         NSDictionary* entry = [points objectAtIndex:i];
         CLLocationDegrees lat = [TiUtils doubleValue:[entry objectForKey:@"latitude"]];

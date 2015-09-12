@@ -540,8 +540,8 @@
     if(attached) {
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] addPolygons:polygonsToAdd];
+            [initialPolygons release];
         }, NO);
-        [initialPolygons release];
     }
     else {
         RELEASE_TO_NIL(polygonsToAdd);
@@ -637,8 +637,8 @@
     if(attached) {
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] addCircles:circlesToAdd];
+            [initialCircles release];
         }, NO);
-        [initialCircles release];
     }
     else {
         RELEASE_TO_NIL(circlesToAdd);
@@ -733,8 +733,8 @@
     if(attached) {
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] addPolylines:polylinesToAdd];
+            [initialPolylines release];
         }, NO);
-        [initialPolylines release];
     }
     else {
         RELEASE_TO_NIL(polylinesToAdd);
