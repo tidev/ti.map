@@ -1,5 +1,7 @@
 # Change Log
 <pre>
+v2.3.5    Refactor module to use getMapAsync [TIMOB-19726]
+v2.3.4    Recompiled map with NDK r10e [TIMOB-19681]
 v2.3.3    Update toImage() signature [TIMOB-19314]
           Strip down Google Play Services library to include only maps components [TIMOB-18082]
 
