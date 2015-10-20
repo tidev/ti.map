@@ -60,7 +60,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected LatLngBounds preLayoutUpdateBounds;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
-	private int retries = 0;
 
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
