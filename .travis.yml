@@ -8,8 +8,8 @@ before_install:
     - MODULE_ROOT=$PWD
 install:
     - cd $MODULE_ROOT
-    - curl -o install.sh https://raw.githubusercontent.com/appcelerator-modules/ci/master/travis/install.sh
-    - source install.sh -s "3.4.0.GA"
+    - curl -o install.sh https://raw.githubusercontent.com/ashcoding/ci/timapFix/travis/install.sh #change this to appcelerator-modules once PR has been merged
+    - source install.sh -s "--branch 4_1_X"
 script: 
     - curl -o script.sh https://raw.githubusercontent.com/appcelerator-modules/ci/master/travis/script.sh
     - source script.sh

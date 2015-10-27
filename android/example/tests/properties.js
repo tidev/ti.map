@@ -1,11 +1,12 @@
-
 exports.title = 'Properties';
+exports.color = 'black';
 exports.run = function(UI, Map) {
     var win = UI.createWindow();
     
     var rows = [
         {
             title: 'pitchEnabled: true',
+            color: 'black',
             run: function(e){
                 map.pitchEnabled = !map.pitchEnabled;
                 // Display the current value of the property in the row
@@ -14,6 +15,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'rotateEnabled: true',
+            color: 'black',
             run: function(e){
                 map.rotateEnabled = !map.rotateEnabled;
                 // Display the current value of the property in the row
@@ -22,6 +24,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'showsBuildings: true',
+            color: 'black',
             run: function(e){
                 map.showsBuildings = !map.showsBuildings;
                 // Display the current value of the property in the row
@@ -30,6 +33,7 @@ exports.run = function(UI, Map) {
         },
         {
             title: 'showsPointsOfInterest: true',
+            color: 'black',
             run: function(e){
                 map.showsPointsOfInterest = !map.showsPointsOfInterest;
                 // Display the current value of the property in the row

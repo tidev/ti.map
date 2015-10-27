@@ -1,0 +1,42 @@
+---
+name: Modules.Map.Polyline
+summary: Represents a bounded area on the map.
+description: |
+    The `Polyline` object gives you low-level control over polylines that can be added to a
+    [map view](Modules.Map.View). A polyline must have its `points` property set to appear on a map.
+
+    Use the <Modules.Map.createPolyline> method to create a polyline.
+
+extends: Titanium.Proxy
+since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
+platforms: [android, iphone, ipad]
+
+properties:
+
+  - name: points
+    summary: Array of map points making up the polyline. Can also be an array of longitude, latitude touples.
+    availability: creation
+    type: Array<MapPointType>
+    optional: false
+
+  - name: strokeColor
+    summary: |
+        Color to use for the the polyline, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+    default: black
+
+  - name: strokeWidth
+    summary: Line width in pixels to use when drawing the polyline.
+    type: Number
+    default: 10
+
+  - name: zIndex
+    summary: |
+        The order (depth) in which to display the polylines.
+    description: |
+        For iOS, the polylines are drawn in the order in which they are added.
+    availability: creation
+    type: Number
+    platforms: [android]

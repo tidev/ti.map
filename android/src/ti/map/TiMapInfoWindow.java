@@ -48,12 +48,15 @@ public class TiMapInfoWindow extends RelativeLayout
 	private View[] clicksourceList;
 	private String currentClicksource = null;
 
-	public TiMapInfoWindow(Context context)
+	private AnnotationProxy proxy = null;
+
+	public TiMapInfoWindow(Context context, AnnotationProxy proxy)
 	{
 		super(context);
 		setBackgroundColor(Color.WHITE);
 		setGravity(Gravity.NO_GRAVITY);
 
+		this.proxy = proxy;
 		RelativeLayout.LayoutParams params = null;
 
 		// Left button or left view
@@ -167,7 +170,7 @@ public class TiMapInfoWindow extends RelativeLayout
 		pane.setVisibility(VISIBLE);
 		if (obj instanceof String) {
 			ImageView imageview = new ImageView(getContext());
-			TiDrawableReference imageref = TiDrawableReference.fromUrl(TiApplication.getAppCurrentActivity(), (String) obj);
+			TiDrawableReference imageref = TiDrawableReference.fromUrl(TiApplication.getAppCurrentActivity(), proxy.resolveUrl(null, (String) obj));
 			Bitmap bitmap = imageref.getBitmap();
 			if (bitmap != null) {
 				imageview.setImageBitmap(bitmap);

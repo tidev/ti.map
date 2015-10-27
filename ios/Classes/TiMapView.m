@@ -1,12 +1,13 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
- 
-#import "TiBase.h"
+
+
 #import "TiMapView.h"
+#import "TiBase.h"
 #import "TiUtils.h"
 #import "TiMapModule.h"
 #import "TiMapAnnotationProxy.h"
@@ -14,6 +15,9 @@
 #import "TiMapImageAnnotationView.h"
 #import "TiMapCustomAnnotationView.h"
 #import "TiMapRouteProxy.h"
+#import "TiMapPolygonProxy.h"
+#import "TiMapCircleProxy.h"
+#import "TiMapPolylineProxy.h"
 
 @implementation TiMapView
 
@@ -26,11 +30,15 @@
 		map.delegate = nil;
 		RELEASE_TO_NIL(map);
 	}
-    if (mapLine2View) {
-        CFRelease(mapLine2View);
-        mapLine2View = nil;
+    if (mapObjects2View) {
+        CFRelease(mapObjects2View);
+        mapObjects2View = nil;
     }
+
 	RELEASE_TO_NIL(locationManager);
+    RELEASE_TO_NIL(polygonProxies);
+    RELEASE_TO_NIL(polylineProxies);
+    RELEASE_TO_NIL(circleProxies);
 	[super dealloc];
 }
 
@@ -68,11 +76,38 @@
             map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
         }
         [self addSubview:map];
-        mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        mapObjects2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        [self registerTouchEvents];
         //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
         loaded = YES;
     }
     return map;
+}
+
+-(void)registerTouchEvents
+{
+    UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOverlayTap:)];
+    tap.cancelsTouchesInView = NO;
+    
+    [map addGestureRecognizer:tap];
+    [map addGestureRecognizer:longPressInterceptor];
+    
+    [longPressInterceptor release];
+    [tap release];
+}
+
+-(void)handleOverlayTap: (UIGestureRecognizer*)tap
+{
+    CGPoint tapPoint = [tap locationInView:self.map];
+    
+    CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
+    MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
+    
+    [self handlePolygonClick:mapPoint];
+    [self handlePolylineClick:mapPoint];
+    [self handleCircleClick:mapPoint];
 }
 
 - (id)accessibilityElement
@@ -501,16 +536,164 @@
 
 -(void)addRoute:(TiMapRouteProxy*)route
 {
-    CFDictionaryAddValue(mapLine2View, [route routeLine], [route routeRenderer]);
-    [self addOverlay:[route routeLine] level:[route level]];
+    TiThreadPerformOnMainThread(^{
+        CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
+        [self addOverlay:[route routeLine] level:[route level]];
+    }, NO);
 }
 
 -(void)removeRoute:(TiMapRouteProxy*)route
 {
-    MKPolyline *routeLine = [route routeLine];
-    CFDictionaryRemoveValue(mapLine2View, routeLine);
-    [map removeOverlay:routeLine];
+    TiThreadPerformOnMainThread(^{
+        MKPolyline *routeLine = [route routeLine];
+        CFDictionaryRemoveValue(mapObjects2View, routeLine);
+        [map removeOverlay:routeLine];
+    }, NO);
 }
+
+-(void)addPolygons:(NSMutableArray*)polygons
+{
+    for (TiMapPolygonProxy *poly in polygons)
+    {
+        [self addPolygon:poly];
+    }
+}
+
+-(void)addPolygon:(TiMapPolygonProxy*)polygonProxy
+{
+    TiThreadPerformOnMainThread(^{
+        MKPolygon *poly = [polygonProxy polygon];
+        CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
+        [map addOverlay:poly];
+
+        if (polygonProxies == nil) {
+            polygonProxies = [[NSMutableArray alloc] init];
+        }
+        [polygonProxies addObject:polygonProxy];
+    }, NO);
+}
+
+-(void)removePolygon:(TiMapPolygonProxy*)polygonProxy
+{
+    [self removePolygon:polygonProxy remove:YES];
+}
+
+-(void)removePolygon:(TiMapPolygonProxy*)polygonProxy remove:(BOOL)r
+{
+    TiThreadPerformOnMainThread(^{
+        MKPolygon *poly = [polygonProxy polygon];
+        CFDictionaryRemoveValue(mapObjects2View, poly);
+        [map removeOverlay:poly];
+        if (r) {
+            [polygonProxies removeObject:polygonProxy];
+        }
+    }, NO);
+}
+
+-(void)removeAllPolygons {
+    for (int i=0; i < [polygonProxies count]; i++) {
+        TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
+        [self removePolygon:proxy remove:NO];
+    }
+    [polygonProxies removeAllObjects];
+}
+
+-(void)addCircle:(TiMapCircleProxy*)circleProxy {
+    
+    TiThreadPerformOnMainThread(^{
+        MKCircle *circle = [circleProxy circle];
+        CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
+        [map addOverlay:circle];
+        
+        if (circleProxies == nil) {
+            circleProxies = [[NSMutableArray alloc] init];
+        }
+        [circleProxies addObject:circleProxy];
+    }, NO);
+}
+
+-(void)addCircles:(NSMutableArray*)circles
+{
+    for (TiMapCircleProxy *circle in circles)
+    {
+        [self addCircle:circle];
+    }
+}
+
+-(void)removeCircle:(TiMapCircleProxy*)circleProxy
+{
+    [self removeCircle:circleProxy remove:YES];
+}
+
+-(void)removeCircle:(TiMapCircleProxy*)circleProxy remove:(BOOL)r
+{
+    TiThreadPerformOnMainThread(^{
+        MKCircle *circle = [circleProxy circle];
+        CFDictionaryRemoveValue(mapObjects2View, circle);
+        [map removeOverlay:circle];
+        if (r) {
+            [circleProxies removeObject:circleProxy];
+        }
+    }, NO);
+}
+
+-(void)removeAllCircles {
+    for (int i=0; i < [circleProxies count]; i++) {
+        TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
+        [self removeCircle:circle remove:NO];
+    }
+    [circleProxies removeAllObjects];
+}
+
+-(void)addPolylines:(NSMutableArray*)polylines
+{
+    for (TiMapPolylineProxy *poly in polylines)
+    {
+        [self addPolyline:poly];
+    }
+}
+
+-(void)addPolyline:(TiMapPolylineProxy*)polylineProxy
+{
+    TiThreadPerformOnMainThread(^{
+        MKPolyline *poly = [polylineProxy polyline];
+        CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
+        [map addOverlay:poly];
+        if (polylineProxies == nil) {
+            polylineProxies = [[NSMutableArray alloc] init];
+        }
+        [polylineProxies addObject:polylineProxy];
+    }, NO);
+}
+
+-(void)removePolyline:(TiMapPolylineProxy*)polylineProxy
+{
+    [self removePolyline:polylineProxy remove:YES];
+}
+
+-(void)removePolyline:(TiMapPolylineProxy*)polylineProxy remove:(BOOL)r
+{
+    TiThreadPerformOnMainThread(^{
+        MKPolyline *poly = [polylineProxy polyline];
+        CFDictionaryRemoveValue(mapObjects2View, poly);
+        [map removeOverlay:poly];
+        if (r) {
+            [polylineProxies removeObject:polylineProxy];
+        }
+    }, NO);
+}
+
+-(void)removeAllPolylines {
+    for (int i=0; i < [polylineProxies count]; i++) {
+        TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
+        [self removePolyline:proxy remove:NO];
+    }
+    [polylineProxies removeAllObjects];
+}
+
+
+
+
 
 #pragma mark Public APIs iOS 7
 
@@ -552,12 +735,17 @@
     [map addOverlay:polyline];
 }
 
+-(BOOL)isIOS9OrGreater
+{
+    return [UIImage instancesRespondToSelector:@selector(flipsForRightToLeftLayoutDirection)];
+}
+
 #pragma mark Delegates
 
 // Delegate for >= iOS 8
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-	if((status == kCLAuthorizationStatusAuthorizedWhenInUse) || (status == kCLAuthorizationStatusAuthorizedAlways) || (status == kCLAuthorizationStatusAuthorized)){
+	if((status == kCLAuthorizationStatusAuthorizedWhenInUse) || (status == kCLAuthorizationStatusAuthorizedAlways)){
 		self.map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
 	}
 }
@@ -565,7 +753,7 @@
 // Delegate for >= iOS 7
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
 {
-    return (MKOverlayRenderer *)CFDictionaryGetValue(mapLine2View, overlay);
+    return (MKOverlayRenderer *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
 // Delegate for < iOS 7
@@ -573,7 +761,7 @@
 // Can be removed when support is dropped for iOS 6 and below.
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {	
-    return (MKOverlayView *)CFDictionaryGetValue(mapLine2View, overlay);
+    return (MKOverlayView *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
@@ -639,6 +827,11 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState
 {
 	[self firePinChangeDragState:annotationView newState:newState fromOldState:oldState];
+	if (oldState == MKAnnotationViewDragStateStarting) {
+		[annotationView setDragState: MKAnnotationViewDragStateDragging];
+	} else if (oldState == MKAnnotationViewDragStateEnding || newState == MKAnnotationViewDragStateCanceling) {
+		[annotationView setDragState: MKAnnotationViewDragStateNone];
+    }
 }
 
 - (void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
@@ -659,7 +852,7 @@
 	if (title == nil)
 		title = [NSNull null];
 
-	NSNumber * indexNumber = NUMINT([pinview tag]);
+	NSNumber * indexNumber = [pinview tag];
 
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
 								viewProxy,@"annotation",
@@ -683,7 +876,7 @@
 	{
 		if ([annotation isKindOfClass:[TiMapAnnotationProxy class]])
 		{
-			if ([annotation tag] == pinview.tag)
+			if ([(TiMapAnnotationProxy*)annotation tag] == pinview.tag)
 			{
 				return annotation;
 			}
@@ -695,25 +888,25 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
 	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
+        
 		BOOL isSelected = [view isSelected];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
-		return;
-	}
+    }
 }
+
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view{
 	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
-		BOOL isSelected = [view isSelected];
+		BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
-		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
-		return;
+		[self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
 	}
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)aview calloutAccessoryControlTapped:(UIControl *)control
 {
-	if ([aview conformsToProtocol:@protocol(TiMapAnnotation)])
+    if ([aview conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
 		MKPinAnnotationView *pinview = (MKPinAnnotationView*)aview;
 		NSString * clickSource = @"unknown";
@@ -774,30 +967,57 @@
         }
         else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
-            pinview.pinColor = [ann pinColor];
+            
+            if([self isIOS9OrGreater] == YES) {
+#if __IPHONE_9_0
+                pinview.pinTintColor = [ann pinColor];
+#endif
+            } else {
+                
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+                pinview.pinColor = [ann pinColor];
+#pragma GCC diagnostic pop
+            }
+            
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }
-        annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];;
+        annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
         annView.enabled = YES;
         annView.centerOffset = ann.offset;
+        
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
+        
         if (left!=nil) {
             annView.leftCalloutAccessoryView = left;
         }
+        else {
+            //ios7 requires this to be explicitly set as nil if nil
+            if (![TiUtils isIOS8OrGreater]) {
+                annView.leftCalloutAccessoryView = nil;
+            }
+        }
+        
         if (right!=nil) {
             annView.rightCalloutAccessoryView = right;
         }
+        else {
+            //ios7 requires this to be explicitly set as nil if nil
+            
+            if (![TiUtils isIOS8OrGreater]) {
+                annView.rightCalloutAccessoryView = nil;
+            }
+        }
 
-        BOOL draggable = [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]];
-        if (draggable && [[MKAnnotationView class] instancesRespondToSelector:NSSelectorFromString(@"isDraggable")])
-            [annView performSelector:NSSelectorFromString(@"setDraggable:") withObject:[NSNumber numberWithBool:YES]];
-
+        [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
         annView.tag = [ann tag];
+        
         return annView;
     }
+    
     return nil;
 }
 
@@ -841,6 +1061,7 @@
 {
 	id<MKAnnotation> result = nil;
 	for (UIView* subview in [view subviews]) {
+        
 		if (![subview pointInside:[self convertPoint:point toView:subview] withEvent:nil]) {
 			continue;
 		}
@@ -861,6 +1082,68 @@
 
 #pragma mark Event generation
 
+
+-(void)handleLongPressOnMap:(UIGestureRecognizer *)sender
+{
+    if(sender.state == UIGestureRecognizerStateBegan) {
+        TiProxy * mapProxy = [self proxy];
+        CGPoint location = [sender locationInView:map];
+        CLLocationCoordinate2D coord = [map convertPoint:location toCoordinateFromView:map];
+        NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
+        NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
+        NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+        if ([mapProxy _hasListeners:@"longclick"]) {
+            [mapProxy fireEvent:@"longclick" withObject:event];
+        }
+
+    }
+
+}
+
+-(void)handlePolygonClick:(MKMapPoint)point
+{
+    for (int i=0; i < [polygonProxies count]; i++) {
+        TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
+
+        MKPolygonRenderer *polygonRenderer = proxy.polygonRenderer;
+
+        CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
+        BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
+        if (inPolygon) {
+            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYGON];
+        }
+    }
+}
+-(void)handleCircleClick:(MKMapPoint)point
+{
+    for (int i=0; i < [circleProxies count]; i++) {
+        TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
+
+        MKCircleRenderer *circRenderer = circle.circleRenderer;
+
+        CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
+        BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
+        if (inCircle) {
+            [self fireShapeClickEvent:circle point:point sourceType:VIEW_TYPE_CIRCLE];
+        }
+    }
+}
+-(void)handlePolylineClick:(MKMapPoint)point
+{
+    for (int i=0; i < [polylineProxies count]; i++) {
+        TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
+
+        MKPolylineRenderer *polylineRenderer = proxy.polylineRenderer;
+
+        CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
+        BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
+        if (onPolyline) {
+            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYLINE];
+        }
+    }
+}
+
 - (void)fireClickEvent:(MKAnnotationView *) pinview source:(NSString *)source
 {
 	if (ignoreClicks)
@@ -874,13 +1157,7 @@
 		return;
 	}
 
-	TiProxy * ourProxy = [self proxy];
-	BOOL parentWants = [ourProxy _hasListeners:@"click"];
-	BOOL viewWants = [viewProxy _hasListeners:@"click"];
-	if(!parentWants && !viewWants)
-	{
-		return;
-	}
+    TiProxy * mapProxy = [self proxy];
 	
 	id title = [viewProxy title];
 	if (title == nil)
@@ -888,21 +1165,56 @@
 		title = [NSNull null];
 	}
 
-	NSNumber * indexNumber = NUMINT([pinview tag]);
+	NSNumber * indexNumber = [pinview tag];
 	id clicksource = source ? source : (id)[NSNull null];
 	
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
-			clicksource,@"clicksource",	viewProxy,@"annotation",	ourProxy,@"map",
-			title,@"title",			indexNumber,@"index",		nil];
+			clicksource,@"clicksource",	viewProxy,@"annotation", mapProxy,@"map",
+			title,@"title",	indexNumber,@"index", nil];
 
-	if (parentWants)
-	{
-		[ourProxy fireEvent:@"click" withObject:event];
-	}
-	if (viewWants)
-	{
-		[viewProxy fireEvent:@"click" withObject:event];
-	}
+    [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
+}
+
+- (void)fireShapeClickEvent:(id)sourceProxy point:(MKMapPoint)point sourceType:(NSString*)sourceType {
+    if (ignoreClicks)
+    {
+        return;
+    }
+
+    TiProxy * mapProxy = [self proxy];
+    CLLocationCoordinate2D coord = MKCoordinateForMapPoint(point);
+
+    NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
+    NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
+
+    // In iOS, sometimes the source property is forced to the mapProxy and so we have to send along
+    // a more robust message via 'shape' and 'shapeType'.
+    NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:sourceType,@"clicksource",
+                            mapProxy,@"map",lat,@"latitude",lng,@"longitude",sourceProxy,@"source",sourceProxy,@"shape",sourceType,@"shapeType", nil];
+
+    [self doClickEvent:sourceProxy mapProxy:mapProxy event:event];
+}
+
+// Common functionality to fire event on map proxy and view proxy objects
+- (void)doClickEvent:(id)viewProxy mapProxy:(id)mapProxy event:(NSDictionary*)event
+{
+
+    BOOL parentWants = [mapProxy _hasListeners:@"click"];
+    BOOL viewWants;
+    if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
+        viewWants = [viewProxy _hasListeners:@"click"];
+    } else {
+        viewWants = FALSE;
+    }
+
+    if (parentWants)
+    {
+        [mapProxy fireEvent:@"click" withObject:event];
+    }
+    if (viewWants)
+    {
+        [viewProxy fireEvent:@"click" withObject:event];
+    }
 }
 
 

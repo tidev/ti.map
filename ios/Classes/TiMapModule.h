@@ -19,7 +19,7 @@ return [NSNumber numberWithInt:map];\
 }\
 
 @interface TiMapModule : TiModule {
-
+    UIColor *colorRed;
 }
 
 +(void)logAddedIniOS7Warning:(NSString*)name;
