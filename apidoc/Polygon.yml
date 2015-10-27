@@ -1,0 +1,56 @@
+---
+name: Modules.Map.Polygon
+summary: Represents a bounded area on the map.
+description: |
+    The `Polygon` object gives you low-level control over polygons that can be added to a
+    [map view](Modules.Map.View). A polygon must have its `points` property set to appear on a map.
+
+    Use the <Modules.Map.createPolygon> method to create a polygon.
+
+extends: Titanium.Proxy
+since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
+platforms: [android, iphone, ipad]
+
+properties:
+
+  - name: points
+    summary: Array of map points making up the polygon. Can also be an array of longitude, latitude touples.
+    availability: creation
+    type: Array<MapPointType>
+    optional: false
+
+  - name: holes
+    summary: Array of points arrays that define holes in the polygon.
+    availability: creation
+    type: Array<Array<MapPointType>>
+    optional: true
+
+  - name: fillColor
+    summary: |
+        Color to use when shading the polygon, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+    default: black
+
+  - name: strokeColor
+    summary: |
+        Color to use for the border of the polygon, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+    default: black
+
+  - name: strokeWidth
+    summary: Line width in pixels to use when drawing the polygon.
+    type: Number
+    default: 10
+
+  - name: zIndex
+    summary: |
+        The order (depth) in which to display the polygons.
+    description: |
+        For iOS, the polygons are drawn in the order in which they are added.
+    availability: creation
+    type: Number
+    platforms: [android]

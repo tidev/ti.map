@@ -1,5 +1,20 @@
 # Change Log
 <pre>
+v2.3.5    Refactor module to use getMapAsync [TIMOB-19726]
+v2.3.4    Recompiled map with NDK r10e [TIMOB-19681]
+v2.3.3    Update toImage() signature [TIMOB-19314]
+          Strip down Google Play Services library to include only maps components [TIMOB-18082]
+
+v2.3.2    Update Google Play Services library and assets [TIMOB-18988]
+
+v2.3.1    Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
+          Ensure region property is set after mapMove on android to match behavior of ios. [TIMOB-17857]
+
+v2.3.0    Fixed a couple crashing issues with map, added API name. [TIMOB-18244]
+
+v2.2.5    Fixed the example. [MOD-2073]
+
+v2.2.4    Added support for density-specific images for leftButton and rightButton properties. [MOD-1771]
 
 v2.2.3    Update signature of addAnnotations method.[TIMOB-17988]
           Adding architectures to manifest [TIMOB-18065]

@@ -1,0 +1,56 @@
+---
+name: Modules.Map.Circle
+summary: Represents a bounded area on the map.
+description: |
+    The `Circle` object gives you low-level control over circles that can be added to a
+    [map view](Modules.Map.View). A circle must have a `center` property and a `radius` set to appear on a map.
+
+    Use the <Modules.Map.createCircle> method to create a circle.
+
+extends: Titanium.Proxy
+since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
+platforms: [android, iphone, ipad]
+
+properties:
+
+  - name: center
+    summary: Array with longitude and latitude values. Can also be an object with longitude and latitude.
+    availability: creation
+    type: Array<MapPointType>
+    optional: false
+
+  - name: radius
+    summary: The radius of the circle, specified in meters. It should be zero or greater.
+    availability: creation
+    type: Number
+    optional: true
+
+  - name: fillColor
+    summary: |
+        Color to use when shading the circle, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+    default: black
+
+  - name: strokeColor
+    summary: |
+        Color to use for the border of the circle, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+    default: black
+
+  - name: strokeWidth
+    summary: Line width in pixels to use when drawing the circle.
+    type: Number
+    default: 10
+
+  - name: zIndex
+    summary: |
+        The order (depth) in which to display the circles.
+    description: |
+        For iOS, the circles are drawn in the order in which they are added.
+    availability: creation
+    type: Number
+    platforms: [android]

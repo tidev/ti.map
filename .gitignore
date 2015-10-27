@@ -2,8 +2,7 @@
 tmp
 bin
 build
-dist
-*.zip
+
 */*/modules
 */*/modules*
 .apt_generated
@@ -22,3 +21,12 @@ xcuserdata
 
 .idea/
 libs/
+
+android/clean
+android/ant_clean
+android/.classpath
+android/.settings
+
+android/launch-*
+nbproject
+

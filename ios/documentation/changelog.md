@@ -1,5 +1,14 @@
 # Change Log
 <pre>
+v2.4.1  Fixed an issue where pins have not been draggable anymore. [MOD-2131]
+v2.4.0  iOS9: Upgrade map module to support bitcode. [TIMOB-19385]
+v2.3.2  Fixed map crash with polygons when not setting mapType. [TIMOB-19102]
+v2.3.1  Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
+        Fixes longclick event on iOS. [Github #41]
+v2.2.2  Fixed map annotations showing undeclared buttons in iOS7 [TIMOB-17953]
+
+v2.2.1  Fixed map draggable map pins [TIMOB-18510]
+
 v2.2.0  Updated to build for 64-bit [TIMOB-17928]
         Adding architectures to manifest [TIMOB-18065]
 

@@ -218,16 +218,13 @@ public class AnnotationProxy extends KrollProxy
 	private void handleCustomView(Object obj)
 	{
 		if (obj instanceof TiViewProxy) {
-			KrollDict d = ((TiViewProxy) obj).toImage();
-			Object imageBlob = d.get(TiC.PROPERTY_MEDIA);
-			if (imageBlob instanceof TiBlob) {
-				Bitmap image = ((TiBlob) imageBlob).getImage();
-				if (image != null) {
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
-					setIconImageDimensions(image.getWidth(), image.getHeight());
-					return;
-				}
+			TiBlob imageBlob = ((TiViewProxy) obj).toImage();
+			Bitmap image = imageBlob.getImage();
+			if (image != null) {
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
+				setIconImageDimensions(image.getWidth(), image.getHeight());
 			}
+			return;
 		}
 		Log.w(TAG, "Unable to get the image from the custom view: " + obj);
 		setIconImageDimensions(-1, -1);
@@ -372,7 +369,7 @@ public class AnnotationProxy extends KrollProxy
 	private TiMapInfoWindow getOrCreateMapInfoWindow()
 	{
 		if (infoWindow == null) {
-			infoWindow = new TiMapInfoWindow(TiApplication.getInstance().getApplicationContext());
+			infoWindow = new TiMapInfoWindow(TiApplication.getInstance().getApplicationContext(), this);
 		}
 		return infoWindow;
 	}
