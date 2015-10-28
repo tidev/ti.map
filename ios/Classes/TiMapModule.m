@@ -60,7 +60,10 @@ MAKE_SYSTEM_PROP(STANDARD_TYPE,MKMapTypeStandard);
 MAKE_SYSTEM_PROP(NORMAL_TYPE,MKMapTypeStandard); // For parity with Android
 MAKE_SYSTEM_PROP(SATELLITE_TYPE,MKMapTypeSatellite);
 MAKE_SYSTEM_PROP(HYBRID_TYPE,MKMapTypeHybrid);
-
+#ifdef __IPHONE_9_0
+MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
+MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
+#endif
 /*
  * TODO: Replace with the constants [MKPinAnnotationView redPinColor], [MKPinAnnotationView redPinColor] and [MKPinAnnotationView redPinColor]
  * as soon as we make iOS9 as the minimum SDK.
