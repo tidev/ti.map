@@ -1,5 +1,6 @@
 # Change Log
 <pre>
+v2.5.0  Add iOS9 mapTypes 'HYBRID_FLYOVER_TYPE' and 'SATELLITE_FLYOVER_TYPE'. [MOD-2152]
 v2.4.1  Fixed an issue where pins have not been draggable anymore. [MOD-2131]
 v2.4.0  iOS9: Upgrade map module to support bitcode. [TIMOB-19385]
 v2.3.2  Fixed map crash with polygons when not setting mapType. [TIMOB-19102]

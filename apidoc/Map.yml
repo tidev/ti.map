@@ -225,6 +225,12 @@ properties:
     type: Number
     permission: read-only
 
+  - name: SATELLITE_FLYOVER_TYPE
+    summary: Used with [mapType](Modules.Map.View.mapType) to display satellite flyover imagery of the area. Available in iOS 9.0 and later.
+    type: Number
+    permission: read-only
+    platforms: [iphone, ipad]
+
   - name: NORMAL_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display a street map that shows the position of all roads and some road names.
     type: Number
@@ -240,6 +246,12 @@ properties:
     summary: Used with [mapType](Modules.Map.View.mapType) to display a satellite image of the area with road and road name information layered on top.
     type: Number
     permission: read-only
+
+  - name: HYBRID_FLYOVER_TYPE
+    summary: Used with [mapType](Modules.Map.View.mapType) to display a satellite flyover image of the area with road and road name information layered on top. Available in iOS 9.0 and later.
+    type: Number
+    permission: read-only
+    platforms: [iphone, ipad]
 
   - name: SUCCESS
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is available, and the connection is successful.
