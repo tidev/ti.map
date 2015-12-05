@@ -487,7 +487,7 @@
 		} else if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"]){
 			[locationManager requestWhenInUseAuthorization];
 		} else {
-			NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml.  Starting with iOS8 this is required.");
+			NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml. Starting with iOS8 this is required.");
 		}
 		// Create the map
 		[self map];
@@ -727,17 +727,28 @@
     [TiMapModule logAddedIniOS7Warning:@"showsPointsOfInterest"];
 }
 
+-(void)setShowsCompass_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsCompass"];
+}
+
+-(void)setShowsScale_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsScale"];
+}
+
+-(void)setShowsTraffic_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsTraffic"];
+}
+
+
 #pragma mark Utils
 // Using these utility functions allows us to override them for different versions of iOS
 
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level
 {
     [map addOverlay:polyline];
-}
-
--(BOOL)isIOS9OrGreater
-{
-    return [UIImage instancesRespondToSelector:@selector(flipsForRightToLeftLayoutDirection)];
 }
 
 #pragma mark Delegates
@@ -968,18 +979,7 @@
         else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
             
-            if([self isIOS9OrGreater] == YES) {
-#if __IPHONE_9_0
-                pinview.pinTintColor = [ann pinColor];
-#endif
-            } else {
-                
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-                pinview.pinColor = [ann pinColor];
-#pragma GCC diagnostic pop
-            }
-            
+            pinview.pinColor = [ann pincolor];
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }
@@ -1111,7 +1111,7 @@
         CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
         BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
         if (inPolygon) {
-            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYGON];
+            [self fireShapeClickEvent:proxy point:point sourceType:@"polygon"];
         }
     }
 }
@@ -1125,7 +1125,7 @@
         CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
         BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
         if (inCircle) {
-            [self fireShapeClickEvent:circle point:point sourceType:VIEW_TYPE_CIRCLE];
+            [self fireShapeClickEvent:circle point:point sourceType:@"circle"];
         }
     }
 }
@@ -1139,7 +1139,7 @@
         CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
         BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
         if (onPolyline) {
-            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYLINE];
+            [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
         }
     }
 }
