@@ -190,9 +190,9 @@
 	}
 }
 
-- (UIColor*)pinColor
+-(id)pincolor
 {
-	return [TiUtils intValue:[self valueForUndefinedKey:@"pincolor"]];
+    return [TiUtils intValue:[self valueForUndefinedKey:@"pincolor"]];
 }
 
 -(void)setPincolor:(id)color
