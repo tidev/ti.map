@@ -1100,7 +1100,7 @@
         CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
         BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
         if (inPolygon) {
-            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYGON];
+            [self fireShapeClickEvent:proxy point:point sourceType:@"polygon"];
         }
     }
 }
@@ -1114,7 +1114,7 @@
         CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
         BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
         if (inCircle) {
-            [self fireShapeClickEvent:circle point:point sourceType:VIEW_TYPE_CIRCLE];
+            [self fireShapeClickEvent:circle point:point sourceType:@"circle"];
         }
     }
 }
@@ -1128,7 +1128,7 @@
         CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
         BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
         if (onPolyline) {
-            [self fireShapeClickEvent:proxy point:point sourceType:VIEW_TYPE_POLYLINE];
+            [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
         }
     }
 }
@@ -1154,12 +1154,12 @@
 		title = [NSNull null];
 	}
 
-	NSNumber * indexNumber = [pinview tag];
+	NSInteger indexNumber = [pinview tag];
 	id clicksource = source ? source : (id)[NSNull null];
 	
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
 			clicksource,@"clicksource",	viewProxy,@"annotation", mapProxy,@"map",
-			title,@"title",	indexNumber,@"index", nil];
+			title,@"title",	NUMINTEGER(indexNumber),@"index", nil];
 
     [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
 }
