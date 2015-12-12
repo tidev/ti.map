@@ -1154,7 +1154,7 @@
 		title = [NSNull null];
 	}
 
-	NSInteger *indexNumber = [pinview tag];
+	NSInteger indexNumber = [pinview tag];
 	id clicksource = source ? source : (id)[NSNull null];
 	
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
