@@ -26,6 +26,13 @@
 	[super dealloc];
 }
 
+-(TiMapCameraProxy*)camera
+{
+    return [TiMapUtils returnValueOnMainThread:^id{
+        return [[TiMapCameraProxy alloc] initWithCamera:[self map].camera];
+    }];
+}
+
 #pragma mark Public APIs iOS 7
 
 -(void)setTintColor_:(id)color
@@ -41,12 +48,6 @@
     TiThreadPerformOnMainThread(^{
         [self map].camera = [value camera];
     }, YES);
-}
--(TiMapCameraProxy*)camera
-{
-    return [TiMapUtils returnValueOnMainThread:^id{
-        return [[TiMapCameraProxy alloc] initWithCamera:[self map].camera];
-    }];
 }
 
 -(void)setPitchEnabled_:(id)value
@@ -76,6 +77,44 @@
         [self map].showsPointsOfInterest = [TiUtils boolValue:value];
     }, YES);
 }
+
+-(void)setShowsCompass_:(id)value
+{
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsCompass = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsCompass' is only available on iOS 9 and later.");
+    }
+}
+
+-(void)setShowsScale_:(id)value
+{
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsScale = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsScale' is only available on iOS 9 and later.");
+    }
+}
+
+-(void)setShowsTraffic_:(id)value
+{
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsTraffic = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsTraffic' is only available on iOS 9 and later.");
+    }}
 
 -(void)animateCamera:(id)args
 {

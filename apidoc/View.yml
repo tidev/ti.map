@@ -616,6 +616,34 @@ properties:
     since: "3.2.0"
     platforms: [iphone, ipad]
 
+  - name: showsCompass
+    summary: A Boolean indicating whether the map displays a compass control. Available in iOS 9.0 and later.
+    description: |
+        When this property is set to `true`, the map displays the control that lets users change the heading
+        orientation of the map.
+    type: Boolean
+    default: true
+    since: "5.2.0"
+    platforms: [iphone, ipad]
+
+  - name: showsScale
+    summary: A Boolean indicating whether the map shows scale information. Available in iOS 9.0 and later.
+    description: When this property is set to `true`, the map displays the scale information.
+    type: Boolean
+    default: false
+    since: "5.2.0"
+    platforms: [iphone, ipad]
+
+  - name: showsTraffic
+    summary: A Boolean value indicating whether the map displays traffic information. Available in iOS 9.0 and later.
+    description: |
+        The mapType property must be set to <Modules.Map.NORMAL_TYPE> or <Modules.Map.HYBRID_TYPE> for 
+        traffic information to be shown.
+    type: Boolean
+    default: false
+    since: "5.2.0"
+    platforms: [iphone, ipad]
+
 ---
 name: MapRegionTypev2
 summary: Simple object representing a map location and zoom level.
