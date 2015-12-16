@@ -487,7 +487,7 @@
 		} else if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"]){
 			[locationManager requestWhenInUseAuthorization];
 		} else {
-			NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml.  Starting with iOS8 this is required.");
+			NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml. Starting with iOS 8 this is required.");
 		}
 		// Create the map
 		[self map];
@@ -727,17 +727,28 @@
     [TiMapModule logAddedIniOS7Warning:@"showsPointsOfInterest"];
 }
 
+-(void)setShowsCompass_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsCompass"];
+}
+
+-(void)setShowsScale_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsScale"];
+}
+
+-(void)setShowsTraffic_:(id)value
+{
+    [TiMapModule logAddedIniOS7Warning:@"showsTraffic"];
+}
+
+
 #pragma mark Utils
 // Using these utility functions allows us to override them for different versions of iOS
 
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level
 {
     [map addOverlay:polyline];
-}
-
--(BOOL)isIOS9OrGreater
-{
-    return [UIImage instancesRespondToSelector:@selector(flipsForRightToLeftLayoutDirection)];
 }
 
 #pragma mark Delegates
