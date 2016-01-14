@@ -517,7 +517,7 @@ properties:
     summary: Enable or disables the map toolbar.
     type: Boolean
     default: true
-    since: "6.0.0"
+    since: "6.1.0"
     platforms: [android]
 
   - name: enableZoomControls
