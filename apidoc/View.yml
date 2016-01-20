@@ -513,6 +513,13 @@ properties:
     since: "3.2.3"
     platforms: [android]
 
+  - name: mapToolbarEnabled
+    summary: Enable or disables the map toolbar.
+    type: Boolean
+    default: true
+    since: "6.1.0"
+    platforms: [android]
+
   - name: enableZoomControls
     summary: |
         Enables or disables the built-in zoom controls.

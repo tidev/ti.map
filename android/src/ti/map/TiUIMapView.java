@@ -194,6 +194,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setUserLocationButtonEnabled(TiConvert.toBoolean(d,
 					MapModule.PROPERTY_USER_LOCATION_BUTTON, true));
 		}
+		if (d.containsKey(MapModule.PROPERTY_MAP_TOOLBAR_ENABLED)) {
+			setMapToolbarEnabled(TiConvert.toBoolean(d,
+					MapModule.PROPERTY_MAP_TOOLBAR_ENABLED, true));
+		}
 		if (d.containsKey(TiC.PROPERTY_MAP_TYPE)) {
 			setMapType(d.getInt(TiC.PROPERTY_MAP_TYPE));
 		}
@@ -248,6 +252,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setUserLocationEnabled(TiConvert.toBoolean(newValue));
 		} else if (key.equals(MapModule.PROPERTY_USER_LOCATION_BUTTON)) {
 			setUserLocationButtonEnabled(TiConvert.toBoolean(newValue));
+		} else if (key.equals(MapModule.PROPERTY_MAP_TOOLBAR_ENABLED)) {
+			setMapToolbarEnabled(TiConvert.toBoolean(newValue));
 		} else if (key.equals(TiC.PROPERTY_MAP_TYPE)) {
 			setMapType(TiConvert.toInt(newValue));
 		} else if (key.equals(TiC.PROPERTY_REGION)) {
@@ -281,6 +287,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 	protected void setUserLocationButtonEnabled(boolean enabled) {
 		map.getUiSettings().setMyLocationButtonEnabled(enabled);
+	}
+
+	protected void setMapToolbarEnabled(boolean enabled) {
+		map.getUiSettings().setMapToolbarEnabled(enabled);
 	}
 
 	public float getMaxZoomLevel() {
