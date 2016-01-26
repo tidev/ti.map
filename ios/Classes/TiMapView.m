@@ -775,6 +775,17 @@
     return (MKOverlayView *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
+-(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
+{
+    if (ignoreRegionChanged) {
+        return;
+    }
+    
+    if ([[self proxy] _hasListeners:@"regionwillchange"]) {
+        [self fireEvent:@"regionwillchange" withRegion:region animated:animate];
+    }
+}
+
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
     if (ignoreRegionChanged) {
@@ -782,26 +793,14 @@
     }
     region = [mapView region];
     [self.proxy replaceValue:[self dictionaryFromRegion] forKey:@"region" notification:NO];
-	if ([self.proxy _hasListeners:@"regionChanged"])
-	{	//TODO: Deprecate old event
-		NSDictionary * props = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"regionChanged",@"type",
-								[NSNumber numberWithDouble:region.center.latitude],@"latitude",
-								[NSNumber numberWithDouble:region.center.longitude],@"longitude",
-								[NSNumber numberWithDouble:region.span.latitudeDelta],@"latitudeDelta",
-								[NSNumber numberWithDouble:region.span.longitudeDelta],@"longitudeDelta",nil];
-		[self.proxy fireEvent:@"regionChanged" withObject:props];
+	
+    if ([self.proxy _hasListeners:@"regionChanged"]) {
+        NSLog(@"[WARN] The 'regionChanged' event is deprecated, use 'regionchanged' instead.");
+        [self fireEvent:@"regionChanged" withRegion:[mapView region] animated:animate];
 	}
-	if ([self.proxy _hasListeners:@"regionchanged"])
-	{
-		NSDictionary * props = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"regionchanged",@"type",
-								[NSNumber numberWithDouble:region.center.latitude],@"latitude",
-								[NSNumber numberWithDouble:region.center.longitude],@"longitude",
-								[NSNumber numberWithDouble:region.span.latitudeDelta],@"latitudeDelta",
-								[NSNumber numberWithDouble:region.span.longitudeDelta],@"longitudeDelta",
-								NUMBOOL(animated),@"animated",nil];
-		[self.proxy fireEvent:@"regionchanged" withObject:props];
+    
+	if ([self.proxy _hasListeners:@"regionchanged"]) {
+        [self fireEvent:@"regionchanged" withRegion:[mapView region] animated:animate];
 	}
 }
 
@@ -1142,6 +1141,19 @@
             [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
         }
     }
+}
+
+- (void)fireEvent:(NSString*)event withRegion:(MKCoordinateRegion)_region animated:(BOOL)animated
+{
+    NSDictionary *object = [NSDictionary dictionaryWithObjectsAndKeys:
+     event,@"type",
+     [NSNumber numberWithDouble:_region.center.latitude],@"latitude",
+     [NSNumber numberWithDouble:_region.center.longitude],@"longitude",
+     [NSNumber numberWithDouble:_region.span.latitudeDelta],@"latitudeDelta",
+     [NSNumber numberWithDouble:_region.span.longitudeDelta],@"longitudeDelta",
+     NUMBOOL(animated),@"animated",nil];
+    
+    [self.proxy fireEvent:event withObject:object];
 }
 
 - (void)fireClickEvent:(MKAnnotationView *) pinview source:(NSString *)source
