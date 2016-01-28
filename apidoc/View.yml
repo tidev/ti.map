@@ -388,9 +388,10 @@ events:
   - name: complete
     summary: Fired when the map completes loading.
 
-  - name: regionchanged
+  - name: regionwillchange
+    since: "6.0.0"
     summary: |
-        Fired when the mapping region changes.
+        Fired when the mapping region will change.
     properties:
       - name: longitude
         summary: Longitude value for the center point of the map, in decimal degrees.
@@ -403,19 +404,50 @@ events:
       - name: longitudeDelta
         summary: |
             The amount of east-to-west distance displayed on the map, measured in decimal degrees.
-            (Since Release 3.1.1.)
+        since: "3.1.1"
         type: Number
 
       - name: latitudeDelta
         summary: |
             The amount of north-to-south distance displayed on the map, measured in decimal degrees.
-            (Since Release 3.1.1.)
+        since: "3.1.1"
+        type: Number
+
+      - name: animated
+        summary: |
+            The regionwillchange event was caused by an `animation`, such as a animating the camera.
+        since: "3.2.0"
+        type: Boolean
+        platforms: [iphone, ipad]
+
+  - name: regionchanged
+    summary: |
+        Fired when the mapping region finished changing.
+    properties:
+      - name: longitude
+        summary: Longitude value for the center point of the map, in decimal degrees.
+        type: Number
+
+      - name: latitude
+        summary: Latitude value for the center point of the map, in decimal degrees.
+        type: Number
+
+      - name: longitudeDelta
+        summary: |
+            The amount of east-to-west distance displayed on the map, measured in decimal degrees.
+        since: "3.1.1"
+        type: Number
+
+      - name: latitudeDelta
+        summary: |
+            The amount of north-to-south distance displayed on the map, measured in decimal degrees.
+        since: "3.1.1"
         type: Number
 
       - name: animated
         summary: |
             The regionchanged event was caused by an `animation`, such as a animating the camera.
-            (Since Release 3.2.0.)
+        since: "3.2.0"
         type: Boolean
         platforms: [iphone, ipad]
 
