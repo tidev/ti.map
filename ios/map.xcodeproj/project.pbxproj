@@ -31,6 +31,15 @@
 		27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609E919F5927000CA150A /* WildcardGestureRecognizer.m */; };
 		27A609EC19F5B84000CA150A /* TiMapCircleProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609EB19F5B84000CA150A /* TiMapCircleProxy.m */; };
 		27A609F019F711B700CA150A /* TiMapPolylineProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609EF19F711B700CA150A /* TiMapPolylineProxy.m */; };
+		3AB90F6E1C67FD4400B4F047 /* FBAnnotationCluster.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AB90F651C67FD4400B4F047 /* FBAnnotationCluster.h */; };
+		3AB90F6F1C67FD4400B4F047 /* FBAnnotationCluster.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB90F661C67FD4400B4F047 /* FBAnnotationCluster.m */; };
+		3AB90F701C67FD4400B4F047 /* FBAnnotationClustering.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AB90F671C67FD4400B4F047 /* FBAnnotationClustering.h */; };
+		3AB90F711C67FD4400B4F047 /* FBClusteringManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AB90F681C67FD4400B4F047 /* FBClusteringManager.h */; };
+		3AB90F721C67FD4400B4F047 /* FBClusteringManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB90F691C67FD4400B4F047 /* FBClusteringManager.m */; };
+		3AB90F731C67FD4400B4F047 /* FBQuadTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AB90F6A1C67FD4400B4F047 /* FBQuadTree.h */; };
+		3AB90F741C67FD4400B4F047 /* FBQuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB90F6B1C67FD4400B4F047 /* FBQuadTree.m */; };
+		3AB90F751C67FD4400B4F047 /* FBQuadTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AB90F6C1C67FD4400B4F047 /* FBQuadTreeNode.h */; };
+		3AB90F761C67FD4400B4F047 /* FBQuadTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB90F6D1C67FD4400B4F047 /* FBQuadTreeNode.m */; };
 		AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		CE92EC1D17DF7B2F0082E943 /* TiMapIOS7View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */; };
@@ -82,6 +91,15 @@
 		27A609ED19F5B85900CA150A /* TiMapCircleProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapCircleProxy.h; path = Classes/TiMapCircleProxy.h; sourceTree = "<group>"; };
 		27A609EE19F7112C00CA150A /* TiMapPolylineProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapPolylineProxy.h; path = Classes/TiMapPolylineProxy.h; sourceTree = "<group>"; };
 		27A609EF19F711B700CA150A /* TiMapPolylineProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapPolylineProxy.m; path = Classes/TiMapPolylineProxy.m; sourceTree = "<group>"; };
+		3AB90F651C67FD4400B4F047 /* FBAnnotationCluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAnnotationCluster.h; sourceTree = "<group>"; };
+		3AB90F661C67FD4400B4F047 /* FBAnnotationCluster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAnnotationCluster.m; sourceTree = "<group>"; };
+		3AB90F671C67FD4400B4F047 /* FBAnnotationClustering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAnnotationClustering.h; sourceTree = "<group>"; };
+		3AB90F681C67FD4400B4F047 /* FBClusteringManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBClusteringManager.h; sourceTree = "<group>"; };
+		3AB90F691C67FD4400B4F047 /* FBClusteringManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBClusteringManager.m; sourceTree = "<group>"; };
+		3AB90F6A1C67FD4400B4F047 /* FBQuadTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBQuadTree.h; sourceTree = "<group>"; };
+		3AB90F6B1C67FD4400B4F047 /* FBQuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBQuadTree.m; sourceTree = "<group>"; };
+		3AB90F6C1C67FD4400B4F047 /* FBQuadTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBQuadTreeNode.h; sourceTree = "<group>"; };
+		3AB90F6D1C67FD4400B4F047 /* FBQuadTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBQuadTreeNode.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiMap_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CE92EC1917DF7B2F0082E943 /* TiMapIOS7View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapIOS7View.h; path = Classes/TiMapIOS7View.h; sourceTree = "<group>"; };
@@ -152,6 +170,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3AB90EDD1C67F21B00B4F047 /* FBAnnotationClustering */,
 				27A609E419F54FC300CA150A /* TiMapPolygonProxy.h */,
 				27A609EE19F7112C00CA150A /* TiMapPolylineProxy.h */,
 				27A609E519F54FC300CA150A /* TiMapPolygonProxy.m */,
@@ -200,6 +219,23 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		3AB90EDD1C67F21B00B4F047 /* FBAnnotationClustering */ = {
+			isa = PBXGroup;
+			children = (
+				3AB90F651C67FD4400B4F047 /* FBAnnotationCluster.h */,
+				3AB90F661C67FD4400B4F047 /* FBAnnotationCluster.m */,
+				3AB90F671C67FD4400B4F047 /* FBAnnotationClustering.h */,
+				3AB90F681C67FD4400B4F047 /* FBClusteringManager.h */,
+				3AB90F691C67FD4400B4F047 /* FBClusteringManager.m */,
+				3AB90F6A1C67FD4400B4F047 /* FBQuadTree.h */,
+				3AB90F6B1C67FD4400B4F047 /* FBQuadTree.m */,
+				3AB90F6C1C67FD4400B4F047 /* FBQuadTreeNode.h */,
+				3AB90F6D1C67FD4400B4F047 /* FBQuadTreeNode.m */,
+			);
+			name = FBAnnotationClustering;
+			path = Classes/FBAnnotationClustering;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -212,6 +248,9 @@
 				24DD6CF91134B3F500162E58 /* TiMapModule.h in Headers */,
 				CE92EC1F17DF7B2F0082E943 /* TiMapIOS7ViewProxy.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* TiMapModuleAssets.h in Headers */,
+				3AB90F701C67FD4400B4F047 /* FBAnnotationClustering.h in Headers */,
+				3AB90F751C67FD4400B4F047 /* FBQuadTreeNode.h in Headers */,
+				3AB90F711C67FD4400B4F047 /* FBClusteringManager.h in Headers */,
 				CED651C617D7AA21007C2954 /* TiMapAnnotationProxy.h in Headers */,
 				CE92EC2517DF9A640082E943 /* TiMapCameraProxy.h in Headers */,
 				CEE33CF319EC4C150005E745 /* TiMapUtils.h in Headers */,
@@ -221,6 +260,8 @@
 				CED651CC17D7AA21007C2954 /* TiMapPinAnnotationView.h in Headers */,
 				CED651CE17D7AA21007C2954 /* TiMapView.h in Headers */,
 				CED651D017D7AA21007C2954 /* TiMapViewProxy.h in Headers */,
+				3AB90F6E1C67FD4400B4F047 /* FBAnnotationCluster.h in Headers */,
+				3AB90F731C67FD4400B4F047 /* FBQuadTree.h in Headers */,
 				27A609E619F54FC300CA150A /* TiMapPolygonProxy.h in Headers */,
 				CE92EC1D17DF7B2F0082E943 /* TiMapIOS7View.h in Headers */,
 			);
@@ -263,6 +304,8 @@
 				Japanese,
 				French,
 				German,
+				Base,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* map */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -298,10 +341,12 @@
 			files = (
 				24DD6CFA1134B3F500162E58 /* TiMapModule.m in Sources */,
 				27A609F019F711B700CA150A /* TiMapPolylineProxy.m in Sources */,
+				3AB90F741C67FD4400B4F047 /* FBQuadTree.m in Sources */,
 				24DE9E1211C5FE74003F90F6 /* TiMapModuleAssets.m in Sources */,
 				CED651C717D7AA21007C2954 /* TiMapAnnotationProxy.m in Sources */,
 				CED651C917D7AA21007C2954 /* TiMapCustomAnnotationView.m in Sources */,
 				CEC39B4717EB97BA00DCE1EE /* TiMapRouteProxy.m in Sources */,
+				3AB90F761C67FD4400B4F047 /* FBQuadTreeNode.m in Sources */,
 				27A609E719F54FC300CA150A /* TiMapPolygonProxy.m in Sources */,
 				CE92EC2617DF9A640082E943 /* TiMapCameraProxy.m in Sources */,
 				27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */,
@@ -309,6 +354,8 @@
 				CE92EC1E17DF7B2F0082E943 /* TiMapIOS7View.m in Sources */,
 				CED651CD17D7AA21007C2954 /* TiMapPinAnnotationView.m in Sources */,
 				CE92EC2017DF7B2F0082E943 /* TiMapIOS7ViewProxy.m in Sources */,
+				3AB90F721C67FD4400B4F047 /* FBClusteringManager.m in Sources */,
+				3AB90F6F1C67FD4400B4F047 /* FBAnnotationCluster.m in Sources */,
 				27A609EC19F5B84000CA150A /* TiMapCircleProxy.m in Sources */,
 				CEE33CF419EC4C150005E745 /* TiMapUtils.m in Sources */,
 				CED651CF17D7AA21007C2954 /* TiMapView.m in Sources */,
@@ -361,7 +408,10 @@
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-Qunused-arguments",
+				);
 				PRODUCT_NAME = TiMap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -402,7 +452,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "-DTI_POST_1_2";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-Qunused-arguments",
+				);
 				PRODUCT_NAME = TiMap;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;

@@ -309,6 +309,11 @@
     }
 }
 
+-(void)cluster:(id)unused
+{
+    [(TiMapView*)[self view] cluster];
+}
+
 -(NSArray*)annotations
 {
     if ([self viewAttached]) {

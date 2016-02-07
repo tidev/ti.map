@@ -598,6 +598,16 @@
     [polygonProxies removeAllObjects];
 }
 
+-(void)cluster
+{
+    if (clusteringManager != nil) {
+        clusteringManager.delegate = nil;
+        RELEASE_TO_NIL(clusteringManager);
+    }
+    clusteringManager = [[FBClusteringManager alloc] initWithAnnotations:map.annotations];
+    [clusteringManager setDelegate:self];
+}
+
 -(void)addCircle:(TiMapCircleProxy*)circleProxy {
     
     TiThreadPerformOnMainThread(^{
@@ -752,6 +762,18 @@
 }
 
 #pragma mark Delegates
+
+-(CGFloat)cellSizeFactorForCoordinator:(FBClusteringManager *)coordinator
+{
+    id cellSizeFactor = [[self proxy] valueForKey:@"cellSizeFactor"];
+    ENSURE_TYPE_OR_NIL(cellSizeFactor, NSNumber);
+    
+    if (cellSizeFactor == nil) {
+        cellSizeFactor = @1.0;
+    }
+    
+    return [TiUtils floatValue:cellSizeFactor];
+}
 
 // Delegate for >= iOS 8
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -938,7 +960,20 @@
 // For MapKit provided annotations (eg. MKUserLocation) return nil to use the MapKit provided annotation view.
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
-    if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
+    // This is how you can check if annotation is a cluster
+    if ([annotation isKindOfClass:[FBAnnotationCluster class]]) {
+        FBAnnotationCluster *cluster = (FBAnnotationCluster *)annotation;
+        cluster.title = [NSString stringWithFormat:@"%lu", (unsigned long)cluster.annotations.count];
+        
+        MKPinAnnotationView *annotationView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"cluster-pin"];
+
+        annotationView.pinTintColor = [MKPinAnnotationView redPinColor];
+        annotationView.canShowCallout = YES;
+        
+        return annotationView;
+    } else if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
+        MKAnnotationView *annView = nil;
+
         TiMapAnnotationProxy *ann = (TiMapAnnotationProxy*)annotation;
         id customView = [ann valueForUndefinedKey:@"customView"];
         if ( (customView == nil) || (customView == [NSNull null]) || (![customView isKindOfClass:[TiViewProxy class]]) ){
@@ -954,7 +989,6 @@
         else {
             identifier = @"timap-customView";
         }
-        MKAnnotationView *annView = nil;
 		
         annView = (MKAnnotationView*) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
 		

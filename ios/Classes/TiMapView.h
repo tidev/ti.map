@@ -10,6 +10,7 @@
 #import "TiMKOverlayPathUniversal.h"
 #import "WildcardGestureRecognizer.h"
 #import <MapKit/MapKit.h>
+#import "FBClusteringManager.h"
 
 @class TiMapAnnotationProxy;
 
@@ -18,8 +19,9 @@
 -(NSString *)lastHitName;
 @end
 
-@interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate> {
+@interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate, FBClusteringManagerDelegate> {
 	MKMapView *map;
+    FBClusteringManager *clusteringManager;
 	BOOL regionFits;
 	BOOL animate;
 	BOOL loaded;
@@ -76,6 +78,7 @@
 -(void)removePolyline:(id)args;
 -(void)removePolyline:(id)args remove:(BOOL)r;
 -(void)removeAllPolylines;
+-(void)cluster;
 
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 

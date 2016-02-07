@@ -172,6 +172,15 @@
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    if (clusteringManager != nil) {
+        [[NSOperationQueue new] addOperationWithBlock:^{
+            double scale = map.bounds.size.width / map.visibleMapRect.size.width;
+            NSArray *annotations = [clusteringManager clusteredAnnotationsWithinMapRect:mapView.visibleMapRect withZoomScale:scale];
+            
+            [clusteringManager displayAnnotations:annotations onMapView:map];
+        }];
+    }
+    
     if (animated && cameraAnimationCallback != nil) {
         [cameraAnimationCallback call:nil thisObject:nil];
         RELEASE_TO_NIL(cameraAnimationCallback);
