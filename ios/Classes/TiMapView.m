@@ -962,14 +962,32 @@
 {
     // This is how you can check if annotation is a cluster
     if ([annotation isKindOfClass:[FBAnnotationCluster class]]) {
+        
+        static NSString *const AnnotatioViewReuseID = @"AnnotatioViewReuseID";
+        
+        MKAnnotationView *annotationView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotatioViewReuseID];
+        
+        if (!annotationView) {
+            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotatioViewReuseID];
+        
+            [annotationView setFrame:CGRectMake(0, 0, 36, 36)];
+            [annotationView setBackgroundColor:[UIColor redColor]];
+            [annotationView.layer setCornerRadius:18];
+            [annotationView.layer setBorderWidth:4];
+            [annotationView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            
+            UILabel *label = [[UILabel alloc] initWithFrame:[annotationView bounds]];
+            [label setTextColor:[UIColor whiteColor]];
+            [label setTextAlignment:NSTextAlignmentCenter];
+            
+            [annotationView addSubview:label];
+        }
+
         FBAnnotationCluster *cluster = (FBAnnotationCluster *)annotation;
         cluster.title = [NSString stringWithFormat:@"%lu", (unsigned long)cluster.annotations.count];
-        
-        MKPinAnnotationView *annotationView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"cluster-pin"];
 
-        annotationView.pinTintColor = [MKPinAnnotationView redPinColor];
-        annotationView.canShowCallout = YES;
-        
+        [(UILabel*)[[annotationView subviews] objectAtIndex:0] setText:[cluster title]];
+       
         return annotationView;
     } else if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
         MKAnnotationView *annView = nil;
