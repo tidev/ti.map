@@ -765,7 +765,7 @@
 
 -(CGFloat)cellSizeFactorForCoordinator:(FBClusteringManager *)coordinator
 {
-    id cellSizeFactor = [[self proxy] valueForKey:@"cellSizeFactor"];
+    id cellSizeFactor = [[self proxy] valueForKey:@"clusterCellSizeFactor"];
     ENSURE_TYPE_OR_NIL(cellSizeFactor, NSNumber);
     
     if (cellSizeFactor == nil) {

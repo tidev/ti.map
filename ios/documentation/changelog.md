@@ -1,9 +1,23 @@
 # Change Log
 <pre>
-v2.5.0  Add iOS9 mapTypes 'HYBRID_FLYOVER_TYPE' and 'SATELLITE_FLYOVER_TYPE'. [MOD-2152]
+v2.8.0  Support for map annotation clustering. [TIMOB-2815]
+
+v2.7.0  Support 'regionwillchange' event. [MOD-2194]
+
+v2.6.0  Support new MKMapView iOS 9 properties. [MOD-2172]
+
+v2.5.2  Selecting annotations crashes the app. [MOD-2171]
+
+v2.5.1  Fix annotations crash on iOS 9 [MOD-2171]
+
+v2.5.0  Support new iOS9 flyover mapTypes. [MOD-2152]
+
 v2.4.1  Fixed an issue where pins have not been draggable anymore. [MOD-2131]
+
 v2.4.0  iOS9: Upgrade map module to support bitcode. [TIMOB-19385]
+
 v2.3.2  Fixed map crash with polygons when not setting mapType. [TIMOB-19102]
+
 v2.3.1  Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
         Fixes longclick event on iOS. [Github #41]
 v2.2.2  Fixed map annotations showing undeclared buttons in iOS7 [TIMOB-17953]
