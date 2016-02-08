@@ -969,15 +969,30 @@
         
         if (!annotationView) {
             annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotatioViewReuseID];
+            
+            id clusterTintColor = [[self proxy] valueForKey:@"clusterTintColor"];
+            id clusterTextColor = [[self proxy] valueForKey:@"clusterTextColor"];
+            
+            if (clusterTintColor == nil) {
+                clusterTintColor = [UIColor redColor];
+            } else {
+                clusterTintColor = [[TiColor colorNamed:clusterTintColor] _color];
+            }
+            
+            if (clusterTextColor == nil) {
+                clusterTextColor = [UIColor whiteColor];
+            } else {
+                clusterTextColor = [[TiColor colorNamed:clusterTextColor] _color];
+            }
         
             [annotationView setFrame:CGRectMake(0, 0, 36, 36)];
-            [annotationView setBackgroundColor:[UIColor redColor]];
+            [annotationView setBackgroundColor:clusterTintColor];
             [annotationView.layer setCornerRadius:18];
             [annotationView.layer setBorderWidth:4];
             [annotationView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
             
             UILabel *label = [[UILabel alloc] initWithFrame:[annotationView bounds]];
-            [label setTextColor:[UIColor whiteColor]];
+            [label setTextColor:clusterTextColor];
             [label setTextAlignment:NSTextAlignmentCenter];
             
             [annotationView addSubview:label];
