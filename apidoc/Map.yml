@@ -360,6 +360,7 @@ examples:
             });
             win.open();
 
+examples:
   - title: Alloy XML Markup
     example: |
         Previous example as an Alloy view.
@@ -414,4 +415,3 @@ examples:
             }
 
             $.index.open();
-
