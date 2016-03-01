@@ -313,6 +313,7 @@ methods:
     platforms: [android]
 
 examples:
+
   - title: Map Example
     example: |
         This is a basic map example that places a custom annotation on the map, and
