@@ -359,8 +359,7 @@ examples:
                 Ti.API.info("Clicked " + evt.clicksource + " on " + evt.latitude + "," + evt.longitude);
             });
             win.open();
-
-examples:
+            
   - title: Alloy XML Markup
     example: |
         Previous example as an Alloy view.
