@@ -218,7 +218,7 @@ public class AnnotationProxy extends KrollProxy
 
 	private void handleImage(Object image)
 	{
-		// image path
+		// Image path
 		if (image instanceof String) {
 			TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) image);
 			Bitmap bitmap = imageref.getBitmap();
@@ -228,6 +228,17 @@ public class AnnotationProxy extends KrollProxy
 				return;
 			}
 		}
+        
+        // Image blob
+        if (image instanceof TiBlob) {
+            Bitmap bitmap = ((TiBlob) image).getImage();
+            if (bitmap != null) {
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                setIconImageHeight(bitmap.getHeight());
+                return;
+            }
+        }
+        
 		Log.w(TAG, "Unable to get the image from the path: " + image);
 		setIconImageHeight(-1);
 	}

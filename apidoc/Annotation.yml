@@ -87,7 +87,7 @@ properties:
     summary: Image to use for the the pin.
     description: |
         Must be set during creation. This is ignored if the customView property is set.
-    type: String
+    type: [String, Titanium.Blob]
     default: If not specified, a standard map pin image is used.
 
   - name: latitude 
