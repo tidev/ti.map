@@ -313,6 +313,7 @@ methods:
     platforms: [android]
 
 examples:
+
   - title: Map Example
     example: |
         This is a basic map example that places a custom annotation on the map, and
@@ -359,7 +360,7 @@ examples:
                 Ti.API.info("Clicked " + evt.clicksource + " on " + evt.latitude + "," + evt.longitude);
             });
             win.open();
-
+            
   - title: Alloy XML Markup
     example: |
         Previous example as an Alloy view.
@@ -414,4 +415,3 @@ examples:
             }
 
             $.index.open();
-
