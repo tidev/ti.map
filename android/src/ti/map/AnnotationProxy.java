@@ -229,16 +229,16 @@ public class AnnotationProxy extends KrollProxy
 			}
 		}
         
-        // Image blob
-        if (image instanceof TiBlob) {
-            Bitmap bitmap = ((TiBlob) image).getImage();
-            if (bitmap != null) {
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                setIconImageHeight(bitmap.getHeight());
-                return;
-            }
-        }
-        
+		// Image blob
+		if (image instanceof TiBlob) {
+			Bitmap bitmap = ((TiBlob) image).getImage();
+			if (bitmap != null) {
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+				setIconImageHeight(bitmap.getHeight());
+				return;
+			}
+		}
+		
 		Log.w(TAG, "Unable to get the image from the path: " + image);
 		setIconImageHeight(-1);
 	}
