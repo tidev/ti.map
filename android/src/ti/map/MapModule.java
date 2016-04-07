@@ -35,10 +35,14 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_SHOW_INFO_WINDOW = "showInfoWindow";
 	public static final String PROPERTY_USER_LOCATION_BUTTON = "userLocationButton";
 	public static final String PROPERTY_COMPASS_ENABLED = "compassEnabled";
+	public static final String PROPERTY_MAP_TOOLBAR_ENABLED = "mapToolbarEnabled";
 	public static final String PROPERTY_TILT = "tilt";
 	public static final String PROPERTY_BEARING = "bearing";
 	public static final String PROPERTY_ZOOM = "zoom";
 	public static final String PROPERTY_ZORDER_ON_TOP = "zOrderOnTop";
+	public static final String PROPERTY_PANNING = "panning";
+	public static final String PROPERTY_STREET_NAMES = "streetNames";
+	public static final String PROPERTY_USER_NAVIGATION = "userNavigation";
 
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";

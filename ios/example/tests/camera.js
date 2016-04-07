@@ -109,6 +109,10 @@ exports.run = function(UI, Map) {
         top: '50%'
     });
     win.add(map);
+
+    map.addEventListener('regionwillchange', function(e) {
+        Ti.API.warn('The current region will change now!');
+    });
     
     // Check camera properties on location change to find the current values
     map.addEventListener('regionchanged', function(e) {

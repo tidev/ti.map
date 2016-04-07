@@ -60,21 +60,14 @@ MAKE_SYSTEM_PROP(STANDARD_TYPE,MKMapTypeStandard);
 MAKE_SYSTEM_PROP(NORMAL_TYPE,MKMapTypeStandard); // For parity with Android
 MAKE_SYSTEM_PROP(SATELLITE_TYPE,MKMapTypeSatellite);
 MAKE_SYSTEM_PROP(HYBRID_TYPE,MKMapTypeHybrid);
-
-/*
- * TODO: Replace with the constants [MKPinAnnotationView redPinColor], [MKPinAnnotationView redPinColor] and [MKPinAnnotationView redPinColor]
- * as soon as we make iOS9 as the minimum SDK.
- */
-
 #ifdef __IPHONE_9_0
-MAKE_SYSTEM_PROP(ANNOTATION_RED, [MKPinAnnotationView redPinColor]);
-MAKE_SYSTEM_PROP(ANNOTATION_GREEN, [MKPinAnnotationView greenPinColor]);
-MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, [MKPinAnnotationView purplePinColor]);
-#else
+MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
+MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
+#endif
+
 MAKE_SYSTEM_PROP(ANNOTATION_RED, MKPinAnnotationColorRed);
 MAKE_SYSTEM_PROP(ANNOTATION_GREEN, MKPinAnnotationColorGreen);
 MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, MKPinAnnotationColorPurple);
-#endif
 
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_NONE,MKAnnotationViewDragStateNone);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START,MKAnnotationViewDragStateStarting);

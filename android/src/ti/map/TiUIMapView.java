@@ -38,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -49,7 +50,7 @@ import com.google.android.gms.maps.model.Marker;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
-	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
+	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback, OnMapReadyCallback
 {
 
 	private static final String TAG = "TiUIMapView";
@@ -59,7 +60,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected LatLngBounds preLayoutUpdateBounds;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
-	private int retries = 0;
 
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
@@ -97,13 +97,21 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	@Override
 	protected Fragment createFragment() {
 		if (proxy == null) {
-			return SupportMapFragment.newInstance();
+			Fragment map = SupportMapFragment.newInstance();
+			if (map instanceof SupportMapFragment) {
+				((SupportMapFragment)map).getMapAsync(this);
+			}
+			return map;
 		} else {
 			boolean zOrderOnTop = TiConvert.toBoolean(
-					proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP), false);
+				proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP), false);
 			GoogleMapOptions gOptions = new GoogleMapOptions();
 			gOptions.zOrderOnTop(zOrderOnTop);
-			return SupportMapFragment.newInstance(gOptions);
+			Fragment map = SupportMapFragment.newInstance(gOptions);
+			if (map instanceof SupportMapFragment) {
+				((SupportMapFragment)map).getMapAsync(this);
+			}
+			return map;
 		}
 	}
 
@@ -141,23 +149,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	@Override
-	protected void onViewCreated() {
-		map = acquireMap();
-		
-		if (map == null && retries < 10) {
-			Log.w(TAG, "Cannot load map. Retrying");
-			sendMessage();
-			retries++;
-			return;
-		}
-		
-		if (map == null) {
-			Log.e(TAG, "Unable to load map");
-			return;
-		}
-		
-		//successfully loaded map
-		retries = 0;
+	public void onMapReady(GoogleMap gMap) {
+		map = gMap;
 
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
 		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
@@ -186,7 +179,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	public void processProperties(KrollDict d) {
 		super.processProperties(d);
 
-		if (acquireMap() == null) {
+		if (map == null) {
 			return;
 		}
 		processMapProperties(d);
@@ -200,6 +193,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if (d.containsKey(MapModule.PROPERTY_USER_LOCATION_BUTTON)) {
 			setUserLocationButtonEnabled(TiConvert.toBoolean(d,
 					MapModule.PROPERTY_USER_LOCATION_BUTTON, true));
+		}
+		if (d.containsKey(MapModule.PROPERTY_MAP_TOOLBAR_ENABLED)) {
+			setMapToolbarEnabled(TiConvert.toBoolean(d,
+					MapModule.PROPERTY_MAP_TOOLBAR_ENABLED, true));
 		}
 		if (d.containsKey(TiC.PROPERTY_MAP_TYPE)) {
 			setMapType(d.getInt(TiC.PROPERTY_MAP_TYPE));
@@ -255,6 +252,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setUserLocationEnabled(TiConvert.toBoolean(newValue));
 		} else if (key.equals(MapModule.PROPERTY_USER_LOCATION_BUTTON)) {
 			setUserLocationButtonEnabled(TiConvert.toBoolean(newValue));
+		} else if (key.equals(MapModule.PROPERTY_MAP_TOOLBAR_ENABLED)) {
+			setMapToolbarEnabled(TiConvert.toBoolean(newValue));
 		} else if (key.equals(TiC.PROPERTY_MAP_TYPE)) {
 			setMapType(TiConvert.toInt(newValue));
 		} else if (key.equals(TiC.PROPERTY_REGION)) {
@@ -274,10 +273,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 	}
 
-	public GoogleMap acquireMap() {
-		return ((SupportMapFragment) getFragment()).getMap();
-	}
-
 	public GoogleMap getMap() {
 		return map;
 	}
@@ -292,6 +287,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 	protected void setUserLocationButtonEnabled(boolean enabled) {
 		map.getUiSettings().setMyLocationButtonEnabled(enabled);
+	}
+
+	protected void setMapToolbarEnabled(boolean enabled) {
+		map.getUiSettings().setMapToolbarEnabled(enabled);
 	}
 
 	public float getMaxZoomLevel() {
@@ -979,4 +978,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	public void onMapLoaded() {
 		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
+	
+	protected void onViewCreated() {
+		// keep around for backward compatibility
+	}
+
 }

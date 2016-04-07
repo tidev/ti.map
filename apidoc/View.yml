@@ -126,7 +126,8 @@ methods:
       - name: mapType
         summary: |
             Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
-            <Modules.Map.TERRAIN_TYPE> or <Modules.Map.HYBRID_TYPE>.
+            <Modules.Map.TERRAIN_TYPE>, <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or
+            <Modules.Map.SATELLITE_FLYOVER_TYPE>.
         type: Number
 
   - name: setLocation
@@ -387,9 +388,10 @@ events:
   - name: complete
     summary: Fired when the map completes loading.
 
-  - name: regionchanged
+  - name: regionwillchange
+    since: "6.0.0"
     summary: |
-        Fired when the mapping region changes.
+        Fired when the mapping region will change.
     properties:
       - name: longitude
         summary: Longitude value for the center point of the map, in decimal degrees.
@@ -402,19 +404,50 @@ events:
       - name: longitudeDelta
         summary: |
             The amount of east-to-west distance displayed on the map, measured in decimal degrees.
-            (Since Release 3.1.1.)
+        since: "3.1.1"
         type: Number
 
       - name: latitudeDelta
         summary: |
             The amount of north-to-south distance displayed on the map, measured in decimal degrees.
-            (Since Release 3.1.1.)
+        since: "3.1.1"
+        type: Number
+
+      - name: animated
+        summary: |
+            The regionwillchange event was caused by an `animation`, such as a animating the camera.
+        since: "3.2.0"
+        type: Boolean
+        platforms: [iphone, ipad]
+
+  - name: regionchanged
+    summary: |
+        Fired when the mapping region finished changing.
+    properties:
+      - name: longitude
+        summary: Longitude value for the center point of the map, in decimal degrees.
+        type: Number
+
+      - name: latitude
+        summary: Latitude value for the center point of the map, in decimal degrees.
+        type: Number
+
+      - name: longitudeDelta
+        summary: |
+            The amount of east-to-west distance displayed on the map, measured in decimal degrees.
+        since: "3.1.1"
+        type: Number
+
+      - name: latitudeDelta
+        summary: |
+            The amount of north-to-south distance displayed on the map, measured in decimal degrees.
+        since: "3.1.1"
         type: Number
 
       - name: animated
         summary: |
             The regionchanged event was caused by an `animation`, such as a animating the camera.
-            (Since Release 3.2.0.)
+        since: "3.2.0"
         type: Boolean
         platforms: [iphone, ipad]
 
@@ -463,8 +496,9 @@ properties:
 
   - name: mapType
     summary: |
-        Map type, either: <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>, <Modules.Map.TERRAIN_TYPE>
-        or <Modules.Map.HYBRID_TYPE>
+        Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
+        <Modules.Map.TERRAIN_TYPE>, <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or 
+        <Modules.Map.SATELLITE_FLYOVER_TYPE>.
     type: Number
     default: NORMAL_TYPE
 
@@ -509,6 +543,13 @@ properties:
     type: Boolean
     default: true
     since: "3.2.3"
+    platforms: [android]
+
+  - name: mapToolbarEnabled
+    summary: Enable or disables the map toolbar.
+    type: Boolean
+    default: true
+    since: "6.1.0"
     platforms: [android]
 
   - name: enableZoomControls
@@ -612,6 +653,34 @@ properties:
     type: Boolean
     default: true
     since: "3.2.0"
+    platforms: [iphone, ipad]
+
+  - name: showsCompass
+    summary: A Boolean indicating whether the map displays a compass control. Available in iOS 9.0 and later.
+    description: |
+        When this property is set to `true`, the map displays the control that lets users change the heading
+        orientation of the map.
+    type: Boolean
+    default: true
+    since: "5.2.0"
+    platforms: [iphone, ipad]
+
+  - name: showsScale
+    summary: A Boolean indicating whether the map shows scale information. Available in iOS 9.0 and later.
+    description: When this property is set to `true`, the map displays the scale information.
+    type: Boolean
+    default: false
+    since: "5.2.0"
+    platforms: [iphone, ipad]
+
+  - name: showsTraffic
+    summary: A Boolean value indicating whether the map displays traffic information. Available in iOS 9.0 and later.
+    description: |
+        The mapType property must be set to <Modules.Map.NORMAL_TYPE> or <Modules.Map.HYBRID_TYPE> for 
+        traffic information to be shown.
+    type: Boolean
+    default: false
+    since: "5.2.0"
     platforms: [iphone, ipad]
 
 ---

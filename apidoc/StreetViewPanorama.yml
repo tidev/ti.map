@@ -1,0 +1,58 @@
+---
+name: Modules.Map.StreetViewPanorama
+summary: Provides panoramic 360-degree views from designated roads throughout its coverage area.
+description: |
+    Each street view panorama is an image, or set of images, that provides a full 360-degree view from
+    a single location. It provides a viewer that renders the panorama as a sphere with a camera at its center.
+    A window can only contain one street view.
+
+extends: Titanium.UI.View
+excludes:
+    events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
+              'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
+
+since: "5.2.0"
+platforms: [android]
+properties:
+
+  - name: position
+    summary: A dictionary specifying the position of the street view.
+    type: StreetViewPosition
+
+  - name: panning
+    summary: Determines whether the user is able to re-orient the camera by dragging.
+    type: Boolean
+    default: true
+
+  - name: zoom
+    summary: Determines whether the user is able to pinch to zoom.
+    type: Boolean
+    default: true
+
+  - name: streetNames
+    summary: Determines whether the user is able to see street names displayed.
+    type: Boolean
+    default: true
+
+  - name: userNavigation
+    summary: Determines whether the user is able to move to a different panorama.
+    description: |
+        If `true`, users can use a single tap on navigation links, or double tap the
+        view, to move to a new panorama.    
+    type: Boolean
+    default: true
+---
+name: StreetViewPosition
+summary: Simple object representing a street view coordinates.
+properties:
+
+  - name: longitude
+    summary: Longitude value for the center point of the view, in decimal degrees.
+    type: Number
+    default: 0
+
+  - name: latitude
+    summary: Latitude value for the center point of the view, in decimal degrees.
+    type: Number
+    default: 0
+since: "5.2.0"
