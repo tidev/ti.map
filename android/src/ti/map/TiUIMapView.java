@@ -896,7 +896,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	@Override
 	public void release() {
 		selectedAnnotation = null;
-		map.clear();
+		if (map != null) {
+			map.clear();
+		}
 		currentCircles = null;
 		currentPolygons = null;
 		currentPolylines = null;
