@@ -1,7 +1,7 @@
 
 /**
  * If the table view rows are too small on Android, add the following to your tiapp.xml
- * 
+ *
 <android xmlns:android="http://schemas.android.com/apk/res/android">
     <manifest>
         <supports-screens android:anyDensity="false"/>
@@ -34,7 +34,7 @@ var top = isIOS7Plus() ? 20 : 0;
 
 //=====================================================================
 // Rows
-//=====================================================================  
+//=====================================================================
 var rows = [
     require('tests/multiMap'),
     require('tests/annotations'),
@@ -45,6 +45,7 @@ var rows = [
 if (IOS) {
     rows.push(require('tests/camera'));
     rows.push(require('tests/properties'));
+    rows.push(require('tests/cluster'));
 }
 
 if (ANDROID) {

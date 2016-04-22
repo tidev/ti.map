@@ -77,6 +77,14 @@ methods:
         summary: Modules.Map.Route
         type: Modules.Map.Route
 
+  - name: cluster
+    summary: Clusters the current annotations.
+    description: |
+        You can configure the using the [clusterTintColor](Modules.Map.View.clusterTintColor), [clusterTextColor](Modules.Map.View.clusterTextColor)
+        and [cellSizeFactor](Modules.Map.View.cellSizeFactor) properties.
+    since: "6.0.0"
+    platforms: [iphone, ipad]
+
   - name: deselectAnnotation
     summary: |
         Deselects the specified annotation, so the main annotation is hidden and only
@@ -493,6 +501,31 @@ properties:
         If the application depends on the annotations being in a set order, it should keep
         references to all of the annotations in a separate array.
     type: Array<Modules.Map.Annotation>
+
+  - name: clusterCellSizeFactor
+    summary: Sets the cell size factor of the cluster.
+    description: |
+        Cell size factor will scale size of default cell size. With value smaller than 1.0 cell size will be smaller 
+        than default and you will see more clusters on the map. With factor larger than 1.0 cell size will be bigger 
+        than default and you will see less clusters on the map.
+    since: "6.0.0"
+    type: Float
+    default: 1.0
+    platforms: [iphone,ipad]
+
+  - name: clusterTintColor
+    summary: Sets the tint color of the cluster annotation.
+    since: "6.0.0"
+    type: String
+    default: null (behaves as red)
+    platforms: [iphone,ipad]
+
+  - name: clusterTintColor
+    summary: Sets the text color of the cluster annotation.
+    since: "6.0.0"
+    type: String
+    default: null (behaves as white)
+    platforms: [iphone,ipad]
 
   - name: mapType
     summary: |
