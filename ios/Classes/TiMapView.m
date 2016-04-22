@@ -1108,7 +1108,7 @@
 
 -(void)handleCalloutTap:(UIGestureRecognizer *)sender
 {
-    [self fireClickEvent:selectedAnnotation source:@"callout"];
+    [self fireClickEvent:selectedAnnotation source:@"infoWindow"];
 }
 
 
