@@ -899,15 +899,40 @@
         
 		BOOL isSelected = [view isSelected];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
+        selectedAnnotation = ann;
+        //if canShowCallout == true we will try to find calloutView to hadleTap on callout
+        if ([ann canShowCallout]) {
+            //run after delay because we have to wait for animation finish
+            [self performSelector:@selector(findCalloutView:) withObject:ann afterDelay:0.2];
+        }
 		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
     }
 }
+
+- (void)findCalloutView:(UIView *)node
+{
+    //dig annotation subviews to find _MKSmallCalloutPassthroughButton
+    if([node isKindOfClass:[NSClassFromString(@"_MKSmallCalloutPassthroughButton") class]]){
+        //add tap recogniser to this view
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCalloutTap:)];
+        [node addGestureRecognizer:tap];
+        return;
+    }else{
+        for(UIView *child in node.subviews){
+            [self findCalloutView:child];
+        }
+    }
+}
+
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view{
 	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
 	{
 		BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
+        if (selectedAnnotation == ann) {
+            selectedAnnotation = nil;
+        }
 		[self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
 	}
 }
@@ -1078,6 +1103,11 @@
 }
 
 #pragma mark Event generation
+
+-(void)handleCalloutTap:(UIGestureRecognizer *)sender
+{
+    [self fireClickEvent:selectedAnnotation source:@"callout"];
+}
 
 
 -(void)handleLongPressOnMap:(UIGestureRecognizer *)sender
