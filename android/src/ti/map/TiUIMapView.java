@@ -813,7 +813,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if(currentPolylines.size() > 0) {
 			PolylineBoundary boundary = new PolylineBoundary();
 
-			double baseVal = 2;
 			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
 			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude);
 			double side2 =  b.northeast.longitude > b.southwest.longitude ? (b.northeast.longitude - b.southwest.longitude ) : (b.southwest.longitude - b.northeast.longitude );
