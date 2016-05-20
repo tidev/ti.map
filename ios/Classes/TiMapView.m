@@ -782,7 +782,7 @@
     }
     
     if ([[self proxy] _hasListeners:@"regionwillchange"]) {
-        [self fireEvent:@"regionwillchange" withRegion:region animated:animate];
+        [self fireEvent:@"regionwillchange" withRegion:region animated:animated];
     }
 }
 
@@ -796,11 +796,11 @@
 	
     if ([self.proxy _hasListeners:@"regionChanged"]) {
         NSLog(@"[WARN] The 'regionChanged' event is deprecated, use 'regionchanged' instead.");
-        [self fireEvent:@"regionChanged" withRegion:[mapView region] animated:animate];
+        [self fireEvent:@"regionChanged" withRegion:[mapView region] animated:animated];
 	}
     
 	if ([self.proxy _hasListeners:@"regionchanged"]) {
-        [self fireEvent:@"regionchanged" withRegion:[mapView region] animated:animate];
+        [self fireEvent:@"regionchanged" withRegion:[mapView region] animated:animated];
 	}
 }
 
