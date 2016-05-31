@@ -862,13 +862,11 @@
 	if (title == nil)
 		title = [NSNull null];
 
-	NSNumber * indexNumber = [pinview tag];
-
 	NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
 								viewProxy,@"annotation",
 								ourProxy,@"map",
 								title,@"title",
-								indexNumber,@"index",
+								[NSNumber numberWithInteger:[pinview tag]],@"index",
 								NUMINT(newState),@"newState",
 								NUMINT(oldState),@"oldState",
 								nil];
