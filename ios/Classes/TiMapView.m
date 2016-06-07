@@ -34,7 +34,7 @@
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
-
+    selectedAnnotation = nil;
 	RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
@@ -893,32 +893,33 @@
 	return nil;
 }
 
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
-	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
-	{
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
+    {
+        BOOL isSelected = [view isSelected];
+        MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
         
-		BOOL isSelected = [view isSelected];
-		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
         selectedAnnotation = ann;
+        
         //if canShowCallout == true we will try to find calloutView to hadleTap on callout
         if ([ann canShowCallout]) {
             //run after delay because we have to wait for animation finish
             [self performSelector:@selector(findCalloutView:) withObject:ann afterDelay:0.2];
         }
-		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
+        [self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
     }
 }
 
 - (void)findCalloutView:(UIView *)node
 {
     //dig annotation subviews to find _MKSmallCalloutPassthroughButton
-    if([node isKindOfClass:[NSClassFromString(@"_MKSmallCalloutPassthroughButton") class]]){
+    if ([node isKindOfClass:[NSClassFromString(@"_MKSmallCalloutPassthroughButton") class]]) {
         //add tap recogniser to this view
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCalloutTap:)];
         [node addGestureRecognizer:tap];
-        return;
     }else{
-        for(UIView *child in node.subviews){
+        for (UIView *child in node.subviews) {
             [self findCalloutView:child];
         }
     }
