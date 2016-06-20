@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -17,7 +17,6 @@ import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.TiPoint;
 import org.appcelerator.titanium.proxy.TiViewProxy;
@@ -70,7 +69,7 @@ public class AnnotationProxy extends KrollProxy
 	private int iconImageWidth = 0;
 	private String annoTitle;
 	private AnnotationDelegate delegate = null;
-	
+
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
 	private static final int MSG_SET_LON = MSG_FIRST_ID + 300;
@@ -86,15 +85,10 @@ public class AnnotationProxy extends KrollProxy
 		defaultValues.put(MapModule.PROPERTY_SHOW_INFO_WINDOW, true);
 	}
 
-	public AnnotationProxy(TiContext tiContext)
-	{
-		this();
-	}
-
 	public void setDelegate(AnnotationDelegate delegate) {
 		this.delegate = delegate;
 	}
-	
+
 	@Override
 	protected KrollDict getLangConversionTable()
 	{
@@ -251,7 +245,7 @@ public class AnnotationProxy extends KrollProxy
 				return;
 			}
 		}
-        
+
 		// Image blob
 		if (image instanceof TiBlob) {
 			Bitmap bitmap = ((TiBlob) image).getImage();
@@ -261,7 +255,7 @@ public class AnnotationProxy extends KrollProxy
 				return;
 			}
 		}
-		
+
 		Log.w(TAG, "Unable to get the image from the path: " + image);
 		setIconImageDimensions(-1, -1);
 	}
@@ -409,7 +403,7 @@ public class AnnotationProxy extends KrollProxy
 			getMainHandler().sendEmptyMessage(MSG_UPDATE_INFO_WINDOW);
 		}
 	}
-	
+
 	private void requestRefresh() {
 		if (this.delegate != null) {
 			this.delegate.refreshAnnotation(this);
