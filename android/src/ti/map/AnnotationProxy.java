@@ -53,6 +53,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 })
 public class AnnotationProxy extends KrollProxy
 {
+	public interface AnnotationDelegate {
+		public void refreshAnnotation(AnnotationProxy annotation);
+	}
+
 	private static final String TAG = "AnnotationProxy";
 
 	private MarkerOptions markerOptions;
@@ -65,7 +69,8 @@ public class AnnotationProxy extends KrollProxy
 	private int iconImageHeight = 0;
 	private int iconImageWidth = 0;
 	private String annoTitle;
-
+	private AnnotationDelegate delegate = null;
+	
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
 	private static final int MSG_SET_LON = MSG_FIRST_ID + 300;
@@ -86,6 +91,10 @@ public class AnnotationProxy extends KrollProxy
 		this();
 	}
 
+	public void setDelegate(AnnotationDelegate delegate) {
+		this.delegate = delegate;
+	}
+	
 	@Override
 	protected KrollDict getLangConversionTable()
 	{
@@ -232,7 +241,7 @@ public class AnnotationProxy extends KrollProxy
 
 	private void handleImage(Object image)
 	{
-		// image path
+		// Image path
 		if (image instanceof String) {
 			TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) image);
 			Bitmap bitmap = imageref.getBitmap();
@@ -242,6 +251,17 @@ public class AnnotationProxy extends KrollProxy
 				return;
 			}
 		}
+        
+		// Image blob
+		if (image instanceof TiBlob) {
+			Bitmap bitmap = ((TiBlob) image).getImage();
+			if (bitmap != null) {
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+				setIconImageHeight(bitmap.getHeight());
+				return;
+			}
+		}
+		
 		Log.w(TAG, "Unable to get the image from the path: " + image);
 		setIconImageDimensions(-1, -1);
 	}
@@ -362,8 +382,9 @@ public class AnnotationProxy extends KrollProxy
 		} else if (name.equals(MapModule.PROPERTY_DRAGGABLE)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_DRAGGABLE),
 				TiConvert.toBoolean(value));
+		} else if (name.equals(TiC.PROPERTY_PINCOLOR)) {
+			requestRefresh();
 		}
-
 	}
 
 	private TiMapInfoWindow getOrCreateMapInfoWindow()
@@ -386,6 +407,12 @@ public class AnnotationProxy extends KrollProxy
 			}
 		} else {
 			getMainHandler().sendEmptyMessage(MSG_UPDATE_INFO_WINDOW);
+		}
+	}
+	
+	private void requestRefresh() {
+		if (this.delegate != null) {
+			this.delegate.refreshAnnotation(this);
 		}
 	}
 }
