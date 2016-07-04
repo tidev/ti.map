@@ -257,7 +257,7 @@ public class AnnotationProxy extends KrollProxy
 			Bitmap bitmap = ((TiBlob) image).getImage();
 			if (bitmap != null) {
 				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageHeight(bitmap.getHeight());
+				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				return;
 			}
 		}
