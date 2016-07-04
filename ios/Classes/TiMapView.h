@@ -18,10 +18,6 @@
 -(NSString *)lastHitName;
 @end
 
-NSString * const VIEW_TYPE_POLYGON  = @"polygon";
-NSString * const VIEW_TYPE_CIRCLE   = @"circle";
-NSString * const VIEW_TYPE_POLYLINE = @"polyline";
-
 @interface TiMapView : TiUIView<MKMapViewDelegate, CLLocationManagerDelegate> {
 	MKMapView *map;
 	BOOL regionFits;

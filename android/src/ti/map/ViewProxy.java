@@ -20,6 +20,7 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
 
+import ti.map.AnnotationProxy.AnnotationDelegate;
 import android.app.Activity;
 import android.os.Message;
 
@@ -28,7 +29,7 @@ import android.os.Message;
 		TiC.PROPERTY_MAP_TYPE, TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS,
 		TiC.PROPERTY_ANIMATE, MapModule.PROPERTY_TRAFFIC,
 		TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, MapModule.PROPERTY_COMPASS_ENABLED })
-public class ViewProxy extends TiViewProxy {
+public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final String TAG = "MapViewProxy";
 
 	private static final int MSG_FIRST_ID = TiViewProxy.MSG_LAST_ID + 1;
@@ -262,7 +263,8 @@ public class ViewProxy extends TiViewProxy {
 		} else {
 			setProperty(TiC.PROPERTY_ANNOTATIONS, new Object[] { annotation });
 		}
-
+		annotation.setDelegate(this);
+		
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			if (TiApplication.isUIThread()) {
@@ -996,6 +998,30 @@ public class ViewProxy extends TiViewProxy {
 		} else {
 			Log.e(TAG,
 					"Unable set location since the map view has not been created yet. Use setRegion() instead.");
+		}
+	}
+	
+	public void refreshAnnotation(AnnotationProxy annotation) {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView ourMapView = (TiUIMapView) view;
+			final boolean wasSelected = ourMapView.selectedAnnotation == annotation;
+			if (TiApplication.isUIThread()) {
+				handleAddAnnotation(annotation);
+				if (wasSelected) {
+					handleSelectAnnotation(annotation);
+				}
+			} else {
+				TiMessenger.sendBlockingMainMessage(getMainHandler()
+						.obtainMessage(MSG_ADD_ANNOTATION), annotation);
+				if (wasSelected) {
+					TiMessenger.sendBlockingMainMessage(getMainHandler()
+							.obtainMessage(MSG_SELECT_ANNOTATION), annotation);
+				}
+			}
+		} else {
+			Log.e(TAG,
+					"Unable to refresh annotation since the map view has not been created yet.");
 		}
 	}
 	

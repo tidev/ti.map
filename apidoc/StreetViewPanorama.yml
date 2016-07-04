@@ -11,7 +11,7 @@ excludes:
     events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
               'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
 
-since:"5.2.0"
+since: "5.2.0"
 platforms: [android]
 properties:
 
@@ -56,4 +56,3 @@ properties:
     type: Number
     default: 0
 since: "5.2.0"
-

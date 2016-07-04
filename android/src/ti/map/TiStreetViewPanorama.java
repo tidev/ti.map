@@ -94,7 +94,8 @@ public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPa
 		processStreetProperties(proxy.getProperties());
 	}
 
-	@Override
+	//TODO: This method does not override anything from the super class and cannot be kept here for backward compatibility.
+	//@Override
 	protected void onViewCreated()
 	{
 		// Keep this method for backward compat.
