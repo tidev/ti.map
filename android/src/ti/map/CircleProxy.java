@@ -1,3 +1,9 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
 package ti.map;
 
 import java.util.HashMap;
@@ -8,7 +14,6 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.util.TiConvert;
 
@@ -46,10 +51,6 @@ public class CircleProxy  extends KrollProxy implements IShape
 
 	public CircleProxy() {
 		super();
-	}
-
-	public CircleProxy(TiContext tiContext) {
-		this();
 	}
 
 	private int toPx(Object size){
