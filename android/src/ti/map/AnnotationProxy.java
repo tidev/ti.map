@@ -6,6 +6,8 @@
  */
 package ti.map;
 
+import java.util.HashMap;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -17,6 +19,7 @@ import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.TiDimension;
+import org.appcelerator.titanium.TiPoint;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiDrawableReference;
@@ -45,7 +48,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 	TiC.PROPERTY_LEFT_VIEW,
 	TiC.PROPERTY_RIGHT_BUTTON,
 	TiC.PROPERTY_RIGHT_VIEW,
-	MapModule.PROPERTY_SHOW_INFO_WINDOW
+	MapModule.PROPERTY_SHOW_INFO_WINDOW,
+	MapModule.PROPERTY_CENTER_OFFSET
 })
 public class AnnotationProxy extends KrollProxy
 {
@@ -59,9 +63,11 @@ public class AnnotationProxy extends KrollProxy
 	private TiMarker marker;
 	private TiMapInfoWindow infoWindow = null;
 	private static final String defaultIconImageHeight = "40dip"; //The height of the default marker icon
+	private static final String defaultIconImageWidth = "36dip"; //The width of the default marker icon
 	// The height of the marker icon in the unit of "px". Will use it to analyze the touch event to find out
 	// the correct clicksource for the click event.
 	private int iconImageHeight = 0;
+	private int iconImageWidth = 0;
 	private String annoTitle;
 	private AnnotationDelegate delegate = null;
 	
@@ -203,9 +209,18 @@ public class AnnotationProxy extends KrollProxy
 			handleImage(getProperty(TiC.PROPERTY_IMAGE));
 		} else if (hasProperty(TiC.PROPERTY_PINCOLOR)) {
 			markerOptions.icon(BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
-			setIconImageHeight(-1);
+			setIconImageDimensions(-1, -1);
 		} else {
-			setIconImageHeight(-1);
+			setIconImageDimensions(-1, -1);
+		}
+
+		if (hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
+			HashMap centerOffsetProperty = (HashMap) getProperty(MapModule.PROPERTY_CENTER_OFFSET);
+			TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
+
+			float offsetX = 0.5f - ((float) centerOffset.getX().getValue() / (float) iconImageWidth);
+			float offsetY = 0.5f - ((float) centerOffset.getY().getValue() / (float) iconImageHeight);
+			markerOptions.anchor(offsetX, offsetY);
 		}
 	}
 
@@ -216,13 +231,12 @@ public class AnnotationProxy extends KrollProxy
 			Bitmap image = imageBlob.getImage();
 			if (image != null) {
 				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
-				setIconImageHeight(image.getHeight());
-				return;
+				setIconImageDimensions(image.getWidth(), image.getHeight());
 			}
-			
+			return;
 		}
 		Log.w(TAG, "Unable to get the image from the custom view: " + obj);
-		setIconImageHeight(-1);
+		setIconImageDimensions(-1, -1);
 	}
 
 	private void handleImage(Object image)
@@ -233,7 +247,7 @@ public class AnnotationProxy extends KrollProxy
 			Bitmap bitmap = imageref.getBitmap();
 			if (bitmap != null) {
 				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageHeight(bitmap.getHeight());
+				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				return;
 			}
 		}
@@ -243,13 +257,13 @@ public class AnnotationProxy extends KrollProxy
 			Bitmap bitmap = ((TiBlob) image).getImage();
 			if (bitmap != null) {
 				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageHeight(bitmap.getHeight());
+				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				return;
 			}
 		}
 		
 		Log.w(TAG, "Unable to get the image from the path: " + image);
-		setIconImageHeight(-1);
+		setIconImageDimensions(-1, -1);
 	}
 
 	public MarkerOptions getMarkerOptions()
@@ -294,15 +308,18 @@ public class AnnotationProxy extends KrollProxy
 		return infoWindow;
 	}
 
-	private void setIconImageHeight(int h)
+	private void setIconImageDimensions(int w, int h)
 	{
-		if (h >= 0) {
+		if (w >= 0 && h >= 0) {
+			iconImageWidth = w;
 			iconImageHeight = h;
 		} else { // default maker icon
-			TiDimension dimension = new TiDimension(defaultIconImageHeight, TiDimension.TYPE_UNDEFINED);
+			TiDimension widthDimension = new TiDimension(defaultIconImageWidth, TiDimension.TYPE_UNDEFINED);
+			TiDimension heightDimension = new TiDimension(defaultIconImageHeight, TiDimension.TYPE_UNDEFINED);
 			// TiDimension needs a view to grab the window manager, so we'll just use the decorview of the current window
 			View view = TiApplication.getAppCurrentActivity().getWindow().getDecorView();
-			iconImageHeight = dimension.getAsPixels(view);
+			iconImageWidth = widthDimension.getAsPixels(view);
+			iconImageHeight = heightDimension.getAsPixels(view);
 		}
 	}
 
