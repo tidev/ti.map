@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiViewProxy.h"
+#import "TiProxy.h"
 #import <MapKit/MapKit.h>
 
 @interface TiMapSnapshotterProxy : TiProxy {
