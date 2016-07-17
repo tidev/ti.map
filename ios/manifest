@@ -2,13 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.7.1
+version: 2.8.0
 apiversion: 2
 architectures: armv7 arm64 i386 x86_64
 description: External version of Map module
 author: Jeff Haynie, Jon Alter, & Pedro Enrique
 license: Apache Public License v2
-copyright: Copyright (c) 2013-2015 by Appcelerator, Inc.
+copyright: Copyright (c) 2013-2016 by Appcelerator, Inc.
 
 
 # these should not be edited
