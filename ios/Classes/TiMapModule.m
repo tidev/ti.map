@@ -9,7 +9,6 @@
 #import "TiMapViewProxy.h"
 #import "TiMapIOS7ViewProxy.h"
 #import "TiMapCameraProxy.h"
-#import "TiMapSnapshotterProxy.h"
 #import <MapKit/MapKit.h>
 @implementation TiMapModule
 
@@ -47,7 +46,6 @@
     return [[[mapViewProxyClass alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
-
 -(TiMapCameraProxy*)createCamera:(id)args
 {
     if (![TiUtils isIOS7OrGreater]) {
@@ -56,7 +54,6 @@
     }
     return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
-
 
 MAKE_SYSTEM_PROP(STANDARD_TYPE,MKMapTypeStandard);
 MAKE_SYSTEM_PROP(NORMAL_TYPE,MKMapTypeStandard); // For parity with Android
