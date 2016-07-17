@@ -1,3 +1,9 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
 package ti.map;
 
 import java.util.ArrayList;
@@ -8,7 +14,6 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.util.TiConvert;
 
 import ti.map.Shape.IShape;
@@ -51,10 +56,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 	public PolylineProxy() {
 		super();
-	}
-
-	public PolylineProxy(TiContext tiContext) {
-		this();
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 		if (hasProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)) {
 			options.color(TiConvert.toColor((String)getProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)));
 		}
-			
+
 		if (hasProperty(MapModule.PROPERTY_STROKE_WIDTH)) {
 			options.width(TiConvert.toFloat(getProperty(MapModule.PROPERTY_STROKE_WIDTH)));
 		}

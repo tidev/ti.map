@@ -1,3 +1,9 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
 package ti.map;
 
 import java.util.HashMap;
@@ -94,7 +100,8 @@ public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPa
 		processStreetProperties(proxy.getProperties());
 	}
 
-	@Override
+	//TODO: This method does not override anything from the super class and cannot be kept here for backward compatibility.
+	//@Override
 	protected void onViewCreated()
 	{
 		// Keep this method for backward compat.

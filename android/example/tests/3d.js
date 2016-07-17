@@ -122,4 +122,4 @@ exports.run = function(UI, Map) {
 	win.add(snapshotButton);
 	win.add(snapshotView);
 	win.open();
-}
+};

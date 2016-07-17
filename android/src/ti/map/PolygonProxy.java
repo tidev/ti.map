@@ -1,3 +1,9 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
 package ti.map;
 
 import java.util.ArrayList;
@@ -9,7 +15,6 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.util.TiConvert;
 
 import ti.map.Shape.IShape;
@@ -44,10 +49,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 	public PolygonProxy() {
 		super();
-	}
-
-	public PolygonProxy(TiContext tiContext) {
-		this();
 	}
 
 	@Override

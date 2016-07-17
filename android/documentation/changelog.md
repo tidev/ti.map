@@ -1,5 +1,9 @@
 # Change Log
 <pre>
+v2.3.10   Android null check on map.clear()
+v2.3.9    Android: Annotation.pincolor can't be changed if annotation added to mapView. [TIMOB-20620]
+v2.3.8    Support annotation's image property with Ti.Blob [MOD-2205]
+v2.3.7    Android: Provide the method setMapToolbarEnabled [MOD-2189]
 v2.3.6    Add Street View Panorama [TIMOB-19751]
 v2.3.5    Refactor module to use getMapAsync [TIMOB-19726]
 v2.3.4    Recompiled map with NDK r10e [TIMOB-19681]

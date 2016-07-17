@@ -66,7 +66,7 @@ properties:
         Positive offset values move the annotation view down and right, while negative values
         move it up and left.
     type: Point
-    platforms: [iphone, ipad]
+    platforms: [android, iphone, ipad]
 
   - name: customView
     summary: Defines a custom view to be used by the annotation.
@@ -87,7 +87,7 @@ properties:
     summary: Image to use for the the pin.
     description: |
         Must be set during creation. This is ignored if the customView property is set.
-    type: String
+    type: [String, Titanium.Blob]
     default: If not specified, a standard map pin image is used.
 
   - name: latitude 

@@ -50,4 +50,4 @@ exports.run = function(UI, Map) {
     win.add(map4);
     
     win.open();
-}
+};
