@@ -10,7 +10,6 @@
 
 @interface TiMapSnapshotterProxy : TiProxy {
     MKMapSnapshotOptions *options;
-    MKMapSnapshotter *snapshotter;
 }
 
 @end

@@ -19,9 +19,8 @@
 
 -(void)dealloc
 {
-    [super dealloc];
     RELEASE_TO_NIL(options);
-    RELEASE_TO_NIL(snapshotter);
+    [super dealloc];
 }
 
 -(MKCoordinateRegion)regionFromDict:(NSDictionary*)dict
@@ -48,25 +47,25 @@
 
 -(void)setRegion:(id)value
 {
-    ENSURE_TYPE(NSDictionary, value);
+    ENSURE_TYPE(value, NSDictionary);
     [[self options] setRegion:[self regionFromDict:value]];
 }
 
 -(void)setMapType:(id)value
 {
-    ENSURE_TYPE(NSNumber, value);
+    ENSURE_TYPE(value, NSNumber);
     [[self options] setMapType:[TiUtils intValue:value]];
 }
 
 -(void)setShowBuilding:(id)value
 {
-    ENSURE_TYPE(NSNumber, value);
+    ENSURE_TYPE(value, NSNumber);
     [[self options] setShowsBuildings:[TiUtils boolValue:value]];
 }
 
 -(void)setShowsPointsOfInterest:(id)value
 {
-    ENSURE_TYPE(NSNumber, value);
+    ENSURE_TYPE(value, NSNumber);
     [[self options] setShowsPointsOfInterest:[TiUtils boolValue:value]];
 }
 
@@ -75,8 +74,8 @@
     ENSURE_SINGLE_ARG(args, NSDictionary);
     float width = [TiUtils floatValue:[args objectForKey:@"width"]];
     float height = [TiUtils floatValue:[args objectForKey:@"height"]];
-    [[self options]setSize:CGSizeMake(width,height)];
     
+    [[self options] setSize:CGSizeMake(width,height)];
 }
 
 -(void)takeSnapshot:(id)args
@@ -86,25 +85,21 @@
     KrollCallback *successCallback = [args objectForKey:@"success"];
     KrollCallback *ErrorCallback = [args objectForKey:@"error"];
     
-    TiMapViewProxy *mapProxy = (TiMapViewProxy*)[args objectForKey:@"mapView"];
-    if (mapProxy) {
-        TiMapView * mapView = (TiMapView *)[mapProxy view];
-        [[self options] setRegion:[[mapView map] region]];
-        [[self options] setMapType:[[mapView map]mapType]];
-    }
+    MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:[self options]];
+        [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
+            if (error) {
+                [self _fireEventToListener:@"blob" withObject:[TiUtils stringValue:error] listener:ErrorCallback thisObject:nil];
+                return;
+            }
+            
+            TiBlob *blob = [[[TiBlob alloc] _initWithPageContext:[self pageContext]] autorelease];
+            [blob setImage:[snapshot image]];
+            [blob setMimeType:@"image/png" type:TiBlobTypeImage];
+            
+            NSDictionary *event = [NSDictionary dictionaryWithObject:blob forKey:@"image"];
+            [self _fireEventToListener:@"blob" withObject:event listener:successCallback thisObject:nil];
+        }];
 
-    snapshotter = [[MKMapSnapshotter alloc] initWithOptions:[self options]];
-    [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
-        if (error) {
-            [self _fireEventToListener:@"blob" withObject:[TiUtils stringValue:error] listener:ErrorCallback thisObject:nil];
-            return;
-        }
-        
-        TiBlob *blob = [[TiBlob alloc] _initWithPageContext:[self pageContext] andImage:[snapshot image]];
-        NSDictionary *event = [NSDictionary dictionaryWithObject:blob forKey:@"image"];
-        [self _fireEventToListener:@"blob" withObject:event listener:successCallback thisObject:nil];
-    }];
-    
 }
 
 @end

@@ -14,8 +14,7 @@ methods:
         type: Titanium.Blob
     parameters:
       - name: success
-        summary: | 
-            Function to be called upon successful completion.
+        summary: Function to be called upon successful completion.
         type: Callback<Titanium.Blob>
         optional: false
 
@@ -23,16 +22,10 @@ methods:
         summary: Function to call upon receiving an error.
         type: Callback
         optional: false
-
-      - name: mapView
-        summary: Map View to be captured by the snap shot.
-        type: view<Modules.Map.View>
-        optional: true
   
 properties:
   - name: region
-    summary: |
-        A dictionary specifying the location and zoom level of the map.
+    summary: A dictionary specifying the location and zoom level of the map.
     type: MapRegionTypev2<Modules.Map.View.MapRegionTypev2>
 
   - name: showsPointsOfInterest
@@ -62,7 +55,7 @@ properties:
     type: Boolean
     default: true
 examples:
-  - title: Snapshot without a mapView
+  - title: Taking a simple snapshot
     example: |
        
                 var MapModule = require('ti.map');
@@ -78,73 +71,25 @@ examples:
                         longitude: -121.8863,
                         latitudeDelta: 0.4,
                         longitudeDelta: 0.4
+                    },
+                    size: {
+                        width: 300, 
+                        height: 200
                     }
                 });
                 
                 Snapshotter.takeSnapshot({
                     success: function(e) {
                         var imageView = Ti.UI.createImageView({
-                            image: e.image,
-                            width: Ti.UI.FIlL,
-                            height: Ti.UI.FILL
+                            image: e.image
                         });
                         win.add(imageView);
                     },
-                    error: function() {
-
-                    },
-                });
-
-                win.open();
-
-
-  - title: Snapshot with mapView
-    example: |
-                var MapModule = require('ti.map');
-
-                var win = Ti.UI.createWindow({
-                    backgroundColor: 'white'
-                });
-
-                var mapview = MapModule.createView({
-                    mapType: MapModule.HYBRID_TYPE,
-                    region: {
-                        latitude: 37.389569,
-                        longitude: -122.050212,
-                        latitudeDelta: 0.2,
-                        longitudeDelta: 0.2
+                    error: function(e) {
+                        Ti.API.error("The snapshot could not be taken: " + e.error);
                     }
                 });
-                win.add(mapview);
 
-                var Snapshotter = MapModule.createSnapshotter();
-
-                var imageView = Ti.UI.createImageView({
-                        width: Ti.UI.FILL,
-                        height: Ti.UI.FILL
-                });
-
-                var button = Titanium.UI.createButton({
-                   title: 'Take Snap!',
-                   top: 10,
-                   width: 100,
-                   height: 50
-                });
-
-                button.addEventListener('click',function(e) {
-                   Snapshotter.takeSnapshot({
-                        success: function(e) {
-                            imageView.image = e.image;
-                        },
-                        error: function() {
-
-                        },
-                        mapView: mapview
-                    });
-                   win.add(imageView);
-                });
-
-                win.add(button);
                 win.open();
 
 ---
