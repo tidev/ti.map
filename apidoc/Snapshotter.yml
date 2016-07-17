@@ -1,0 +1,109 @@
+---
+name: Modules.Map.Snapshotter
+summary: Snapshotter is used to allow screen shots to be taken of a specified region or a mapview.
+
+extends: Titanium.Proxy
+since: {iphone: "6.0.0", ipad: "6.0.0" }
+platforms: [iphone, ipad]
+methods:
+  - name: takeSnapshot
+    summary: |
+        Takes a snap shot of of the map corresponding to the region property or a snap of the mapView if
+        passed in as a second parameter.
+    returns:
+        type: Titanium.Blob
+    parameters:
+      - name: success
+        summary: Function to be called upon successful completion.
+        type: Callback<Titanium.Blob>
+        optional: false
+
+      - name: error 
+        summary: Function to call upon receiving an error.
+        type: Callback
+        optional: false
+  
+properties:
+  - name: region
+    summary: A dictionary specifying the location and zoom level of the map.
+    type: MapRegionTypev2<Modules.Map.View.MapRegionTypev2>
+
+  - name: showsPointsOfInterest
+    summary: |
+        When this property is set to YES, the map displays icons and labels for 
+        restaurants, schools, and other relevant points of interest.
+    type: Boolean
+    default: true
+
+  - name: size
+    summary: |
+        A dictionary specifying the width and height of the snapshot.
+    type: SnapshotSize
+
+  - name: mapType
+    summary: |
+        Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
+        <Modules.Map.TERRAIN_TYPE>, <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or 
+        <Modules.Map.SATELLITE_FLYOVER_TYPE>.
+    type: Number
+    default: NORMAL_TYPE
+
+  - name: showsBuildings
+    summary: |
+        Determines whether building will be shown on the map. The mapType property must be set 
+        to <Modules.Map.STANDARD_TYPE> for extruded buildings to be displayed.
+    type: Boolean
+    default: true
+examples:
+  - title: Taking a simple snapshot
+    example: |
+       
+                var MapModule = require('ti.map');
+
+                var win = Ti.UI.createWindow({
+                    backgroundColor: 'white'
+                });
+
+                var Snapshotter = MapModule.createSnapshotter({
+                    mapType: MapModule.HYBRID_TYPE,
+                    region: {
+                        latitude: 37.3382,
+                        longitude: -121.8863,
+                        latitudeDelta: 0.4,
+                        longitudeDelta: 0.4
+                    },
+                    size: {
+                        width: 300, 
+                        height: 200
+                    }
+                });
+                
+                Snapshotter.takeSnapshot({
+                    success: function(e) {
+                        var imageView = Ti.UI.createImageView({
+                            image: e.image
+                        });
+                        win.add(imageView);
+                    },
+                    error: function(e) {
+                        Ti.API.error("The snapshot could not be taken: " + e.error);
+                    }
+                });
+
+                win.open();
+
+---
+name: SnapshotSize
+summary: |
+    Simple dictionary used as an argument to [setSize](Modules.Map.Snapshotter.setSize).
+properties:
+
+  - name: height
+    summary: The height the be used for the snapshot.
+    type: Number
+
+  - name: width
+    summary: The height the be used for the snapshot.
+    type: Number
+since: "6.0.0"
+---

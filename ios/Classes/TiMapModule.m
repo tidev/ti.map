@@ -10,7 +10,6 @@
 #import "TiMapIOS7ViewProxy.h"
 #import "TiMapCameraProxy.h"
 #import <MapKit/MapKit.h>
-
 @implementation TiMapModule
 
 #pragma mark Internal
