@@ -375,16 +375,14 @@ examples:
         `alloy.js`:
 
             // Loads the map module, which can be referenced by Alloy.Globals.Map
-            Alloy.Globals.Map = require('ti.map');
+            Alloy.Globals.Map = require("ti.map");
 
         `app/views/index.xml`:
 
             <Alloy>
                 <Window>
-                    <Module id="mapview" module="ti.map" onClick="report">
-                        <!-- Starting with Alloy 1.4.0, use the Annotation tag to define an annotation -->
-                        <!-- Prior to Alloy 1.4.0, create annotations in the controller -->
-                        <Annotation id='appcHQ' myid='1' />
+                    <Module id="mapview" module="ti.map" onClick="report" method="createView">
+                        <Annotation id="appcHQ" myId="1337" />
                     </Module>
                 </Window>
             </Alloy>
@@ -400,18 +398,18 @@ examples:
                 }
             },
             "#appcHQ" : {
-                latitude: 37.390749,
-                longitude: -122.081651,
+                latitude: 37.368122,
+                longitude: -121.913653,
                 title: "Appcelerator Headquarters",
-                subtitle: "Mountain View, CA",
+                subtitle: "San Jose, CA",
                 pincolor: Alloy.Globals.Map.ANNOTATION_RED
             }
 
 
         `app/controllers/index.js`:
 
-            function report(evt) {
-                Ti.API.info("Annotation " + evt.title + " clicked, id: " + evt.annotation.myid);
+            function report(e) {
+                Ti.API.info("Annotation " + e.title + " clicked, ID: " + e.annotation.myID);
             }
 
             $.index.open();
