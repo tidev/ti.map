@@ -367,8 +367,9 @@ events:
 
       - name: clicksource
         summary: |
-            Source of the click event. Can be one of `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null`.
-            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`.
+            Source of the click event. Can be one of `pin`, `leftPane`, `rightPane`, `infoWindow` or `null`.
+            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`. On android this also applies 
+            for `title` and `subtitle`. 
         type: String
 
       - name: annotation
