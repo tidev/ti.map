@@ -381,11 +381,11 @@ examples:
 
             <Alloy>
                 <Window>
-                    <View id="mapview" module="ti.map" onClick="report">
+                    <Module id="mapview" module="ti.map" onClick="report">
                         <!-- Starting with Alloy 1.4.0, use the Annotation tag to define an annotation -->
                         <!-- Prior to Alloy 1.4.0, create annotations in the controller -->
                         <Annotation id='appcHQ' myid='1' />
-                    </View>
+                    </Module>
                 </Window>
             </Alloy>
 
