@@ -48,7 +48,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 	TiC.PROPERTY_RIGHT_BUTTON,
 	TiC.PROPERTY_RIGHT_VIEW,
 	MapModule.PROPERTY_SHOW_INFO_WINDOW,
-	MapModule.PROPERTY_CENTER_OFFSET
+	MapModule.PROPERTY_CENTER_OFFSET,
+	TiC.PROPERTY_VISIBLE
 })
 public class AnnotationProxy extends KrollProxy
 {
@@ -76,6 +77,7 @@ public class AnnotationProxy extends KrollProxy
 	private static final int MSG_SET_LAT = MSG_FIRST_ID + 301;
 	private static final int MSG_SET_DRAGGABLE = MSG_FIRST_ID + 302;
 	private static final int MSG_UPDATE_INFO_WINDOW = MSG_FIRST_ID + 303;
+	private static final int MSG_SET_VISIBLE = MSG_FIRST_ID + 304;
 
 	public AnnotationProxy()
 	{
@@ -122,6 +124,13 @@ public class AnnotationProxy extends KrollProxy
 				return true;
 			}
 
+			case MSG_SET_VISIBLE: {
+ 				result = (AsyncResult) msg.obj;
+ 				marker.getMarker().setVisible((Boolean) result.getArg());
+ 				result.setResult(null);
+ 				return true;
+ 			}
+
 			case MSG_SET_DRAGGABLE: {
 				result = (AsyncResult) msg.obj;
 				marker.getMarker().setDraggable((Boolean) result.getArg());
@@ -142,8 +151,7 @@ public class AnnotationProxy extends KrollProxy
 
 	public void setPosition(double latitude, double longitude)
 	{
-		LatLng position = new LatLng(latitude, longitude);
-		marker.getMarker().setPosition(position);
+		marker.getMarker().setPosition(new LatLng(latitude, longitude));
 	}
 
 	public void processOptions()
@@ -157,8 +165,8 @@ public class AnnotationProxy extends KrollProxy
 		if (hasProperty(TiC.PROPERTY_LATITUDE)) {
 			latitude = TiConvert.toDouble(getProperty(TiC.PROPERTY_LATITUDE));
 		}
-		LatLng position = new LatLng(latitude, longitude);
-		markerOptions.position(position);
+
+		markerOptions.position(new LatLng(latitude, longitude));
 
 		if (hasProperty(TiC.PROPERTY_LEFT_BUTTON) || hasProperty(TiC.PROPERTY_LEFT_VIEW)
 			|| hasProperty(TiC.PROPERTY_RIGHT_BUTTON) || hasProperty(TiC.PROPERTY_RIGHT_VIEW)
@@ -195,6 +203,10 @@ public class AnnotationProxy extends KrollProxy
 		if (hasProperty(MapModule.PROPERTY_DRAGGABLE)) {
 			markerOptions.draggable(TiConvert.toBoolean(getProperty(MapModule.PROPERTY_DRAGGABLE)));
 		}
+
+		if (hasProperty(TiC.PROPERTY_VISIBLE)) {
+ 			markerOptions.visible(TiConvert.toBoolean(getProperty(TiC.PROPERTY_VISIBLE)));
+ 		}
 
 		// customView, image and pincolor must be defined before adding to mapview. Once added, their values are final.
 		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
@@ -351,34 +363,23 @@ public class AnnotationProxy extends KrollProxy
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_LEFT_BUTTON)) {
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.LEFT_PANE);
-			if (value == null) {
-				Object leftView = getProperty(TiC.PROPERTY_LEFT_VIEW);
-				if (leftView != null) {
-					getOrCreateMapInfoWindow().setLeftOrRightPane(leftView, TiMapInfoWindow.LEFT_PANE);
-				}
-			}
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_LEFT_VIEW) && getProperty(TiC.PROPERTY_LEFT_BUTTON) == null) {
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.LEFT_PANE);
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_RIGHT_BUTTON)) {
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.RIGHT_PANE);
-			if (value == null) {
-				Object rightView = getProperty(TiC.PROPERTY_RIGHT_VIEW);
-				if (rightView != null) {
-					getOrCreateMapInfoWindow().setLeftOrRightPane(rightView, TiMapInfoWindow.LEFT_PANE);
-				}
-			}
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_RIGHT_VIEW) && getProperty(TiC.PROPERTY_RIGHT_BUTTON) == null) {
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.RIGHT_PANE);
 			updateInfoWindow();
 		} else if (name.equals(MapModule.PROPERTY_DRAGGABLE)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_DRAGGABLE),
-				TiConvert.toBoolean(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_DRAGGABLE), TiConvert.toBoolean(value));
 		} else if (name.equals(TiC.PROPERTY_PINCOLOR)) {
 			requestRefresh();
-		}
+		} else if (name.equals(TiC.PROPERTY_VISIBLE)) {
+ 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_VISIBLE), TiConvert.toBoolean(value));
+  		}
 	}
 
 	private TiMapInfoWindow getOrCreateMapInfoWindow()
