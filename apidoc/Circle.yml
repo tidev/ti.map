@@ -46,6 +46,11 @@ properties:
     type: Number
     default: 10
 
+  - name: opacity
+    summary: Opacity of this map circle, from 0.0 (transparent) to 1.0 (opaque).
+    type: Number
+    default: 1.0 (opaque)
+
   - name: zIndex
     summary: |
         The order (depth) in which to display the circles.
