@@ -162,7 +162,6 @@ properties:
 
   - name: visible
     summary: Determines whether the annotation is visible or not.
-    description: |
     type: Boolean
     default: true
     platforms: [android]
