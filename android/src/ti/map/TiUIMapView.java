@@ -9,6 +9,8 @@ package ti.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -60,7 +62,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected LatLngBounds preLayoutUpdateBounds;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
-
+	
+	private Timer t;
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
@@ -907,7 +910,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	@Override
-	public void onCameraChange(CameraPosition position) {
+	public void onCameraChange(final CameraPosition position) {
 		if (preLayout) {
 			if (preLayoutUpdateBounds != null) {
 				moveCamera(CameraUpdateFactory.newLatLngBounds(
@@ -920,22 +923,32 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				preLayout = false;
 			}
 		} else if (proxy != null) {
-			KrollDict d = new KrollDict();
-			d.put(TiC.PROPERTY_LATITUDE, position.target.latitude);
-			d.put(TiC.PROPERTY_LONGITUDE, position.target.longitude);
-			d.put(TiC.PROPERTY_SOURCE, proxy);
-			LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
-			d.put(TiC.PROPERTY_LATITUDE_DELTA,
-					(bounds.northeast.latitude - bounds.southwest.latitude));
-			d.put(TiC.PROPERTY_LONGITUDE_DELTA,
-					(bounds.northeast.longitude - bounds.southwest.longitude));
-
-			// In iOS, the region property is updated in the
-			// 'regionDidChangeAnimated' method.
-			// This allows a user to call getRegion and receive the current map
-			// bounds
-			proxy.setProperty(TiC.PROPERTY_REGION, d);
-			proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
+			if (t != null) {
+				t.purge();
+				t.cancel();
+			}
+			
+			t = new Timer();
+			t.schedule(new TimerTask() {
+				public void run() {
+					KrollDict d = new KrollDict();
+					d.put(TiC.PROPERTY_LATITUDE, position.target.latitude);
+					d.put(TiC.PROPERTY_LONGITUDE, position.target.longitude);
+					d.put(TiC.PROPERTY_SOURCE, proxy);
+					LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
+					d.put(TiC.PROPERTY_LATITUDE_DELTA, (bounds.northeast.latitude - bounds.southwest.latitude));
+					d.put(TiC.PROPERTY_LONGITUDE_DELTA, (bounds.northeast.longitude - bounds.southwest.longitude));
+					
+					// In iOS, the region property is updated in the
+					// 'regionDidChangeAnimated' method.
+					// This allows a user to call getRegion and receive the current map
+					// bounds
+					proxy.setProperty(TiC.PROPERTY_REGION, d);
+					proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
+					
+					t.cancel();
+				}
+			}, 1000);
 		}
 
 	}

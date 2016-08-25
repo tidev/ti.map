@@ -22,6 +22,7 @@
 
     CLLocationCoordinate2D center;
     double radius;
+    double alpha;
     double strokeWidth;
     TiColor *strokeColor;
     TiColor *fillColor;
