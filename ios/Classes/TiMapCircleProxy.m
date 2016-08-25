@@ -58,6 +58,14 @@
     [self applyFillColor];
     [self applyStrokeColor];
     [self applyStrokeWidth];
+    [self applyAlpha];
+}
+
+-(void)applyAlpha
+{
+    if (circleRenderer != nil) {
+        circleRenderer.alpha = isnan(alpha) ? 1 : alpha;
+    }
 }
 
 -(void)applyFillColor
@@ -126,9 +134,14 @@
 
 -(void)setStrokeWidth:(id)value
 {
-
     strokeWidth = [TiUtils floatValue:value];
     [self applyStrokeWidth];
+}
+
+-(void)setAlpha:(id)value
+{
+    alpha = [TiUtils floatValue:value];
+    [self applyAlpha];
 }
 
 
