@@ -58,10 +58,10 @@
     [self applyFillColor];
     [self applyStrokeColor];
     [self applyStrokeWidth];
-    [self applyAlpha];
+    [self applyOpacity];
 }
 
--(void)applyAlpha
+-(void)applyOpacity
 {
     if (circleRenderer != nil) {
         circleRenderer.alpha = isnan(alpha) ? 1 : alpha;
@@ -138,10 +138,10 @@
     [self applyStrokeWidth];
 }
 
--(void)setAlpha:(id)value
+-(void)setOpacity:(id)value
 {
     alpha = [TiUtils floatValue:value];
-    [self applyAlpha];
+    [self applyOpacity];
 }
 
 
