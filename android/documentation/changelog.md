@@ -1,5 +1,6 @@
 # Change Log
 <pre>
+v3.0.1    Update Google Play Services to v9.6.1 (revision 33)
 v2.3.10   Android null check on map.clear()
 v2.3.9    Android: Annotation.pincolor can't be changed if annotation added to mapView. [TIMOB-20620]
 v2.3.8    Support annotation's image property with Ti.Blob [MOD-2205]
