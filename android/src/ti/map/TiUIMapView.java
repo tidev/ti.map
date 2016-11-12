@@ -179,13 +179,13 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setOnMapLoadedCallback(this);
 		if (styleString != null){
 			try {
-	            boolean success = map.setMapStyle(new MapStyleOptions(styleString));
-	            if (!success) {
-	                Log.e("MapsActivityRaw", "Style parsing failed.");
-	            }
-	        } catch (Resources.NotFoundException e) {
-	            Log.e("MapsActivityRaw", "Can't find style.", e);
-	        }
+				boolean success = map.setMapStyle(new MapStyleOptions(styleString));
+				if (!success) {
+					Log.e("MapsActivityRaw", "Style parsing failed.");
+				}
+			} catch (Resources.NotFoundException e) {
+				Log.e("MapsActivityRaw", "Can't find style.", e);
+			}
 		}
 
 		((ViewProxy) proxy).clearPreloadObjects();
