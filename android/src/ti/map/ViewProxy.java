@@ -27,7 +27,7 @@ import android.os.Message;
 @Kroll.proxy(creatableInModule = MapModule.class, propertyAccessors = {
 		TiC.PROPERTY_USER_LOCATION, MapModule.PROPERTY_USER_LOCATION_BUTTON,
 		TiC.PROPERTY_MAP_TYPE, TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS,
-		TiC.PROPERTY_ANIMATE, MapModule.PROPERTY_TRAFFIC,
+		TiC.PROPERTY_ANIMATE, MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE,
 		TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, MapModule.PROPERTY_COMPASS_ENABLED })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final String TAG = "MapViewProxy";

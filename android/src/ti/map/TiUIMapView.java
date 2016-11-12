@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.res.Resources;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
 
 
@@ -64,6 +66,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
+	
+	private String styleString;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
 		super(proxy, activity);
@@ -71,6 +75,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		currentCircles = new ArrayList<CircleProxy>();
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
+		styleString = null;
 	}
 
 	/**
@@ -172,6 +177,17 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
+		if (styleString != null){
+			try {
+	            boolean success = map.setMapStyle(new MapStyleOptions(styleString));
+	            if (!success) {
+	                Log.e("MapsActivityRaw", "Style parsing failed.");
+	            }
+	        } catch (Resources.NotFoundException e) {
+	            Log.e("MapsActivityRaw", "Can't find style.", e);
+	        }
+		}
+
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
 
@@ -237,6 +253,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if (d.containsKey(MapModule.PROPERTY_COMPASS_ENABLED)) {
 			setCompassEnabled(TiConvert.toBoolean(d,
 					MapModule.PROPERTY_COMPASS_ENABLED, true));
+		}
+		if (d.containsKey(TiC.PROPERTY_STYLE)) {
+			styleString = d.getString(TiC.PROPERTY_STYLE);
 		}
 	}
 
