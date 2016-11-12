@@ -687,7 +687,8 @@ properties:
   - name: style
     summary: JSON String to style the Map.
     description: |
-        This property will change the look (colors, roads, labels) of the map. A valid JSON can be created at (Google Maps Styling Wizard)[https://mapstyle.withgoogle.com/]
+        This property will change the look (colors, roads, labels) of the map. A valid JSON can be created
+        at (Google Maps Styling Wizard)[https://mapstyle.withgoogle.com/]
     type: String
     default: false
     since: "6.1.0"

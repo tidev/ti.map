@@ -169,6 +169,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		processPreloadPolygons();
 		processPreloadCircles();
 		processPreloadPolylines();
+		processMapStyle();
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
@@ -177,16 +178,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
-		if (styleString != null){
-			try {
-				boolean success = map.setMapStyle(new MapStyleOptions(styleString));
-				if (!success) {
-					Log.e("MapsActivityRaw", "Style parsing failed.");
-				}
-			} catch (Resources.NotFoundException e) {
-				Log.e("MapsActivityRaw", "Can't find style.", e);
-			}
-		}
 
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
@@ -287,6 +278,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setCompassEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(TiC.PROPERTY_STYLE)) {
+			styleString = TiConvert.toString(newValue);
+			processMapStyle();
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -294,6 +288,19 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 	public GoogleMap getMap() {
 		return map;
+	}
+
+	private void processMapStyle() {
+		if (styleString != null){
+			try {
+				boolean success = map.setMapStyle(new MapStyleOptions(styleString));
+				if (!success) {
+					Log.e("MapsActivityRaw", "Style parsing failed.");
+				}
+			} catch (Resources.NotFoundException e) {
+				Log.e("MapsActivityRaw", "Can't find style.", e);
+			}
+		}
 	}
 
 	protected void setUserLocationEnabled(boolean enabled) {
