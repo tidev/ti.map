@@ -67,15 +67,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
 	
-	private String styleString;
-
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
 		super(proxy, activity);
 		timarkers = new ArrayList<TiMarker>();
 		currentCircles = new ArrayList<CircleProxy>();
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
-		styleString = null;
 	}
 
 	/**
@@ -169,7 +166,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		processPreloadPolygons();
 		processPreloadCircles();
 		processPreloadPolylines();
-		processMapStyle();
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
@@ -246,7 +242,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 					MapModule.PROPERTY_COMPASS_ENABLED, true));
 		}
 		if (d.containsKey(TiC.PROPERTY_STYLE)) {
-			styleString = d.getString(TiC.PROPERTY_STYLE);
+			setStyle(d.getString(TiC.PROPERTY_STYLE));
 		}
 	}
 
@@ -279,8 +275,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		} else if (key.equals(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_STYLE)) {
-			styleString = TiConvert.toString(newValue);
-			processMapStyle();
+			setStyle(TiConvert.toString(newValue,""));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -290,10 +285,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		return map;
 	}
 
-	private void processMapStyle() {
-		if (styleString != null){
+	private void setStyle(String style) {
+		if (style != null && style != ""){
 			try {
-				boolean success = map.setMapStyle(new MapStyleOptions(styleString));
+				boolean success = map.setMapStyle(new MapStyleOptions(style));
 				if (!success) {
 					Log.e("MapsActivityRaw", "Style parsing failed.");
 				}
