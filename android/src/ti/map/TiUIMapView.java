@@ -285,7 +285,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		return map;
 	}
 
-	private void setStyle(String style) {
+	protected void setStyle(String style) {
 		if (style != null && style != ""){
 			try {
 				boolean success = map.setMapStyle(new MapStyleOptions(style));
