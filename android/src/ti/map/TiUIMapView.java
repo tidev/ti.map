@@ -66,7 +66,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
-	
+
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
 		super(proxy, activity);
 		timarkers = new ArrayList<TiMarker>();
