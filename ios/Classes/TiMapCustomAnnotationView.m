@@ -24,8 +24,8 @@
 - (void)setProxy:(TiViewProxy*)customView
 {
     if (theProxy != customView) {
-        [[theProxy view] removeFromSuperview];
-        RELEASE_TO_NIL(theProxy);
+        //[[theProxy view] removeFromSuperview];
+        //RELEASE_TO_NIL(theProxy);
         [self initWithProxy:customView];
     }
     else {
@@ -36,7 +36,7 @@
 
 - (void)initWithProxy:(TiViewProxy*)customView
 {
-    theProxy = [customView retain];
+    theProxy = customView;
     TiUIView* theView = [theProxy barButtonViewForSize:CGSizeZero];
     self.frame = wrapperView.frame = [theView bounds];
     [wrapperView addSubview:theView];
