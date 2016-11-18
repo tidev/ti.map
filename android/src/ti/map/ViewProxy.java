@@ -757,7 +757,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	@Kroll.method
 	public void addPolyline(PolylineProxy polyline) {
 		if (TiApplication.isUIThread()) {
-			handleAddPolygon(polyline);
+			handleAddPolyline(polyline);
 		} else {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_ADD_POLYLINE), polyline);
