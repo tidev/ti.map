@@ -155,7 +155,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map = gMap;
 
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
-		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
+		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
 		if (Build.VERSION.SDK_INT < 16) {
 			View rootView = proxy.getActivity().findViewById(
 					android.R.id.content);
@@ -834,7 +834,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if(currentPolylines.size() > 0) {
 			PolylineBoundary boundary = new PolylineBoundary();
 
-			double baseVal = 2;
 			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
 			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude);
 			double side2 =  b.northeast.longitude > b.southwest.longitude ? (b.northeast.longitude - b.southwest.longitude ) : (b.southwest.longitude - b.northeast.longitude );
@@ -1001,7 +1000,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	public void onMapLoaded() {
 		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
-	
+
 	protected void onViewCreated() {
 		// keep around for backward compatibility
 	}
