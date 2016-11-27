@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.res.Resources;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
 
 
@@ -172,6 +174,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
+
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
 
@@ -238,6 +241,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setCompassEnabled(TiConvert.toBoolean(d,
 					MapModule.PROPERTY_COMPASS_ENABLED, true));
 		}
+		if (d.containsKey(TiC.PROPERTY_STYLE)) {
+			setStyle(d.getString(TiC.PROPERTY_STYLE));
+		}
 	}
 
 	@Override
@@ -268,6 +274,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setCompassEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(TiC.PROPERTY_STYLE)) {
+			setStyle(TiConvert.toString(newValue,""));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -275,6 +283,19 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 	public GoogleMap getMap() {
 		return map;
+	}
+
+	protected void setStyle(String style) {
+		if (style != null && style != ""){
+			try {
+				boolean success = map.setMapStyle(new MapStyleOptions(style));
+				if (!success) {
+					Log.e("MapsActivityRaw", "Style parsing failed.");
+				}
+			} catch (Resources.NotFoundException e) {
+				Log.e("MapsActivityRaw", "Can't find style.", e);
+			}
+		}
 	}
 
 	protected void setUserLocationEnabled(boolean enabled) {
