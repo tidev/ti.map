@@ -24,7 +24,7 @@
 - (void)setProxy:(TiViewProxy*)customView
 {
     if (theProxy != customView) {
-        [[theProxy view] removeFromSuperview];
+        [wrapperView.subviews.firstObject removeFromSuperview];
         RELEASE_TO_NIL(theProxy);
         [self initWithProxy:customView];
     }
