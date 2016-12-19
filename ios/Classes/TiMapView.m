@@ -1079,11 +1079,15 @@
         
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
+        id opacity = [ann valueForUndefinedKey:@"opacity"];
+        
+        if (opacity) {
+            [[annView layer] setOpacity:[TiUtils floatValue:opacity def:1.0]];
+        }
         
         if (left!=nil) {
             annView.leftCalloutAccessoryView = left;
-        }
-        else {
+        } else {
             //ios7 requires this to be explicitly set as nil if nil
             if (![TiUtils isIOS8OrGreater]) {
                 annView.leftCalloutAccessoryView = nil;
@@ -1092,8 +1096,7 @@
         
         if (right!=nil) {
             annView.rightCalloutAccessoryView = right;
-        }
-        else {
+        } else {
             //ios7 requires this to be explicitly set as nil if nil
             
             if (![TiUtils isIOS8OrGreater]) {
