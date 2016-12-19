@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -190,9 +190,20 @@
 	}
 }
 
+-(void)setOpacity:(id)value
+{
+    id current = [self valueForUndefinedKey:@"opacity"];
+    [self replaceValue:value forKey:@"opacity" notification:NO];
+    if ([current isEqual:value] == NO)
+    {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+
+}
+
 -(id)pincolor
 {
-    return [TiUtils intValue:[self valueForUndefinedKey:@"pincolor"]];
+    return NUMINT([self valueForUndefinedKey:@"pincolor"]);
 }
 
 -(void)setPincolor:(id)color

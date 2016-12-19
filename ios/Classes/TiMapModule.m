@@ -1,15 +1,15 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "TiMapModule.h"
 #import "TiMapViewProxy.h"
-#import "TiMapIOS7ViewProxy.h"
 #import "TiMapCameraProxy.h"
 #import <MapKit/MapKit.h>
+
 @implementation TiMapModule
 
 #pragma mark Internal
@@ -42,8 +42,7 @@
 
 -(TiMapViewProxy*)createView:(id)args
 {
-    Class mapViewProxyClass = ([TiUtils isIOS7OrGreater]) ? [TiMapIOS7ViewProxy class] : [TiMapViewProxy class];
-    return [[[mapViewProxyClass alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+    return [[[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
 -(TiMapCameraProxy*)createCamera:(id)args
@@ -64,9 +63,12 @@ MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
 MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 MAKE_SYSTEM_PROP(ANNOTATION_RED, MKPinAnnotationColorRed);
 MAKE_SYSTEM_PROP(ANNOTATION_GREEN, MKPinAnnotationColorGreen);
 MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, MKPinAnnotationColorPurple);
+#pragma GCC diagnostic pop
 
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_NONE,MKAnnotationViewDragStateNone);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START,MKAnnotationViewDragStateStarting);

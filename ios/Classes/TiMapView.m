@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -9,6 +9,8 @@
 #import "TiMapView.h"
 #import "TiBase.h"
 #import "TiUtils.h"
+#import "TiMapUtils.h"
+#import "TiBase.h"
 #import "TiMapModule.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapPinAnnotationView.h"
@@ -82,6 +84,13 @@
         loaded = YES;
     }
     return map;
+}
+
+-(TiMapCameraProxy*)camera
+{
+    return [TiMapUtils returnValueOnMainThread:^id{
+        return [[TiMapCameraProxy alloc] initWithCamera:[self map].camera];
+    }];
 }
 
 -(void)registerTouchEvents
@@ -691,64 +700,139 @@
     [polylineProxies removeAllObjects];
 }
 
-
-
-
-
 #pragma mark Public APIs iOS 7
 
 -(void)setTintColor_:(id)color
 {
-    [TiMapModule logAddedIniOS7Warning:@"tintColor"];
+    TiColor *ticolor = [TiUtils colorValue:color];
+    UIColor* theColor = [ticolor _color];
+    [[self map] performSelector:@selector(setTintColor:) withObject:theColor];
+    [self performSelector:@selector(setTintColor:) withObject:theColor];
 }
 
--(void)setCamera_:(id)value
+-(void)setCamera_:(TiMapCameraProxy*)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"camera"];
+    TiThreadPerformOnMainThread(^{
+        [self map].camera = [value camera];
+    }, YES);
 }
 
 -(void)setPitchEnabled_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"pitchEnabled"];
+    TiThreadPerformOnMainThread(^{
+        [self map].pitchEnabled = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setRotateEnabled_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"rotateEnabled"];
+    TiThreadPerformOnMainThread(^{
+        [self map].rotateEnabled = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsBuildings_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsBuildings"];
+    TiThreadPerformOnMainThread(^{
+        [self map].showsBuildings = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsPointsOfInterest_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsPointsOfInterest"];
+    TiThreadPerformOnMainThread(^{
+        [self map].showsPointsOfInterest = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsCompass_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsCompass"];
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsCompass = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsCompass' is only available on iOS 9 and later.");
+    }
 }
 
 -(void)setShowsScale_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsScale"];
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsScale = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsScale' is only available on iOS 9 and later.");
+    }
 }
 
 -(void)setShowsTraffic_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsTraffic"];
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsTraffic = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsTraffic' is only available on iOS 9 and later.");
+    }}
+
+-(void)animateCamera:(id)args
+{
+    enum Args {
+        kArgAnimationDict = 0,
+        kArgCount,
+        kArgCallback = kArgCount
+    };
+    NSDictionary *animationDict = [args objectAtIndex:kArgAnimationDict];
+    ENSURE_TYPE(animationDict, NSDictionary);
+    // Callback is optional
+    cameraAnimationCallback = ([args count] > kArgCallback) ? [[args objectAtIndex:kArgCallback] retain] : nil;
+    
+    id cameraProxy = [animationDict objectForKey:@"camera"];
+    ENSURE_TYPE(cameraProxy, TiMapCameraProxy);
+    
+    double duration = [TiUtils doubleValue:[animationDict objectForKey:@"duration"] def:400];
+    double delay = [TiUtils doubleValue:[animationDict objectForKey:@"delay"] def:0];
+    NSUInteger curve = [TiUtils intValue:[animationDict objectForKey:@"curve"] def:UIViewAnimationOptionCurveEaseInOut];
+    
+    // Apple says to use `mapView:regionDidChangeAnimated:` instead of `completion`
+    // to know when the camera animation has completed
+    TiThreadPerformOnMainThread(^{
+        [UIView animateWithDuration:(duration / 1000)
+                              delay:(delay / 1000)
+                            options:curve
+                         animations:^{
+                             [self map].camera = [cameraProxy camera];
+                         }
+                         completion:nil];
+    }, NO);
 }
 
+-(void)showAnnotations:(id)args
+{
+    ENSURE_SINGLE_ARG_OR_NIL(args, NSArray);
+    // If no annotations are passed in, use the annotations on the map
+    if (args == nil) {
+        args = [self customAnnotations];
+    }
+    TiThreadPerformOnMainThread(^{
+        [[self map] showAnnotations:args animated:animate];
+    },NO);
+}
 
 #pragma mark Utils
-// Using these utility functions allows us to override them for different versions of iOS
 
+// These methods override the default implementation in TiMapView
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level
 {
-    [map addOverlay:polyline];
+    [map addOverlay:polyline level:level];
 }
 
 #pragma mark Delegates
@@ -788,9 +872,15 @@
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    if (animated && cameraAnimationCallback != nil) {
+        [cameraAnimationCallback call:nil thisObject:nil];
+        RELEASE_TO_NIL(cameraAnimationCallback);
+    }
+
     if (ignoreRegionChanged) {
         return;
     }
+    
     region = [mapView region];
     [self.proxy replaceValue:[self dictionaryFromRegion] forKey:@"region" notification:NO];
 	
@@ -975,8 +1065,11 @@
         }
         else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
-            
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
             pinview.pinColor = [ann pincolor];
+#pragma GCC diagnostic pop
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }

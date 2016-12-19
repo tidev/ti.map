@@ -50,7 +50,7 @@ properties:
     summary: Opacity of this map circle, from 0.0 (transparent) to 1.0 (opaque).
     type: Number
     default: 1.0 (opaque)
-    since: "6.0.0"
+    since: "6.1.0"
 
   - name: zIndex
     summary: |

@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -9,10 +9,14 @@
 @implementation WildcardGestureRecognizer
 @synthesize touchesBeganCallback;
 
+- (void)dealloc
+{
+    [touchesBeganCallback release];
+    [super dealloc];
+}
 
 -(id)init{
-    if (self = [super init])
-    {
+    if (self = [super init]) {
         self.cancelsTouchesInView = NO;
     }
     return self;

@@ -164,4 +164,4 @@ properties:
     summary: Determines whether the annotation is visible or not.
     type: Boolean
     default: true
-    since: "6.0.0"
+    since: "6.1.0"

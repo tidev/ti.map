@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -10,6 +10,7 @@
 #import "TiMKOverlayPathUniversal.h"
 #import "WildcardGestureRecognizer.h"
 #import <MapKit/MapKit.h>
+#import "TiMapCameraProxy.h"
 
 @class TiMapAnnotationProxy;
 
@@ -36,8 +37,7 @@
 	
 	// Location manager needed for iOS 8 permissions
 	CLLocationManager *locationManager;
-
-
+    KrollCallback *cameraAnimationCallback;
 }
 
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;
@@ -48,8 +48,11 @@
 -(TiMapAnnotationProxy*)annotationFromArg:(id)arg;
 -(NSArray*)annotationsFromArgs:(id)value;
 -(MKMapView*)map;
+-(TiMapCameraProxy*)camera;
 
 #pragma mark Public APIs
+-(void)animateCamera:(id)args;
+-(void)showAnnotations:(id)args;
 -(void)addAnnotation:(id)args;
 -(void)addAnnotations:(id)args;
 -(void)setAnnotations_:(id)value;
