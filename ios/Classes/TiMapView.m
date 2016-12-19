@@ -34,8 +34,8 @@
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
-    selectedAnnotation = nil;
-	RELEASE_TO_NIL(locationManager);
+    RELEASE_TO_NIL(selectedAnnotation);
+    RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
     RELEASE_TO_NIL(circleProxies);
@@ -918,7 +918,7 @@
         //add tap recogniser to this view
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCalloutTap:)];
         [node addGestureRecognizer:tap];
-    }else{
+    } else {
         for (UIView *child in node.subviews) {
             [self findCalloutView:child];
         }
