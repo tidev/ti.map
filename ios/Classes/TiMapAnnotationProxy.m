@@ -190,10 +190,10 @@
 	}
 }
 
--(void)setOpacity:(id)value
+-(void)setVisible:(id)value
 {
-    id current = [self valueForUndefinedKey:@"opacity"];
-    [self replaceValue:value forKey:@"opacity" notification:NO];
+    id current = [self valueForUndefinedKey:@"visible"];
+    [self replaceValue:value forKey:@"visible" notification:NO];
     if ([current isEqual:value] == NO)
     {
         [self setNeedsRefreshingWithSelection:YES];

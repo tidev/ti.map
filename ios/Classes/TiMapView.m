@@ -1079,10 +1079,10 @@
         
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
-        id opacity = [ann valueForUndefinedKey:@"opacity"];
+        id visible = [ann valueForUndefinedKey:@"visible"];
         
-        if (opacity) {
-            [[annView layer] setOpacity:[TiUtils floatValue:opacity def:1.0]];
+        if (visible != nil) {
+            [annView setHidden:[TiUtils boolValue:visible def:NO]];
         }
         
         if (left!=nil) {
