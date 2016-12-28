@@ -1,6 +1,6 @@
 # Titanium Map Module [![Build Status](https://travis-ci.org/appcelerator-modules/ti.map.svg)](https://travis-ci.org/appcelerator-modules/ti.map)
 
-This is the Map Module for Titanium.
+This is the Map Module for Titanium. Please use [JIRA](http://jira.appcelerator.org) to report issues or ask our [TiSlack community](http://tislack.org) for help! :rocket:
 
 ## Contributors
 
@@ -9,5 +9,5 @@ This is the Map Module for Titanium.
 
 ## Legal
 
-This module is Copyright (c) 2010-2014 by Appcelerator, Inc. All Rights Reserved. Usage of this module is subject to 
+This module is Copyright (c) 2010-2016 by Appcelerator, Inc. All Rights Reserved. Usage of this module is subject to 
 the Terms of Service agreement with Appcelerator, Inc.  
