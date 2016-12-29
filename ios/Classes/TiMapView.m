@@ -928,22 +928,22 @@
 
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view{
-	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
-	{
+	if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
 		BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
-        if (selectedAnnotation == ann) {
-            selectedAnnotation = nil;
-        }
+        	
+		if (selectedAnnotation == ann) {
+            		selectedAnnotation = nil;
+        	}
+		
 		[self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
 	}
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)aview calloutAccessoryControlTapped:(UIControl *)control
 {
-    if ([aview conformsToProtocol:@protocol(TiMapAnnotation)])
-	{
-		MKPinAnnotationView *pinview = (MKPinAnnotationView*)aview;
+	if ([aview conformsToProtocol:@protocol(TiMapAnnotation)]) {
+		MKPinAnnotationView *pinview = (MKPinAnnotationView *)aview;
 		NSString * clickSource = @"unknown";
 		if (aview.leftCalloutAccessoryView == control)
 		{
@@ -1111,7 +1111,6 @@
     [self fireClickEvent:selectedAnnotation source:@"infoWindow"];
 }
 
-
 -(void)handleLongPressOnMap:(UIGestureRecognizer *)sender
 {
     if(sender.state == UIGestureRecognizerStateBegan) {
@@ -1125,9 +1124,7 @@
         if ([mapProxy _hasListeners:@"longclick"]) {
             [mapProxy fireEvent:@"longclick" withObject:event];
         }
-
     }
-
 }
 
 -(void)handlePolygonClick:(MKMapPoint)point
@@ -1240,7 +1237,6 @@
 // Common functionality to fire event on map proxy and view proxy objects
 - (void)doClickEvent:(id)viewProxy mapProxy:(id)mapProxy event:(NSDictionary*)event
 {
-
     BOOL parentWants = [mapProxy _hasListeners:@"click"];
     BOOL viewWants;
     if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
@@ -1258,6 +1254,5 @@
         [viewProxy fireEvent:@"click" withObject:event];
     }
 }
-
 
 @end
