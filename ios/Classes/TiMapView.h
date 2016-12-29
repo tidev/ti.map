@@ -31,6 +31,9 @@
     NSMutableArray *polygonProxies;
     NSMutableArray *circleProxies;
     NSMutableArray *polylineProxies;
+    
+    //selected annotation
+    MKAnnotationView<TiMapAnnotation> * selectedAnnotation;
 
     // dictionary for object tracking and association
     CFMutableDictionaryRef mapObjects2View;   // MKOverlay Object -> MKOverlay Object's renderer
