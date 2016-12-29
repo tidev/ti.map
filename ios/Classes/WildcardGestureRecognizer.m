@@ -9,6 +9,11 @@
 @implementation WildcardGestureRecognizer
 @synthesize touchesBeganCallback;
 
+- (void)dealloc
+{
+    [touchesBeganCallback release];
+    [super dealloc];
+}
 
 -(id)init{
     if (self = [super init])

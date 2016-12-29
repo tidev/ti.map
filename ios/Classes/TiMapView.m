@@ -902,10 +902,11 @@
         
         selectedAnnotation = ann;
         
-        //if canShowCallout == true we will try to find calloutView to hadleTap on callout
+        // If canShowCallout == true we will try to find calloutView to hadleTap on callout
         if ([ann canShowCallout]) {
-            //run after delay because we have to wait for animation finish
-            [self performSelector:@selector(findCalloutView:) withObject:ann afterDelay:0.2];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+                [self findCalloutView:ann];
+            });
         }
         [self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
     }
@@ -913,9 +914,9 @@
 
 - (void)findCalloutView:(UIView *)node
 {
-    //dig annotation subviews to find _MKSmallCalloutPassthroughButton
+    // Dig annotation subviews to find _MKSmallCalloutPassthroughButton
     if ([node isKindOfClass:[NSClassFromString(@"_MKSmallCalloutPassthroughButton") class]]) {
-        //add tap recogniser to this view
+        // Add tap recogniser to this view
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCalloutTap:)];
         [node addGestureRecognizer:tap];
     } else {
