@@ -543,8 +543,8 @@ properties:
     summary: Enable or disables the compass button.
     type: Boolean
     default: true
-    since: "3.2.3"
-    platforms: [android]
+    since: { android: "3.2.3", iphone: "6.1.0", ipad: "6.1.0" }
+    platforms: [android, iphone, ipad]
 
   - name: mapToolbarEnabled
     summary: Enable or disables the map toolbar.
@@ -663,6 +663,9 @@ properties:
         orientation of the map.
     type: Boolean
     default: true
+    deprecated:
+        since: "6.1.0"
+        notes: Please use <Modules.Map.View.compassEnabled> for parity instead.
     since: "5.2.0"
     platforms: [iphone, ipad]
 
