@@ -80,10 +80,16 @@
 
 -(void)setShowsCompass_:(id)value
 {
+    DEPRECATED_REPLACED(@"View.showsCompass", @"6.1.0", @"View.compassEnabled");
+    [self setCompassEnabled_:value];
+}
+
+-(void)setCompassEnabled_:(id)value
+{
     if ([TiUtils isIOS9OrGreater] == YES) {
 #ifdef __IPHONE_9_0
         TiThreadPerformOnMainThread(^{
-            [self map].showsCompass = [TiUtils boolValue:value];
+            [[self map] setShowsCompass:[TiUtils boolValue:value]];
         }, YES);
 #endif
     } else {
