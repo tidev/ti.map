@@ -342,7 +342,7 @@ events:
 
         Note that only one annotation can be selected at any given time.
 
-        The `click` event includes a value, `clicksource`, which describes the part of the annotation that was clicked. The `clicksource` can be one of `pin`, `leftButton` or `rightButton` on iOS and pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. If the user deselects an annotation
+        The `click` event includes a value, `clicksource`, which describes the part of the annotation that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton` on iOS and pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. If the user deselects an annotation
         by clicking on the pin, `clicksource` is `pin`. If the user deselects the
         annotation by clicking elsewhere in the map view, `clicksource` is `map`.
 
@@ -368,7 +368,7 @@ events:
       - name: clicksource
         summary: |
             Source of the click event. Can be one of `pin`, `leftPane`, `rightPane`, `infoWindow` or `null`.
-            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`. On android this also applies 
+            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`. On Android, this also applies 
             for `title` and `subtitle`. 
         type: String
 
@@ -543,8 +543,8 @@ properties:
     summary: Enable or disables the compass button.
     type: Boolean
     default: true
-    since: "3.2.3"
-    platforms: [android]
+    since: { android: "3.2.3", iphone: "6.1.0", ipad: "6.1.0" }
+    platforms: [android, iphone, ipad]
 
   - name: mapToolbarEnabled
     summary: Enable or disables the map toolbar.
@@ -663,6 +663,9 @@ properties:
         orientation of the map.
     type: Boolean
     default: true
+    deprecated:
+        since: "6.1.0"
+        notes: Please use <Modules.Map.View.compassEnabled> for parity instead.
     since: "5.2.0"
     platforms: [iphone, ipad]
 
