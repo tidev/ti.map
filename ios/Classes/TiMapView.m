@@ -900,7 +900,7 @@
         BOOL isSelected = [view isSelected];
         MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
         
-        selectedAnnotation = ann;
+        selectedAnnotation = [ann retain];
         
         // If canShowCallout == true we will try to find calloutView to hadleTap on callout
         if ([ann canShowCallout]) {
@@ -933,8 +933,8 @@
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
         	
 		if (selectedAnnotation == ann) {
-            		selectedAnnotation = nil;
-        	}
+			RELEASE_TO_NIL(ann);
+		}
 		
 		[self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
 	}
