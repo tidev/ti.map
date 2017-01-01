@@ -747,14 +747,20 @@
 
 -(void)setShowsCompass_:(id)value
 {
+    DEPRECATED_REPLACED(@"View.showsCompass", @"6.1.0", @"View.compassEnabled");
+    [self setCompassEnabled_:value];
+}
+
+-(void)setCompassEnabled_:(id)value
+{
     if ([TiUtils isIOS9OrGreater] == YES) {
 #ifdef __IPHONE_9_0
         TiThreadPerformOnMainThread(^{
-            [self map].showsCompass = [TiUtils boolValue:value];
+            [[self map] setShowsCompass:[TiUtils boolValue:value]];
         }, YES);
 #endif
-    } else {
-        NSLog(@"[WARN] The property 'showsCompass' is only available on iOS 9 and later.");
+} else {
+        NSLog(@"[WARN] The property 'compassEnabled' is only available on iOS 9 and later.");
     }
 }
 
@@ -818,12 +824,9 @@
 -(void)showAnnotations:(id)args
 {
     ENSURE_SINGLE_ARG_OR_NIL(args, NSArray);
-    // If no annotations are passed in, use the annotations on the map
-    if (args == nil) {
-        args = [self customAnnotations];
-    }
+
     TiThreadPerformOnMainThread(^{
-        [[self map] showAnnotations:args animated:animate];
+        [[self map] showAnnotations:args ?: [self customAnnotations] animated:animate];
     },NO);
 }
 
@@ -849,14 +852,6 @@
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
 {
     return (MKOverlayRenderer *)CFDictionaryGetValue(mapObjects2View, overlay);
-}
-
-// Delegate for < iOS 7
-// MKPolylineView is deprecated in iOS 7, still here for backward compatibility.
-// Can be removed when support is dropped for iOS 6 and below.
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
-{	
-    return (MKOverlayView *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
 -(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
