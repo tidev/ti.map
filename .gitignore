@@ -29,3 +29,4 @@ android/.settings
 android/dist/
 android/launch-*
 nbproject
+/ios/metadata.json

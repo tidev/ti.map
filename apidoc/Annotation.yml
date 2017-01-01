@@ -165,3 +165,4 @@ properties:
     type: Boolean
     default: true
     since: "6.1.0"
+    platforms: [android, iphone, ipad]
