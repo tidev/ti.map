@@ -1,12 +1,11 @@
-exports.title = '3D features';
-exports.color = 'black';
+exports.title = '3D Features';
+
 exports.run = function(UI, Map) {
+	var win = UI.createWindow(exports.title);
+
 	var tilt = 90;
 	var bearing = 45;
 	var zoom = 17.5;
-	var win = UI.createWindow({
-		fullscreen : false
-	});
 
 	var tiltButton = Ti.UI.createButton({
 		top : '10%',
@@ -121,5 +120,4 @@ exports.run = function(UI, Map) {
 	win.add(compassButton);
 	win.add(snapshotButton);
 	win.add(snapshotView);
-	win.open();
 };

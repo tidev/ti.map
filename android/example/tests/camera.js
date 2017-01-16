@@ -1,7 +1,7 @@
 exports.title = 'Camera';
-exports.color = 'black';
+
 exports.run = function(UI, Map) {
-    var win = UI.createWindow();
+    var win = UI.createWindow(exports.title);
     
     var rows = [
         {
@@ -95,7 +95,7 @@ exports.run = function(UI, Map) {
     
     // Table View
     var tableView = Ti.UI.createTableView({
-        top: '10%',
+        top: 0,
         bottom: '50%',
         data: rows
     });
@@ -125,7 +125,5 @@ exports.run = function(UI, Map) {
             ', pitch: '+cam.pitch+
             '}');
         }
-    });
-    
-    win.open();
+    });    
 };
