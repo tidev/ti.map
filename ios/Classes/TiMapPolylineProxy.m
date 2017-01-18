@@ -7,18 +7,12 @@
 
 #import "TiMapPolylineProxy.h"
 
-
-
-
 @implementation TiMapPolylineProxy
-
 
 @synthesize polyline, polylineRenderer;
 
-
 -(void)dealloc
 {
-
     RELEASE_TO_NIL(polyline);
     RELEASE_TO_NIL(polylineRenderer);
     RELEASE_TO_NIL(strokeColor);
@@ -33,19 +27,17 @@
     }
 
     [super _initWithProperties:properties];
-
+    strokeWidth = 0.0;
+    
     [self setupPolyline];
 }
 
-
 #pragma mark Internal
-
 
 -(NSString*)apiName
 {
     return @"Ti.Map.Polyline";
 }
-
 
 -(void)setupPolyline
 {
@@ -64,7 +56,6 @@
 
     [self applyStrokeColor];
     [self applyStrokeWidth];
-
 }
 
 // A location can either be a an array of longitude, latitude pairings or
@@ -89,19 +80,17 @@
     return coord;
 }
 
-
-
 -(void)applyStrokeColor
 {
     if (polylineRenderer != nil) {
-        polylineRenderer.strokeColor = strokeColor == nil? [UIColor blackColor] : [strokeColor color];
+        [polylineRenderer setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
     }
 }
 
 -(void)applyStrokeWidth
 {
     if (polylineRenderer != nil) {
-        polylineRenderer.lineWidth = strokeWidth;
+        [polylineRenderer setLineWidth:strokeWidth];
     }
 }
 
@@ -131,7 +120,5 @@
     strokeWidth = [TiUtils floatValue:value];
     [self applyStrokeWidth];
 }
-
-
 
 @end

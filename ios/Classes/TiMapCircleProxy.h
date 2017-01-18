@@ -15,8 +15,6 @@
 @class TiMapViewProxy;
 
 @interface TiMapCircleProxy : TiProxy {
-
-
     MKCircle *circle;
     MKCircleRenderer *circleRenderer;
 
@@ -26,18 +24,11 @@
     double strokeWidth;
     TiColor *strokeColor;
     TiColor *fillColor;
-
 }
-
-
 
 @property (nonatomic, readonly) MKCircle *circle;
 @property (nonatomic, readonly) MKCircleRenderer *circleRenderer;
 
-
-
-
 @end
-
 
 #endif

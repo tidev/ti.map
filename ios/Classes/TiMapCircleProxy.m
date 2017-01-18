@@ -7,18 +7,12 @@
 
 #import "TiMapCircleProxy.h"
 
-
-
-
 @implementation TiMapCircleProxy
-
 
 @synthesize circle, circleRenderer;
 
-
 -(void)dealloc
 {
-
     RELEASE_TO_NIL(circle);
     RELEASE_TO_NIL(circleRenderer);
     RELEASE_TO_NIL(fillColor);
@@ -55,6 +49,8 @@
 {
     circle = [[MKCircle circleWithCenterCoordinate:center radius:radius] retain];
     circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:circle] retain];
+    alpha = 1.0;
+    strokeWidth = 0.0;
     
     [self applyFillColor];
     [self applyStrokeColor];
@@ -65,28 +61,28 @@
 -(void)applyOpacity
 {
     if (circleRenderer != nil) {
-        circleRenderer.alpha = isnan(alpha) ? 1 : alpha;
+        [circleRenderer setAlpha:alpha];
     }
 }
 
 -(void)applyFillColor
 {
     if (circleRenderer != nil) {
-        circleRenderer.fillColor = fillColor == nil ? [UIColor blackColor] : [fillColor color];
+        [circleRenderer setFillColor:(fillColor == nil ? [UIColor blackColor] : [fillColor color])];
     }
 }
 
 -(void)applyStrokeColor
 {
     if (circleRenderer != nil) {
-        circleRenderer.strokeColor = strokeColor == nil? [UIColor blackColor] : [strokeColor color];
+        [circleRenderer setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
     }
 }
 
 -(void)applyStrokeWidth
 {
     if (circleRenderer != nil) {
-        circleRenderer.lineWidth = strokeWidth;
+        [circleRenderer setLineWidth:strokeWidth];
     }
 }
 
@@ -144,7 +140,5 @@
     alpha = [TiUtils floatValue:value];
     [self applyOpacity];
 }
-
-
 
 @end

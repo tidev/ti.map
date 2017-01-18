@@ -15,25 +15,16 @@
 @class TiMapViewProxy;
 
 @interface TiMapPolylineProxy : TiProxy {
-
-
     MKPolyline *polyline;
     MKPolylineRenderer *polylineRenderer;
 
     float strokeWidth;
     TiColor *strokeColor;
-
 }
-
-
 
 @property (nonatomic, readonly) MKPolyline *polyline;
 @property (nonatomic, readonly) MKPolylineRenderer *polylineRenderer;
 
-
-
-
 @end
-
 
 #endif

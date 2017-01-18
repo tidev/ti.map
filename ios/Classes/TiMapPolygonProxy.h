@@ -12,23 +12,15 @@
 @class TiMapViewProxy;
 
 @interface TiMapPolygonProxy : TiProxy {
-
-
     MKPolygon *polygon;
     MKPolygonRenderer *polygonRenderer;
 
     float strokeWidth;
     TiColor *fillColor;
     TiColor *strokeColor;
-
 }
-
-
 
 @property (nonatomic, readonly) MKPolygon *polygon;
 @property (nonatomic, readonly) MKPolygonRenderer *polygonRenderer;
-
-
-
 
 @end

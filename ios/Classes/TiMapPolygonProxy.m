@@ -7,18 +7,12 @@
 
 #import "TiMapPolygonProxy.h"
 
-
-
-
 @implementation TiMapPolygonProxy
-
 
 @synthesize polygon, polygonRenderer;
 
-
 -(void)dealloc
 {
-
     RELEASE_TO_NIL(polygon);
     RELEASE_TO_NIL(polygonRenderer);
     RELEASE_TO_NIL(fillColor);
@@ -38,7 +32,6 @@
     [self setupPolygon];
 }
 
-
 #pragma mark Internal
 
 
@@ -46,7 +39,6 @@
 {
     return @"Ti.Map.Polygon";
 }
-
 
 -(void)setupPolygon
 {
@@ -90,7 +82,6 @@
     [self applyFillColor];
     [self applyStrokeColor];
     [self applyStrokeWidth];
-
 }
 
 // A location can either be a an array of longitude, latitude pairings or
@@ -112,6 +103,7 @@
         lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
         coord = CLLocationCoordinate2DMake(lat, lon);
     }
+    
     return coord;
 }
 
@@ -170,7 +162,5 @@
     strokeWidth = [TiUtils floatValue:value];
     [self applyStrokeWidth];
 }
-
-
 
 @end
