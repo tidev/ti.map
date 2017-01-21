@@ -729,7 +729,8 @@
 
 -(void)setShowsCompass_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsCompass"];
+    DEPRECATED_REPLACED(@"Map.View.showsCompass", @"6.1.0", @"Map.View.compassEnabled");
+    [self setCompassEnabled_:value];
 }
 
 -(void)setShowsScale_:(id)value
@@ -795,7 +796,7 @@
     [self.proxy replaceValue:[self dictionaryFromRegion] forKey:@"region" notification:NO];
 	
     if ([self.proxy _hasListeners:@"regionChanged"]) {
-        NSLog(@"[WARN] The 'regionChanged' event is deprecated, use 'regionchanged' instead.");
+        DEPRECATED_REPLACED(@"Map.View.Event.regionChanged", @"5.4.0", @"Map.View.Event.regionchanged");
         [self fireEvent:@"regionChanged" withRegion:[mapView region] animated:animated];
 	}
     
