@@ -170,9 +170,7 @@ methods:
     platforms: [android]
 
   - name: animateCamera
-    summary: |
-        Changes the camera used for determining the map's viewing parameters and animates the change.
-        Available in iOS 7.0 and later.
+    summary: Changes the camera used for determining the map's viewing parameters and animates the change.
     parameters:
       - name: animationParams
         summary: |
@@ -191,7 +189,7 @@ methods:
   - name: showAnnotations
     summary: |
         Sets the visible region so that the map displays the specified annotations. If no array is passed
-        annotations on the map will be shown. Available in iOS 7.0 and later.
+        annotations on the map will be shown.
     parameters:
       - name: annotations
         summary: |
@@ -544,6 +542,7 @@ properties:
     type: Boolean
     default: true
     since: { android: "3.2.3", iphone: "6.1.0", ipad: "6.1.0" }
+    osver: { ios: {min: "9.0"} }
     platforms: [android, iphone, ipad]
 
   - name: mapToolbarEnabled
@@ -598,7 +597,7 @@ properties:
     platforms: [android]
 
   - name: camera
-    summary: The camera used for determining the appearance of the map. Available in iOS 7.0 and later.
+    summary: The camera used for determining the appearance of the map.
     description: |
         A camera object defines a point above the map's surface from which to view the map. Applying a camera to a map has the
         effect of giving the map a 3D-like appearance. You can use a camera to rotate the map so that it is oriented to match
@@ -614,7 +613,7 @@ properties:
     platforms: [iphone, ipad]
 
   - name: pitchEnabled
-    summary: A Boolean value indicating whether the map camera's pitch information is used. Available in iOS 7.0 and later.
+    summary: A Boolean value indicating whether the map camera's pitch information is used. 
     description: |
         When this property is set to `true` and a valid camera is associated with the map,
         the camera's pitch angle is used to tilt the plane of the map. When this property
@@ -625,7 +624,7 @@ properties:
     platforms: [iphone, ipad]
 
   - name: rotateEnabled
-    summary: A Boolean value indicating whether the map camera's heading information is used. Available in iOS 7.0 and later.
+    summary: A Boolean value indicating whether the map camera's heading information is used.
     description: |
         When this property is set to `true` and a valid camera is associated with the map,
         the camera's heading angle is used to rotate the plane of the map around its center
@@ -636,7 +635,7 @@ properties:
     platforms: [iphone, ipad]
 
   - name: showsBuildings
-    summary: A Boolean indicating whether the map displays extruded building information. Available in iOS 7.0 and later.
+    summary: A Boolean indicating whether the map displays extruded building information.
     description: |
         When this property is set to `true` and the camera has a pitch angle greater than zero,
         the map extrudes buildings so that they extend above the map plane, creating a 3D effect.
@@ -647,7 +646,7 @@ properties:
     platforms: [iphone, ipad]
 
   - name: showsPointsOfInterest
-    summary: A Boolean indicating whether the map displays point-of-interest information. Available in iOS 7.0 and later.
+    summary: A Boolean indicating whether the map displays point-of-interest information.
     description: |
         When this property is set to `true`, the map displays icons and labels for restaurants,
         schools, and other relevant points of interest.
@@ -657,11 +656,12 @@ properties:
     platforms: [iphone, ipad]
 
   - name: showsCompass
-    summary: A Boolean indicating whether the map displays a compass control. Available in iOS 9.0 and later.
+    summary: A Boolean indicating whether the map displays a compass control.
     description: |
         When this property is set to `true`, the map displays the control that lets users change the heading
         orientation of the map.
     type: Boolean
+    osver: { ios: {min: "9.0"} }
     default: true
     deprecated:
         since: "6.1.0"
@@ -670,19 +670,21 @@ properties:
     platforms: [iphone, ipad]
 
   - name: showsScale
-    summary: A Boolean indicating whether the map shows scale information. Available in iOS 9.0 and later.
+    summary: A Boolean indicating whether the map shows scale information.
     description: When this property is set to `true`, the map displays the scale information.
     type: Boolean
+    osver: { ios: {min: "9.0"} }
     default: false
     since: "5.2.0"
     platforms: [iphone, ipad]
 
   - name: showsTraffic
-    summary: A Boolean value indicating whether the map displays traffic information. Available in iOS 9.0 and later.
+    summary: A Boolean value indicating whether the map displays traffic information.
     description: |
         The mapType property must be set to <Modules.Map.NORMAL_TYPE> or <Modules.Map.HYBRID_TYPE> for 
         traffic information to be shown.
     type: Boolean
+    osver: { ios: {min: "9.0"} }
     default: false
     since: "5.2.0"
     platforms: [iphone, ipad]
