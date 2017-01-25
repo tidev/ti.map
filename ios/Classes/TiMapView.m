@@ -1146,7 +1146,7 @@
 -(void)handleMapClick:(MKMapPoint)point
 {
 	TiProxy * mapProxy = [self proxy];
-    //first convert MKMapPoint to CLLocationCoordinate2D
+
     CLLocationCoordinate2D clickCoordinate = MKCoordinateForMapPoint(point);
     NSNumber *lat = [NSNumber numberWithDouble:clickCoordinate.latitude];
     NSNumber *lng = [NSNumber numberWithDouble:clickCoordinate.longitude];
