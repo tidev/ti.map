@@ -108,7 +108,22 @@
     [self handlePolygonClick:mapPoint];
     [self handlePolylineClick:mapPoint];
     [self handleCircleClick:mapPoint];
+    [self handleMapClick:mapPoint];
+
 }
+
+
+//TiProxy * mapProxy = [self proxy];
+//CGPoint location = [sender locationInView:map];
+//CLLocationCoordinate2D coord = [map convertPoint:location toCoordinateFromView:map];
+//NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
+//NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
+//NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
+//                        mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+//if ([mapProxy _hasListeners:@"click"]) {
+//    [mapProxy fireEvent:@"click" withObject:event];
+
+
 
 - (id)accessibilityElement
 {
@@ -1128,6 +1143,20 @@
     }
 }
 
+-(void)handleMapClick:(MKMapPoint)point
+{
+	TiProxy * mapProxy = [self proxy];
+    //first convert MKMapPoint to CLLocationCoordinate2D
+    CLLocationCoordinate2D clickCoordinate = MKCoordinateForMapPoint(point);
+    NSNumber *lat = [NSNumber numberWithDouble:clickCoordinate.latitude];
+    NSNumber *lng = [NSNumber numberWithDouble:clickCoordinate.longitude];
+    NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
+                            mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+    if ([mapProxy _hasListeners:@"mapclick"]) {
+        [mapProxy fireEvent:@"mapclick" withObject:event];
+    }
+}
+
 -(void)handlePolygonClick:(MKMapPoint)point
 {
     for (int i=0; i < [polygonProxies count]; i++) {
@@ -1142,6 +1171,7 @@
         }
     }
 }
+
 -(void)handleCircleClick:(MKMapPoint)point
 {
     for (int i=0; i < [circleProxies count]; i++) {
