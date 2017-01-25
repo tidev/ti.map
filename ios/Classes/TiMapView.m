@@ -759,7 +759,7 @@
             [[self map] setShowsCompass:[TiUtils boolValue:value]];
         }, YES);
 #endif
-} else {
+    } else {
         NSLog(@"[WARN] The property 'compassEnabled' is only available on iOS 9 and later.");
     }
 }
