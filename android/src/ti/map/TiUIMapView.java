@@ -52,7 +52,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
-	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback, OnMapReadyCallback
+	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, 
+	GoogleMap.OnCameraMoveStarted, GoogleMap.OnCameraMove, GoogleMap.OnCameraMoveCanceled, GoogleMap.OnCameraIdle
 {
 
 	private static final String TAG = "TiUIMapView";
@@ -169,6 +170,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setOnMarkerClickListener(this);
 		map.setOnMapClickListener(this);
 		map.setOnCameraChangeListener(this);
+		map.setOnCameraIdleListener(this);
+		map.setOnCameraMoveStartedListener(this);
+		map.setOnCameraMoveListener(this);
+		map.setOnCameraMoveCanceledListener(this);
 		map.setOnMarkerDragListener(this);
 		map.setOnInfoWindowClickListener(this);
 		map.setInfoWindowAdapter(this);
@@ -909,6 +914,27 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 
 	}
+	
+	@Override
+    public void onCameraMoveStarted(int reason) {
+		proxy.fireEvent(TiC.EVENT_REGION_WILLCHANGE, reason);
+    }
+	
+	@Override
+    public void onCameraMove() {
+		proxy.fireEvent(TiC.EVENT_CAMERA_MOVE);
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+    		proxy.fireEvent(TiC.EVENT_CAMERA_CANCEL);
+    }
+
+    @Override
+    public void onCameraIdle() {
+    		proxy.fireEvent(TiC.EVENT_REGION_IDLE);
+    }
+
 
 	// Intercept the touch event to find out the correct clicksource if clicking
 	// on the info window.

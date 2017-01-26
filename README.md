@@ -12,7 +12,7 @@ This is the Map Module for Titanium. Please use [JIRA](http://jira.appcelerator.
     import > Existing Folder as New Project
 2- Rename build.properties (without .example), and update any info necessary.
 3- Make sure your ndk version is at least android-ndk-r10e.
-4- Right-click on project > Publish > Pacjage - Android Module
+4- Right-click on project > Publish > Package - Android Module
 
 Note: for version api 3, make sure Ti SDK >= 6.x is selected.
 
