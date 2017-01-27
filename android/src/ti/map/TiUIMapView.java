@@ -917,28 +917,26 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	
 	@Override
     public void onCameraMoveStarted(int reason) {
-		Log.d(TAG, "onCameraMoveStarted", Log.DEBUG_MODE);
+		String[] reasons = {"", "REASON_GESTURE", "REASON_API_ANIMATION", "REASON_DEVELOPER_ANIMATION"};
+		Log.i(TAG, "onCameraMoveStarted " + reasons[reason]);
 		KrollDict d = new KrollDict();
-		//d.put(TiC.PROPERTY_REASON, reason);
-		//proxy.fireEvent(TiC.EVENT_CAMERAMOVESTARTED, d);
+		d.put("reason", reasons[reason]);
+		proxy.fireEvent("regionwillchange", d);
     }
 	
 	@Override
     public void onCameraMove() {
-		Log.d(TAG, "onCameraMove", Log.DEBUG_MODE);
-		KrollDict d = new KrollDict();
-		//proxy.fireEvent(TiC.EVENT_CAMERA_MOVE);
+		proxy.fireEvent("cameramove");
     }
 
     @Override
     public void onCameraMoveCanceled() {
-    		Log.d(TAG, "onCameraMoveCanceled", Log.DEBUG_MODE);
-    		//proxy.fireEvent(TiC.EVENT_CAMERA_CANCEL);
+    		proxy.fireEvent("cameramovecancelled");
     }
 
     @Override
     public void onCameraIdle() {
-    		Log.d(TAG, "onCameraIdle", Log.DEBUG_MODE);
+    		Log.i(TAG, "onCameraIdle");
     		//proxy.fireEvent(TiC.EVENT_REGION_IDLE);
     }
 
