@@ -192,10 +192,10 @@
 	}
 }
 
--(void)setVisible:(id)value
+-(void)setHidden:(id)value
 {
-    id current = [self valueForUndefinedKey:@"visible"];
-    [self replaceValue:value forKey:@"visible" notification:NO];
+    id current = [self valueForUndefinedKey:@"hidden"];
+    [self replaceValue:value forKey:@"hidden" notification:NO];
     if ([current isEqual:value] == NO)
     {
         [self setNeedsRefreshingWithSelection:YES];

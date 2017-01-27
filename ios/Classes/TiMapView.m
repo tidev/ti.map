@@ -1102,7 +1102,7 @@
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
         
-        [annView setHidden:![TiUtils boolValue:[ann valueForUndefinedKey:@"visible"] def:YES]];
+        [annView setHidden:[TiUtils boolValue:[ann valueForUndefinedKey:@"hidden"] def:NO]];
         
         if (left!=nil) {
             annView.leftCalloutAccessoryView = left;

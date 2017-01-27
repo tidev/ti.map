@@ -34,6 +34,8 @@
 
 - (id)pincolor;
 - (BOOL)animatesDrop;
+- (void)setVisible:(id)value;
+
 
 - (UIView*)leftViewAccessory;
 - (UIView*)rightViewAccessory;

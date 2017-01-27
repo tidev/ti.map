@@ -160,9 +160,9 @@ properties:
     default: true
     since: "3.2.0"
 
-  - name: visible
-    summary: Determines whether the annotation is visible or not.
+  - name: hidden
+    summary: Determines whether the annotation is hidden or not.
     type: Boolean
-    default: true
+    default: false
     since: "6.1.0"
     platforms: [android, iphone, ipad]
