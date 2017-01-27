@@ -98,4 +98,4 @@ exports.run = function(UI, Map) {
     });
     
     win.open();
-}
+};
