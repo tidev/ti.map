@@ -53,7 +53,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
 	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, 
-	GoogleMap.OnCameraMoveStarted, GoogleMap.OnCameraMove, GoogleMap.OnCameraMoveCanceled, GoogleMap.OnCameraIdle
+	GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveCanceledListener, GoogleMap.OnCameraIdleListener  
 {
 
 	private static final String TAG = "TiUIMapView";
@@ -917,22 +917,29 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	
 	@Override
     public void onCameraMoveStarted(int reason) {
-		proxy.fireEvent(TiC.EVENT_REGION_WILLCHANGE, reason);
+		Log.d(TAG, "onCameraMoveStarted", Log.DEBUG_MODE);
+		KrollDict d = new KrollDict();
+		//d.put(TiC.PROPERTY_REASON, reason);
+		//proxy.fireEvent(TiC.EVENT_CAMERAMOVESTARTED, d);
     }
 	
 	@Override
     public void onCameraMove() {
-		proxy.fireEvent(TiC.EVENT_CAMERA_MOVE);
+		Log.d(TAG, "onCameraMove", Log.DEBUG_MODE);
+		KrollDict d = new KrollDict();
+		//proxy.fireEvent(TiC.EVENT_CAMERA_MOVE);
     }
 
     @Override
     public void onCameraMoveCanceled() {
-    		proxy.fireEvent(TiC.EVENT_CAMERA_CANCEL);
+    		Log.d(TAG, "onCameraMoveCanceled", Log.DEBUG_MODE);
+    		//proxy.fireEvent(TiC.EVENT_CAMERA_CANCEL);
     }
 
     @Override
     public void onCameraIdle() {
-    		proxy.fireEvent(TiC.EVENT_REGION_IDLE);
+    		Log.d(TAG, "onCameraIdle", Log.DEBUG_MODE);
+    		//proxy.fireEvent(TiC.EVENT_REGION_IDLE);
     }
 
 
