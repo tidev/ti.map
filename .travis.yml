@@ -1,7 +1,7 @@
 language: objective-c
-osx_image: xcode8.1
+osx_image: xcode8.2
 env:
- global:
+global:
    - "ARTIFACTS_AWS_REGION=us-east-1"
    - "ARTIFACTS_S3_BUCKET=builds.appcelerator.com"
    - "MODULE_NAME=ti.map"
