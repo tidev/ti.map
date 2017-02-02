@@ -182,25 +182,30 @@
 {
 	subtitle = [TiUtils replaceString:[TiUtils stringValue:subtitle]
 			characters:[NSCharacterSet newlineCharacterSet] withString:@" "];
-	//The label will strip out these newlines anyways (Technically, replace them with spaces)
+	
+	// The label will strip out these newlines anyways (Technically, replace them with spaces)
 
 	id current = [self valueForUndefinedKey:@"subtitle"];
 	[self replaceValue:subtitle forKey:@"subtitle" notification:NO];
-	if (![subtitle isEqualToString:current])
-	{
+	
+	if (![subtitle isEqualToString:current]) {
 		[self setNeedsRefreshingWithSelection:NO];
 	}
 }
 
 -(void)setHidden:(id)value
 {
-    id current = [self valueForUndefinedKey:@"hidden"];
-    [self replaceValue:value forKey:@"hidden" notification:NO];
-    if ([current isEqual:value] == NO)
-    {
-        [self setNeedsRefreshingWithSelection:YES];
-    }
+	id current = [self valueForUndefinedKey:@"hidden"];
+	[self replaceValue:value forKey:@"hidden" notification:NO];
+	
+	if ([current isEqual:value] == NO) {
+		[self setNeedsRefreshingWithSelection:YES];
+	}
+}
 
+-(id)hidden
+{
+	return NUMBOOL([TiUtils boolValue:[self valueForUndefinedKey:@"hidden"] def:NO]);
 }
 
 -(id)pincolor
