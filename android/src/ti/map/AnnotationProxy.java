@@ -85,6 +85,23 @@ public class AnnotationProxy extends KrollProxy
 		defaultValues.put(MapModule.PROPERTY_SHOW_INFO_WINDOW, true);
 	}
 
+	@Override
+	public void release() {
+		if (markerOptions != null) {
+			markerOptions = null;
+		}
+		if (marker != null) {
+			marker = null;
+		}
+		if (infoWindow != null) {
+			infoWindow = null;
+		}
+		if (delegate != null) {
+			delegate = null;
+		}
+		super.release();
+	}
+
 	public void setDelegate(AnnotationDelegate delegate) {
 		this.delegate = delegate;
 	}
