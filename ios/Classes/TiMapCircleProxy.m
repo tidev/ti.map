@@ -21,6 +21,11 @@
     [super dealloc];
 }
 
+- (NSArray *)keySequence
+{
+    return @[@"center", @"radius"];
+}
+
 -(void)_initWithProperties:(NSDictionary*)properties
 {
     if ([properties objectForKey:@"center"] == nil) {
@@ -32,7 +37,6 @@
     }
 
     [super _initWithProperties:properties];
-    [self setupCircle];
 }
 
 
@@ -44,46 +48,14 @@
     return @"Ti.Map.Circle";
 }
 
-
--(void)setupCircle
+- (MKCircleRenderer *)circleRenderer
 {
-    circle = [[MKCircle circleWithCenterCoordinate:center radius:radius] retain];
-    circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:circle] retain];
-    alpha = 1.0;
-    strokeWidth = 0.0;
+    if (circleRenderer == nil) {
+        circle = [[MKCircle circleWithCenterCoordinate:center radius:radius] retain];
+        circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:circle] retain];
+    }
     
-    [self applyFillColor];
-    [self applyStrokeColor];
-    [self applyStrokeWidth];
-    [self applyOpacity];
-}
-
--(void)applyOpacity
-{
-    if (circleRenderer != nil) {
-        [circleRenderer setAlpha:alpha];
-    }
-}
-
--(void)applyFillColor
-{
-    if (circleRenderer != nil) {
-        [circleRenderer setFillColor:(fillColor == nil ? [UIColor blackColor] : [fillColor color])];
-    }
-}
-
--(void)applyStrokeColor
-{
-    if (circleRenderer != nil) {
-        [circleRenderer setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
-    }
-}
-
--(void)applyStrokeWidth
-{
-    if (circleRenderer != nil) {
-        [circleRenderer setLineWidth:strokeWidth];
-    }
+    return circleRenderer;
 }
 
 #pragma mark Public APIs
@@ -108,7 +80,6 @@
         lon = [TiUtils doubleValue:[value objectAtIndex:0]];
         center = CLLocationCoordinate2DMake(lat, lon);
     }
-
 }
 
 -(void)setFillColor:(id)value
@@ -117,7 +88,7 @@
         RELEASE_TO_NIL(fillColor);
     }
     fillColor = [[TiColor colorNamed:value] retain];
-    [self applyFillColor];
+    [[self circleRenderer] setFillColor:(fillColor == nil ? [UIColor blackColor] : [fillColor color])];
 }
 
 -(void)setStrokeColor:(id)value
@@ -126,19 +97,19 @@
         RELEASE_TO_NIL(strokeColor);
     }
     strokeColor = [[TiColor colorNamed:value] retain];
-    [self applyStrokeColor];
+    [[self circleRenderer] setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
 }
 
 -(void)setStrokeWidth:(id)value
 {
     strokeWidth = [TiUtils floatValue:value];
-    [self applyStrokeWidth];
+    [[self circleRenderer] setLineWidth:strokeWidth];
 }
 
 -(void)setOpacity:(id)value
 {
     alpha = [TiUtils floatValue:value];
-    [self applyOpacity];
+    [[self circleRenderer] setAlpha:alpha];
 }
 
 @end

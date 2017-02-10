@@ -14,9 +14,9 @@ platforms: [android, iphone, ipad]
 properties:
 
   - name: center
-    summary: Array with longitude and latitude values. Can also be an object with longitude and latitude.
+    summary: An object with longitude and latitude values. Can also be an array with longitude (index 0), latitude (index 1) touples.
     availability: creation
-    type: Array<MapPointType>
+    type: MapPointType
     optional: false
 
   - name: radius
