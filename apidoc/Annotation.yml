@@ -100,10 +100,14 @@ properties:
 
   - name: pincolor
     summary: |
-        Pin color.
+        The color of the pin-annotation. Use the `ANNOTATION_*` constants for pre-
+        defined colors, e.g `ANNOTATION_GREEN`.
+        
+        Note for iOS: Apps running iOS 9 and later can also specify a non-constant
+        value, e.g. "blue", "rgb(0, 0, 255 ,1)" or "#0000ff".   
     description: |
         Pin color is ignored if a custom pin image is specified using <Modules.Map.Annotation.image>.
-    type: Number
+    type: [Number, String]
 
   - name: subtitle
     summary: Secondary title of the annotation view.

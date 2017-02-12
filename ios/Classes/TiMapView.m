@@ -1087,11 +1087,12 @@
         }
         else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-            pinview.pinColor = [ann pincolor];
-#pragma GCC diagnostic pop
+            
+#ifdef __IPHONE_9_0
+            pinview.pinTintColor = [ann nativePinColor];
+#else
+            pinview.pinColor = [ann nativePinColor];
+#endif
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }

@@ -10,6 +10,8 @@
 #import "TiViewProxy.h"
 #import "ImageLoader.h"
 #import "TiButtonUtil.h"
+#import "TiMapConstants.h"
+#import "UIColor+AndroidHueParity.h"
 #import "TiMapViewProxy.h"
 #import "TiMapView.h"
 
@@ -221,6 +223,67 @@
 	{
 		[self setNeedsRefreshingWithSelection:YES];
 	}
+}
+
+// Mapping both string-colors, color constant and native colors to a pin color
+// This is overcomplicated to maintain iOS < 9 compatibility. Remove this when
+// we have a minimum iOS verion of 9.0+
+-(id)nativePinColor
+{
+    id current = [self valueForUndefinedKey:@"pincolor"];
+    
+    if ([current isKindOfClass:[NSString class]]) {
+#ifdef __IPHONE_9_0
+        return [[TiUtils colorValue:current] color];
+#else
+        return MKPinAnnotationColorRed;
+#endif
+    }
+
+    switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
+        case TiMapAnnotationPinColorGreen: {
+#ifdef __IPHONE_9_0
+            return [MKPinAnnotationView greenPinColor];
+#else
+            return MKPinAnnotationColorGreen;
+#endif
+        }
+        case TiMapAnnotationPinColorPurple: {
+#ifdef __IPHONE_9_0
+            return [MKPinAnnotationView purplePinColor];
+#else
+            return MKPinAnnotationColorPurple;
+#endif
+        }
+#ifdef __IPHONE_9_0
+        case TiMapAnnotationPinColorBlue:
+        return [UIColor blueColor];
+        case TiMapAnnotationPinColorCyan:
+        return [UIColor cyanColor];
+        case TiMapAnnotationPinColorMagenta:
+        return [UIColor magentaColor];
+        case TiMapAnnotationPinColorOrange:
+        return [UIColor orangeColor];
+        case TiMapAnnotationPinColorYellow:
+        return [UIColor yellowColor];
+
+        // UIColor extensions
+        case TiMapAnnotationPinColorAzure:
+        return [UIColor azureColor];
+        case TiMapAnnotationPinColorRose:
+        return [UIColor roseColor];
+        case TiMapAnnotationPinColorViolet:
+        return [UIColor violetColor];
+#endif
+        case TiMapAnnotationPinColorRed:
+        default: {
+#ifdef __IPHONE_9_0
+            return [MKPinAnnotationView redPinColor];
+#else
+            return MKPinAnnotationColorRed;
+#endif
+        }
+    }
 }
 
 - (BOOL)animatesDrop
