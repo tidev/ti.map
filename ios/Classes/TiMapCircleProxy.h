@@ -15,9 +15,6 @@
 @class TiMapViewProxy;
 
 @interface TiMapCircleProxy : TiProxy {
-    MKCircle *circle;
-    MKCircleRenderer *circleRenderer;
-
     CLLocationCoordinate2D center;
     double radius;
     double alpha;
@@ -26,7 +23,6 @@
     TiColor *fillColor;
 }
 
-@property (nonatomic, readonly) MKCircle *circle;
 @property (nonatomic, readonly) MKCircleRenderer *circleRenderer;
 
 @end

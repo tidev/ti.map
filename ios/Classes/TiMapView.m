@@ -610,7 +610,7 @@
 -(void)addCircle:(TiMapCircleProxy*)circleProxy {
     
     TiThreadPerformOnMainThread(^{
-        MKCircle *circle = [circleProxy circle];
+        MKCircle *circle = [[circleProxy circleRenderer] circle];
         CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
         [map addOverlay:circle];
         
@@ -637,7 +637,7 @@
 -(void)removeCircle:(TiMapCircleProxy*)circleProxy remove:(BOOL)r
 {
     TiThreadPerformOnMainThread(^{
-        MKCircle *circle = [circleProxy circle];
+        MKCircle *circle = [[circleProxy circleRenderer] circle];
         CFDictionaryRemoveValue(mapObjects2View, circle);
         [map removeOverlay:circle];
         if (r) {

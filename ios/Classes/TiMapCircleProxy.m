@@ -9,11 +9,10 @@
 
 @implementation TiMapCircleProxy
 
-@synthesize circle, circleRenderer;
+@synthesize circleRenderer;
 
 -(void)dealloc
 {
-    RELEASE_TO_NIL(circle);
     RELEASE_TO_NIL(circleRenderer);
     RELEASE_TO_NIL(fillColor);
     RELEASE_TO_NIL(strokeColor);
@@ -51,8 +50,7 @@
 - (MKCircleRenderer *)circleRenderer
 {
     if (circleRenderer == nil) {
-        circle = [[MKCircle circleWithCenterCoordinate:center radius:radius] retain];
-        circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:circle] retain];
+        circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]] retain];
     }
     
     return circleRenderer;
