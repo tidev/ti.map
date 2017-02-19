@@ -85,7 +85,7 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final float ANNOTATION_ROSE = BitmapDescriptorFactory.HUE_ROSE;
 	@Kroll.constant public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
 	@Kroll.constant public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
-	@Kroll.constant public static final float ANNOTATION_PURPLE = 276.92; // Based on the HUI color scheme
+	@Kroll.constant public static final float ANNOTATION_PURPLE = 276.92f; // Based on the HUI color scheme
 
 	public MapModule()
 	{
