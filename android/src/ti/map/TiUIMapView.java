@@ -831,7 +831,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 
 		// currentPolylines
-		if(currentPolylines.size() > 0) {
+		ArrayList<PolylineProxy> clickablePolylines = new ArrayList<PolylineProxy>();
+		for (PolylineProxy polylineProxy : currentPolylines) {
+			if (polylineProxy.getClickable()) {
+				clickablePolylines.add(polylineProxy);
+			}
+		}
+
+		if(clickablePolylines.size() > 0) {
 			PolylineBoundary boundary = new PolylineBoundary();
 
 			double baseVal = 2;
@@ -841,7 +848,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			double diagonal = Math.sqrt((side1*side1)+(side2*side2));
 			double val = diagonal / map.getCameraPosition().zoom;
 
-			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(currentPolylines, point, val);
+			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(clickablePolylines, point, val);
 
 			boundary = null;
 			if(clickedPolylines.size() > 0) {
@@ -850,6 +857,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				}
 			}
 		}
+		clickablePolylines.clear();
 
 	}
 
