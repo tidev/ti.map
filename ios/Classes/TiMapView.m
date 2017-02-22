@@ -986,7 +986,8 @@
 		
         if (annView==nil) {
             if ([identifier isEqualToString:@"timap-customView"]) {
-                annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+                // TO DO : identifier is made nil here due to MOD-2201. Need to properly fixed.
+                annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:nil map:self] autorelease];
             }
             else if ([identifier isEqualToString:@"timap-image"]) {
                 annView=[[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
