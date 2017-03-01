@@ -46,7 +46,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 501;
 	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 502;
 	private static final int MSG_SET_ZINDEX 	  = MSG_FIRST_ID + 503;
-	private static final int MSG_SET_TOUCHENABLED = MSG_FIRST_ID + 504;
+	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 504;
 
 	public static final String PROPERTY_STROKE_COLOR2 = "color";
 	public static final String PROPERTY_STROKE_WIDTH2 = "width";
@@ -88,7 +88,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 				result.setResult(null);
 				return true;
 			}
-			case MSG_SET_TOUCHENABLED: {
+			case MSG_SET_TOUCH_ENABLED: {
 				result = (AsyncResult) msg.obj;
 				clickable = TiConvert.toBoolean(result.getArg(), true);
 				result.setResult(null);
@@ -213,7 +213,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
 		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCHENABLED), TiConvert.toBoolean(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
 		}
 
 	}
