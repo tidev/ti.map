@@ -231,7 +231,7 @@ public class TiMapInfoWindow extends RelativeLayout
 					v.getHitRect(hitRect);
 
 					// The title and subtitle are the children of a relative layout which is the child of this.
-					if (tag == TiC.PROPERTY_TITLE || tag == TiC.PROPERTY_SUBTITLE) {
+					if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)){
 						Rect textLayoutRect = new Rect();
 						((ViewGroup) (v.getParent())).getHitRect(textLayoutRect);
 						hitRect.offset(textLayoutRect.left, textLayoutRect.top);

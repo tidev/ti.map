@@ -1,7 +1,7 @@
 exports.title = 'Routes';
-exports.color = 'black';
+
 exports.run = function(UI, Map) {
-    var win = UI.createWindow();
+    var win = UI.createWindow(exports.title);
     var w = 5.0;
     
     var rows = [
@@ -50,7 +50,7 @@ exports.run = function(UI, Map) {
     ];
     
     var tableView = Ti.UI.createTableView({
-        top: '10%',
+        top: 0,
         bottom: '50%',
         data: rows
     });
@@ -77,7 +77,5 @@ exports.run = function(UI, Map) {
         width: 5.0
     });
     
-    map.addRoute(route);
-    
-    win.open();
+    map.addRoute(route);    
 };

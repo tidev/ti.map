@@ -1,6 +1,7 @@
 exports.title = 'Polygons';
+
 exports.run = function(UI, Map) {
-    var win = UI.createWindow();
+    var win = UI.createWindow(exports.title);
 
     var rows = [
         {
@@ -56,7 +57,7 @@ exports.run = function(UI, Map) {
     ];
 
     var tableView = Ti.UI.createTableView({
-        top: '10%',
+        top: 0,
         bottom: '50%',
         data: rows
     });
@@ -158,6 +159,4 @@ exports.run = function(UI, Map) {
     map.addEventListener('click', function(e) {
         Ti.API.info("Source: " + e.clicksource + ", Latitude: " + e.latitude + " Longitude: " + e.longitude);
     });
-
-    win.open();
 };
