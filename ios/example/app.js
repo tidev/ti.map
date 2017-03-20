@@ -15,46 +15,20 @@ var ANDROID = (Ti.Platform.osname === 'android');
 var UI = require('ui');
 var Map = require('ti.map');
 
-function isIOS7Plus() {
-    if (Titanium.Platform.name == 'iPhone OS')
-    {
-        var version = Titanium.Platform.version.split(".");
-        var major = parseInt(version[0],10);
-
-        if (major >= 7)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-Ti.API.info("iOS7: "+isIOS7Plus());
-var top = isIOS7Plus() ? 20 : 0;
-
-//=====================================================================
-// Rows
-//=====================================================================  
 var rows = [
-    require('tests/multiMap'),
-    require('tests/annotations'),
-    require('tests/routes'),
-    require('tests/drawing')
+    require('/tests/multiMap'),
+    require('/tests/annotations'),
+    require('/tests/routes'),
+    require('/tests/drawing')
 ];
 
 if (IOS) {
-    rows.push(require('tests/camera'));
-    rows.push(require('tests/properties'));
+    rows.push(require('/camera'));
+    rows.push(require('/properties'));
 }
 
-if (ANDROID) {
-    var code = Map.isGooglePlayServicesAvailable();
-
-    if (code != Map.SUCCESS) {
-        alert ("Google Play Services is not installed/updated/available");
-    } else {
-        startUI();
-    }
+if (ANDROID && Map.isGooglePlayServicesAvailable() != Map.SUCCESS) {
+    alert ('Google Play Services is not installed/updated/available');
 } else {
     startUI();
 }

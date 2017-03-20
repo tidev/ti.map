@@ -5,18 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiProxy.h"
-#import <MapKit/MapKit.h>
+#import <UIKit/UIKit.h>
 
-@interface TiMapCameraProxy : TiProxy {
-    
-@private
-    MKMapCamera *camera_;
-}
+@interface UIColor (AndroidHueParity)
 
--(id)init;
--(id)initWithCamera:(MKMapCamera*)camera;
-
--(MKMapCamera*)camera;
++ (UIColor *)azureColor;
++ (UIColor *)violetColor;
++ (UIColor *)roseColor;
 
 @end

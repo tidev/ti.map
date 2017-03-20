@@ -1,7 +1,7 @@
 exports.title = 'Multi Maps';
-exports.color = 'black';
+
 exports.run = function(UI, Map) {
-    var win = UI.createWindow();
+    var win = UI.createWindow(exports.title);
     
     var map1 = Map.createView({
         userLocation: true,
@@ -47,7 +47,5 @@ exports.run = function(UI, Map) {
     win.add(map1);
     win.add(map2);
     win.add(map3);
-    win.add(map4);
-    
-    win.open();
+    win.add(map4);    
 };

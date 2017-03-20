@@ -1,30 +1,28 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "TiMapCircleProxy.h"
 
-
-
-
 @implementation TiMapCircleProxy
 
-
-@synthesize circle, circleRenderer;
-
+@synthesize circleRenderer;
 
 -(void)dealloc
 {
-
-    RELEASE_TO_NIL(circle);
     RELEASE_TO_NIL(circleRenderer);
     RELEASE_TO_NIL(fillColor);
     RELEASE_TO_NIL(strokeColor);
 
     [super dealloc];
+}
+
+- (NSArray *)keySequence
+{
+    return @[@"center", @"radius"];
 }
 
 -(void)_initWithProperties:(NSDictionary*)properties
@@ -38,7 +36,6 @@
     }
 
     [super _initWithProperties:properties];
-    [self setupCircle];
 }
 
 
@@ -50,35 +47,14 @@
     return @"Ti.Map.Circle";
 }
 
-
--(void)setupCircle
+- (MKCircleRenderer *)circleRenderer
 {
-    circle = [[MKCircle circleWithCenterCoordinate:center radius:radius] retain];
-    circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:circle] retain];
-    [self applyFillColor];
-    [self applyStrokeColor];
-    [self applyStrokeWidth];
-}
-
--(void)applyFillColor
-{
-    if (circleRenderer != nil) {
-        circleRenderer.fillColor = fillColor == nil ? [UIColor blackColor] : [fillColor color];
+    if (circleRenderer == nil) {
+        circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]] retain];
+        [circleRenderer setFillColor:fillColor ? [fillColor color] : [UIColor blackColor]];
     }
-}
-
--(void)applyStrokeColor
-{
-    if (circleRenderer != nil) {
-        circleRenderer.strokeColor = strokeColor == nil? [UIColor blackColor] : [strokeColor color];
-    }
-}
-
--(void)applyStrokeWidth
-{
-    if (circleRenderer != nil) {
-        circleRenderer.lineWidth = strokeWidth;
-    }
+    
+    return circleRenderer;
 }
 
 #pragma mark Public APIs
@@ -103,7 +79,8 @@
         lon = [TiUtils doubleValue:[value objectAtIndex:0]];
         center = CLLocationCoordinate2DMake(lat, lon);
     }
-
+    
+    [self replaceValue:value forKey:@"center" notification:NO];
 }
 
 -(void)setFillColor:(id)value
@@ -112,7 +89,8 @@
         RELEASE_TO_NIL(fillColor);
     }
     fillColor = [[TiColor colorNamed:value] retain];
-    [self applyFillColor];
+    [[self circleRenderer] setFillColor:(fillColor == nil ? [UIColor blackColor] : [fillColor color])];
+    [self replaceValue:value forKey:@"fillColor" notification:NO];
 }
 
 -(void)setStrokeColor:(id)value
@@ -121,16 +99,22 @@
         RELEASE_TO_NIL(strokeColor);
     }
     strokeColor = [[TiColor colorNamed:value] retain];
-    [self applyStrokeColor];
+    [[self circleRenderer] setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
+    [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }
 
 -(void)setStrokeWidth:(id)value
 {
-
     strokeWidth = [TiUtils floatValue:value];
-    [self applyStrokeWidth];
+    [[self circleRenderer] setLineWidth:strokeWidth];
+    [self replaceValue:value forKey:@"strokeWidth" notification:NO];
 }
 
-
+-(void)setOpacity:(id)value
+{
+    alpha = [TiUtils floatValue:value];
+    [[self circleRenderer] setAlpha:alpha];
+    [self replaceValue:value forKey:@"opacity" notification:NO];
+}
 
 @end
