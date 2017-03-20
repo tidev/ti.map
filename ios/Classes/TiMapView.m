@@ -109,25 +109,11 @@
     [self handlePolylineClick:mapPoint];
     [self handleCircleClick:mapPoint];
     [self handleMapClick:mapPoint];
-
 }
-
-
-//TiProxy * mapProxy = [self proxy];
-//CGPoint location = [sender locationInView:map];
-//CLLocationCoordinate2D coord = [map convertPoint:location toCoordinateFromView:map];
-//NSNumber *lat = [NSNumber numberWithDouble:coord.latitude];
-//NSNumber *lng = [NSNumber numberWithDouble:coord.longitude];
-//NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
-//                        mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
-//if ([mapProxy _hasListeners:@"click"]) {
-//    [mapProxy fireEvent:@"click" withObject:event];
-
-
 
 - (id)accessibilityElement
 {
-	return [self map];
+    return [self map];
 }
 
 - (NSArray *)customAnnotations
@@ -139,22 +125,22 @@
 
 -(void)willFirePropertyChanges
 {
-	regionFits = [TiUtils boolValue:[self.proxy valueForKey:@"regionFit"]];
-	animate = [TiUtils boolValue:[self.proxy valueForKey:@"animate"]];
+    regionFits = [TiUtils boolValue:[self.proxy valueForKey:@"regionFit"]];
+    animate = [TiUtils boolValue:[self.proxy valueForKey:@"animate"]];
 }
 
 -(void)didFirePropertyChanges
 {
-	[self render];
+    [self render];
 }
 
 -(void)setBounds:(CGRect)bounds
 {
-    //TIMOB-13102.
-    //When the bounds change the mapview fires the regionDidChangeAnimated delegate method
-    //Here we update the region property which is not what we want.
-    //Instead we set a forceRender flag and render in frameSizeChanged and capture updated
-    //region there.
+    // TIMOB-13102:
+    // When the bounds change the mapview fires the regionDidChangeAnimated delegate method
+    // Here we update the region property which is not what we want.
+    // Instead we set a forceRender flag and render in frameSizeChanged and capture updated
+    // region there.
     CGRect oldBounds = (map != nil) ? [map bounds] : CGRectZero;
     forceRender = (oldBounds.size.width == 0 || oldBounds.size.height==0);
     ignoreRegionChanged = YES;
@@ -197,7 +183,7 @@
 {
 	NSArray *selected = map.selectedAnnotations;
 	BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
-    ignoreClicks = YES;
+        ignoreClicks = YES;
 	if (yn==NO)
 	{
 		[map deselectAnnotation:proxy animated:NO];
@@ -264,7 +250,7 @@
 
 -(void)removeAnnotations:(id)args
 {
-	ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy, and NSString classes
+    ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy, and NSString classes
     
     // Test for annotation title strings
     NSMutableArray *doomedAnnotations = [NSMutableArray arrayWithArray:args];
@@ -991,8 +977,7 @@
             id imagePath = [ann valueForUndefinedKey:@"image"];
             image = [TiUtils image:imagePath proxy:ann];
             identifier = (image!=nil) ? @"timap-image":@"timap-pin";
-        }
-        else {
+        } else {
             identifier = @"timap-customView";
         }
         MKAnnotationView *annView = nil;
@@ -1002,21 +987,17 @@
         if (annView==nil) {
             if ([identifier isEqualToString:@"timap-customView"]) {
                 annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-            }
-            else if ([identifier isEqualToString:@"timap-image"]) {
+            } else if ([identifier isEqualToString:@"timap-image"]) {
                 annView=[[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
-            }
-            else {
+            } else {
                 annView=[[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
             }
         }
         if ([identifier isEqualToString:@"timap-customView"]) {
             [((TiMapCustomAnnotationView*)annView) setProxy:customView];
-        }
-        else if ([identifier isEqualToString:@"timap-image"]) {
+        } else if ([identifier isEqualToString:@"timap-image"]) {
             annView.image = image;
-        }
-        else {
+        } else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
             
             pinview.pinColor = [ann pincolor];
@@ -1030,20 +1011,18 @@
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
         
-        if (left!=nil) {
+        if (left != nil) {
             annView.leftCalloutAccessoryView = left;
-        }
-        else {
+        } else {
             //ios7 requires this to be explicitly set as nil if nil
             if (![TiUtils isIOS8OrGreater]) {
                 annView.leftCalloutAccessoryView = nil;
             }
         }
         
-        if (right!=nil) {
+        if (right != nil) {
             annView.rightCalloutAccessoryView = right;
-        }
-        else {
+        } else {
             //ios7 requires this to be explicitly set as nil if nil
             
             if (![TiUtils isIOS8OrGreater]) {
@@ -1069,17 +1048,17 @@
 {
 	for (MKAnnotationView<TiMapAnnotation> *thisView in views)
 	{
-		if(![thisView conformsToProtocol:@protocol(TiMapAnnotation)])
+		if (![thisView conformsToProtocol:@protocol(TiMapAnnotation)])
 		{
 			return;
 		}
         /*Image Annotation don't have any animation of its own. 
          *So in this case we do a custom animation, to place the 
          *image annotation on top of the mapview.*/
-        if([thisView isKindOfClass:[TiMapImageAnnotationView class]] || [thisView isKindOfClass:[TiMapCustomAnnotationView class]])
+        if ([thisView isKindOfClass:[TiMapImageAnnotationView class]] || [thisView isKindOfClass:[TiMapCustomAnnotationView class]])
         {
             TiMapAnnotationProxy *anntProxy = [self proxyForAnnotation:thisView];
-            if([anntProxy animatesDrop] && ![anntProxy placed])
+            if ([anntProxy animatesDrop] && ![anntProxy placed])
             {
                 CGRect viewFrame = thisView.frame;
                 thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
@@ -1145,13 +1124,14 @@
 
 -(void)handleMapClick:(MKMapPoint)point
 {
-	TiProxy * mapProxy = [self proxy];
+    TiProxy * mapProxy = [self proxy];
 
     CLLocationCoordinate2D clickCoordinate = MKCoordinateForMapPoint(point);
     NSNumber *lat = [NSNumber numberWithDouble:clickCoordinate.latitude];
     NSNumber *lng = [NSNumber numberWithDouble:clickCoordinate.longitude];
     NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
                             mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+
     if ([mapProxy _hasListeners:@"mapclick"]) {
         [mapProxy fireEvent:@"mapclick" withObject:event];
     }
@@ -1227,7 +1207,7 @@
 		return;
 	}
 
-    TiProxy * mapProxy = [self proxy];
+        TiProxy * mapProxy = [self proxy];
 	
 	id title = [viewProxy title];
 	if (title == nil)
@@ -1242,7 +1222,7 @@
 			clicksource,@"clicksource",	viewProxy,@"annotation", mapProxy,@"map",
 			title,@"title",	NUMINTEGER(indexNumber),@"index", nil];
 
-    [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
+        [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
 }
 
 - (void)fireShapeClickEvent:(id)sourceProxy point:(MKMapPoint)point sourceType:(NSString*)sourceType {
@@ -1276,12 +1256,11 @@
         viewWants = FALSE;
     }
 
-    if (parentWants)
-    {
+    if (parentWants) {
         [mapProxy fireEvent:@"click" withObject:event];
     }
-    if (viewWants)
-    {
+	
+    if (viewWants) {
         [viewProxy fireEvent:@"click" withObject:event];
     }
 }
