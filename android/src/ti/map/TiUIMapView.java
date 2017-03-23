@@ -330,6 +330,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setTrafficEnabled(enabled);
 	}
 
+	protected void setPadding(int left, int top, int right, int bottom) {
+		map.setPadding(left, top, right, bottom);
+	}
+
 	protected void setZoomControlsEnabled(boolean enabled) {
 		map.getUiSettings().setZoomControlsEnabled(enabled);
 	}

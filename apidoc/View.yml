@@ -148,7 +148,23 @@ methods:
             Dictionary specifying the location and the zoom level for the map.
         type: MapLocationTypeV2
     since: "3.1.0"
-
+    
+  - name: setPadding
+    summary: Sets the distance between each edges of the view to the map controls, where the maps controls may be obscured by other elements.
+    parameters:
+      - name: left
+        summary: Left padding
+        type: Number
+      - name: top
+        summary: Top padding
+        type: Number
+      - name: right
+        summary: Right padding
+        type: Number
+      - name: bottom
+        summary: Bottom padding
+        type: Number
+        
   - name: zoom
     summary: Zooms in or out of the map.
     description: |

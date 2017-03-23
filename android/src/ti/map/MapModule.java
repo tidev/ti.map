@@ -37,6 +37,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_USER_LOCATION_BUTTON = "userLocationButton";
 	public static final String PROPERTY_COMPASS_ENABLED = "compassEnabled";
 	public static final String PROPERTY_MAP_TOOLBAR_ENABLED = "mapToolbarEnabled";
+	public static final String PROPERTY_PADDING = "padding";
 	public static final String PROPERTY_TILT = "tilt";
 	public static final String PROPERTY_BEARING = "bearing";
 	public static final String PROPERTY_ZOOM = "zoom";
