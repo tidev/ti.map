@@ -440,7 +440,15 @@ events:
             The regionwillchange event was caused by an `animation`, such as a animating the camera.
         since: "3.2.0"
         type: Boolean
-        platforms: [iphone, ipad]
+        platforms: [android, iphone, ipad]
+        
+      - name: reason
+        summary: |
+            The reason for the camera change, either <Modules.Map.REASON_API_ANIMATION>, 
+            <Modules.Map.REASON_DEVELOPER_ANIMATION> or <Modules.Map.REASON_GESTURE>.
+        since: "6.0.0"
+        type: Number
+        platforms: [android]
 
   - name: regionchanged
     summary: |

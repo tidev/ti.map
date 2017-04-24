@@ -48,6 +48,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_HIDDEN = "hidden";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
+	public static final String EVENT_REGION_WILL_CHANGE  = "regionwillchange";
 
 	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
 	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
@@ -87,6 +88,10 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
 	@Kroll.constant public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
 	@Kroll.constant public static final float ANNOTATION_PURPLE = 276.92f; // Based on the HUI color scheme
+
+	@Kroll.constant public static final int REASON_API_ANIMATION = GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION;
+	@Kroll.constant public static final int REASON_DEVELOPER_ANIMATION = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
+	@Kroll.constant public static final int REASON_GESTURE = GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
 
 	public MapModule()
 	{
