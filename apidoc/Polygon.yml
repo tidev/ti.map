@@ -50,8 +50,7 @@ properties:
     summary: Determines whether view should receive touch events.
     type: Boolean
     default: true
-    since: "6.1.0"
-    platforms: [android]
+    since: "6.2.0"
 
   - name: zIndex
     summary: |
