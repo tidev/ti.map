@@ -46,6 +46,13 @@ properties:
     type: Number
     default: 10
 
+  - name: touchEnabled
+    summary: Determines whether view should receive touch events.
+    type: Boolean
+    default: true
+    since: "6.1.0"
+    platforms: [android]
+
   - name: zIndex
     summary: |
         The order (depth) in which to display the polygons.

@@ -212,6 +212,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 		else if (name.equals(PolylineProxy.PROPERTY_ZINDEX)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
+
 		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
 		}
