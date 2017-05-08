@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -10,6 +10,8 @@
 #import "TiViewProxy.h"
 #import "ImageLoader.h"
 #import "TiButtonUtil.h"
+#import "TiMapConstants.h"
+#import "UIColor+AndroidHueParity.h"
 #import "TiMapViewProxy.h"
 #import "TiMapView.h"
 
@@ -182,19 +184,35 @@
 {
 	subtitle = [TiUtils replaceString:[TiUtils stringValue:subtitle]
 			characters:[NSCharacterSet newlineCharacterSet] withString:@" "];
-	//The label will strip out these newlines anyways (Technically, replace them with spaces)
+	
+	// The label will strip out these newlines anyways (Technically, replace them with spaces)
 
 	id current = [self valueForUndefinedKey:@"subtitle"];
 	[self replaceValue:subtitle forKey:@"subtitle" notification:NO];
-	if (![subtitle isEqualToString:current])
-	{
+	
+	if (![subtitle isEqualToString:current]) {
 		[self setNeedsRefreshingWithSelection:NO];
 	}
 }
 
+-(void)setHidden:(id)value
+{
+	id current = [self valueForUndefinedKey:@"hidden"];
+	[self replaceValue:value forKey:@"hidden" notification:NO];
+	
+	if ([current isEqual:value] == NO) {
+		[self setNeedsRefreshingWithSelection:YES];
+	}
+}
+
+-(id)hidden
+{
+	return NUMBOOL([TiUtils boolValue:[self valueForUndefinedKey:@"hidden"] def:NO]);
+}
+
 -(id)pincolor
 {
-    return [TiUtils intValue:[self valueForUndefinedKey:@"pincolor"]];
+    return NUMINT([self valueForUndefinedKey:@"pincolor"]);
 }
 
 -(void)setPincolor:(id)color
@@ -205,6 +223,67 @@
 	{
 		[self setNeedsRefreshingWithSelection:YES];
 	}
+}
+
+// Mapping both string-colors, color constant and native colors to a pin color
+// This is overcomplicated to maintain iOS < 9 compatibility. Remove this when
+// we have a minimum iOS verion of 9.0+
+-(id)nativePinColor
+{
+    id current = [self valueForUndefinedKey:@"pincolor"];
+    
+    if ([current isKindOfClass:[NSString class]]) {
+#ifdef __IPHONE_9_0
+        return [[TiUtils colorValue:current] color];
+#else
+        return MKPinAnnotationColorRed;
+#endif
+    }
+
+    switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
+        case TiMapAnnotationPinColorGreen: {
+#ifdef __IPHONE_9_0
+            return [MKPinAnnotationView greenPinColor];
+#else
+            return MKPinAnnotationColorGreen;
+#endif
+        }
+        case TiMapAnnotationPinColorPurple: {
+#ifdef __IPHONE_9_0
+            return [MKPinAnnotationView purplePinColor];
+#else
+            return MKPinAnnotationColorPurple;
+#endif
+        }
+#ifdef __IPHONE_9_0
+        case TiMapAnnotationPinColorBlue:
+        return [UIColor blueColor];
+        case TiMapAnnotationPinColorCyan:
+        return [UIColor cyanColor];
+        case TiMapAnnotationPinColorMagenta:
+        return [UIColor magentaColor];
+        case TiMapAnnotationPinColorOrange:
+        return [UIColor orangeColor];
+        case TiMapAnnotationPinColorYellow:
+        return [UIColor yellowColor];
+
+        // UIColor extensions
+        case TiMapAnnotationPinColorAzure:
+        return [UIColor azureColor];
+        case TiMapAnnotationPinColorRose:
+        return [UIColor roseColor];
+        case TiMapAnnotationPinColorViolet:
+        return [UIColor violetColor];
+#endif
+        case TiMapAnnotationPinColorRed:
+        default: {
+#ifdef __IPHONE_9_0
+            return [MKPinAnnotationView redPinColor];
+#else
+            return MKPinAnnotationColorRed;
+#endif
+        }
+    }
 }
 
 - (BOOL)animatesDrop

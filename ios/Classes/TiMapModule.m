@@ -1,15 +1,16 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "TiMapModule.h"
 #import "TiMapViewProxy.h"
-#import "TiMapIOS7ViewProxy.h"
 #import "TiMapCameraProxy.h"
+#import "TiMapConstants.h"
 #import <MapKit/MapKit.h>
+
 @implementation TiMapModule
 
 #pragma mark Internal
@@ -42,8 +43,7 @@
 
 -(TiMapViewProxy*)createView:(id)args
 {
-    Class mapViewProxyClass = ([TiUtils isIOS7OrGreater]) ? [TiMapIOS7ViewProxy class] : [TiMapViewProxy class];
-    return [[[mapViewProxyClass alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+    return [[[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
 -(TiMapCameraProxy*)createCamera:(id)args
@@ -64,9 +64,19 @@ MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
 MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
 #endif
 
-MAKE_SYSTEM_PROP(ANNOTATION_RED, MKPinAnnotationColorRed);
-MAKE_SYSTEM_PROP(ANNOTATION_GREEN, MKPinAnnotationColorGreen);
-MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, MKPinAnnotationColorPurple);
+MAKE_SYSTEM_PROP(ANNOTATION_RED, TiMapAnnotationPinColorRed);
+MAKE_SYSTEM_PROP(ANNOTATION_GREEN, TiMapAnnotationPinColorGreen);
+MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, TiMapAnnotationPinColorPurple);
+#ifdef __IPHONE_9_0
+MAKE_SYSTEM_PROP(ANNOTATION_AZURE, TiMapAnnotationPinColorAzure);
+MAKE_SYSTEM_PROP(ANNOTATION_BLUE, TiMapAnnotationPinColorBlue);
+MAKE_SYSTEM_PROP(ANNOTATION_CYAN, TiMapAnnotationPinColorCyan);
+MAKE_SYSTEM_PROP(ANNOTATION_MAGENTA, TiMapAnnotationPinColorMagenta);
+MAKE_SYSTEM_PROP(ANNOTATION_ORANGE, TiMapAnnotationPinColorOrange);
+MAKE_SYSTEM_PROP(ANNOTATION_ROSE, TiMapAnnotationPinColorRose);
+MAKE_SYSTEM_PROP(ANNOTATION_VIOLET, TiMapAnnotationPinColorViolet);
+MAKE_SYSTEM_PROP(ANNOTATION_YELLOW, TiMapAnnotationPinColorYellow);
+#endif
 
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_NONE,MKAnnotationViewDragStateNone);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START,MKAnnotationViewDragStateStarting);

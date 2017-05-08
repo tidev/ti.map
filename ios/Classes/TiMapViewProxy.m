@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -9,6 +9,7 @@
 #import "TiMapView.h"
 #import "TiMapModule.h"
 #import "TiMapRouteProxy.h"
+#import "TiMapUtils.h"
 
 @implementation TiMapViewProxy
 
@@ -744,24 +745,27 @@
     }
 }
 
-
-
 #pragma mark Public APIs iOS 7
 
--(id)camera
+-(TiMapCameraProxy*)camera
 {
-    [TiMapModule logAddedIniOS7Warning:@"camera"];
-    return nil;
+    return [TiMapUtils returnValueOnMainThread:^id{
+        return [(TiMapView *)[self view] camera];
+    }];
 }
 
 -(void)animateCamera:(id)args
 {
-    [TiMapModule logAddedIniOS7Warning:@"animateCamera()"];
+    TiThreadPerformOnMainThread(^{
+        [(TiMapView *)[self view] animateCamera:args];
+    }, NO);
 }
 
 -(void)showAnnotations:(id)args
 {
-    [TiMapModule logAddedIniOS7Warning:@"showAnnotations()"];
+    TiThreadPerformOnMainThread(^{
+        [(TiMapView *)[self view] showAnnotations:args];
+    }, NO);
 }
 
 @end

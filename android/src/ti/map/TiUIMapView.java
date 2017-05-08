@@ -155,7 +155,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map = gMap;
 
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
-		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
+		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
 		if (Build.VERSION.SDK_INT < 16) {
 			View rootView = proxy.getActivity().findViewById(
 					android.R.id.content);
@@ -419,7 +419,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		// if annotation already on map, remove it first then re-add it
 		TiMarker tiMarker = annotation.getTiMarker();
 		if (tiMarker != null) {
-			removeAnnotation(tiMarker);
+			timarkers.remove(tiMarker);
+			tiMarker.getMarker().remove();
 		}
 		annotation.processOptions();
 		// add annotation to map view
@@ -449,11 +450,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected void removeAllAnnotations() {
 		for (int i = 0; i < timarkers.size(); i++) {
 			TiMarker timarker = timarkers.get(i);
-			timarker.getMarker().remove();
-			AnnotationProxy proxy = timarker.getProxy();
-			if (proxy != null) {
-				proxy.setTiMarker(null);
-			}
+			timarker.release();
 		}
 		timarkers.clear();
 	}
@@ -480,11 +477,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 
 		if (timarker != null && timarkers.remove(timarker)) {
-			timarker.getMarker().remove();
-			AnnotationProxy proxy = timarker.getProxy();
-			if (proxy != null) {
-				proxy.setTiMarker(null);
-			}
+			timarker.release();
 		}
 	}
 
@@ -855,7 +848,6 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if(clickablePolylines.size() > 0) {
 			PolylineBoundary boundary = new PolylineBoundary();
 
-			double baseVal = 2;
 			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
 			double side1 =  b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude) : (b.southwest.latitude - b.northeast.latitude);
 			double side2 =  b.northeast.longitude > b.southwest.longitude ? (b.northeast.longitude - b.southwest.longitude ) : (b.southwest.longitude - b.northeast.longitude );
@@ -1023,7 +1015,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	public void onMapLoaded() {
 		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 	}
-	
+
 	protected void onViewCreated() {
 		// keep around for backward compatibility
 	}

@@ -1,24 +1,18 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "TiMapPolygonProxy.h"
 
-
-
-
 @implementation TiMapPolygonProxy
-
 
 @synthesize polygon, polygonRenderer;
 
-
 -(void)dealloc
 {
-
     RELEASE_TO_NIL(polygon);
     RELEASE_TO_NIL(polygonRenderer);
     RELEASE_TO_NIL(fillColor);
@@ -38,7 +32,6 @@
     [self setupPolygon];
 }
 
-
 #pragma mark Internal
 
 
@@ -46,7 +39,6 @@
 {
     return @"Ti.Map.Polygon";
 }
-
 
 -(void)setupPolygon
 {
@@ -90,7 +82,6 @@
     [self applyFillColor];
     [self applyStrokeColor];
     [self applyStrokeWidth];
-
 }
 
 // A location can either be a an array of longitude, latitude pairings or
@@ -112,6 +103,7 @@
         lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
         coord = CLLocationCoordinate2DMake(lat, lon);
     }
+    
     return coord;
 }
 
@@ -170,7 +162,5 @@
     strokeWidth = [TiUtils floatValue:value];
     [self applyStrokeWidth];
 }
-
-
 
 @end

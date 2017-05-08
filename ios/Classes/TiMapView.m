@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -9,6 +9,8 @@
 #import "TiMapView.h"
 #import "TiBase.h"
 #import "TiUtils.h"
+#import "TiMapUtils.h"
+#import "TiBase.h"
 #import "TiMapModule.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapPinAnnotationView.h"
@@ -84,6 +86,13 @@
     return map;
 }
 
+-(TiMapCameraProxy*)camera
+{
+    return [TiMapUtils returnValueOnMainThread:^id{
+        return [[TiMapCameraProxy alloc] initWithCamera:[self map].camera];
+    }];
+}
+
 -(void)registerTouchEvents
 {
     UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
@@ -108,11 +117,12 @@
     [self handlePolygonClick:mapPoint];
     [self handlePolylineClick:mapPoint];
     [self handleCircleClick:mapPoint];
+    [self handleMapClick:mapPoint];
 }
 
 - (id)accessibilityElement
 {
-	return [self map];
+    return [self map];
 }
 
 - (NSArray *)customAnnotations
@@ -124,22 +134,22 @@
 
 -(void)willFirePropertyChanges
 {
-	regionFits = [TiUtils boolValue:[self.proxy valueForKey:@"regionFit"]];
-	animate = [TiUtils boolValue:[self.proxy valueForKey:@"animate"]];
+    regionFits = [TiUtils boolValue:[self.proxy valueForKey:@"regionFit"]];
+    animate = [TiUtils boolValue:[self.proxy valueForKey:@"animate"]];
 }
 
 -(void)didFirePropertyChanges
 {
-	[self render];
+    [self render];
 }
 
 -(void)setBounds:(CGRect)bounds
 {
-    //TIMOB-13102.
-    //When the bounds change the mapview fires the regionDidChangeAnimated delegate method
-    //Here we update the region property which is not what we want.
-    //Instead we set a forceRender flag and render in frameSizeChanged and capture updated
-    //region there.
+    // TIMOB-13102:
+    // When the bounds change the mapview fires the regionDidChangeAnimated delegate method
+    // Here we update the region property which is not what we want.
+    // Instead we set a forceRender flag and render in frameSizeChanged and capture updated
+    // region there.
     CGRect oldBounds = (map != nil) ? [map bounds] : CGRectZero;
     forceRender = (oldBounds.size.width == 0 || oldBounds.size.height==0);
     ignoreRegionChanged = YES;
@@ -182,7 +192,7 @@
 {
 	NSArray *selected = map.selectedAnnotations;
 	BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
-    ignoreClicks = YES;
+        ignoreClicks = YES;
 	if (yn==NO)
 	{
 		[map deselectAnnotation:proxy animated:NO];
@@ -249,7 +259,7 @@
 
 -(void)removeAnnotations:(id)args
 {
-	ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy, and NSString classes
+    ENSURE_TYPE(args,NSArray); // assumes an array of TiMapAnnotationProxy, and NSString classes
     
     // Test for annotation title strings
     NSMutableArray *doomedAnnotations = [NSMutableArray arrayWithArray:args];
@@ -601,7 +611,7 @@
 -(void)addCircle:(TiMapCircleProxy*)circleProxy {
     
     TiThreadPerformOnMainThread(^{
-        MKCircle *circle = [circleProxy circle];
+        MKCircle *circle = [[circleProxy circleRenderer] circle];
         CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
         [map addOverlay:circle];
         
@@ -628,7 +638,7 @@
 -(void)removeCircle:(TiMapCircleProxy*)circleProxy remove:(BOOL)r
 {
     TiThreadPerformOnMainThread(^{
-        MKCircle *circle = [circleProxy circle];
+        MKCircle *circle = [[circleProxy circleRenderer] circle];
         CFDictionaryRemoveValue(mapObjects2View, circle);
         [map removeOverlay:circle];
         if (r) {
@@ -691,40 +701,49 @@
     [polylineProxies removeAllObjects];
 }
 
-
-
-
-
 #pragma mark Public APIs iOS 7
 
 -(void)setTintColor_:(id)color
 {
-    [TiMapModule logAddedIniOS7Warning:@"tintColor"];
+    TiColor *ticolor = [TiUtils colorValue:color];
+    UIColor* theColor = [ticolor _color];
+    [[self map] performSelector:@selector(setTintColor:) withObject:theColor];
+    [self performSelector:@selector(setTintColor:) withObject:theColor];
 }
 
--(void)setCamera_:(id)value
+-(void)setCamera_:(TiMapCameraProxy*)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"camera"];
+    TiThreadPerformOnMainThread(^{
+        [self map].camera = [value camera];
+    }, YES);
 }
 
 -(void)setPitchEnabled_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"pitchEnabled"];
+    TiThreadPerformOnMainThread(^{
+        [self map].pitchEnabled = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setRotateEnabled_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"rotateEnabled"];
+    TiThreadPerformOnMainThread(^{
+        [self map].rotateEnabled = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsBuildings_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsBuildings"];
+    TiThreadPerformOnMainThread(^{
+        [self map].showsBuildings = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsPointsOfInterest_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsPointsOfInterest"];
+    TiThreadPerformOnMainThread(^{
+        [self map].showsPointsOfInterest = [TiUtils boolValue:value];
+    }, YES);
 }
 
 -(void)setShowsCompass_:(id)value
@@ -733,23 +752,91 @@
     [self setCompassEnabled_:value];
 }
 
+-(void)setCompassEnabled_:(id)value
+{
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [[self map] setShowsCompass:[TiUtils boolValue:value]];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'compassEnabled' is only available on iOS 9 and later.");
+    }
+}
+
 -(void)setShowsScale_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsScale"];
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsScale = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsScale' is only available on iOS 9 and later.");
+    }
 }
 
 -(void)setShowsTraffic_:(id)value
 {
-    [TiMapModule logAddedIniOS7Warning:@"showsTraffic"];
+    if ([TiUtils isIOS9OrGreater] == YES) {
+#ifdef __IPHONE_9_0
+        TiThreadPerformOnMainThread(^{
+            [self map].showsTraffic = [TiUtils boolValue:value];
+        }, YES);
+#endif
+    } else {
+        NSLog(@"[WARN] The property 'showsTraffic' is only available on iOS 9 and later.");
+    }}
+
+-(void)animateCamera:(id)args
+{
+    enum Args {
+        kArgAnimationDict = 0,
+        kArgCount,
+        kArgCallback = kArgCount
+    };
+    NSDictionary *animationDict = [args objectAtIndex:kArgAnimationDict];
+    ENSURE_TYPE(animationDict, NSDictionary);
+    // Callback is optional
+    cameraAnimationCallback = ([args count] > kArgCallback) ? [[args objectAtIndex:kArgCallback] retain] : nil;
+    
+    id cameraProxy = [animationDict objectForKey:@"camera"];
+    ENSURE_TYPE(cameraProxy, TiMapCameraProxy);
+    
+    double duration = [TiUtils doubleValue:[animationDict objectForKey:@"duration"] def:400];
+    double delay = [TiUtils doubleValue:[animationDict objectForKey:@"delay"] def:0];
+    NSUInteger curve = [TiUtils intValue:[animationDict objectForKey:@"curve"] def:UIViewAnimationOptionCurveEaseInOut];
+    
+    // Apple says to use `mapView:regionDidChangeAnimated:` instead of `completion`
+    // to know when the camera animation has completed
+    TiThreadPerformOnMainThread(^{
+        [UIView animateWithDuration:(duration / 1000)
+                              delay:(delay / 1000)
+                            options:curve
+                         animations:^{
+                             [self map].camera = [cameraProxy camera];
+                         }
+                         completion:nil];
+    }, NO);
 }
 
+-(void)showAnnotations:(id)args
+{
+    ENSURE_SINGLE_ARG_OR_NIL(args, NSArray);
+
+    TiThreadPerformOnMainThread(^{
+        [[self map] showAnnotations:args ?: [self customAnnotations] animated:animate];
+    },NO);
+}
 
 #pragma mark Utils
-// Using these utility functions allows us to override them for different versions of iOS
 
+// These methods override the default implementation in TiMapView
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level
 {
-    [map addOverlay:polyline];
+    [map addOverlay:polyline level:level];
 }
 
 #pragma mark Delegates
@@ -768,14 +855,6 @@
     return (MKOverlayRenderer *)CFDictionaryGetValue(mapObjects2View, overlay);
 }
 
-// Delegate for < iOS 7
-// MKPolylineView is deprecated in iOS 7, still here for backward compatibility.
-// Can be removed when support is dropped for iOS 6 and below.
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
-{	
-    return (MKOverlayView *)CFDictionaryGetValue(mapObjects2View, overlay);
-}
-
 -(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
 {
     if (ignoreRegionChanged) {
@@ -789,9 +868,15 @@
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    if (animated && cameraAnimationCallback != nil) {
+        [cameraAnimationCallback call:nil thisObject:nil];
+        RELEASE_TO_NIL(cameraAnimationCallback);
+    }
+
     if (ignoreRegionChanged) {
         return;
     }
+    
     region = [mapView region];
     [self.proxy replaceValue:[self dictionaryFromRegion] forKey:@"region" notification:NO];
 	
@@ -976,8 +1061,7 @@
             id imagePath = [ann valueForUndefinedKey:@"image"];
             image = [TiUtils image:imagePath proxy:ann];
             identifier = (image!=nil) ? @"timap-image":@"timap-pin";
-        }
-        else {
+        } else {
             identifier = @"timap-customView";
         }
         MKAnnotationView *annView = nil;
@@ -987,24 +1071,24 @@
         if (annView==nil) {
             if ([identifier isEqualToString:@"timap-customView"]) {
                 annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-            }
-            else if ([identifier isEqualToString:@"timap-image"]) {
+            } else if ([identifier isEqualToString:@"timap-image"]) {
                 annView=[[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
-            }
-            else {
+            } else {
                 annView=[[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
             }
         }
         if ([identifier isEqualToString:@"timap-customView"]) {
             [((TiMapCustomAnnotationView*)annView) setProxy:customView];
-        }
-        else if ([identifier isEqualToString:@"timap-image"]) {
+        } else if ([identifier isEqualToString:@"timap-image"]) {
             annView.image = image;
-        }
-        else {
+        } else {
             MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
             
-            pinview.pinColor = [ann pincolor];
+#ifdef __IPHONE_9_0
+            pinview.pinTintColor = [ann nativePinColor];
+#else
+            pinview.pinColor = [ann nativePinColor];
+#endif
             pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
             annView.calloutOffset = CGPointMake(-8, 0);
         }
@@ -1015,20 +1099,20 @@
         UIView *left = [ann leftViewAccessory];
         UIView *right = [ann rightViewAccessory];
         
-        if (left!=nil) {
+        [annView setHidden:[TiUtils boolValue:[ann valueForUndefinedKey:@"hidden"] def:NO]];
+
+        if (left != nil) {
             annView.leftCalloutAccessoryView = left;
-        }
-        else {
+        } else {
             //ios7 requires this to be explicitly set as nil if nil
             if (![TiUtils isIOS8OrGreater]) {
                 annView.leftCalloutAccessoryView = nil;
             }
         }
         
-        if (right!=nil) {
+        if (right != nil) {
             annView.rightCalloutAccessoryView = right;
-        }
-        else {
+        } else {
             //ios7 requires this to be explicitly set as nil if nil
             
             if (![TiUtils isIOS8OrGreater]) {
@@ -1054,17 +1138,17 @@
 {
 	for (MKAnnotationView<TiMapAnnotation> *thisView in views)
 	{
-		if(![thisView conformsToProtocol:@protocol(TiMapAnnotation)])
+		if (![thisView conformsToProtocol:@protocol(TiMapAnnotation)])
 		{
 			return;
 		}
         /*Image Annotation don't have any animation of its own. 
          *So in this case we do a custom animation, to place the 
          *image annotation on top of the mapview.*/
-        if([thisView isKindOfClass:[TiMapImageAnnotationView class]] || [thisView isKindOfClass:[TiMapCustomAnnotationView class]])
+        if ([thisView isKindOfClass:[TiMapImageAnnotationView class]] || [thisView isKindOfClass:[TiMapCustomAnnotationView class]])
         {
             TiMapAnnotationProxy *anntProxy = [self proxyForAnnotation:thisView];
-            if([anntProxy animatesDrop] && ![anntProxy placed])
+            if ([anntProxy animatesDrop] && ![anntProxy placed])
             {
                 CGRect viewFrame = thisView.frame;
                 thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
@@ -1128,6 +1212,21 @@
     }
 }
 
+-(void)handleMapClick:(MKMapPoint)point
+{
+    TiProxy * mapProxy = [self proxy];
+
+    CLLocationCoordinate2D clickCoordinate = MKCoordinateForMapPoint(point);
+    NSNumber *lat = [NSNumber numberWithDouble:clickCoordinate.latitude];
+    NSNumber *lng = [NSNumber numberWithDouble:clickCoordinate.longitude];
+    NSDictionary * event = [NSDictionary dictionaryWithObjectsAndKeys:
+                            mapProxy,@"map", lat,@"latitude", lng,@"longitude", nil];
+
+    if ([mapProxy _hasListeners:@"mapclick"]) {
+        [mapProxy fireEvent:@"mapclick" withObject:event];
+    }
+}
+
 -(void)handlePolygonClick:(MKMapPoint)point
 {
     for (int i=0; i < [polygonProxies count]; i++) {
@@ -1142,6 +1241,7 @@
         }
     }
 }
+
 -(void)handleCircleClick:(MKMapPoint)point
 {
     for (int i=0; i < [circleProxies count]; i++) {
@@ -1197,7 +1297,7 @@
 		return;
 	}
 
-    TiProxy * mapProxy = [self proxy];
+        TiProxy * mapProxy = [self proxy];
 	
 	id title = [viewProxy title];
 	if (title == nil)
@@ -1212,7 +1312,7 @@
 			clicksource,@"clicksource",	viewProxy,@"annotation", mapProxy,@"map",
 			title,@"title",	NUMINTEGER(indexNumber),@"index", nil];
 
-    [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
+        [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
 }
 
 - (void)fireShapeClickEvent:(id)sourceProxy point:(MKMapPoint)point sourceType:(NSString*)sourceType {
@@ -1246,12 +1346,11 @@
         viewWants = FALSE;
     }
 
-    if (parentWants)
-    {
+    if (parentWants) {
         [mapProxy fireEvent:@"click" withObject:event];
     }
-    if (viewWants)
-    {
+	
+    if (viewWants) {
         [viewProxy fireEvent:@"click" withObject:event];
     }
 }

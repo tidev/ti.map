@@ -147,7 +147,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_AZURE
     summary: |
@@ -155,7 +157,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
 
   - name: ANNOTATION_CYAN
     summary: |
@@ -163,7 +166,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_MAGENTA
     summary: |
@@ -171,7 +176,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_ORANGE
     summary: |
@@ -179,7 +186,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_PURPLE
     summary: |
@@ -187,7 +196,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [iphone, ipad]
+    since: {iphone: "3.2.0", ipad: "3.2.0", android: "6.1.0"}
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_ROSE
     summary: |
@@ -195,7 +205,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_YELLOW
     summary: |
@@ -203,7 +215,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_VIOLET
     summary: |
@@ -211,7 +225,9 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    osver: {ios: {min: "9.0"} }
+    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_RED
     summary: |

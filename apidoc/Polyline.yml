@@ -14,7 +14,7 @@ platforms: [android, iphone, ipad]
 properties:
 
   - name: points
-    summary: Array of map points making up the polyline. Can also be an array of longitude, latitude touples.
+    summary: Array of map points making up the polyline. Can also be an array of longitude (index 0), latitude (index 1) touples.
     availability: creation
     type: Array<MapPointType>
     optional: false

@@ -44,6 +44,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_PANNING = "panning";
 	public static final String PROPERTY_STREET_NAMES = "streetNames";
 	public static final String PROPERTY_USER_NAVIGATION = "userNavigation";
+	public static final String PROPERTY_HIDDEN = "hidden";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 
@@ -84,6 +85,7 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final float ANNOTATION_ROSE = BitmapDescriptorFactory.HUE_ROSE;
 	@Kroll.constant public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
 	@Kroll.constant public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
+	@Kroll.constant public static final float ANNOTATION_PURPLE = 276.92f; // Based on the HUI color scheme
 
 	public MapModule()
 	{

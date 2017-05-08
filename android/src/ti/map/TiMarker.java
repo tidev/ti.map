@@ -28,4 +28,12 @@ public class TiMarker {
 	public AnnotationProxy getProxy() {
 		return proxy;
 	}
+
+	public void release() {
+		marker.remove();
+		if (proxy != null) {
+			proxy.release();
+			proxy = null;
+		}
+	}
 }

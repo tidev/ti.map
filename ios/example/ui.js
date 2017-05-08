@@ -1,45 +1,58 @@
+var IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
+var nav;
 
 function init(rows, onClick) {
-	Ti.UI.backgroundColor = '#FFF';
     var win = Ti.UI.createWindow({
         backgroundColor: '#FFF',
-        top: top
+        title: 'Ti.Map',
+        translucent: false
     });
-    
+
+    var transformedRows = [];
+
+    for (var row in rows) {
+        transformedRows.push({
+            title: rows[row].title,
+            hasChild: true
+        });
+    }
+
     var tableView = Ti.UI.createTableView({
         top: 0,
-        data: rows
+        data: transformedRows
     });
-    tableView.addEventListener('click', function(e){
+
+    tableView.addEventListener('click', function(e) {
         onClick && onClick(e);
     });
-    
+
     win.add(tableView);
-    
-    win.open();
+
+    if (IOS) {
+        nav = Ti.UI.iOS.createNavigationWindow({
+            window: win
+        });
+        nav.open();
+    } else  {
+        win.open();
+    }
 }
 
-function createWindow() {
-    var win  = Ti.UI.createWindow({
+function createWindow(title) {
+
+    var win = Ti.UI.createWindow({
         backgroundColor: '#FFF',
-        fullscreen: false,
-        top: top
+        title: title,
+        translucent: false
+
     });
-    
-    var backButton = Ti.UI.createLabel({
-        top: 0, width: '100%', height: '10%',
-        backgroundColor: '#000',
-        color: '#FFF',
-        text: 'Back',
-        textAlign: 'center'
-    });
-    
-    backButton.addEventListener('click', function() {
-        win.close();
-    });
-    
-    win.add(backButton);
-    
+
+    if (nav) {
+        nav.openWindow(win);
+    } else  {
+        win.open();
+    }
+
     return win;
 }
 
