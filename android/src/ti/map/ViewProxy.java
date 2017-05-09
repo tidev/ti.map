@@ -52,11 +52,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
 	private static final int MSG_REMOVE_ALL_POLYGONS = MSG_FIRST_ID + 903;
-	
+
 	private static final int MSG_ADD_POLYLINE = MSG_FIRST_ID + 910;
 	private static final int MSG_REMOVE_POLYLINE = MSG_FIRST_ID + 911;
 	private static final int MSG_REMOVE_ALL_POLYLINES = MSG_FIRST_ID + 912;
-	
+
 	private static final int MSG_ADD_CIRCLE = MSG_FIRST_ID + 921;
 	private static final int MSG_REMOVE_CIRCLE = MSG_FIRST_ID + 922;
 	private static final int MSG_REMOVE_ALL_CIRCLES = MSG_FIRST_ID + 923;
@@ -154,13 +154,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 			result.setResult(null);
 			return true;
 		}
-		
+
 		case MSG_MAX_ZOOM: {
 			result = (AsyncResult) msg.obj;
 			result.setResult(getMaxZoom());
 			return true;
 		}
-		
+
 		case MSG_MIN_ZOOM: {
 			result = (AsyncResult) msg.obj;
 			result.setResult(getMinZoom());
@@ -202,7 +202,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 			result.setResult(null);
 			return true;
 		}
-		
+
 		case MSG_ADD_POLYLINE: {
 			result = (AsyncResult) msg.obj;
 			handleAddPolyline(result.getArg());
@@ -223,7 +223,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 			result.setResult(null);
 			return true;
 		}
-		
+
 		case MSG_ADD_CIRCLE: {
 			result = (AsyncResult) msg.obj;
 			handleAddCircle((CircleProxy) result.getArg());
@@ -264,7 +264,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 			setProperty(TiC.PROPERTY_ANNOTATIONS, new Object[] { annotation });
 		}
 		annotation.setDelegate(this);
-		
+
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			if (TiApplication.isUIThread()) {
@@ -744,21 +744,23 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(
 					MSG_REMOVE_ALL_POLYGONS));
 		}
-	}	
-	
+	}
+
 	/**
 	 * EOF Polygons
 	 */
 
 	/**
 	 * Polylines
-	 * 
+	 *
 	 **/
 	@Kroll.method
 	public void addPolyline(PolylineProxy polyline) {
 		if (TiApplication.isUIThread()) {
+			System.out.println("Class: "+polyline.getClass().getSimpleName());
 			handleAddPolyline(polyline);
 		} else {
+			System.out.println("Messenger Class: "+polyline.getClass().getSimpleName());
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_ADD_POLYLINE), polyline);
 		}
@@ -850,8 +852,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 					MSG_REMOVE_ALL_POLYLINES));
 		}
 	}
-	
-	
+
+
 	/**
 	 * EOF Polylines
 	 */
@@ -1000,7 +1002,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 					"Unable set location since the map view has not been created yet. Use setRegion() instead.");
 		}
 	}
-	
+
 	public void refreshAnnotation(AnnotationProxy annotation) {
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
@@ -1024,7 +1026,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 					"Unable to refresh annotation since the map view has not been created yet.");
 		}
 	}
-	
+
 	public String getApiName()
 	{
 		return "Ti.Map";

@@ -6,13 +6,16 @@
  */
 package ti.map;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
 
@@ -22,6 +25,10 @@ import android.os.Message;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.Gap;
+import com.google.android.gms.maps.model.PatternItem;
 
 
 @Kroll.proxy(name="Polyline",creatableInModule=MapModule.class, propertyAccessors = {
@@ -30,6 +37,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 	PolylineProxy.PROPERTY_STROKE_COLOR2,
 	PolylineProxy.PROPERTY_STROKE_WIDTH2,
+	PolylineProxy.PROPERTY_STROKE_PATTERN2,
 
 	PolylineProxy.PROPERTY_ZINDEX,
 
@@ -42,17 +50,28 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private PolylineOptions options;
 	private Polyline polyline;
 
+	private static final String TAG = "PolylineProxy";
+
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
-	private static final int MSG_SET_POINTS 	  = MSG_FIRST_ID + 499;
-	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 501;
-	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 502;
-	private static final int MSG_SET_ZINDEX 	  = MSG_FIRST_ID + 503;
+	private static final int MSG_SET_POINTS 	  	= MSG_FIRST_ID + 499;
+	private static final int MSG_SET_STROKE_COLOR 	= MSG_FIRST_ID + 501;
+	private static final int MSG_SET_STROKE_WIDTH 	= MSG_FIRST_ID + 502;
+	private static final int MSG_SET_STROKE_PATTERN = MSG_FIRST_ID + 503;
+	private static final int MSG_SET_ZINDEX 	  	= MSG_FIRST_ID + 504;
 
-	public static final String PROPERTY_STROKE_COLOR2 = "color";
-	public static final String PROPERTY_STROKE_WIDTH2 = "width";
+	public static final String PROPERTY_STROKE_COLOR2 	= "color";
+	public static final String PROPERTY_STROKE_WIDTH2 	= "width";
+	public static final String PROPERTY_STROKE_PATTERN2 = "pattern";
 
 	public static final String PROPERTY_ZINDEX = "zIndex";
+
+	//Default patterns definitions
+	private static final int DEFAULT_PATTERN_DASH_LENGTH_PX = 50;
+	private static final int DEFAULT_PATTERN_GAP_LENGTH_PX = 20;
+
+	private static final List<PatternItem> DEFAULT_DASHED_PATTERN = Arrays.asList(new Dash(DEFAULT_PATTERN_DASH_LENGTH_PX), new Gap(DEFAULT_PATTERN_GAP_LENGTH_PX));
+	private static final List<PatternItem> DEFAULT_DOTTED_PATTERN = Arrays.asList(new Dot(), new Gap(DEFAULT_PATTERN_GAP_LENGTH_PX));
 
 	public PolylineProxy() {
 		super();
@@ -79,6 +98,13 @@ public class PolylineProxy extends KrollProxy implements IShape
 			case MSG_SET_STROKE_COLOR: {
 				result = (AsyncResult) msg.obj;
 				polyline.setColor((Integer)result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_STROKE_PATTERN: {
+				result = (AsyncResult) msg.obj;
+				int type = (Integer)result.getArg();
+				polyline.setPattern(processPatternDefinition(type));
 				result.setResult(null);
 				return true;
 			}
@@ -125,6 +151,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 			options.zIndex(TiConvert.toFloat(getProperty(PolylineProxy.PROPERTY_ZINDEX)));
 		}
 
+		if (hasProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2)) {
+			if (getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2) instanceof HashMap)
+				options.pattern(processPatternDefinition((HashMap)getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2)));
+			else
+				options.pattern(processPatternDefinition(TiConvert.toInt(getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2))));
+		}
 	}
 
 	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
@@ -219,6 +251,31 @@ public class PolylineProxy extends KrollProxy implements IShape
 		return location;
 	}
 
+	private List<PatternItem> processPatternDefinition(HashMap definition) {
+		List<PatternItem> pattern = null;
+		int type = (Integer)definition.get("type");
+		int gapLength = (Integer)definition.get("gapLength");
 
+		if (definition.get("type") == null) {
+			Log.e(TAG, "No pattern type specified. Using default dashed pattern.");
 
+			return DEFAULT_DASHED_PATTERN;
+		}
+
+		if (type == MapModule.POLYLINE_PATTERN_DASHED) {
+			int dashLength = (Integer)definition.get("dashLength");
+
+			pattern = Arrays.asList(new Dash(dashLength), new Gap(gapLength));
+		} else if (type == MapModule.POLYLINE_PATTERN_DOTTED)
+			pattern = Arrays.asList(new Dot(), new Gap(gapLength));
+
+		return pattern != null ? pattern : DEFAULT_DASHED_PATTERN;
+	}
+
+	private List<PatternItem> processPatternDefinition(int type) {
+		if (type == MapModule.POLYLINE_PATTERN_DOTTED)
+			return DEFAULT_DOTTED_PATTERN;
+
+		return DEFAULT_DASHED_PATTERN;
+	}
 }
