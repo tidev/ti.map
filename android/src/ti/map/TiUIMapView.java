@@ -450,7 +450,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	protected void removeAllAnnotations() {
 		for (int i = 0; i < timarkers.size(); i++) {
 			TiMarker timarker = timarkers.get(i);
-			timarker.release();
+			timarker.getMarker().remove();
 		}
 		timarkers.clear();
 	}
@@ -475,9 +475,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		} else if (annotation instanceof String) {
 			timarker = findMarkerByTitle((String) annotation);
 		}
-
-		if (timarker != null && timarkers.remove(timarker)) {
-			timarker.release();
+		if (timarker != null) {
+			timarkers.remove(timarker);
+			timarker.getMarker().remove();
 		}
 	}
 
