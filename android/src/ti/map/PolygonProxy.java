@@ -29,12 +29,14 @@ import com.google.android.gms.maps.model.PolygonOptions;
 MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR,
 		MapModule.PROPERTY_STROKE_WIDTH, MapModule.PROPERTY_ZINDEX,
 		MapModule.PROPERTY_POINTS, PolygonProxy.PROPERTY_HOLES,
+		TiC.PROPERTY_TOUCH_ENABLED
 
 })
 public class PolygonProxy extends KrollProxy implements IShape {
 
 	private PolygonOptions options;
 	private Polygon polygon;
+	private boolean clickable;
 
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
@@ -44,11 +46,13 @@ public class PolygonProxy extends KrollProxy implements IShape {
 	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 702;
 	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 703;
 	private static final int MSG_SET_HOLES = MSG_FIRST_ID + 704;
+	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 705;
 
 	public static final String PROPERTY_HOLES = "holes";
 
 	public PolygonProxy() {
 		super();
+		clickable = true;
 	}
 
 	@Override
@@ -92,6 +96,12 @@ public class PolygonProxy extends KrollProxy implements IShape {
 			result.setResult(null);
 			return true;
 		}
+		case MSG_SET_TOUCH_ENABLED: {
+			result = (AsyncResult) msg.obj;
+			clickable = TiConvert.toBoolean(result.getArg(), true);
+			result.setResult(null);
+			return true;
+		}
 		default: {
 			return super.handleMessage(msg);
 		}
@@ -125,7 +135,9 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		if (hasProperty(MapModule.PROPERTY_ZINDEX)) {
 			options.zIndex(TiConvert.toFloat(getProperty(MapModule.PROPERTY_ZINDEX)));
 		}
-
+		if (hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
+			clickable = TiConvert.toBoolean(getProperty(TiC.PROPERTY_TOUCH_ENABLED));
+		}
 	}
 
 	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
@@ -228,6 +240,10 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		return polygon;
 	}
 
+	public boolean getClickable() {
+		return clickable;
+	}
+
 	public List<? extends List<LatLng>> getHoles() {
 		return polygon.getHoles();
 	}
@@ -269,6 +285,10 @@ public class PolygonProxy extends KrollProxy implements IShape {
 			TiMessenger.sendBlockingMainMessage(
 					getMainHandler().obtainMessage(MSG_SET_ZINDEX),
 					TiConvert.toFloat(value));
+		}
+
+		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
 		}
 
 	}

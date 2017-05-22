@@ -30,12 +30,14 @@ import com.google.android.gms.maps.model.LatLng;
 		MapModule.PROPERTY_CENTER, MapModule.PROPERTY_RADIUS,
 		MapModule.PROPERTY_STROKE_WIDTH, MapModule.PROPERTY_STROKE_COLOR,
 		MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_ZINDEX,
-		TiC.PROPERTY_VISIBLE, TiC.PROPERTY_OPACITY })
+		TiC.PROPERTY_VISIBLE, TiC.PROPERTY_OPACITY,
+		TiC.PROPERTY_TOUCH_ENABLED })
 public class CircleProxy  extends KrollProxy implements IShape
 {
 
 	private CircleOptions options;
 	private Circle circle;
+	private boolean clickable;
 
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
@@ -47,10 +49,12 @@ public class CircleProxy  extends KrollProxy implements IShape
 	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 505;
 	private static final int MSG_SET_VISIBLE = MSG_FIRST_ID + 506;
 	private static final int MSG_SET_OPACITY = MSG_FIRST_ID + 507;
+	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 508;
 
 
 	public CircleProxy() {
 		super();
+		clickable = true;
 	}
 
 	private int toPx(Object size){
@@ -126,7 +130,12 @@ public class CircleProxy  extends KrollProxy implements IShape
 				result.setResult(null);
 				return true;
 			}
-
+			case MSG_SET_TOUCH_ENABLED: {
+				result = (AsyncResult) msg.obj;
+				clickable = TiConvert.toBoolean(result.getArg(), true);
+				result.setResult(null);
+				return true;
+			}
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -165,6 +174,10 @@ public class CircleProxy  extends KrollProxy implements IShape
 
 		if (hasProperty(TiC.PROPERTY_VISIBLE)) {
 			options.visible(TiConvert.toBoolean(getProperty(TiC.PROPERTY_VISIBLE)));
+		}
+
+		if (hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
+			clickable = TiConvert.toBoolean(getProperty(TiC.PROPERTY_TOUCH_ENABLED));
 		}
 	}
 
@@ -212,6 +225,10 @@ public class CircleProxy  extends KrollProxy implements IShape
 		else if (name.equals(TiC.PROPERTY_OPACITY)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_OPACITY));
 		}
+
+		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
+		}
 	}
 
 	public CircleOptions getOptions() {
@@ -224,6 +241,10 @@ public class CircleProxy  extends KrollProxy implements IShape
 
 	public Circle getCircle() {
 		return circle;
+	}
+
+	public boolean getClickable() {
+		return clickable;
 	}
 
 	// A location can either be a an array of longitude, latitude pairings or

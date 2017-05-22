@@ -793,8 +793,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 
 		// currentCircles
-		if(currentCircles.size() > 0) {
-			for (CircleProxy circleProxy : currentCircles) {
+		ArrayList<CircleProxy> clickableCircles = new ArrayList<CircleProxy>();
+		for (CircleProxy circleProxy : currentCircles) {
+			if (circleProxy.getClickable()) {
+				clickableCircles.add(circleProxy);
+			}
+		}
+		if(clickableCircles.size() > 0) {
+			for (CircleProxy circleProxy : clickableCircles) {
 
 				Circle circle = circleProxy.getCircle();
 			    LatLng center = circle.getCenter();
@@ -807,13 +813,20 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 					fireShapeClickEvent(point, circleProxy, MapModule.PROPERTY_CIRCLE);
 				}
 			}
+			clickableCircles.clear();
 		}
 
 		//	currentPolygons
-		if(currentPolygons.size() > 0) {
+		ArrayList<PolygonProxy> clickablePolygones = new ArrayList<PolygonProxy>();
+		for (PolygonProxy polygonProxy : currentPolygons) {
+			if (polygonProxy.getClickable()) {
+				clickablePolygones.add(polygonProxy);
+			}
+		}
+		if(clickablePolygones.size() > 0) {
 
 			Boundary boundary = new Boundary();
-			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(currentPolygons, point);
+			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(clickablePolygones, point);
 			boundary = null;
 
 			if(clickedPolygon.size() > 0) {
@@ -821,10 +834,18 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 					fireShapeClickEvent(point, polygonProxy, MapModule.PROPERTY_POLYGON);
 				}
 			}
+			clickablePolygones.clear();
 		}
 
 		// currentPolylines
-		if(currentPolylines.size() > 0) {
+		ArrayList<PolylineProxy> clickablePolylines = new ArrayList<PolylineProxy>();
+		for (PolylineProxy polylineProxy : currentPolylines) {
+			if (polylineProxy.getClickable()) {
+				clickablePolylines.add(polylineProxy);
+			}
+		}
+
+		if(clickablePolylines.size() > 0) {
 			PolylineBoundary boundary = new PolylineBoundary();
 
 			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
@@ -833,7 +854,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			double diagonal = Math.sqrt((side1*side1)+(side2*side2));
 			double val = diagonal / map.getCameraPosition().zoom;
 
-			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(currentPolylines, point, val);
+			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(clickablePolylines, point, val);
 
 			boundary = null;
 			if(clickedPolylines.size() > 0) {
@@ -842,6 +863,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				}
 			}
 		}
+		clickablePolylines.clear();
 
 	}
 

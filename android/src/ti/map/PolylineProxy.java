@@ -25,22 +25,20 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 
 @Kroll.proxy(name="Polyline",creatableInModule=MapModule.class, propertyAccessors = {
-
-	MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
-
+	MapModule.PROPERTY_STROKE_COLOR,
+	MapModule.PROPERTY_STROKE_WIDTH,
 	PolylineProxy.PROPERTY_STROKE_COLOR2,
 	PolylineProxy.PROPERTY_STROKE_WIDTH2,
-
 	PolylineProxy.PROPERTY_ZINDEX,
-
 	MapModule.PROPERTY_POINTS,
-
+	TiC.PROPERTY_TOUCH_ENABLED
 })
 public class PolylineProxy extends KrollProxy implements IShape
 {
 
 	private PolylineOptions options;
 	private Polyline polyline;
+	private boolean clickable;
 
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
@@ -48,6 +46,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 501;
 	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 502;
 	private static final int MSG_SET_ZINDEX 	  = MSG_FIRST_ID + 503;
+	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 504;
 
 	public static final String PROPERTY_STROKE_COLOR2 = "color";
 	public static final String PROPERTY_STROKE_WIDTH2 = "width";
@@ -56,6 +55,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 	public PolylineProxy() {
 		super();
+		clickable = true;
 	}
 
 	@Override
@@ -85,6 +85,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 			case MSG_SET_ZINDEX: {
 				result = (AsyncResult) msg.obj;
 				polyline.setZIndex((Float)result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_TOUCH_ENABLED: {
+				result = (AsyncResult) msg.obj;
+				clickable = TiConvert.toBoolean(result.getArg(), true);
 				result.setResult(null);
 				return true;
 			}
@@ -124,6 +130,9 @@ public class PolylineProxy extends KrollProxy implements IShape
 		if (hasProperty(PolylineProxy.PROPERTY_ZINDEX)) {
 			options.zIndex(TiConvert.toFloat(getProperty(PolylineProxy.PROPERTY_ZINDEX)));
 		}
+		if (hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
+			clickable = TiConvert.toBoolean(getProperty(TiC.PROPERTY_TOUCH_ENABLED));
+		}
 
 	}
 
@@ -153,6 +162,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 		//single point
 		addLocation(points, locationArray, list);
 		return locationArray;
+	}
+
+	public boolean getClickable() {
+		return clickable;
 	}
 
 	public PolylineOptions getOptions() {
@@ -198,6 +211,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 		else if (name.equals(PolylineProxy.PROPERTY_ZINDEX)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
+		}
+
+		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
 		}
 
 	}
