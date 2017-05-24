@@ -865,6 +865,10 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		clickablePolylines.clear();
 
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
+		d.put(TiC.PROPERTY_LONGITUDE, point.longitude);
+		proxy.fireEvent("mapclick", d);
 	}
 
 	@Override
