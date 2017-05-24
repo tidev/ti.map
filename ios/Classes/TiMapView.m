@@ -20,6 +20,7 @@
 #import "TiMapPolygonProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapPolylineProxy.h"
+#import "TiMapViewProxy.h"
 
 @implementation TiMapView
 
@@ -27,21 +28,14 @@
 
 -(void)dealloc
 {
-	if (map!=nil)
-	{
+	if (map != nil) {
 		map.delegate = nil;
-		RELEASE_TO_NIL(map);
-	}
+    }
+
     if (mapObjects2View) {
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
-    RELEASE_TO_NIL(selectedAnnotation);
-    RELEASE_TO_NIL(locationManager);
-    RELEASE_TO_NIL(polygonProxies);
-    RELEASE_TO_NIL(polylineProxies);
-    RELEASE_TO_NIL(circleProxies);
-	[super dealloc];
 }
 
 -(void)render
@@ -102,9 +96,6 @@
     
     [map addGestureRecognizer:tap];
     [map addGestureRecognizer:longPressInterceptor];
-    
-    [longPressInterceptor release];
-    [tap release];
 }
 
 -(void)handleOverlayTap: (UIGestureRecognizer*)tap
@@ -171,7 +162,7 @@
 
 -(TiMapAnnotationProxy*)annotationFromArg:(id)arg
 {
-    return [(TiMapViewProxy*)[self proxy] annotationFromArg:arg];
+    return [(TiMapViewProxy *)[self proxy] annotationFromArg:arg];
 }
 
 -(NSArray*)annotationsFromArgs:(id)value
@@ -484,9 +475,9 @@
 	ENSURE_SINGLE_ARG(value,NSObject);
 
 	// Release the locationManager in case it was already created
-	RELEASE_TO_NIL(locationManager);
-	BOOL userLocation = [TiUtils boolValue:value def:NO];
-	// if userLocation is true and this is iOS 8 or greater, then ask for permission
+    BOOL userLocation = [TiUtils boolValue:value def:NO];
+	
+    // if userLocation is true and this is iOS 8 or greater, then ask for permission
 	if (userLocation && [TiUtils isIOS8OrGreater]) {
 		// the locationManager needs to be created to permissions
 		locationManager = [[CLLocationManager alloc] init];
@@ -547,7 +538,7 @@
 -(void)addRoute:(TiMapRouteProxy*)route
 {
     TiThreadPerformOnMainThread(^{
-        CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
+        CFDictionaryAddValue(mapObjects2View, (__bridge const void *)([route routeLine]), (__bridge const void *)([route routeRenderer]));
         [self addOverlay:[route routeLine] level:[route level]];
     }, NO);
 }
@@ -556,7 +547,7 @@
 {
     TiThreadPerformOnMainThread(^{
         MKPolyline *routeLine = [route routeLine];
-        CFDictionaryRemoveValue(mapObjects2View, routeLine);
+        CFDictionaryRemoveValue(mapObjects2View, (__bridge const void *)(routeLine));
         [map removeOverlay:routeLine];
     }, NO);
 }
@@ -573,7 +564,7 @@
 {
     TiThreadPerformOnMainThread(^{
         MKPolygon *poly = [polygonProxy polygon];
-        CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
+        CFDictionaryAddValue(mapObjects2View, (__bridge const void *)(poly), (__bridge const void *)([polygonProxy polygonRenderer]));
         [map addOverlay:poly];
 
         if (polygonProxies == nil) {
@@ -592,7 +583,7 @@
 {
     TiThreadPerformOnMainThread(^{
         MKPolygon *poly = [polygonProxy polygon];
-        CFDictionaryRemoveValue(mapObjects2View, poly);
+        CFDictionaryRemoveValue(mapObjects2View, (__bridge const void *)(poly));
         [map removeOverlay:poly];
         if (r) {
             [polygonProxies removeObject:polygonProxy];
@@ -612,7 +603,7 @@
     
     TiThreadPerformOnMainThread(^{
         MKCircle *circle = [[circleProxy circleRenderer] circle];
-        CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
+        CFDictionaryAddValue(mapObjects2View, (__bridge const void *)(circle), (__bridge const void *)([circleProxy circleRenderer]));
         [map addOverlay:circle];
         
         if (circleProxies == nil) {
@@ -639,7 +630,7 @@
 {
     TiThreadPerformOnMainThread(^{
         MKCircle *circle = [[circleProxy circleRenderer] circle];
-        CFDictionaryRemoveValue(mapObjects2View, circle);
+        CFDictionaryRemoveValue(mapObjects2View, (__bridge const void *)(circle));
         [map removeOverlay:circle];
         if (r) {
             [circleProxies removeObject:circleProxy];
@@ -667,7 +658,7 @@
 {
     TiThreadPerformOnMainThread(^{
         MKPolyline *poly = [polylineProxy polyline];
-        CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
+        CFDictionaryAddValue(mapObjects2View, (__bridge const void *)(poly), (__bridge const void *)([polylineProxy polylineRenderer]));
         [map addOverlay:poly];
         if (polylineProxies == nil) {
             polylineProxies = [[NSMutableArray alloc] init];
@@ -685,7 +676,7 @@
 {
     TiThreadPerformOnMainThread(^{
         MKPolyline *poly = [polylineProxy polyline];
-        CFDictionaryRemoveValue(mapObjects2View, poly);
+        CFDictionaryRemoveValue(mapObjects2View, (__bridge const void *)(poly));
         [map removeOverlay:poly];
         if (r) {
             [polylineProxies removeObject:polylineProxy];
@@ -800,7 +791,7 @@
     NSDictionary *animationDict = [args objectAtIndex:kArgAnimationDict];
     ENSURE_TYPE(animationDict, NSDictionary);
     // Callback is optional
-    cameraAnimationCallback = ([args count] > kArgCallback) ? [[args objectAtIndex:kArgCallback] retain] : nil;
+    cameraAnimationCallback = ([args count] > kArgCallback) ? [args objectAtIndex:kArgCallback] : nil;
     
     id cameraProxy = [animationDict objectForKey:@"camera"];
     ENSURE_TYPE(cameraProxy, TiMapCameraProxy);
@@ -852,7 +843,7 @@
 // Delegate for >= iOS 7
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
 {
-    return (MKOverlayRenderer *)CFDictionaryGetValue(mapObjects2View, overlay);
+    return (MKOverlayRenderer *)CFDictionaryGetValue(mapObjects2View, (__bridge const void *)(overlay));
 }
 
 -(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
@@ -870,7 +861,7 @@
 {
     if (animated && cameraAnimationCallback != nil) {
         [cameraAnimationCallback call:nil thisObject:nil];
-        RELEASE_TO_NIL(cameraAnimationCallback);
+        cameraAnimationCallback = nil;
     }
 
     if (ignoreRegionChanged) {
@@ -986,7 +977,7 @@
         BOOL isSelected = [view isSelected];
         MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
         
-        selectedAnnotation = [ann retain];
+        selectedAnnotation = ann;
         
         // If canShowCallout == true we will try to find calloutView to hadleTap on callout
         if ([ann canShowCallout]) {
@@ -1015,11 +1006,11 @@
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view{
 	if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
-		BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
+		BOOL isSelected = [view isSelected];
 		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
         	
 		if (selectedAnnotation == ann) {
-			RELEASE_TO_NIL(ann);
+			ann = nil;
 		}
 		
 		[self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
@@ -1070,11 +1061,11 @@
 		
         if (annView==nil) {
             if ([identifier isEqualToString:@"timap-customView"]) {
-                annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+                annView = [[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self];
             } else if ([identifier isEqualToString:@"timap-image"]) {
-                annView=[[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
+                annView= [[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image];
             } else {
-                annView=[[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+                annView= [[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self];
             }
         }
         if ([identifier isEqualToString:@"timap-customView"]) {

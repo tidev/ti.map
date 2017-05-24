@@ -11,15 +11,6 @@
 
 @synthesize circleRenderer;
 
--(void)dealloc
-{
-    RELEASE_TO_NIL(circleRenderer);
-    RELEASE_TO_NIL(fillColor);
-    RELEASE_TO_NIL(strokeColor);
-
-    [super dealloc];
-}
-
 - (NSArray *)keySequence
 {
     return @[@"center", @"radius"];
@@ -50,7 +41,7 @@
 - (MKCircleRenderer *)circleRenderer
 {
     if (circleRenderer == nil) {
-        circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]] retain];
+        circleRenderer = [[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]];
         [circleRenderer setFillColor:fillColor ? [fillColor color] : [UIColor blackColor]];
     }
     
@@ -85,20 +76,14 @@
 
 -(void)setFillColor:(id)value
 {
-    if (fillColor != nil) {
-        RELEASE_TO_NIL(fillColor);
-    }
-    fillColor = [[TiColor colorNamed:value] retain];
+    fillColor = [TiColor colorNamed:value];
     [[self circleRenderer] setFillColor:(fillColor == nil ? [UIColor blackColor] : [fillColor color])];
     [self replaceValue:value forKey:@"fillColor" notification:NO];
 }
 
 -(void)setStrokeColor:(id)value
 {
-    if (strokeColor != nil) {
-        RELEASE_TO_NIL(strokeColor);
-    }
-    strokeColor = [[TiColor colorNamed:value] retain];
+    strokeColor = [TiColor colorNamed:value];
     [[self circleRenderer] setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
     [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }

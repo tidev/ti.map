@@ -11,15 +11,6 @@
 
 @synthesize polyline, polylineRenderer;
 
--(void)dealloc
-{
-    RELEASE_TO_NIL(polyline);
-    RELEASE_TO_NIL(polylineRenderer);
-    RELEASE_TO_NIL(strokeColor);
-
-    [super dealloc];
-}
-
 -(void)_initWithProperties:(NSDictionary*)properties
 {
     if ([properties objectForKey:@"points"] == nil) {
@@ -50,9 +41,9 @@
         coordArray[i] = coord;
     }
 
-    polyline = [[MKPolyline polylineWithCoordinates:coordArray count:[points count]] retain];
+    polyline = [MKPolyline polylineWithCoordinates:coordArray count:[points count]];
     free(coordArray);
-    polylineRenderer = [[[MKPolylineRenderer alloc] initWithPolyline:polyline] retain];
+    polylineRenderer = [[MKPolylineRenderer alloc] initWithPolyline:polyline];
 
     [self applyStrokeColor];
     [self applyStrokeWidth];
@@ -108,10 +99,7 @@
 
 -(void)setStrokeColor:(id)value
 {
-    if (strokeColor != nil) {
-        RELEASE_TO_NIL(strokeColor);
-    }
-    strokeColor = [[TiColor colorNamed:value] retain];
+    strokeColor = [TiColor colorNamed:value];
     [self applyStrokeColor];
 }
 

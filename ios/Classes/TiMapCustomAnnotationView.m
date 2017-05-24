@@ -7,6 +7,7 @@
  
 #import "TiBase.h"
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapAnnotationProxy.h"
 
 @implementation TiMapCustomAnnotationView
 
@@ -25,7 +26,6 @@
 {
     if (theProxy != customView) {
         [wrapperView.subviews.firstObject removeFromSuperview];
-        RELEASE_TO_NIL(theProxy);
         [self initWithProxy:customView];
     }
     else {
@@ -36,24 +36,15 @@
 
 - (void)initWithProxy:(TiViewProxy*)customView
 {
-    theProxy = [customView retain];
+    theProxy = customView;
     TiUIView* theView = [theProxy barButtonViewForSize:CGSizeZero];
     self.frame = wrapperView.frame = [theView bounds];
     [wrapperView addSubview:theView];
 }
 
--(void)dealloc
-{
-    RELEASE_TO_NIL(wrapperView);
-    RELEASE_TO_NIL(lastHitName);
-    RELEASE_TO_NIL(theProxy);
-    [super dealloc];
-}
-
 -(NSString *)lastHitName
 {
     NSString * result = lastHitName;
-    [lastHitName autorelease];
     lastHitName = nil;
     return result;
 }
@@ -69,24 +60,22 @@
                 if (CGRectContainsPoint([ourSubSubView frame], subPoint) && [ourSubSubView isKindOfClass:[UILabel class]]) {
                     NSString * labelText = [(UILabel *)ourSubSubView text];
                     TiMapAnnotationProxy * ourProxy = (TiMapAnnotationProxy *)[self annotation];
-                    RELEASE_TO_NIL(lastHitName);
+
                     if ([labelText isEqualToString:[ourProxy title]]) {
-                        lastHitName = [@"title" retain];
-                    }
-                    else if ([labelText isEqualToString:[ourProxy subtitle]]) {
-                        lastHitName = [@"subtitle" retain];
+                        lastHitName = @"title";
+                    } else if ([labelText isEqualToString:[ourProxy subtitle]]) {
+                        lastHitName = @"subtitle";
                     }
                     return nil;
                 }
             }
             if (CGRectContainsPoint([ourSubView bounds], subPoint)) {
-                RELEASE_TO_NIL(lastHitName);
-                lastHitName = [@"annotation" retain];
+                lastHitName = @"annotation";
                 return nil;
             }
         }
     }
-    RELEASE_TO_NIL(lastHitName);
+
     return result;
 }
 

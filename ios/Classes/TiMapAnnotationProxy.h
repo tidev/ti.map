@@ -14,7 +14,7 @@
 @interface TiMapAnnotationProxy : TiViewProxy<MKAnnotation, TiProxyObserver> {
 @private
 	int tag;
-	TiMapViewProxy *delegate;
+	__unsafe_unretained TiMapViewProxy *delegate;
 	BOOL needsRefreshing;
 	BOOL needsRefreshingWithSelection;
 	BOOL placed;

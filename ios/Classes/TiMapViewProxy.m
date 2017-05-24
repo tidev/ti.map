@@ -24,22 +24,6 @@
             nil];
 }
 
--(void)_destroy
-{
-	RELEASE_TO_NIL(selectedAnnotation);
-	RELEASE_TO_NIL(annotationsToAdd);
-	RELEASE_TO_NIL(annotationsToRemove);
-	RELEASE_TO_NIL(routesToAdd);
-	RELEASE_TO_NIL(routesToRemove);
-    RELEASE_TO_NIL(polygonsToAdd);
-    RELEASE_TO_NIL(polygonsToRemove);
-    RELEASE_TO_NIL(circlesToAdd);
-    RELEASE_TO_NIL(circlesToRemove);
-    RELEASE_TO_NIL(polylinesToAdd);
-    RELEASE_TO_NIL(polylinesToRemove);
-	[super _destroy];
-}
-
 -(NSString*)apiName
 {
     return @"Ti.Map.View";
@@ -74,7 +58,13 @@
 
 -(void)viewDidAttach
 {
-    ENSURE_UI_THREAD_0_ARGS;
+    if (![NSThread isMainThread]) {
+        TiThreadPerformOnMainThread(^{
+            [self performSelector:@selector(viewDidAttach) withObject:nil];
+        }, NO);
+        return;
+    }
+
 	TiMapView * ourView = (TiMapView *)[self view];
 
     for (id arg in annotationsToAdd) {
@@ -137,20 +127,8 @@
 			[ourView zoom:[NSNumber numberWithDouble:-1.0]];
 		}
 	}
-	
-	RELEASE_TO_NIL(selectedAnnotation);
-	RELEASE_TO_NIL(annotationsToAdd);
-	RELEASE_TO_NIL(annotationsToRemove);
-	RELEASE_TO_NIL(routesToAdd);
-	RELEASE_TO_NIL(routesToRemove);
-    RELEASE_TO_NIL(polygonsToAdd);
-    RELEASE_TO_NIL(polygonsToRemove);
-    RELEASE_TO_NIL(circlesToAdd);
-    RELEASE_TO_NIL(circlesToRemove);
-    RELEASE_TO_NIL(polylinesToAdd);
-    RELEASE_TO_NIL(polylinesToRemove);
-	
-	[super viewDidAttach];
+    
+    [super viewDidAttach];
 }
 
 -(TiMapAnnotationProxy*)annotationFromArg:(id)arg
@@ -162,7 +140,7 @@
 		return arg;
 	}
 	ENSURE_TYPE(arg,NSDictionary);
-	TiMapAnnotationProxy *proxy = [[[TiMapAnnotationProxy alloc] _initWithPageContext:[self pageContext] args:[NSArray arrayWithObject:arg]] autorelease];
+	TiMapAnnotationProxy *proxy = [[TiMapAnnotationProxy alloc] _initWithPageContext:[self pageContext] args:[NSArray arrayWithObject:arg]];
     
 	[proxy setDelegate:self];
 	return proxy;
@@ -193,16 +171,12 @@
 
 -(void)selectAnnotation:(id)arg
 {
-	ENSURE_SINGLE_ARG(arg,NSObject);
-	if ([self viewAttached]) {
-		 TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] selectAnnotation:arg];}, NO);
-	}
-	else {
-		if (selectedAnnotation != arg) {
-			RELEASE_TO_NIL(selectedAnnotation);
-			selectedAnnotation = [arg retain];
-		}
-	}
+    ENSURE_SINGLE_ARG(arg,NSObject);
+    if ([self viewAttached]) {
+        TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] selectAnnotation:arg];}, NO);
+    } else if (selectedAnnotation != arg) {
+        selectedAnnotation = arg;
+    }
 }
 
 -(void)deselectAnnotation:(id)arg
@@ -212,7 +186,7 @@
 		TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] deselectAnnotation:arg];}, NO);
 	}
 	else {
-		RELEASE_TO_NIL(selectedAnnotation);
+        selectedAnnotation = nil;
 	}
 }
 
@@ -274,7 +248,7 @@
     __block NSArray* currentAnnotations = nil;
     if (attached) {
         TiThreadPerformOnMainThread(^{
-            currentAnnotations = [[(TiMapView*)[self view] customAnnotations] retain];
+            currentAnnotations = [(TiMapView*)[self view] customAnnotations];
         }, YES);
     }
     else {
@@ -300,12 +274,10 @@
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] setAnnotations_:newAnnotations];
         }, NO);
-        [currentAnnotations release];
     }
     else {
-        RELEASE_TO_NIL(annotationsToAdd);
-        RELEASE_TO_NIL(annotationsToRemove);
-        
+        annotationsToAdd = nil;
+        annotationsToRemove = nil;
         annotationsToAdd = [[NSMutableArray alloc] initWithArray:newAnnotations];
     }
 }
@@ -315,9 +287,9 @@
     if ([self viewAttached]) {
         __block NSArray* currentAnnotations = nil;
         TiThreadPerformOnMainThread(^{
-            currentAnnotations = [[(TiMapView*)[self view] customAnnotations] retain];
+            currentAnnotations = [(TiMapView*)[self view] customAnnotations];
         }, YES);
-        return [currentAnnotations autorelease];
+        return currentAnnotations;
     }
     else {
         return annotationsToAdd;
@@ -381,7 +353,7 @@
 	if ([self viewAttached]) {
         __block NSArray* currentAnnotations = nil;
         TiThreadPerformOnMainThread(^{
-            currentAnnotations = [[(TiMapView*)[self view] customAnnotations] retain];
+            currentAnnotations = [(TiMapView*)[self view] customAnnotations];
         }, YES);
         
         for(id object in currentAnnotations)
@@ -389,7 +361,7 @@
             TiMapAnnotationProxy * annProxy = [self annotationFromArg:object];
             [self forgetProxy:annProxy];
         }
-        [currentAnnotations release];
+
         TiThreadPerformOnMainThread(^{[(TiMapView*)[self view] removeAllAnnotations:unused];}, NO);
 	}
 	else 
@@ -398,8 +370,8 @@
             [self forgetProxy:annotation];
         }
         
-        RELEASE_TO_NIL(annotationsToAdd);
-        RELEASE_TO_NIL(annotationsToRemove);
+        annotationsToAdd = nil;
+        annotationsToRemove = nil;
 	}
 }
 
@@ -541,12 +513,11 @@
     if(attached) {
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] addPolygons:polygonsToAdd];
-            [initialPolygons release];
         }, NO);
     }
     else {
-        RELEASE_TO_NIL(polygonsToAdd);
-        RELEASE_TO_NIL(polygonsToRemove);
+        polygonsToAdd = nil;
+        polylinesToRemove = nil;
         
         polygonsToAdd = [[NSMutableArray alloc] initWithArray:initialPolygons];
     }
@@ -638,12 +609,11 @@
     if(attached) {
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] addCircles:circlesToAdd];
-            [initialCircles release];
         }, NO);
     }
     else {
-        RELEASE_TO_NIL(circlesToAdd);
-        RELEASE_TO_NIL(circlesToRemove);
+        circlesToAdd = nil;
+        circlesToRemove = nil;
         circlesToAdd = [[NSMutableArray alloc] initWithArray:initialCircles];
     }
 }
@@ -734,12 +704,11 @@
     if(attached) {
         TiThreadPerformOnMainThread(^{
             [(TiMapView*)[self view] addPolylines:polylinesToAdd];
-            [initialPolylines release];
         }, NO);
     }
     else {
-        RELEASE_TO_NIL(polylinesToAdd);
-        RELEASE_TO_NIL(polylinesToRemove);
+        polygonsToAdd = nil;
+        polylinesToRemove = nil;
 
         polylinesToAdd = [[NSMutableArray alloc] initWithArray:initialPolylines];
     }

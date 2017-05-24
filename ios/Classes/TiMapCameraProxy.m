@@ -18,16 +18,9 @@
 -(id)initWithCamera:(MKMapCamera*)camera
 {
     if (self = [super init]) {
-        camera_ = [camera retain];
+        camera_ = camera;
     }
     return self;
-}
-
--(void)dealloc
-{
-    RELEASE_TO_NIL(camera_);
-	
-	[super dealloc];
 }
 
 -(void)_initWithProperties:(NSDictionary*)properties
@@ -41,9 +34,9 @@
         double eyeAltitude = [TiUtils doubleValue:eyeAlt];
         CLLocationCoordinate2D centerCoordinate = [self locationCoordinatesFromDict:eyeCoord];
         
-        camera_ = [[MKMapCamera cameraLookingAtCenterCoordinate:centerCoordinate
+        camera_ = [MKMapCamera cameraLookingAtCenterCoordinate:centerCoordinate
                                              fromEyeCoordinate:eyeCoordinate
-                                                   eyeAltitude:eyeAltitude] retain];
+                                                   eyeAltitude:eyeAltitude];
     }
 	
 	[super _initWithProperties:properties];
@@ -57,7 +50,7 @@
 -(MKMapCamera*)camera
 {
     if (camera_ == nil) {
-        camera_ = [[MKMapCamera camera] retain];
+        camera_ = [MKMapCamera camera];
     }
     return camera_;
 }
@@ -73,9 +66,10 @@
 {
     __block NSNumber *result;
     TiThreadPerformOnMainThread(^{
-        result = [[NSNumber numberWithDouble:[self camera].altitude] retain];
+        result = [NSNumber numberWithDouble:[self camera].altitude];
     }, YES);
-    return [result autorelease];
+    
+    return result;
 }
 
 -(void)setCenterCoordinate:(id)args
@@ -90,12 +84,13 @@
     __block NSDictionary *result;
     TiThreadPerformOnMainThread(^{
         CLLocationCoordinate2D centerCord = [self camera].centerCoordinate;
-        result = [[NSDictionary dictionaryWithObjectsAndKeys:
+        result = [NSDictionary dictionaryWithObjectsAndKeys:
                   [NSNumber numberWithDouble:centerCord.latitude], @"latitude",
                   [NSNumber numberWithDouble:centerCord.longitude], @"longitude",
-                  nil] retain];
+                  nil];
     }, YES);
-    return [result autorelease];
+    
+    return result;
 }
 
 -(void)setHeading:(id)value
@@ -109,9 +104,10 @@
 {
     __block NSNumber *result;
     TiThreadPerformOnMainThread(^{
-        result = [[NSNumber numberWithDouble:[self camera].heading] retain];
+        result = [NSNumber numberWithDouble:[self camera].heading];
     }, YES);
-    return [result autorelease];
+    
+    return result;
 }
 
 -(void)setPitch:(id)value
@@ -125,9 +121,10 @@
 {
     __block NSNumber *result;
     TiThreadPerformOnMainThread(^{
-        result = [[NSNumber numberWithDouble:[self camera].pitch] retain];
+        result = [NSNumber numberWithDouble:[self camera].pitch];
     }, YES);
-    return [result autorelease];
+    
+    return result;
 }
 
 # pragma mark Utils

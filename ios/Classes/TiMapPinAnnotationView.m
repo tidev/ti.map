@@ -7,9 +7,9 @@
 
 #import "TiMapPinAnnotationView.h"
 #import "TiMapView.h"
+#import "TiMapAnnotationProxy.h"
 
 @implementation TiMapPinAnnotationView
-
 
 -(id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView*)map_
 {
@@ -20,16 +20,9 @@
 	return self;
 }
 
--(void)dealloc
-{
-	RELEASE_TO_NIL(lastHitName);
-	[super dealloc];
-}
-
 -(NSString *)lastHitName
 {
 	NSString * result = lastHitName;
-	[lastHitName autorelease];
 	lastHitName = nil;
 	return result;
 }
@@ -51,14 +44,13 @@
 				{
 					NSString * labelText = [(UILabel *)ourSubSubView text];
 					TiMapAnnotationProxy * ourProxy = (TiMapAnnotationProxy *)[self annotation];
-					RELEASE_TO_NIL(lastHitName);
 					if ([labelText isEqualToString:[ourProxy title]])
 					{
-						lastHitName = [@"title" retain];
+						lastHitName = @"title";
 					}
 					else if ([labelText isEqualToString:[ourProxy subtitle]])
 					{
-						lastHitName = [@"subtitle" retain];
+						lastHitName = @"subtitle";
 					}
 
 					return nil;
@@ -66,14 +58,13 @@
 			}
 			if (CGRectContainsPoint([ourSubView bounds], subPoint))
 			{
-				RELEASE_TO_NIL(lastHitName);
-				lastHitName = [@"annotation" retain];
+				lastHitName = @"annotation";
 				return nil;
 			}
 		}
 	}
-	RELEASE_TO_NIL(lastHitName);
-	return result;
+
+    return result;
 }
 
 @end

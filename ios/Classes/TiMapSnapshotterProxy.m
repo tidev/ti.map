@@ -16,13 +16,6 @@
     return @"Ti.Map.Snapshotter";
 }
 
-
--(void)dealloc
-{
-    RELEASE_TO_NIL(options);
-    [super dealloc];
-}
-
 -(MKCoordinateRegion)regionFromDict:(NSDictionary*)dict
 {
     CLLocationDegrees latitudeDelta = [TiUtils floatValue:@"latitudeDelta" properties:dict];
@@ -92,7 +85,7 @@
                 return;
             }
             
-            TiBlob *blob = [[[TiBlob alloc] _initWithPageContext:[self pageContext]] autorelease];
+            TiBlob *blob = [[TiBlob alloc] _initWithPageContext:[self pageContext]];
             [blob setImage:[snapshot image]];
             [blob setMimeType:@"image/png" type:TiBlobTypeImage];
             
