@@ -30,7 +30,10 @@ public class TiMarker {
 	}
 
 	public void release() {
-		marker.remove();
+		if (marker != null) {
+			marker.remove();
+			marker = null;
+		}
 		if (proxy != null) {
 			proxy.release();
 			proxy = null;
