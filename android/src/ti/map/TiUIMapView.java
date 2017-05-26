@@ -964,6 +964,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			KrollDict d = new KrollDict();
 			d.put(TiC.PROPERTY_LATITUDE, position.target.latitude);
 			d.put(TiC.PROPERTY_LONGITUDE, position.target.longitude);
+			d.put(MapModule.PROPERTY_BEARING, position.bearing);
+			d.put(MapModule.PROPERTY_ZOOM, position.zoom);
+			d.put(MapModule.PROPERTY_TILT, position.tilt);
 			d.put(TiC.PROPERTY_SOURCE, proxy);
 			LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
 			d.put(TiC.PROPERTY_LATITUDE_DELTA,
