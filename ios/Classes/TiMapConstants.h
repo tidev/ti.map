@@ -25,4 +25,10 @@ typedef NS_ENUM(NSUInteger, TiMapAnnotationPinColor) {
     TiMapAnnotationPinColorYellow
 };
 
+typedef NS_ENUM(NSUInteger, TiMapOverlyPatternType) {
+    TiMapOverlyPatternTypeDashed = 0,
+    TiMapOverlyPatternTypeDotted,
+    TiMapOverlyPatternTypeCustom // Unused
+};
+
 #endif /* TiMapConstants_h */

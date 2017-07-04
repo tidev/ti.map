@@ -10,6 +10,8 @@
 
 #import "TiBase.h"
 #import "TiViewProxy.h"
+#import "TiMapOverlayPattern.h"
+
 #import <MapKit/MapKit.h>
 
 @class TiMapViewProxy;
@@ -19,7 +21,8 @@
     MKPolylineRenderer *polylineRenderer;
 
     float strokeWidth;
-    TiColor *strokeColor;
+    UIColor *strokeColor;
+    TiMapOverlayPattern *pattern;
 }
 
 @property (nonatomic, readonly) MKPolyline *polyline;
