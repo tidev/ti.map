@@ -1236,7 +1236,7 @@
 
         CGPoint polygonViewPoint = [polygonRenderer pointForMapPoint:point];
         BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
-        if (inPolygon) {
+        if (inPolygon && [TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES]) {
             [self fireShapeClickEvent:proxy point:point sourceType:@"polygon"];
         }
     }
@@ -1251,7 +1251,7 @@
 
         CGPoint circleViewPoint = [circRenderer pointForMapPoint:point];
         BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
-        if (inCircle) {
+        if (inCircle && [TiUtils boolValue:[circle valueForKey:@"touchEnabled"] def:YES]) {
             [self fireShapeClickEvent:circle point:point sourceType:@"circle"];
         }
     }
@@ -1265,7 +1265,7 @@
 
         CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
         BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
-        if (onPolyline) {
+        if (onPolyline && [TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES]) {
             [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
         }
     }

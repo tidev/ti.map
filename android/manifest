@@ -8,7 +8,7 @@ architectures: armeabi-v7a x86
 description: External version of Map module to support new Google Map v2 sdk
 author: Hieu Pham
 license: Apache Public License v2
-copyright: Copyright (c) 2013-2016 by Appcelerator, Inc.
+copyright: Copyright (c) 2013-2017 by Appcelerator, Inc.
 
 
 # these should not be edited

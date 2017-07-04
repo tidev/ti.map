@@ -32,41 +32,39 @@ import com.google.android.gms.maps.model.PatternItem;
 
 
 @Kroll.proxy(name="Polyline",creatableInModule=MapModule.class, propertyAccessors = {
-
-	MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
-
+	MapModule.PROPERTY_STROKE_COLOR,
+	MapModule.PROPERTY_STROKE_WIDTH,
 	PolylineProxy.PROPERTY_STROKE_COLOR2,
 	PolylineProxy.PROPERTY_STROKE_WIDTH2,
 	PolylineProxy.PROPERTY_STROKE_PATTERN2,
-
 	PolylineProxy.PROPERTY_ZINDEX,
-
 	MapModule.PROPERTY_POINTS,
-
+	TiC.PROPERTY_TOUCH_ENABLED
 })
 public class PolylineProxy extends KrollProxy implements IShape
 {
 
 	private PolylineOptions options;
 	private Polyline polyline;
+	private boolean clickable;
 
 	private static final String TAG = "PolylineProxy";
 
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
-	private static final int MSG_SET_POINTS 	  	= MSG_FIRST_ID + 499;
-	private static final int MSG_SET_STROKE_COLOR 	= MSG_FIRST_ID + 501;
-	private static final int MSG_SET_STROKE_WIDTH 	= MSG_FIRST_ID + 502;
-	private static final int MSG_SET_STROKE_PATTERN = MSG_FIRST_ID + 503;
-	private static final int MSG_SET_ZINDEX 	  	= MSG_FIRST_ID + 504;
+	private static final int MSG_SET_POINTS = MSG_FIRST_ID + 499;
+	private static final int MSG_SET_STROKE_COLOR = MSG_FIRST_ID + 501;
+	private static final int MSG_SET_STROKE_WIDTH = MSG_FIRST_ID + 502;
+	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 503;
+	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 504;
+	private static final int MSG_SET_STROKE_PATTERN = MSG_FIRST_ID + 505;
 
-	public static final String PROPERTY_STROKE_COLOR2 	= "color";
-	public static final String PROPERTY_STROKE_WIDTH2 	= "width";
+	public static final String PROPERTY_STROKE_COLOR2 = "color";
+	public static final String PROPERTY_STROKE_WIDTH2 = "width";
 	public static final String PROPERTY_STROKE_PATTERN2 = "pattern";
 
 	public static final String PROPERTY_ZINDEX = "zIndex";
 
-	//Default patterns definitions
 	private static final int DEFAULT_PATTERN_DASH_LENGTH_PX = 50;
 	private static final int DEFAULT_PATTERN_GAP_LENGTH_PX = 20;
 
@@ -75,6 +73,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 	public PolylineProxy() {
 		super();
+		clickable = true;
 	}
 
 	@Override
@@ -114,6 +113,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 				result.setResult(null);
 				return true;
 			}
+			case MSG_SET_TOUCH_ENABLED: {
+				result = (AsyncResult) msg.obj;
+				clickable = TiConvert.toBoolean(result.getArg(), true);
+				result.setResult(null);
+				return true;
+			}
 			default : {
 				return super.handleMessage(msg);
 			}
@@ -122,18 +127,19 @@ public class PolylineProxy extends KrollProxy implements IShape
 	public void processOptions() {
 
 		options = new PolylineOptions();
-		// (int) 	 strokeColor
-		// (float)	 strokeWidth
-		// (int) 	 fillColor
-		// (float)	 zIndex
+		// (int) 	  strokeColor
+		// (float)	strokeWidth
+		// (int) 	  fillColor
+		// (float)	zIndex
 
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
-			 processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
+		  processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
 		}
 
 		if (hasProperty(MapModule.PROPERTY_STROKE_COLOR)) {
 			options.color(TiConvert.toColor((String)getProperty(MapModule.PROPERTY_STROKE_COLOR)));
 		}
+
 		// alternate API
 		if (hasProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)) {
 			options.color(TiConvert.toColor((String)getProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)));
@@ -142,6 +148,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 		if (hasProperty(MapModule.PROPERTY_STROKE_WIDTH)) {
 			options.width(TiConvert.toFloat(getProperty(MapModule.PROPERTY_STROKE_WIDTH)));
 		}
+
 		// alternate API
 		if (hasProperty(PolylineProxy.PROPERTY_STROKE_WIDTH2)) {
 			options.width(TiConvert.toFloat(getProperty(PolylineProxy.PROPERTY_STROKE_WIDTH2)));
@@ -151,11 +158,16 @@ public class PolylineProxy extends KrollProxy implements IShape
 			options.zIndex(TiConvert.toFloat(getProperty(PolylineProxy.PROPERTY_ZINDEX)));
 		}
 
+		if (hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
+			clickable = TiConvert.toBoolean(getProperty(TiC.PROPERTY_TOUCH_ENABLED));
+		}
+
 		if (hasProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2)) {
-			if (getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2) instanceof HashMap)
+			if (getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2) instanceof HashMap) {
 				options.pattern(processPatternDefinition((HashMap)getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2)));
-			else
+      } else {
 				options.pattern(processPatternDefinition(TiConvert.toInt(getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2))));
+      }
 		}
 	}
 
@@ -166,7 +178,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 		} else {
 			options.add(location);
 		}
-
 	}
 
 	public ArrayList<LatLng> processPoints(Object points, boolean list) {
@@ -185,6 +196,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 		//single point
 		addLocation(points, locationArray, list);
 		return locationArray;
+	}
+
+	public boolean getClickable() {
+		return clickable;
 	}
 
 	public PolylineOptions getOptions() {
@@ -232,6 +247,9 @@ public class PolylineProxy extends KrollProxy implements IShape
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX), TiConvert.toFloat(value));
 		}
 
+		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
+		}
 	}
 
 	// A location can either be a an array of longitude, latitude pairings or
@@ -266,8 +284,9 @@ public class PolylineProxy extends KrollProxy implements IShape
 			int dashLength = (Integer)definition.get("dashLength");
 
 			pattern = Arrays.asList(new Dash(dashLength), new Gap(gapLength));
-		} else if (type == MapModule.POLYLINE_PATTERN_DOTTED)
+		} else if (type == MapModule.POLYLINE_PATTERN_DOTTED) {
 			pattern = Arrays.asList(new Dot(), new Gap(gapLength));
+    }
 
 		return pattern != null ? pattern : DEFAULT_DASHED_PATTERN;
 	}

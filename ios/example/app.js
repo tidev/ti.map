@@ -23,8 +23,8 @@ var rows = [
 ];
 
 if (IOS) {
-    rows.push(require('/camera'));
-    rows.push(require('/properties'));
+    rows.push(require('/tests/camera'));
+    rows.push(require('/tests/properties'));
 }
 
 if (ANDROID && Map.isGooglePlayServicesAvailable() != Map.SUCCESS) {

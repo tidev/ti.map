@@ -46,6 +46,12 @@ properties:
     type: Number
     default: 10
 
+  - name: touchEnabled
+    summary: Determines whether view should receive touch events.
+    type: Boolean
+    default: true
+    since: "6.2.0"
+
   - name: opacity
     summary: Opacity of this map circle, from 0.0 (transparent) to 1.0 (opaque).
     type: Number
