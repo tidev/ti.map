@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 3.1.2
+version: 3.1.3
 apiversion: 3
 architectures: armeabi-v7a x86
 description: External version of Map module to support new Google Map v2 sdk
