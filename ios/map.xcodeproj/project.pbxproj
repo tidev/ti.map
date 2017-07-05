@@ -56,6 +56,8 @@
 		CEE33CF419EC4C150005E745 /* TiMapUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE33CF219EC4C150005E745 /* TiMapUtils.m */; };
 		DB3656FE1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h in Headers */ = {isa = PBXBuildFile; fileRef = DB3656FC1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h */; };
 		DB3656FF1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3656FD1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m */; };
+		DB932FF71F0C5D9C0099E6A8 /* TiMapOverlayPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = DB932FF51F0C5D9C0099E6A8 /* TiMapOverlayPattern.h */; };
+		DB932FF81F0C5D9C0099E6A8 /* TiMapOverlayPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = DB932FF61F0C5D9C0099E6A8 /* TiMapOverlayPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +111,8 @@
 		DB3656EF1E50BA740040E0B9 /* TiMapConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapConstants.h; path = Classes/TiMapConstants.h; sourceTree = "<group>"; };
 		DB3656FC1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+AndroidHueParity.h"; path = "Classes/UIColor+AndroidHueParity.h"; sourceTree = "<group>"; };
 		DB3656FD1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+AndroidHueParity.m"; path = "Classes/UIColor+AndroidHueParity.m"; sourceTree = "<group>"; };
+		DB932FF51F0C5D9C0099E6A8 /* TiMapOverlayPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMapOverlayPattern.h; sourceTree = "<group>"; };
+		DB932FF61F0C5D9C0099E6A8 /* TiMapOverlayPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiMapOverlayPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,7 +230,8 @@
 				DB07496A1E081A23009D8A71 /* Polyline */,
 				DB07496B1E081A36009D8A71 /* Polygon */,
 				DB07496D1E081A6A009D8A71 /* Circle */,
-				CE92EC2117DF8B020082E943 /* TiMKOverlayPathUniversal.h */,
+				DB932FF51F0C5D9C0099E6A8 /* TiMapOverlayPattern.h */,
+				DB932FF61F0C5D9C0099E6A8 /* TiMapOverlayPattern.m */,
 			);
 			name = Overlays;
 			sourceTree = "<group>";
@@ -243,6 +248,7 @@
 		DB0749701E081A8F009D8A71 /* Route */ = {
 			isa = PBXGroup;
 			children = (
+				CE92EC2117DF8B020082E943 /* TiMKOverlayPathUniversal.h */,
 				CEC39B4417EB97BA00DCE1EE /* TiMapRouteProxy.h */,
 				CEC39B4517EB97BA00DCE1EE /* TiMapRouteProxy.m */,
 			);
@@ -295,6 +301,7 @@
 				24DE9E1111C5FE74003F90F6 /* TiMapModuleAssets.h in Headers */,
 				DB3656FE1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h in Headers */,
 				CED651C617D7AA21007C2954 /* TiMapAnnotationProxy.h in Headers */,
+				DB932FF71F0C5D9C0099E6A8 /* TiMapOverlayPattern.h in Headers */,
 				CE92EC2517DF9A640082E943 /* TiMapCameraProxy.h in Headers */,
 				815136F31D355BF5009E3E2C /* TiMapSnapshotterProxy.h in Headers */,
 				CEE33CF319EC4C150005E745 /* TiMapUtils.h in Headers */,
@@ -385,6 +392,7 @@
 				DB3656FF1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m in Sources */,
 				CED651C917D7AA21007C2954 /* TiMapCustomAnnotationView.m in Sources */,
 				CEC39B4717EB97BA00DCE1EE /* TiMapRouteProxy.m in Sources */,
+				DB932FF81F0C5D9C0099E6A8 /* TiMapOverlayPattern.m in Sources */,
 				27A609E719F54FC300CA150A /* TiMapPolygonProxy.m in Sources */,
 				CE92EC2617DF9A640082E943 /* TiMapCameraProxy.m in Sources */,
 				27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */,
