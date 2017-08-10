@@ -1,5 +1,6 @@
 # Change Log
 <pre>
+v3.1.3    Android: Fix userLocation crash [MOD-2334]
 v3.1.2    Android: Fix removeAnnotation [MOD-2337]
 v3.1.1    Android: Fix Annotation memory leak [TIMOB-23269]
 v3.1.0    Android: Add style property [MOD-2311]

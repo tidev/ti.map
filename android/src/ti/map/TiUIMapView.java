@@ -18,6 +18,7 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
+import org.appcelerator.titanium.TiApplication;
 
 import ti.map.Shape.Boundary;
 import ti.map.Shape.IShape;
@@ -34,6 +35,10 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.res.Resources;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.Manifest;
+
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -299,7 +304,12 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	protected void setUserLocationEnabled(boolean enabled) {
-		map.setMyLocationEnabled(enabled);
+		Context context = TiApplication.getInstance().getApplicationContext();
+		if (Build.VERSION.SDK_INT < 23 || context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+			map.setMyLocationEnabled(enabled);
+		} else {
+			Log.e(TAG, "Enable ACCESS_FINE_LOCATION permission to use userLocation");
+		}
 	}
 
 	protected void setCompassEnabled(boolean enabled) {
