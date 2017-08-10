@@ -1,6 +1,7 @@
 # Change Log
 <pre>
 v3.2.0    Support for overlay patterns [MOD-2346]
+v3.1.3    Fix Android "userLocation" crash [MOD-2334]
 v3.1.2    Fix removeAnnotation [MOD-2337]
 v3.1.1    Fix Annotation memory leak [TIMOB-23269]
 v3.1.0    Add style property [MOD-2311]
