@@ -320,14 +320,16 @@ properties:
         Polyline type constant used to display a dashed polyline via <Modules.Map.Polyline.pattern> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    platforms: [android, iphone, ipad]
+    since: "6.2.0"
 
   - name: POLYLINE_PATTERN_DOTTED
     summary: |
         Polyline type constant used to display a dotted polyline via <Modules.Map.Polyline.pattern> property.
     type: Number
     permission: read-only
-    platforms: [android]
+    platforms: [android, iphone, ipad]
+    since: "6.2.0"
 
 methods:
   - name: isGooglePlayServicesAvailable
