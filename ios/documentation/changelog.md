@@ -1,9 +1,11 @@
 # Change Log
 <pre>
-v2.9.0  Support opacity for Circles
-v2.5.0  Add iOS9 mapTypes 'HYBRID_FLYOVER_TYPE' and 'SATELLITE_FLYOVER_TYPE'. [MOD-2152]
+v2.11.0 Support for overlay patterns [MOD-2346]
+v2.10.0 Support "touchEnabled" for overlays, add "mapclick" event [MOD-2322], [MOD-2268]
+v2.9.0  Support "opacity" for circles
+v2.5.0  Add iOS 9 mapTypes 'HYBRID_FLYOVER_TYPE' and 'SATELLITE_FLYOVER_TYPE'. [MOD-2152]
 v2.4.1  Fixed an issue where pins have not been draggable anymore. [MOD-2131]
-v2.4.0  iOS9: Upgrade map module to support bitcode. [TIMOB-19385]
+v2.4.0  iOS 9: Upgrade map module to support bitcode. [TIMOB-19385]
 v2.3.2  Fixed map crash with polygons when not setting mapType. [TIMOB-19102]
 v2.3.1  Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
         Fixes longclick event on iOS. [Github #41]
@@ -19,7 +21,7 @@ v2.0.6  Fixed map not responding to touch after animating camera [TIMOB-17749]
 v2.0.5  Fixed exception when setting "centerCoordinate" on camera [TIMOB-17659]
 
 v2.0.4  Fixed "userLocation" permissions for iOS 8 [TIMOB-17665]
-        Bumping minsdk to 3.4.0 [TIMODOPEN-437]
+        Bumping minsdk to 3.4.0 [MOD-1968]
 
 v2.0.2  Fixed ignoring userLocation property during view creation [TIMOB-12733]
 
