@@ -22,15 +22,6 @@
     return self;
 }
 
--(void)dealloc
-{
-    RELEASE_TO_NIL(color);
-    RELEASE_TO_NIL(routeLine);
-    RELEASE_TO_NIL(routeRenderer);
-	
-	[super dealloc];
-}
-
 -(void)_initWithProperties:(NSDictionary*)properties
 {
     if ([properties objectForKey:@"points"] == nil) {
@@ -62,14 +53,14 @@
         MKMapPoint pt = MKMapPointForCoordinate(coord);
         pointArray[i] = pt;
     }
-    routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] retain];
+    routeLine = [MKPolyline polylineWithPoints:pointArray count:[points count]];
     free(pointArray);
     
     // Using the TiMKOverlayPathUniversal protocol so Xcode can resolve methods
     // MKPolylineView is deprecated in iOS 7, still here for backward compatibility.
     // MKPolylineView can be removed when support is dropped for iOS 6 and below.
     Class rendererClass = ([TiUtils isIOS7OrGreater]) ? [MKPolylineRenderer class] : [MKPolylineView class];
-    routeRenderer = [(id <TiMKOverlayPathUniversal>)[[rendererClass alloc] initWithPolyline:routeLine] retain];
+    routeRenderer = (id <TiMKOverlayPathUniversal>)[[rendererClass alloc] initWithPolyline:routeLine];
     [self applyColor];
     [self applyWidth];
 }
@@ -103,10 +94,7 @@
 
 -(void)setColor:(id)value
 {
-    if (color != nil) {
-        RELEASE_TO_NIL(color);
-    }
-    color = [[TiColor colorNamed:value] retain];
+    color = [TiColor colorNamed:value];
     [self applyColor];
 }
 

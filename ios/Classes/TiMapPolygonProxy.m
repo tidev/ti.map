@@ -11,16 +11,6 @@
 
 @synthesize polygon, polygonRenderer;
 
--(void)dealloc
-{
-    RELEASE_TO_NIL(polygon);
-    RELEASE_TO_NIL(polygonRenderer);
-    RELEASE_TO_NIL(fillColor);
-    RELEASE_TO_NIL(strokeColor);
-
-	[super dealloc];
-}
-
 -(void)_initWithProperties:(NSDictionary*)properties
 {
     if ([properties objectForKey:@"points"] == nil) {
@@ -71,13 +61,13 @@
             [holePolygons addObject:interiorPolygon];
         }
 
-        polygon = [[MKPolygon polygonWithCoordinates:coordArray count:[points count] interiorPolygons:holePolygons] retain];
+        polygon = [MKPolygon polygonWithCoordinates:coordArray count:[points count] interiorPolygons:holePolygons];
     } else {
-        polygon = [[MKPolygon polygonWithCoordinates:coordArray count:[points count]] retain];
+        polygon = [MKPolygon polygonWithCoordinates:coordArray count:[points count]];
     }
 
     free(coordArray);
-    polygonRenderer = [[[MKPolygonRenderer alloc] initWithPolygon:polygon] retain];
+    polygonRenderer = [[MKPolygonRenderer alloc] initWithPolygon:polygon];
 
     [self applyFillColor];
     [self applyStrokeColor];
@@ -141,19 +131,13 @@
 
 -(void)setFillColor:(id)value
 {
-    if (fillColor != nil) {
-        RELEASE_TO_NIL(fillColor);
-    }
-    fillColor = [[TiColor colorNamed:value] retain];
+    fillColor = [TiColor colorNamed:value];
     [self applyFillColor];
 }
 
 -(void)setStrokeColor:(id)value
 {
-    if (strokeColor != nil) {
-        RELEASE_TO_NIL(strokeColor);
-    }
-    strokeColor = [[TiColor colorNamed:value] retain];
+    strokeColor = [TiColor colorNamed:value];
     [self applyStrokeColor];
 }
 

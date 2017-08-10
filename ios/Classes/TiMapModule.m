@@ -43,7 +43,7 @@
 
 -(TiMapViewProxy*)createView:(id)args
 {
-    return [[[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+    return [[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args];
 }
 
 -(TiMapCameraProxy*)createCamera:(id)args
@@ -52,7 +52,7 @@
         [TiMapModule logAddedIniOS7Warning:@"createCamera()"];
         return nil;
     }
-    return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+    return [[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args];
 }
 
 MAKE_SYSTEM_PROP(STANDARD_TYPE,MKMapTypeStandard);
