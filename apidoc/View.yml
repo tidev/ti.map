@@ -411,7 +411,7 @@ events:
     platforms: [android, iphone, ipad]
 
   - name: regionwillchange
-    since: "6.0.0"
+    since: { android: "6.2.0", iphone: "6.0.0", ipad: "6.0.0" }
     summary: |
         Fired when the mapping region will change.
     properties:
@@ -440,7 +440,15 @@ events:
             The regionwillchange event was caused by an `animation`, such as a animating the camera.
         since: "3.2.0"
         type: Boolean
-        platforms: [iphone, ipad]
+        platforms: [android, iphone, ipad]
+        
+      - name: reason
+        summary: |
+            The reason for the camera change, either <Modules.Map.REASON_API_ANIMATION>, 
+            <Modules.Map.REASON_DEVELOPER_ANIMATION> or <Modules.Map.REASON_GESTURE>.
+        since: "6.0.0"
+        type: Number
+        platforms: [android]
 
   - name: regionchanged
     summary: |

@@ -269,6 +269,24 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
 
+  - name: REASON_API_ANIMATION
+    summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The animation was initiated in response to the user actions.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    
+  - name: REASON_DEVELOPER_ANIMATION
+    summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The camera moved in response to a request from the application.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    
+  - name: REASON_GESTURE
+    summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The camera moved in response to the user gestures on the map.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    
   - name: SUCCESS
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is available, and the connection is successful.
     type: Number
