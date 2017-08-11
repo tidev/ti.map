@@ -93,6 +93,9 @@ public class MapModule extends KrollModule
 	@Kroll.constant public static final int REASON_DEVELOPER_ANIMATION = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
 	@Kroll.constant public static final int REASON_GESTURE = GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
 
+  @Kroll.constant public static final int POLYLINE_PATTERN_DASHED = 0;
+	@Kroll.constant public static final int POLYLINE_PATTERN_DOTTED = 1;
+
 	public MapModule()
 	{
 		super();

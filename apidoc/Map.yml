@@ -77,7 +77,7 @@ description: |
                     <module platform="iphone">ti.map</module>
                 </modules>
             </ti:app>
-            
+
     -   To use the `userLocation` property in iOS 8 and later, add either the
         [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26)
         or
@@ -333,6 +333,22 @@ properties:
     since: "3.2.0"
     platforms: [iphone, ipad]
 
+  - name: POLYLINE_PATTERN_DASHED
+    summary: |
+        Polyline type constant used to display a dashed polyline via <Modules.Map.Polyline.pattern> property.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+    since: "6.2.0"
+
+  - name: POLYLINE_PATTERN_DOTTED
+    summary: |
+        Polyline type constant used to display a dotted polyline via <Modules.Map.Polyline.pattern> property.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+    since: "6.2.0"
+
 methods:
   - name: isGooglePlayServicesAvailable
     returns:
@@ -394,7 +410,7 @@ examples:
                 Ti.API.info("Clicked " + evt.clicksource + " on " + evt.latitude + "," + evt.longitude);
             });
             win.open();
-            
+
   - title: Alloy XML Markup
     example: |
         Previous example as an Alloy view.

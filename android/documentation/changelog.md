@@ -1,14 +1,16 @@
 # Change Log
 <pre>
-v3.1.2    Android: Fix removeAnnotation [MOD-2337]
-v3.1.1    Android: Fix Annotation memory leak [TIMOB-23269]
-v3.1.0    Android: Add style property [MOD-2311]
+v3.2.0    Support for overlay patterns [MOD-2346]
+v3.1.3    Fix Android "userLocation" crash [MOD-2334]
+v3.1.2    Fix removeAnnotation [MOD-2337]
+v3.1.1    Fix Annotation memory leak [TIMOB-23269]
+v3.1.0    Add style property [MOD-2311]
 v3.0.2    Fix addPolyline() handler
 v3.0.1    Update Google Play Services to v9.6.1 (revision 33)
-v2.3.10   Android null check on map.clear()
-v2.3.9    Android: Annotation.pincolor can't be changed if annotation added to mapView. [TIMOB-20620]
+v2.3.10   Null check on map.clear()
+v2.3.9    Annotation.pincolor can't be changed if annotation added to mapView. [TIMOB-20620]
 v2.3.8    Support annotation's image property with Ti.Blob [MOD-2205]
-v2.3.7    Android: Provide the method setMapToolbarEnabled [MOD-2189]
+v2.3.7    Provide the method setMapToolbarEnabled [MOD-2189]
 v2.3.6    Add Street View Panorama [TIMOB-19751]
 v2.3.5    Refactor module to use getMapAsync [TIMOB-19726]
 v2.3.4    Recompiled map with NDK r10e [TIMOB-19681]

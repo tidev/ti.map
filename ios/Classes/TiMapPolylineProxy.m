@@ -6,6 +6,7 @@
  */
 
 #import "TiMapPolylineProxy.h"
+#import "TiMapConstants.h"
 
 @implementation TiMapPolylineProxy
 
@@ -26,9 +27,7 @@
         [self throwException:@"missing required points property" subreason:nil location:CODELOCATION];
     }
 
-    [super _initWithProperties:properties];
-    strokeWidth = 0.0;
-    
+    [super _initWithProperties:properties];    
     [self setupPolyline];
 }
 
@@ -56,6 +55,7 @@
 
     [self applyStrokeColor];
     [self applyStrokeWidth];
+    [self applyStrokePattern];
 }
 
 // A location can either be a an array of longitude, latitude pairings or
@@ -83,7 +83,7 @@
 -(void)applyStrokeColor
 {
     if (polylineRenderer != nil) {
-        [polylineRenderer setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
+        [polylineRenderer setStrokeColor:strokeColor];
     }
 }
 
@@ -91,6 +91,25 @@
 {
     if (polylineRenderer != nil) {
         [polylineRenderer setLineWidth:strokeWidth];
+    }
+}
+
+-(void)applyStrokePattern
+{
+    if (polylineRenderer != nil && pattern != nil) {
+        [polylineRenderer setLineDashPattern:@[NUMINTEGER(pattern.dashLength), NUMINTEGER(pattern.gapLength)]];
+        
+        switch (pattern.type) {
+            case TiMapOverlyPatternTypeDashed:
+                [polylineRenderer setLineCap:kCGLineCapSquare];
+                break;
+            case TiMapOverlyPatternTypeDotted:
+                [polylineRenderer setLineCap:kCGLineCapRound];
+                break;
+            default:
+                NSLog(@"[ERROR] Unknown overlay-pattern provided!");
+                break;
+        }
     }
 }
 
@@ -105,13 +124,12 @@
     [self replaceValue:value forKey:@"points" notification:NO];
 }
 
-
 -(void)setStrokeColor:(id)value
 {
     if (strokeColor != nil) {
         RELEASE_TO_NIL(strokeColor);
     }
-    strokeColor = [[TiColor colorNamed:value] retain];
+    strokeColor = [[[TiColor colorNamed:value] _color] retain];
     [self applyStrokeColor];
 }
 
@@ -119,6 +137,23 @@
 {
     strokeWidth = [TiUtils floatValue:value];
     [self applyStrokeWidth];
+}
+
+- (void)setPattern:(id)args
+{
+    ENSURE_TYPE(args, NSDictionary);
+    
+    TiMapOverlyPatternType type = [TiUtils intValue:@"type" properties:args def:TiMapOverlyPatternTypeDashed];
+    NSInteger gapLength = [TiUtils intValue:[args objectForKey:@"gapLength"] def:20];
+    NSInteger dashLength = [TiUtils intValue:[args objectForKey:@"dashLength"] def:50];
+    
+    RELEASE_TO_NIL(pattern);
+    
+    pattern = [[[TiMapOverlayPattern alloc] initWithPatternType:type
+                                                  andGapLength:gapLength
+                                                    dashLength:dashLength] retain];
+    
+    [self applyStrokePattern];
 }
 
 @end

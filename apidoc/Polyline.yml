@@ -46,3 +46,32 @@ properties:
     availability: creation
     type: Number
     platforms: [android]
+
+  - name: pattern
+    summary: Pattern used to draw the polylines.
+    description: |
+        As per default polylines are drawn with a solid line. You can specify to 
+        draw them with a dashed line using <Modules.Map.POLYLINE_PATTERN_DASHED> 
+        or with a dotted line using <Modules.Map.POLYLINE_PATTERN_DOTTED>.
+
+        You can also specify the dimensions to use when you create a dashed or 
+        dotted polyline.
+
+        For a dashed polyline, you can do something like this:
+
+            polyline.setPattern({
+                type: TiMap.POLYLINE_PATTERN_DASHED,
+                gapLength: 25,
+                dashLength: 50
+            });
+
+        or for a dotted polyline, you can do:
+
+            polyline.setPattern({
+                type: TiMap.POLYLINE_PATTERN_DOTTED,
+                gapLength: 25
+            });
+
+    type: Object
+    platforms: [android, iphone, ipad]
+    since: "6.2.0"
