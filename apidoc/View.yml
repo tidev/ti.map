@@ -411,7 +411,7 @@ events:
     platforms: [android, iphone, ipad]
 
   - name: regionwillchange
-    since: "6.0.0"
+    since: { android: "6.2.0", iphone: "6.0.0", ipad: "6.0.0" }
     summary: |
         Fired when the mapping region will change.
     properties:
