@@ -27,6 +27,7 @@
 @property (nonatomic,readonly)	BOOL needsRefreshingWithSelection;
 @property (nonatomic, readwrite, assign) BOOL placed;
 @property (nonatomic, readonly) CGPoint offset;
+@property (nonatomic, retain) id <UIViewControllerPreviewing> controllerPreviewing;
 
 // Title and subtitle for use by selection UI.
 - (NSString *)title;

@@ -20,6 +20,7 @@
 #import "TiMapPolygonProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapPolylineProxy.h"
+#import "TiUIiOSPreviewContextProxy.h"
 
 @implementation TiMapView
 
@@ -1119,10 +1120,17 @@
                 annView.rightCalloutAccessoryView = nil;
             }
         }
-
+        
         [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
         annView.tag = [ann tag];
+        
+        TiUIiOSPreviewContextProxy *previewContext = [ann valueForUndefinedKey:@"previewContext"];
+        if (previewContext && [TiUtils forceTouchSupported] && [previewContext preview] != nil) {
+            UIViewController *controller = [[[TiApp app] controller] topPresentedController];
+            [controller unregisterForPreviewingWithContext:ann.controllerPreviewing];
+            ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:[[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext] sourceView:annView];
+        }
         
         return annView;
     }
