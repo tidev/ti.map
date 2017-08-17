@@ -1,5 +1,6 @@
 # Change Log
-<pre>
+```
+v2.12.0 Support peek-and-pop in annotations [TIMOB-24375]
 v2.11.0 Support for overlay patterns [MOD-2346]
 v2.10.0 Support "touchEnabled" for overlays, add "mapclick" event [MOD-2322], [MOD-2268]
 v2.9.0  Support "opacity" for circles
@@ -33,3 +34,4 @@ v2.0.0  Fixed methods deprecated in iOS 7 [MOD-1521]
         Fixed map view with percentage values become grayed when rotating the screen [MOD-1613]
 
 v1.0.0  Moved out of the Titanium SDK to a standalone module [MOD-1514]
+```
