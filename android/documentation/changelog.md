@@ -1,5 +1,6 @@
 # Change Log
 <pre>
+v3.3.0    Expose "regionwillchange" event for iOS-parity [MOD-2343]
 v3.2.0    Support for overlay patterns [MOD-2346]
 v3.1.3    Fix Android "userLocation" crash [MOD-2334]
 v3.1.2    Fix removeAnnotation [MOD-2337]
