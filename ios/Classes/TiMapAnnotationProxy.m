@@ -375,15 +375,16 @@
 	}
 }
 
--(void)setPreviewContext:(id)previewContext
+- (void)setPreviewContext:(id)previewContext
 {
+    ENSURE_TYPE(previewContext, TiUIiOSPreviewContextProxy);
+
     if ([TiUtils forceTouchSupported] == NO) {
         NSLog(@"[WARN] 3DTouch is not available on this device.");
         return;
     }
-    ENSURE_TYPE(previewContext, TiUIiOSPreviewContextProxy);
     
-    if([previewContext preview] == nil) {
+    if ([previewContext preview] == nil) {
         NSLog(@"[ERROR] The 'preview' property of your preview context is not existing or invalid. Please provide a valid view to use peek and pop.");
         RELEASE_TO_NIL(previewContext);
         return;
