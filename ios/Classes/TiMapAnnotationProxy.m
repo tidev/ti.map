@@ -377,6 +377,12 @@
 
 - (void)setPreviewContext:(id)previewContext
 {
+    Class TiUIiOSPreviewContextProxy = NSClassFromString(@"TiUIiOSPreviewContextProxy");
+  
+    if (!TiUIiOSPreviewContextProxy || ![previewContext respondsToSelector:@selector(preview)]) {
+        return;
+    }
+  
     ENSURE_TYPE(previewContext, TiUIiOSPreviewContextProxy);
 
     if ([TiUtils forceTouchSupported] == NO) {
@@ -384,7 +390,7 @@
         return;
     }
     
-    if ([previewContext preview] == nil) {
+    if ([previewContext performSelector:@selector(preview)] == nil) {
         NSLog(@"[ERROR] The 'preview' property of your preview context is not existing or invalid. Please provide a valid view to use peek and pop.");
         RELEASE_TO_NIL(previewContext);
         return;
