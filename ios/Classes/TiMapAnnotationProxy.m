@@ -5,6 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#import "TiUIiOSPreviewContextProxy.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiUtils.h"
 #import "TiViewProxy.h"
@@ -21,6 +22,7 @@
 @synthesize needsRefreshingWithSelection;
 @synthesize placed;
 @synthesize offset;
+@synthesize controllerPreviewing;
 
 #define LEFT_BUTTON  1
 #define RIGHT_BUTTON 2
@@ -39,6 +41,12 @@
 -(NSString*)apiName
 {
     return @"Ti.Map.Annotation";
+}
+
+-(void)dealloc
+{
+    RELEASE_TO_NIL(controllerPreviewing);
+    [super dealloc];
 }
 
 -(NSMutableDictionary*)langConversionTable
@@ -365,6 +373,28 @@
 	{
 		[self setNeedsRefreshingWithSelection:YES];
 	}
+}
+
+-(void)setPreviewContext:(id)previewContext
+{
+    if ([TiUtils forceTouchSupported] == NO) {
+        NSLog(@"[WARN] 3DTouch is not available on this device.");
+        return;
+    }
+    ENSURE_TYPE(previewContext, TiUIiOSPreviewContextProxy);
+    
+    if([previewContext preview] == nil) {
+        NSLog(@"[ERROR] The 'preview' property of your preview context is not existing or invalid. Please provide a valid view to use peek and pop.");
+        RELEASE_TO_NIL(previewContext);
+        return;
+    }
+    
+    id current = [self valueForUndefinedKey:@"previewContext"];
+    [self replaceValue:previewContext forKey:@"previewContext" notification:NO];
+    
+    if (current != previewContext) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
 }
 
 -(void)setImage:(id)image
