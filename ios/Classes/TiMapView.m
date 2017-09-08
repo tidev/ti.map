@@ -38,7 +38,8 @@
         CFRelease(mapObjects2View);
         mapObjects2View = nil;
     }
-    RELEASE_TO_NIL(selectedAnnotation);
+  
+    selectedAnnotation = nil;
     RELEASE_TO_NIL(locationManager);
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
@@ -1011,7 +1012,8 @@
     {
         BOOL isSelected = [view isSelected];
         MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
-        
+      
+        RELEASE_TO_NIL(selectedAnnotation);
         selectedAnnotation = [ann retain];
         
         // If canShowCallout == true we will try to find calloutView to hadleTap on callout
@@ -1171,9 +1173,7 @@
         [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
         annView.userInteractionEnabled = YES;
         annView.tag = [ann tag];
-      
-        Class TiUIiOSPreviewContextProxy = NSClassFromString(@"TiUIiOSPreviewContextProxy");
-      
+
         id previewContext = [ann valueForUndefinedKey:@"previewContext"];
         if (previewContext && [TiUtils forceTouchSupported] && [previewContext performSelector:@selector(preview)] != nil) {
             UIViewController *controller = [[[TiApp app] controller] topPresentedController];
@@ -1186,9 +1186,11 @@
                 return;
             }
 
+#ifndef __clang_analyzer__
             // We can ignore this, as it's guarded above
             id previewingDelegate = [[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext];
             ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
+#endif
     }
   
     return annView;
