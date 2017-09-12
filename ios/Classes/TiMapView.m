@@ -16,6 +16,7 @@
 #import "TiMapPinAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapMarkerAnnotationView.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapPolygonProxy.h"
 #import "TiMapCircleProxy.h"
@@ -42,6 +43,7 @@
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
     RELEASE_TO_NIL(circleProxies);
+    RELEASE_TO_NIL(clusterAnnProxyDict);
 	[super dealloc];
 }
 
@@ -832,6 +834,25 @@
     },NO);
 }
 
+-(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray *)members
+{
+    if (!clusterAnnProxyDict) {
+        clusterAnnProxyDict = [[NSMutableDictionary alloc] init];
+    }
+    
+    TiMapAnnotationProxy *annotationProxy = [clusterAnnProxyDict objectForKey:members];
+    if (annotationProxy) {
+        [[self proxy] forgetProxy:annotationProxy];
+    }
+    [clusterAnnProxyDict removeObjectForKey:members];
+    [clusterAnnProxyDict setObject:annotation forKey:members];
+}
+
+-(TiMapAnnotationProxy *)getClusterAnnotationProxyForMembers:(NSArray *)members
+{
+    return [clusterAnnProxyDict objectForKey:members];
+}
+
 #pragma mark Utils
 
 // These methods override the default implementation in TiMapView
@@ -937,7 +958,7 @@
 
 	if (viewProxy == nil)
 		return;
-
+    
 	TiProxy * ourProxy = [self proxy];
 	BOOL parentWants = [ourProxy _hasListeners:@"pinchangedragstate"];
 	BOOL viewWants = [viewProxy _hasListeners:@"pinchangedragstate"];
@@ -1044,6 +1065,116 @@
 	}
 }
 
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotationProxy:(TiMapAnnotationProxy *)ann
+{
+    BOOL marker = [TiUtils boolValue:[ann valueForUndefinedKey:@"showMarker"] def:NO];
+    
+    id customView = [ann valueForUndefinedKey:@"customView"];
+    if ( (customView == nil) || (customView == [NSNull null]) || (![customView isKindOfClass:[TiViewProxy class]]) ){
+        customView = nil;
+    }
+    
+    NSString *identifier = nil;
+    UIImage* image = nil;
+    if (customView == nil && !marker) {
+        id imagePath = [ann valueForUndefinedKey:@"image"];
+        image = [TiUtils image:imagePath proxy:ann];
+        identifier = (image!=nil) ? @"timap-image":@"timap-pin";
+    } else if(customView) {
+        identifier = @"timap-customView";
+    } else {
+        identifier = @"timap-marker";
+    }
+    MKAnnotationView *annView = nil;
+    annView = (MKAnnotationView*) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+    
+    if (annView==nil) {
+        if ([identifier isEqualToString:@"timap-customView"]) {
+            annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+#ifdef __IPHONE_11_0
+        }  else if ([identifier isEqualToString:@"timap-marker"]) {
+            annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+#endif
+        } else if ([identifier isEqualToString:@"timap-image"]) {
+            annView=[[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
+        } else {
+            annView=[[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+        }
+    }
+    if ([identifier isEqualToString:@"timap-customView"]) {
+        [((TiMapCustomAnnotationView*)annView) setProxy:customView];
+    } else if ([identifier isEqualToString:@"timap-image"]) {
+        annView.image = image;
+#ifdef __IPHONE_11_0
+    } else if ([identifier isEqualToString:@"timap-marker"]) {
+        MKMarkerAnnotationView *markerView = (MKMarkerAnnotationView *)annView;
+        markerView.markerTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerColor"]] color];
+        markerView.glyphText = [ann valueForUndefinedKey:@"markerGlyphText"];
+        markerView.glyphTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerGlyphColor"]] color];
+        markerView.animatesWhenAdded = [TiUtils boolValue:[ann valueForUndefinedKey:@"markerAnimatesWhenAdded"]];
+        markerView.glyphImage = [TiUtils image:[ann valueForUndefinedKey:@"markerGlyphImage"] proxy:ann];
+        markerView.selectedGlyphImage = [TiUtils image:[ann valueForUndefinedKey:@"markerSelectedGlyphImage"] proxy:ann];
+        markerView.titleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerTitleVisibility"]];
+        markerView.subtitleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerSubtitleVisibility"]];
+#endif
+    } else {
+        MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
+        
+#ifdef __IPHONE_9_0
+        pinview.pinTintColor = [ann nativePinColor];
+#else
+        pinview.pinColor = [ann nativePinColor];
+#endif
+        pinview.animatesDrop = [ann animatesDrop] && ![ann placed];
+        annView.calloutOffset = CGPointMake(-8, 0);
+    }
+    annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
+    annView.enabled = YES;
+    annView.centerOffset = ann.offset;
+    
+#ifdef __IPHONE_11_0
+    annView.clusteringIdentifier  = [ann valueForUndefinedKey:@"clusterIdentifier"];
+    annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
+    annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
+#endif
+    
+    UIView *left = [ann leftViewAccessory];
+    UIView *right = [ann rightViewAccessory];
+    
+    [annView setHidden:[TiUtils boolValue:[ann valueForUndefinedKey:@"hidden"] def:NO]];
+    
+    if (left != nil) {
+        annView.leftCalloutAccessoryView = left;
+    } else {
+        //ios7 requires this to be explicitly set as nil if nil
+        if (![TiUtils isIOS8OrGreater]) {
+            annView.leftCalloutAccessoryView = nil;
+        }
+    }
+    
+    if (right != nil) {
+        annView.rightCalloutAccessoryView = right;
+    } else {
+        //ios7 requires this to be explicitly set as nil if nil
+        
+        if (![TiUtils isIOS8OrGreater]) {
+            annView.rightCalloutAccessoryView = nil;
+        }
+    }
+    
+    [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
+    annView.userInteractionEnabled = YES;
+    annView.tag = [ann tag];
+    
+    TiUIiOSPreviewContextProxy *previewContext = [ann valueForUndefinedKey:@"previewContext"];
+    if (previewContext && [TiUtils forceTouchSupported] && [previewContext preview] != nil) {
+        UIViewController *controller = [[[TiApp app] controller] topPresentedController];
+        [controller unregisterForPreviewingWithContext:ann.controllerPreviewing];
+        ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:[[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext] sourceView:annView];
+    }
+    
+    return annView;
+}
 
 // mapView:viewForAnnotation: provides the view for each annotation.
 // This method may be called for all or some of the added annotations.
@@ -1052,93 +1183,33 @@
 {
     if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
         TiMapAnnotationProxy *ann = (TiMapAnnotationProxy*)annotation;
-        id customView = [ann valueForUndefinedKey:@"customView"];
-        if ( (customView == nil) || (customView == [NSNull null]) || (![customView isKindOfClass:[TiViewProxy class]]) ){
-            customView = nil;
+        return [self mapView:mapView viewForAnnotationProxy:ann];
+#ifdef __IPHONE_11_0
+    } else if ([annotation isKindOfClass:[MKClusterAnnotation class]]) {
+        TiMapAnnotationProxy *annProxy = [self getClusterAnnotationProxyForMembers:((MKClusterAnnotation *)annotation).memberAnnotations];
+        if (!annProxy) {
+            return nil;
         }
-        NSString *identifier = nil;
-        UIImage* image = nil;
-        if (customView == nil) {
-            id imagePath = [ann valueForUndefinedKey:@"image"];
-            image = [TiUtils image:imagePath proxy:ann];
-            identifier = (image!=nil) ? @"timap-image":@"timap-pin";
-        } else {
-            identifier = @"timap-customView";
-        }
-        MKAnnotationView *annView = nil;
-		
-        annView = (MKAnnotationView*) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
-		
-        if (annView==nil) {
-            if ([identifier isEqualToString:@"timap-customView"]) {
-                annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-            } else if ([identifier isEqualToString:@"timap-image"]) {
-                annView=[[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
-            } else {
-                annView=[[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-            }
-        }
-        if ([identifier isEqualToString:@"timap-customView"]) {
-            [((TiMapCustomAnnotationView*)annView) setProxy:customView];
-        } else if ([identifier isEqualToString:@"timap-image"]) {
-            annView.image = image;
-        } else {
-            MKPinAnnotationView *pinview = (MKPinAnnotationView*)annView;
-            
-#ifdef __IPHONE_9_0
-            pinview.pinTintColor = [ann nativePinColor];
-#else
-            pinview.pinColor = [ann nativePinColor];
+        ((MKClusterAnnotation *)annotation).title = [annProxy valueForUndefinedKey:@"title"];
+        ((MKClusterAnnotation *)annotation).subtitle = [annProxy valueForUndefinedKey:@"subtitle"];
+        return [self mapView:mapView viewForAnnotationProxy:annProxy];
 #endif
-            pinview.animatesDrop = [ann animatesDrop] && ![(TiMapAnnotationProxy *)annotation placed];
-            annView.calloutOffset = CGPointMake(-8, 0);
-        }
-        annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
-        annView.enabled = YES;
-        annView.centerOffset = ann.offset;
-        
-        UIView *left = [ann leftViewAccessory];
-        UIView *right = [ann rightViewAccessory];
-        
-        [annView setHidden:[TiUtils boolValue:[ann valueForUndefinedKey:@"hidden"] def:NO]];
-
-        if (left != nil) {
-            annView.leftCalloutAccessoryView = left;
-        } else {
-            //ios7 requires this to be explicitly set as nil if nil
-            if (![TiUtils isIOS8OrGreater]) {
-                annView.leftCalloutAccessoryView = nil;
-            }
-        }
-        
-        if (right != nil) {
-            annView.rightCalloutAccessoryView = right;
-        } else {
-            //ios7 requires this to be explicitly set as nil if nil
-            
-            if (![TiUtils isIOS8OrGreater]) {
-                annView.rightCalloutAccessoryView = nil;
-            }
-        }
-        
-        [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
-        annView.userInteractionEnabled = YES;
-        annView.tag = [ann tag];
-        
-        TiUIiOSPreviewContextProxy *previewContext = [ann valueForUndefinedKey:@"previewContext"];
-        if (previewContext && [TiUtils forceTouchSupported] && [previewContext preview] != nil) {
-            UIViewController *controller = [[[TiApp app] controller] topPresentedController];
-            [controller unregisterForPreviewingWithContext:ann.controllerPreviewing];
-            ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:[[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext] sourceView:annView];
-        }
-        
-        return annView;
     }
-    
     return nil;
 }
 
-
+#ifdef __IPHONE_11_0
+- (MKClusterAnnotation *)mapView:(MKMapView *)mapView clusterAnnotationForMemberAnnotations:(NSArray<id<MKAnnotation>>*)memberAnnotations {
+    MKClusterAnnotation *annotation = [[MKClusterAnnotation alloc] initWithMemberAnnotations:memberAnnotations];
+    TiProxy *mapProxy = [self proxy];
+    NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                            mapProxy,@"map", memberAnnotations,@"memberAnnotations", nil];
+    if ([mapProxy _hasListeners:@"clusteringstarted"]) {
+        [mapProxy fireEvent:@"clusteringstarted" withObject:event];
+    }
+    return annotation;
+}
+#endif
 // mapView:didAddAnnotationViews: is called after the annotation views have been added and positioned in the map.
 // The delegate can implement this method to animate the adding of the annotations views.
 // Use the current positions of the annotation views as the destinations of the animation.

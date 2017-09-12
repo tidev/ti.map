@@ -55,5 +55,6 @@
 -(void)addPolyline:(id)args;
 -(void)removePolyline:(id)args;
 -(void)removeAllPolylines:(id)args;
+-(void)setClusterAnnotation:(id)args;
 
 @end

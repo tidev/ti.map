@@ -277,8 +277,30 @@ methods:
   - name: removeAllCircles
     summary: Remove all circles from the map.
 
-
+  - name: setClusterAnnotation
+    summary: Set new cluster annotation for the clustered annotation.
+    description: |
+      This method should be called inside 'clusteringstarted' event.
+    parameters:
+      - name: clusterAnnotationParam
+        summary: Properties for creating cluster annotation.
+        type: ClusterAnnotationParams
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    
 events:
+  - name: clusteringstarted
+    summary: Fired when collision occures between annotations.
+    properties:
+
+      - name: memberannotations
+        summary: Array of annotations participating in clustering.
+        type: Array<Modules.Map.Annotation>
+
+      - name: map
+        summary: This map view.
+        type: Modules.Map.View
+    platforms: [iphone, ipad]
 
   - name: onsnapshotready
     summary: Fired when the snapshot is ready after [snapshot](Modules.Map.View.snapshot) is invoked.
@@ -832,3 +854,24 @@ properties:
         or <Titanium.UI.ANIMATION_CURVE_LINEAR>.
     type: Number
 since: "3.2.0"
+
+---
+name: ClusterAnnotationParams
+summary: |
+    Simple object used to create cluster annotation view.
+properties:
+
+  - name: memberAnnotations
+    summary: |
+      Array of Modules.Map.Annotation, which is recieved in event 'clusteringstarted' as 
+      memberannotations.
+    type: Array<Modules.Map.Annotation>
+
+  - name: annotation
+    summary: |
+      <Modules.Map.Annotation> instance, which you want to show as clustered annotation. There is no 
+      need to provide latitude and longitude as clustered annotation decides its location itself.
+    type: Modules.Map.Annotation
+
+platforms: [iphone, ipad]
+
