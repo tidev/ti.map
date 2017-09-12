@@ -1,1 +1,5 @@
-revision 10298000
+- Version: 11.2.2
+- Download
+  - https://maven.google.com/com/google/android/gms/play-services-maps/<VERSION>/play-services-maps-<VERSION>.aar
+  - https://maven.google.com/com/google/android/gms/play-services-base/<VERSION>/play-services-base-<VERSION>.aar
+  - https://maven.google.com/com/google/android/gms/play-services-basement/<VERSION>/play-services-basement-<VERSION>.aar
