@@ -21,7 +21,7 @@
 #import "TiMapPolygonProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapPolylineProxy.h"
-#import "TiUIiOSPreviewContextProxy.h"
+#import "TiApp.h"
 
 @implementation TiMapView
 
@@ -1159,20 +1159,32 @@
         
         if (![TiUtils isIOS8OrGreater]) {
             annView.rightCalloutAccessoryView = nil;
-        }
+          }
+       }
+  
+        [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
+        annView.userInteractionEnabled = YES;
+        annView.tag = [ann tag];
+      
+        Class TiUIiOSPreviewContextProxy = NSClassFromString(@"TiUIiOSPreviewContextProxy");
+      
+        id previewContext = [ann valueForUndefinedKey:@"previewContext"];
+        if (previewContext && [TiUtils forceTouchSupported] && [previewContext performSelector:@selector(preview)] != nil) {
+            UIViewController *controller = [[[TiApp app] controller] topPresentedController];
+            [controller unregisterForPreviewingWithContext:ann.controllerPreviewing];
+         
+            Class TiPreviewingDelegate = NSClassFromString(@"TiPreviewingDelegate");
+          
+            if (!TiPreviewingDelegate) {
+                NSLog(@"[ERROR] Unable to receive TiPreviewingDelegate class!");
+                return;
+            }
+
+            // We can ignore this, as it's guarded above
+            id previewingDelegate = [[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext];
+            ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
     }
-    
-    [annView setDraggable: [TiUtils boolValue: [ann valueForUndefinedKey:@"draggable"]]];
-    annView.userInteractionEnabled = YES;
-    annView.tag = [ann tag];
-    
-    TiUIiOSPreviewContextProxy *previewContext = [ann valueForUndefinedKey:@"previewContext"];
-    if (previewContext && [TiUtils forceTouchSupported] && [previewContext preview] != nil) {
-        UIViewController *controller = [[[TiApp app] controller] topPresentedController];
-        [controller unregisterForPreviewingWithContext:ann.controllerPreviewing];
-        ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:[[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext] sourceView:annView];
-    }
-    
+  
     return annView;
 }
 
