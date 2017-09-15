@@ -43,7 +43,7 @@
     RELEASE_TO_NIL(polygonProxies);
     RELEASE_TO_NIL(polylineProxies);
     RELEASE_TO_NIL(circleProxies);
-    RELEASE_TO_NIL(clusterAnnProxyDict);
+    RELEASE_TO_NIL(clusterAnnotations);
 	[super dealloc];
 }
 
@@ -834,23 +834,23 @@
     },NO);
 }
 
--(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray *)members
+-(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray <TiMapAnnotationProxy *>*)members
 {
-    if (!clusterAnnProxyDict) {
-        clusterAnnProxyDict = [[NSMutableDictionary alloc] init];
+    if (!clusterAnnotations) {
+        clusterAnnotations = [[NSMutableDictionary alloc] init];
     }
     
-    TiMapAnnotationProxy *annotationProxy = [clusterAnnProxyDict objectForKey:members];
+    TiMapAnnotationProxy *annotationProxy = [clusterAnnotations objectForKey:members];
     if (annotationProxy) {
         [[self proxy] forgetProxy:annotationProxy];
     }
-    [clusterAnnProxyDict removeObjectForKey:members];
-    [clusterAnnProxyDict setObject:annotation forKey:members];
+    [clusterAnnotations removeObjectForKey:members];
+    [clusterAnnotations setObject:annotation forKey:members];
 }
 
--(TiMapAnnotationProxy *)getClusterAnnotationProxyForMembers:(NSArray *)members
+-(TiMapAnnotationProxy *)clusterAnnotationProxyForMembers:(NSArray *)members
 {
-    return [clusterAnnProxyDict objectForKey:members];
+    return [clusterAnnotations objectForKey:members];
 }
 
 #pragma mark Utils
@@ -1067,7 +1067,7 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotationProxy:(TiMapAnnotationProxy *)ann
 {
-    BOOL marker = [TiUtils boolValue:[ann valueForUndefinedKey:@"showMarker"] def:NO];
+    BOOL marker = [TiUtils boolValue:[ann valueForUndefinedKey:@"showAsMarker"] def:NO];
     
     id customView = [ann valueForUndefinedKey:@"customView"];
     if ( (customView == nil) || (customView == [NSNull null]) || (![customView isKindOfClass:[TiViewProxy class]]) ){
@@ -1091,7 +1091,7 @@
     if (annView==nil) {
         if ([identifier isEqualToString:@"timap-customView"]) {
             annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-#ifdef __IPHONE_11_0
+#ifdef IS_IOS_11
         }  else if ([identifier isEqualToString:@"timap-marker"]) {
             annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
 #endif
@@ -1105,7 +1105,7 @@
         [((TiMapCustomAnnotationView*)annView) setProxy:customView];
     } else if ([identifier isEqualToString:@"timap-image"]) {
         annView.image = image;
-#ifdef __IPHONE_11_0
+#ifdef IS_IOS_11
     } else if ([identifier isEqualToString:@"timap-marker"]) {
         MKMarkerAnnotationView *markerView = (MKMarkerAnnotationView *)annView;
         markerView.markerTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerColor"]] color];
@@ -1132,7 +1132,7 @@
     annView.enabled = YES;
     annView.centerOffset = ann.offset;
     
-#ifdef __IPHONE_11_0
+#ifdef IS_IOS_11
     annView.clusteringIdentifier  = [ann valueForUndefinedKey:@"clusterIdentifier"];
     annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
     annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
@@ -1194,28 +1194,28 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
     if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
-        TiMapAnnotationProxy *ann = (TiMapAnnotationProxy*)annotation;
-        return [self mapView:mapView viewForAnnotationProxy:ann];
-#ifdef __IPHONE_11_0
+        TiMapAnnotationProxy *annotationProxy = (TiMapAnnotationProxy*)annotation;
+        return [self mapView:mapView viewForAnnotationProxy:annotationProxy];
+#ifdef IS_IOS_11
     } else if ([annotation isKindOfClass:[MKClusterAnnotation class]]) {
-        TiMapAnnotationProxy *annProxy = [self getClusterAnnotationProxyForMembers:((MKClusterAnnotation *)annotation).memberAnnotations];
-        if (!annProxy) {
+        TiMapAnnotationProxy *annotationProxy = [self clusterAnnotationProxyForMembers:((MKClusterAnnotation *)annotation).memberAnnotations];
+        if (!annotationProxy) {
             return nil;
         }
-        ((MKClusterAnnotation *)annotation).title = [annProxy valueForUndefinedKey:@"title"];
-        ((MKClusterAnnotation *)annotation).subtitle = [annProxy valueForUndefinedKey:@"subtitle"];
-        return [self mapView:mapView viewForAnnotationProxy:annProxy];
+        MKClusterAnnotation *clusterAnnotation = ((MKClusterAnnotation *)annotation);
+        clusterAnnotation.title = [annotationProxy valueForUndefinedKey:@"title"];
+        clusterAnnotation.subtitle = [annotationProxy valueForUndefinedKey:@"subtitle"];
+        return [self mapView:mapView viewForAnnotationProxy:annotationProxy];
 #endif
     }
     return nil;
 }
 
-#ifdef __IPHONE_11_0
+#ifdef IS_IOS_11
 - (MKClusterAnnotation *)mapView:(MKMapView *)mapView clusterAnnotationForMemberAnnotations:(NSArray<id<MKAnnotation>>*)memberAnnotations {
     MKClusterAnnotation *annotation = [[MKClusterAnnotation alloc] initWithMemberAnnotations:memberAnnotations];
     TiProxy *mapProxy = [self proxy];
-    NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                            mapProxy,@"map", memberAnnotations,@"memberAnnotations", nil];
+    NSDictionary *event = @{@"map":mapProxy, @"memberAnnotations":memberAnnotations};
     if ([mapProxy _hasListeners:@"clusteringstarted"]) {
         [mapProxy fireEvent:@"clusteringstarted" withObject:event];
     }

@@ -414,10 +414,10 @@
 	}
 }
 
--(void)setShowMarker:(id)marker
+-(void)setShowAsMarker:(id)marker
 {
-    id current = [self valueForUndefinedKey:@"showMarker"];
-    [self replaceValue:marker forKey:@"showMarker" notification:NO];
+    id current = [self valueForUndefinedKey:@"showAsMarker"];
+    [self replaceValue:marker forKey:@"showAsMarker" notification:NO];
     if ([current isEqual: marker] == NO) {
         [self setNeedsRefreshingWithSelection:YES];
     }

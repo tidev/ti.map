@@ -748,13 +748,13 @@
 -(void)setClusterAnnotation:(id)args
 {
     ENSURE_DICT(args);
-    NSArray *memberAnn = [args objectForKey:@"memberAnnotations"];
+    NSArray *memberAnnotations = [args objectForKey:@"memberAnnotations"];
     id annotation = [args objectForKey:@"annotation"];
-    TiMapAnnotationProxy *annProxy = [self annotationFromArg:annotation];
-    [self rememberProxy:annProxy];
+    TiMapAnnotationProxy *annotationProxy = [self annotationFromArg:annotation];
+    [self rememberProxy:annotationProxy];
     
     if ([self viewAttached]) {
-        [(TiMapView *)[self view] setClusterAnnotation:annProxy forMembers:memberAnn];
+        [(TiMapView *)[self view] setClusterAnnotation:annotationProxy forMembers:memberAnnotations];
     }
 }
 

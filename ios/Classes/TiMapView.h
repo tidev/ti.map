@@ -31,7 +31,7 @@
     NSMutableArray *polygonProxies;
     NSMutableArray *circleProxies;
     NSMutableArray *polylineProxies;
-    NSMutableDictionary *clusterAnnProxyDict;
+    NSMutableDictionary *clusterAnnotations;
     //selected annotation
     MKAnnotationView<TiMapAnnotation> * selectedAnnotation;
 
@@ -82,7 +82,7 @@
 -(void)removePolyline:(id)args;
 -(void)removePolyline:(id)args remove:(BOOL)r;
 -(void)removeAllPolylines;
--(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray *)members;
+-(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray <TiMapAnnotationProxy *>*)members;
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 
 #pragma mark Utils
