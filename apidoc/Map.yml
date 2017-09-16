@@ -559,60 +559,58 @@ examples:
   - title: Map Example With Marker Annotation and Clustering
     example: |
         This is a map example which creates marker annotation and clustering of annotations.
-        
+
             var Map = require('ti.map');
-  
-            var win = Titanium.UI.createWindow({
-                            fullscreen : true,
-                        });
- 
+
+            var win = Titanium.UI.createWindow();
+
             var ann = [];
- 
+
             for (var i = 0; i < 10; i++) {
- 
+
                 ann.push(Map.createAnnotation({
-                        clusterIdentifier:'abc',
-                        collisionMode: Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE,
-                        showAsMarker:true,
-                        markerGlyphText:i.toString(),
-                        markerColor:'blue',
-                        markerGlyphColor:'green',
-                        title:'Title',
-                        subtitle: 'subtitle',
-                        markerTitleVisibility: Map.FEATURE_VISIBILITY_VISIBLE,
-                        markerSubtitleVisibility: Map.FEATURE_VISIBILITY_HIDDEN,
-                        markerGlyphImage:'Flag.png',
-                        markerSelectedGlyphImage:'social-facebook-icon.png',
-                        annotationDisplayPriority:Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW,
-                        latitude : Math.random() * 10 + 40,
-                        longitude : Math.random() * 10,
-                    }));
+                    clusterIdentifier:'abc',
+                    collisionMode: Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE,
+                    showAsMarker:true,
+                    markerGlyphText:i.toString(),
+                    markerColor:'blue',
+                    markerGlyphColor:'green',
+                    title:'Title',
+                    subtitle: 'subtitle',
+                    markerTitleVisibility: Map.FEATURE_VISIBILITY_VISIBLE,
+                    markerSubtitleVisibility: Map.FEATURE_VISIBILITY_HIDDEN,
+                    markerGlyphImage:'Flag.png',
+                    markerSelectedGlyphImage:'social-facebook-icon.png',
+                    annotationDisplayPriority:Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW,
+                    latitude : Math.random() * 10 + 40,
+                    longitude : Math.random() * 10,
+                }));
             }
- 
+
             var mapview = Map.createView({
-                            annotations:ann,
-                            bottom : 0,
-                            right : 0,
-                            width : Ti.UI.FILL,
-                            height : Ti.UI.FILL,
-                            rotateEnabled : true,
-                            mapType : Map.MUTED_STANDARD_TYPE,
-                            showsPointsOfInterest : false,
-                            userLocation : true,
-                        });
- 
-mapview.addEventListener('clusteringstarted', function(e){
-                          Ti.API.info('clustering started');
-                          var clusterAnnotation = Map.createAnnotation({
-                                                               showAsMarker:true,
-                                                                markerText:e.memberAnnotations.length.toString(),
-                                                                title:'Cluster Title',
-                                                                subtitle: 'Cluster Subtitle',
-                                                            });
-                          mapview.setClusterAnnotation({
-                                                      annotation:clusterAnnotation,
-                                                      memberAnnotations:e.memberAnnotations
-                                                    });
-                         });
- win.add(mapview);
- win.open();
+                annotations:ann,
+                bottom : 0,
+                right : 0,
+                width : Ti.UI.FILL,
+                height : Ti.UI.FILL,
+                rotateEnabled : true,
+                mapType : Map.MUTED_STANDARD_TYPE,
+                showsPointsOfInterest : false,
+                userLocation : true,
+            });
+
+            mapview.addEventListener('clusteringstarted', function(e){
+                Ti.API.info('clustering started');
+                var clusterAnnotation = Map.createAnnotation({
+                    showAsMarker:true,
+                    markerText:e.memberAnnotations.length.toString(),
+                    title:'Cluster Title',
+                    subtitle: 'Cluster Subtitle',
+                });
+                mapview.setClusterAnnotation({
+                    annotation:clusterAnnotation,
+                    memberAnnotations:e.memberAnnotations
+                });
+            });
+            win.add(mapview);
+            win.open();
