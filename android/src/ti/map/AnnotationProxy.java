@@ -61,6 +61,7 @@ public class AnnotationProxy extends KrollProxy
 
 	private MarkerOptions markerOptions;
 	private TiMarker marker;
+	private TiClusterMarker clusterMarker;
 	private TiMapInfoWindow infoWindow = null;
 	private static final String defaultIconImageHeight = "40dip"; //The height of the default marker icon
 	private static final String defaultIconImageWidth = "36dip"; //The width of the default marker icon
@@ -169,6 +170,7 @@ public class AnnotationProxy extends KrollProxy
 	public void setPosition(double latitude, double longitude)
 	{
 		marker.getMarker().setPosition(new LatLng(latitude, longitude));
+		clusterMarker.setPosition(new LatLng(latitude, longitude));
 	}
 
 	public void processOptions()
@@ -297,6 +299,11 @@ public class AnnotationProxy extends KrollProxy
 	public void setTiMarker(TiMarker m)
 	{
 		marker = m;
+	}
+
+	public void setClusterMarker(TiClusterMarker m)
+	{
+		clusterMarker = m;
 	}
 
 	public TiMarker getTiMarker()
