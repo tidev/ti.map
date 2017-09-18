@@ -295,7 +295,7 @@ events:
     summary: Fired when collision occures between annotations.
     properties:
 
-      - name: memberannotations
+      - name: memberAnnotations
         summary: Array of annotations participating in clustering.
         type: Array<Modules.Map.Annotation>
 
@@ -867,7 +867,7 @@ properties:
   - name: memberAnnotations
     summary: |
       Array of Modules.Map.Annotation, which is recieved in event 'clusteringstarted' as 
-      memberannotations.
+      memberAnnotations.
     type: Array<Modules.Map.Annotation>
 
   - name: annotation
