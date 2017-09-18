@@ -9,6 +9,7 @@ package ti.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collection;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -53,6 +54,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.MarkerManager;
 
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
@@ -73,6 +75,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
 	private ClusterManager<TiClusterMarker> mClusterManager;
+	public static HashMap<String, TiClusterMarker> markerItemMap = new HashMap<String, TiClusterMarker>();
 	private boolean useClustering = true;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
@@ -170,6 +173,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setBackgroundTransparent(rootView);
 		}
 		mClusterManager = new ClusterManager<TiClusterMarker>(TiApplication.getInstance().getApplicationContext(), map);
+		mClusterManager.setRenderer(new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager));
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
 		processPreloadPolygons();
@@ -223,6 +227,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		if (d.containsKey(TiC.PROPERTY_REGION)) {
 			updateCamera(d.getKrollDict(TiC.PROPERTY_REGION));
+		}
+		if (d.containsKey(MapModule.PROPERTY_CLUSTERING)) {
+			useClustering = TiConvert.toBoolean(d, MapModule.PROPERTY_CLUSTERING, false);
 		}
 		if (d.containsKey(TiC.PROPERTY_ANNOTATIONS)) {
 			Object[] annotations = (Object[]) d.get(TiC.PROPERTY_ANNOTATIONS);
@@ -287,6 +294,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_STYLE)) {
 			setStyle(TiConvert.toString(newValue,""));
+		} else if (key.equals(MapModule.PROPERTY_CLUSTERING)) {
+			 useClustering = TiConvert.toBoolean(newValue, false);
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -297,7 +306,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	protected void setStyle(String style) {
-		if (style != null && style != ""){
+		if (style != null && style != "") {
 			try {
 				boolean success = map.setMapStyle(new MapStyleOptions(style));
 				if (!success) {
@@ -442,11 +451,13 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		}
 		annotation.processOptions();
 		// add annotation to map view
-		if (!useClustering){
-			Marker marker = map.addMarker(annotation.getMarkerOptions());
-			tiMarker = new TiMarker(marker, annotation);
-			annotation.setTiMarker(tiMarker);
-			timarkers.add(tiMarker);
+		if (!useClustering) {
+			if (map != null) {
+				Marker marker = map.addMarker(annotation.getMarkerOptions());
+				tiMarker = new TiMarker(marker, annotation);
+				annotation.setTiMarker(tiMarker);
+				timarkers.add(tiMarker);
+			}
 		} else {
 			if (map != null){
 				TiClusterMarker clusterItem = new TiClusterMarker(annotation);
@@ -476,7 +487,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	protected void removeAllAnnotations() {
-		if (!useClustering){
+		if (!useClustering) {
 			for (int i = 0; i < timarkers.size(); i++) {
 				TiMarker timarker = timarkers.get(i);
 				timarker.getMarker().remove();
@@ -520,7 +531,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			}
 		} else if (annotation instanceof String) {
 			String title = (String) annotation;
-			if (!useClustering){
+			if (!useClustering) {
 				TiMarker marker = findMarkerByTitle(title);
 				if (marker != null) {
 					marker.getMarker().showInfoWindow();
@@ -538,7 +549,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 			}
 		} else if (annotation instanceof String) {
 			String title = (String) annotation;
-			if (!useClustering){
+			if (!useClustering) {
 				TiMarker marker = findMarkerByTitle(title);
 				if (marker != null) {
 					marker.getMarker().hideInfoWindow();
@@ -550,7 +561,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 	private AnnotationProxy getProxyByMarker(Marker m) {
 		if (m != null) {
-			if (!useClustering){
+			if (!useClustering) {
 				for (int i = 0; i < timarkers.size(); i++) {
 					TiMarker timarker = timarkers.get(i);
 					if (m.equals(timarker.getMarker())) {
@@ -940,7 +951,15 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		AnnotationProxy annoProxy = getProxyByMarker(marker);
+		AnnotationProxy annoProxy = null;
+		if (!useClustering) {
+			annoProxy = getProxyByMarker(marker);
+		} else {
+			TiClusterMarker tm = (TiClusterMarker)markerItemMap.get(marker.getId());
+			if (tm != null) {
+				annoProxy = tm.getProxy();
+			}
+		}
 		if (annoProxy != null) {
 			String clicksource = annoProxy.getMapInfoWindow().getClicksource();
 			// The clicksource is null means the click event is not inside

@@ -271,8 +271,10 @@ public class AnnotationProxy extends KrollProxy
 			TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) image);
 			Bitmap bitmap = imageref.getBitmap();
 			if (bitmap != null) {
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				try {
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				} catch (Exception e){}
 				return;
 			}
 		}

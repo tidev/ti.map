@@ -46,6 +46,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_STREET_NAMES = "streetNames";
 	public static final String PROPERTY_USER_NAVIGATION = "userNavigation";
 	public static final String PROPERTY_HIDDEN = "hidden";
+	public static final String PROPERTY_CLUSTERING = "clustering";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	public static final String EVENT_REGION_WILL_CHANGE  = "regionwillchange";
