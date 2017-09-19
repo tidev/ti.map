@@ -1,5 +1,6 @@
 # Change Log
 <pre>
+v3.3.1    Compile using 6.2.0.GA [TIMOB-25288]
 v3.3.0    Expose "regionwillchange" event for iOS-parity [MOD-2343]
 v3.2.0    Support for overlay patterns [MOD-2346]
 v3.1.3    Fix Android "userLocation" crash [MOD-2334]
