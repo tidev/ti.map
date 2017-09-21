@@ -55,12 +55,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.MarkerManager;
+import com.google.maps.android.clustering.Cluster;
 
 
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
 	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback, OnMapReadyCallback,
-	GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener
+	GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, 
+	ClusterManager.OnClusterClickListener<TiClusterMarker>
 {
 
 	private static final String TAG = "TiUIMapView";
@@ -179,7 +181,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		processPreloadPolygons();
 		processPreloadCircles();
 		processPreloadPolylines();
-		map.setOnMarkerClickListener(this);
+		map.setOnMarkerClickListener(mClusterManager);
 		map.setOnMapClickListener(this);
 		map.setOnCameraIdleListener(this);
 		map.setOnCameraMoveStartedListener(this);
@@ -189,6 +191,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
+		mClusterManager.setOnClusterClickListener(this);
 
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
@@ -465,6 +468,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				if (mClusterManager != null){
 					mClusterManager.addItem(clusterItem);
 				}
+				mClusterManager.cluster();
 			}
 		}
 	}
@@ -1103,4 +1107,19 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		// keep around for backward compatibility
 	}
 
+	@Override
+	public boolean onClusterClick(Cluster<TiClusterMarker> cluster) {
+		LatLngBounds.Builder builder = LatLngBounds.builder();
+		for (TiClusterMarker item : cluster.getItems()) {
+			builder.include(item.getPosition());
+		}
+		final LatLngBounds bounds = builder.build();
+
+		if (map != null) {
+			try {
+				map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+			} catch (Exception e) {}
+		}
+		return true;
+	}
 }

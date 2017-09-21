@@ -15,7 +15,7 @@ public class TiClusterMarker implements ClusterItem {
     private LatLng position;
 	private AnnotationProxy proxy;
  
-    public TiClusterMarker(AnnotationProxy p ) {
+    public TiClusterMarker(AnnotationProxy p) {
         proxy = p;
         position = p.getMarkerOptions().getPosition();
     }
