@@ -32,7 +32,7 @@ return [NSNumber numberWithInt:map];\
 @property(nonatomic,readonly) NSNumber *HYBRID_FLYOVER_TYPE;
 @property(nonatomic,readonly) NSNumber *SATELLITE_FLYOVER_TYPE;
 #endif
-#ifdef IS_IOS_11
+#if IS_IOS_11
 @property(nonatomic,readonly) NSNumber *MUTED_STANDARD_TYPE;
 #endif
 

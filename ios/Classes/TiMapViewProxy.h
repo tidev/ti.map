@@ -55,6 +55,7 @@
 -(void)addPolyline:(id)args;
 -(void)removePolyline:(id)args;
 -(void)removeAllPolylines:(id)args;
+#if IS_IOS_11
 -(void)setClusterAnnotation:(id)args;
-
+#endif
 @end

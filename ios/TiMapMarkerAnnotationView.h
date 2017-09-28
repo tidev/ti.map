@@ -4,7 +4,7 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#ifdef IS_IOS_11
+#if IS_IOS_11
 #import "TiBase.h"
 #import <MapKit/MapKit.h>
 #import "TiMapView.h"

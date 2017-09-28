@@ -31,7 +31,9 @@
     NSMutableArray *polygonProxies;
     NSMutableArray *circleProxies;
     NSMutableArray *polylineProxies;
+#if IS_IOS_11
     NSMutableDictionary *clusterAnnotations;
+#endif
     //selected annotation
     MKAnnotationView<TiMapAnnotation> * selectedAnnotation;
 
@@ -48,12 +50,14 @@
 @property (nonatomic, readonly) NSArray *customAnnotations;
 
 #pragma mark Private APIs
+
 -(TiMapAnnotationProxy*)annotationFromArg:(id)arg;
 -(NSArray*)annotationsFromArgs:(id)value;
 -(MKMapView*)map;
 -(TiMapCameraProxy*)camera;
 
 #pragma mark Public APIs
+
 -(void)animateCamera:(id)args;
 -(void)showAnnotations:(id)args;
 -(void)addAnnotation:(id)args;
@@ -82,8 +86,10 @@
 -(void)removePolyline:(id)args;
 -(void)removePolyline:(id)args remove:(BOOL)r;
 -(void)removeAllPolylines;
--(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray <TiMapAnnotationProxy *>*)members;
 -(void)firePinChangeDragState:(MKAnnotationView *) pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
+#if IS_IOS_11
+-(void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray <TiMapAnnotationProxy *>*)members;
+#endif
 
 #pragma mark Utils
 -(void)addOverlay:(MKPolyline*)polyline level:(MKOverlayLevel)level;

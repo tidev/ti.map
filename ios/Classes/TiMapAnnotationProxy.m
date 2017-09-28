@@ -513,6 +513,7 @@
     }
 }
 
+#if IS_IOS_11
 -(void)setClusterIdentifier:(id)clusterIdentifier
 {
     id current = [self valueForUndefinedKey:@"clusterIdentifier"];
@@ -521,6 +522,7 @@
         [self setNeedsRefreshingWithSelection:YES];
     }
 }
+#endif
 
 -(void)setCustomView:(id)customView
 {
