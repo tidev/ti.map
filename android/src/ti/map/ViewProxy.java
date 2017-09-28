@@ -71,6 +71,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_CLUSTERING, false);
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();

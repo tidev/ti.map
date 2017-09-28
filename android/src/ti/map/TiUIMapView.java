@@ -78,7 +78,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	private ArrayList<PolylineProxy> currentPolylines;
 	private ClusterManager<TiClusterMarker> mClusterManager;
 	public static HashMap<String, TiClusterMarker> markerItemMap = new HashMap<String, TiClusterMarker>();
-	private boolean useClustering = true;
+	private boolean useClustering = false;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity) {
 		super(proxy, activity);
