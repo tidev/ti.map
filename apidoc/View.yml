@@ -280,7 +280,7 @@ methods:
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
     description: |
-      This method should be called inside 'clusteringstarted' event. 
+      This method should be called inside the `clusterstart` event. 
       See the example "Map Example With Marker Annotation and Clustering".
     parameters:
       - name: clusterAnnotationParam
@@ -291,8 +291,8 @@ methods:
     since: "6.3.0"
 
 events:
-  - name: clusteringstarted
-    summary: Fired when collision occures between annotations.
+  - name: clusterstart
+    summary: Fired when a collision between annotations occures.
     properties:
 
       - name: memberAnnotations
@@ -878,4 +878,3 @@ properties:
 
 platforms: [iphone, ipad]
 since: "6.3.0"
-

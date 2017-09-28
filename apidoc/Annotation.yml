@@ -160,9 +160,10 @@ properties:
   - name: markerTitleVisibility
     summary: The visibility of the title text rendered below the marker balloon.
     description: |
-        Title text is normally displayed below the marker balloon. Use Map.FEATURE_VISIBILITY_ADAPTIVE,
-        Map.FEATURE_VISIBILITY_VISIBLE or Map.FEATURE_VISIBILITY_HIDDEN.
-    type: Map.FEATURE_VISIBILITY_*
+        Title text is normally displayed below the marker balloon. Use <Modules.Map.FEATURE_VISIBILITY_ADAPTIVE>,
+        <Modules.Map.FEATURE_VISIBILITY_VISIBLE> or <Modules.Map.FEATURE_VISIBILITY_HIDDEN>.
+    type: Number
+    constants: Modules.Map.FEATURE_VISIBILITY_*
     platforms: [iphone, ipad]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
@@ -171,8 +172,9 @@ properties:
     summary: The visibility of the subtitle text rendered below the marker balloon.
     description: |
         The subtitle text is hidden when the marker is not selected. The text is shown when the marker 
-        is selected. Use Map.FEATURE_VISIBILITY_ADAPTIVE, Map.FEATURE_VISIBILITY_VISIBLE or Map.FEATURE_VISIBILITY_HIDDEN.
-    type: Map.FEATURE_VISIBILITY_*
+        is selected. Use <Modules.Map.FEATURE_VISIBILITY_ADAPTIVE>, <Modules.Map.FEATURE_VISIBILITY_VISIBLE> or <Modules.Map.FEATURE_VISIBILITY_HIDDEN>.
+    type: Number
+    constants: Modules.Map.FEATURE_VISIBILITY_*
     platforms: [iphone, ipad]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
@@ -180,8 +182,9 @@ properties:
   - name: collisionMode
     summary: The collision mode to use when interpreting the collision frame rectangle.
     description: |
-        Use Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE or Map.ANNOTATION_VIEW_COLLISION_MODE_CIRCLE.
-    type: Map.ANNOTATION_VIEW_COLLISION_MODE_*
+        Use <Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE> or <Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_CIRCLE>.
+    type: Number
+    constants: Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_*
     platforms: [iphone, ipad]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
@@ -191,10 +194,11 @@ properties:
     description: |
         An annotation view whose priority is set to MKFeatureDisplayPriorityRequired is always visible 
         on the map, whereas other priorities may result in the annotation view being hidden. Use 
-        Map.FEATURE_DISPLAY_PRIORITY_REQUIRED, Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH or 
-        Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW.
-    type: Map.FEATURE_DISPLAY_PRIORITY_*
-    default: Map.FEATURE_DISPLAY_PRIORITY_REQUIRE
+        <Modules.Map.FEATURE_DISPLAY_PRIORITY_REQUIRED>, <Modules.Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH> or 
+        <Modules.Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW>.
+    type: Number
+    constants: Modules.Map.FEATURE_DISPLAY_PRIORITY_*
+    default: Modules.Map.FEATURE_DISPLAY_PRIORITY_REQUIRE
     platforms: [iphone, ipad]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"

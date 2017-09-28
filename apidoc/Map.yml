@@ -558,7 +558,7 @@ examples:
 
   - title: Map Example With Marker Annotation and Clustering
     example: |
-        This is a map example which creates marker annotation and clustering of annotations.
+        This is a map-example which creates marker annotation and clustering of annotations.
 
             var Map = require('ti.map');
 
