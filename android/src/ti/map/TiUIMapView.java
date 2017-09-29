@@ -446,15 +446,15 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	protected void addAnnotation(AnnotationProxy annotation) {
-		// if annotation already on map, remove it first then re-add it
-		TiMarker tiMarker = annotation.getTiMarker();
-		if (tiMarker != null) {
-			timarkers.remove(tiMarker);
-			tiMarker.getMarker().remove();
-		}
-		annotation.processOptions();
 		// add annotation to map view
 		if (!useClustering) {
+			// if annotation already on map, remove it first then re-add it
+			TiMarker tiMarker = annotation.getTiMarker();
+			if (tiMarker != null) {
+				timarkers.remove(tiMarker);
+				tiMarker.getMarker().remove();
+			}
+			annotation.processOptions();
 			if (map != null) {
 				Marker marker = map.addMarker(annotation.getMarkerOptions());
 				tiMarker = new TiMarker(marker, annotation);
@@ -462,8 +462,14 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				timarkers.add(tiMarker);
 			}
 		} else {
+			// if annotation already on map, remove it first then re-add it
+			TiClusterMarker clusterItem = annotation.getClusterMarker();
+			if (clusterItem != null) {
+				mClusterManager.removeItem(clusterItem);
+			}
+			annotation.processOptions();
 			if (map != null){
-				TiClusterMarker clusterItem = new TiClusterMarker(annotation);
+				clusterItem = new TiClusterMarker(annotation);
 				annotation.setClusterMarker(clusterItem);
 				if (mClusterManager != null){
 					mClusterManager.addItem(clusterItem);
@@ -497,6 +503,8 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 				timarker.getMarker().remove();
 			}
 			timarkers.clear();
+		} else {
+			mClusterManager.clearItems();
 		}
 	}
 

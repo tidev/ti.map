@@ -96,6 +96,9 @@ public class AnnotationProxy extends KrollProxy
 		if (marker != null) {
 			marker = null;
 		}
+		if (clusterMarker != null) {
+			clusterMarker = null;
+		}
 		if (infoWindow != null) {
 			infoWindow = null;
 		}
@@ -311,6 +314,11 @@ public class AnnotationProxy extends KrollProxy
 	public TiMarker getTiMarker()
 	{
 		return marker;
+	}
+
+	public TiClusterMarker getClusterMarker()
+	{
+		return clusterMarker;
 	}
 
 	public void showInfo()
