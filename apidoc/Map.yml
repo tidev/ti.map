@@ -274,6 +274,15 @@ properties:
     permission: read-only
     platforms: [iphone, ipad]
 
+  - name: MUTED_STANDARD_TYPE
+    summary: |
+        Used with [mapType](Modules.Map.View.mapType) to display a street map where your data is emphasized over 
+        the underlying map details. Available in iOS 11.0 and later.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+
   - name: REASON_API_ANIMATION
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The animation was initiated in response to the user actions.
     type: Number
@@ -353,6 +362,89 @@ properties:
     permission: read-only
     platforms: [android, iphone, ipad]
     since: "6.2.0"
+
+  - name: FEATURE_VISIBILITY_ADAPTIVE
+    summary: Constant indicating that title text adapts to the current map state.
+    description: |
+        For markers in the normal state, title text is displayed and subtitle text is hidden. When a marker 
+        is selected, the title and subtitle text are hidden when the marker requires a callout.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: FEATURE_VISIBILITY_HIDDEN
+    summary: Constant indicating that title text is always hidden.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: FEATURE_VISIBILITY_VISIBLE
+    summary: Constant indicating that title text is always visible.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: FEATURE_DISPLAY_PRIORITY_REQUIRED
+    summary: Constant indicating that the item is required.
+    description: |
+        An annotation view with this priority does not participate in clustering.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH
+    summary: Constant indicating that the item's display priority is high.
+    description: |
+        An annotation view with this priority is removed from the map when its bounds
+        collide with the bounds of another view with a higher priority. If the priorities 
+        of the two views are equal, the view furthest from the center of the map's visible 
+        region is hidden first.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW
+    summary: Constant indicating that the item's display priority is low.
+    description: |
+        An annotation view with this priority is removed from the map when its bounds
+        collide with the bounds of another view with a higher priority. If the priorities 
+        of the two views are equal, the view furthest from the center of the map's visible 
+        region is hidden first.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE
+    summary: |
+        Constant indicating that the full collision frame rectangle should be used for 
+        detecting collisions.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
+
+  - name: ANNOTATION_VIEW_COLLISION_MODE_CIRCLE
+    summary: |
+        Constant indicating that a circle inscribed in the collision frame rectangle should 
+        be used to determine collisions.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "11.0"} }
+    platforms: [iphone, ipad]
+    since: "6.3.0"
 
 methods:
   - name: isGooglePlayServicesAvailable
@@ -468,3 +560,62 @@ examples:
             }
 
             $.index.open();
+
+  - title: Map Example With Marker Annotation and Clustering
+    example: |
+        This is a map-example which creates marker annotation and clustering of annotations.
+
+            var Map = require('ti.map');
+
+            var win = Titanium.UI.createWindow();
+
+            var ann = [];
+
+            for (var i = 0; i < 10; i++) {
+
+                ann.push(Map.createAnnotation({
+                    clusterIdentifier:'abc',
+                    collisionMode: Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE,
+                    showAsMarker:true,
+                    markerGlyphText:i.toString(),
+                    markerColor:'blue',
+                    markerGlyphColor:'green',
+                    title:'Title',
+                    subtitle: 'subtitle',
+                    markerTitleVisibility: Map.FEATURE_VISIBILITY_VISIBLE,
+                    markerSubtitleVisibility: Map.FEATURE_VISIBILITY_HIDDEN,
+                    markerGlyphImage:'Flag.png',
+                    markerSelectedGlyphImage:'social-facebook-icon.png',
+                    annotationDisplayPriority:Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW,
+                    latitude : Math.random() * 10 + 40,
+                    longitude : Math.random() * 10,
+                }));
+            }
+
+            var mapview = Map.createView({
+                annotations:ann,
+                bottom : 0,
+                right : 0,
+                width : Ti.UI.FILL,
+                height : Ti.UI.FILL,
+                rotateEnabled : true,
+                mapType : Map.MUTED_STANDARD_TYPE,
+                showsPointsOfInterest : false,
+                userLocation : true,
+            });
+
+            mapview.addEventListener('clusteringstarted', function(e){
+                Ti.API.info('clustering started');
+                var clusterAnnotation = Map.createAnnotation({
+                    showAsMarker:true,
+                    markerText:e.memberAnnotations.length.toString(),
+                    title:'Cluster Title',
+                    subtitle: 'Cluster Subtitle',
+                });
+                mapview.setClusterAnnotation({
+                    annotation:clusterAnnotation,
+                    memberAnnotations:e.memberAnnotations
+                });
+            });
+            win.add(mapview);
+            win.open();

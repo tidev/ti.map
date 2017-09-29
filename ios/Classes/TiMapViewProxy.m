@@ -745,6 +745,21 @@
     }
 }
 
+#if IS_IOS_11
+- (void)setClusterAnnotation:(id)args
+{
+    ENSURE_DICT(args);
+    NSArray *memberAnnotations = [args objectForKey:@"memberAnnotations"];
+    id annotation = [args objectForKey:@"annotation"];
+    TiMapAnnotationProxy *annotationProxy = [self annotationFromArg:annotation];
+    [self rememberProxy:annotationProxy];
+    
+    if ([self viewAttached]) {
+        [(TiMapView *)[self view] setClusterAnnotation:annotationProxy forMembers:memberAnnotations];
+    }
+}
+#endif
+
 #pragma mark Public APIs iOS 7
 
 -(TiMapCameraProxy*)camera

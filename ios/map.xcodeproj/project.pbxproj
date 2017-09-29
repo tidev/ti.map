@@ -22,6 +22,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		193F03271F580BE200F26272 /* TiMapMarkerAnnotationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 193F03251F580BE200F26272 /* TiMapMarkerAnnotationView.h */; };
+		193F03281F580BE200F26272 /* TiMapMarkerAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 193F03261F580BE200F26272 /* TiMapMarkerAnnotationView.m */; };
 		24DD6CF91134B3F500162E58 /* TiMapModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* TiMapModule.h */; };
 		24DD6CFA1134B3F500162E58 /* TiMapModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* TiMapModule.m */; };
 		24DE9E1111C5FE74003F90F6 /* TiMapModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* TiMapModuleAssets.h */; };
@@ -71,6 +73,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		193F03251F580BE200F26272 /* TiMapMarkerAnnotationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMapMarkerAnnotationView.h; sourceTree = "<group>"; };
+		193F03261F580BE200F26272 /* TiMapMarkerAnnotationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiMapMarkerAnnotationView.m; sourceTree = "<group>"; };
 		24DD6CF71134B3F500162E58 /* TiMapModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapModule.h; path = Classes/TiMapModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* TiMapModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapModule.m; path = Classes/TiMapModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
@@ -211,6 +215,8 @@
 				CED651BF17D7AA21007C2954 /* TiMapImageAnnotationView.m */,
 				CED651C017D7AA21007C2954 /* TiMapPinAnnotationView.h */,
 				CED651C117D7AA21007C2954 /* TiMapPinAnnotationView.m */,
+				193F03251F580BE200F26272 /* TiMapMarkerAnnotationView.h */,
+				193F03261F580BE200F26272 /* TiMapMarkerAnnotationView.m */,
 			);
 			name = Annotation;
 			sourceTree = "<group>";
@@ -307,6 +313,7 @@
 				CEE33CF319EC4C150005E745 /* TiMapUtils.h in Headers */,
 				CEC39B4617EB97BA00DCE1EE /* TiMapRouteProxy.h in Headers */,
 				CED651C817D7AA21007C2954 /* TiMapCustomAnnotationView.h in Headers */,
+				193F03271F580BE200F26272 /* TiMapMarkerAnnotationView.h in Headers */,
 				CED651CA17D7AA21007C2954 /* TiMapImageAnnotationView.h in Headers */,
 				CED651CC17D7AA21007C2954 /* TiMapPinAnnotationView.h in Headers */,
 				CED651CE17D7AA21007C2954 /* TiMapView.h in Headers */,
@@ -393,6 +400,7 @@
 				CED651C917D7AA21007C2954 /* TiMapCustomAnnotationView.m in Sources */,
 				CEC39B4717EB97BA00DCE1EE /* TiMapRouteProxy.m in Sources */,
 				DB932FF81F0C5D9C0099E6A8 /* TiMapOverlayPattern.m in Sources */,
+				193F03281F580BE200F26272 /* TiMapMarkerAnnotationView.m in Sources */,
 				27A609E719F54FC300CA150A /* TiMapPolygonProxy.m in Sources */,
 				CE92EC2617DF9A640082E943 /* TiMapCameraProxy.m in Sources */,
 				27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */,
@@ -507,6 +515,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DSTROOT = /tmp/TiMap.dst;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -544,6 +553,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DSTROOT = /tmp/TiMap.dst;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

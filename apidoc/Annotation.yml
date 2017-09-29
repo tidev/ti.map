@@ -76,6 +76,148 @@ properties:
     type: Titanium.UI.View
     since: "3.1.0"
 
+  - name: showAsMarker
+    summary: |
+        Boolean to show an annotation view that displays a balloon-shaped 
+        marker at the designated location.
+    description: |
+        Must be set during creation. This is ignored if the customView property is set.
+        See the example "Map Example With Marker Annotation and Clustering".
+    type: Boolean
+    default: false
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerGlyphText
+    summary: The text to display in the marker balloon.
+    description: |
+        Use this property or the <Modules.Map.Annotation.markerGlyphImage> property to specify the marker balloon content. 
+        If you specify both an image and text, the text is displayed.
+        The amount of space available for displaying your glyph text is limited. Specify no more than 
+        two or three characters for any strings you assign to this property.
+    type: String
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerGlyphColor
+    summary: The color to apply to the glyph text or image.
+    description: |
+        The default value of this property is undefined, which applies the standard tint color for the 
+        current map style.
+    type: String
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerColor
+    summary: The background color of the marker balloon.
+    description: |
+        The default value of this property is undefined, which applies the standard color that is appropriate
+        for the current map style.
+    type: String
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerGlyphImage
+    summary: The image displayed in the marker balloon.
+    description: |
+        Use this property or the <Modules.Map.Annotation.markerGlyphText> property to specify the marker balloon content.
+        If you specify both an image and text, the text is displayed.
+        The glyph image is displayed when the marker is in the normal state. Create glyph images as template 
+        images so that the glyph tint color can be applied to it. Normally, you set the size of this image to 
+        20 by 20 points on iOS. However, if you do not provide a separate selected image in the <Modules.Map.Annotation.markerSelectedGlyphImage> 
+        property, make the size of this image 40 by 40 points on iOS. MapKit scales images that are larger or 
+        smaller than those sizes.
+    type: [String, Titanium.Blob]
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerSelectedGlyphImage
+    summary: The image to display when the marker is selected.
+    description: |
+        The glyph image is displayed when the marker is in the selected state. This image is displayed only when the 
+        marker is selected. If you specify an image for this property, you should also specify an image in the <Modules.Map.Annotation.markerGlyphImage> 
+        property.
+        Create glyph images as template images so that the glyph tint color can be applied to it. Set the size of this image 
+        to 40 by 40 points on iOS. MapKit scales images that are larger or smaller than those sizes.
+    type: [String, Titanium.Blob]
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerAnimatesWhenAdded
+    summary: Boolean indicating whether the marker animates into position onscreen.
+    type: Boolean
+    default: false
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerTitleVisibility
+    summary: The visibility of the title text rendered below the marker balloon.
+    description: |
+        Title text is normally displayed below the marker balloon. Use <Modules.Map.FEATURE_VISIBILITY_ADAPTIVE>,
+        <Modules.Map.FEATURE_VISIBILITY_VISIBLE> or <Modules.Map.FEATURE_VISIBILITY_HIDDEN>.
+    type: Number
+    constants: Modules.Map.FEATURE_VISIBILITY_*
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: markerSubtitleVisibility
+    summary: The visibility of the subtitle text rendered below the marker balloon.
+    description: |
+        The subtitle text is hidden when the marker is not selected. The text is shown when the marker 
+        is selected. Use <Modules.Map.FEATURE_VISIBILITY_ADAPTIVE>, <Modules.Map.FEATURE_VISIBILITY_VISIBLE> or <Modules.Map.FEATURE_VISIBILITY_HIDDEN>.
+    type: Number
+    constants: Modules.Map.FEATURE_VISIBILITY_*
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: collisionMode
+    summary: The collision mode to use when interpreting the collision frame rectangle.
+    description: |
+        Use <Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE> or <Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_CIRCLE>.
+    type: Number
+    constants: Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_*
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: annotationDisplayPriority
+    summary: The display priority of this annotation view.
+    description: |
+        An annotation view whose priority is set to MKFeatureDisplayPriorityRequired is always visible 
+        on the map, whereas other priorities may result in the annotation view being hidden. Use 
+        <Modules.Map.FEATURE_DISPLAY_PRIORITY_REQUIRED>, <Modules.Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH> or 
+        <Modules.Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW>.
+    type: Number
+    constants: Modules.Map.FEATURE_DISPLAY_PRIORITY_*
+    default: Modules.Map.FEATURE_DISPLAY_PRIORITY_REQUIRE
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
+  - name: clusterIdentifier
+    summary: An identifier that determines whether the annotation view participates in clustering.
+    description: |
+        The default value of this property is null, which prevents the annotation view from being clustered 
+        with other annotation views. Setting the property to a non null value it to participate in clustering.
+        Clustering occurs when there is a collision between multiple annotation views with the same identifier
+        on the map surface. The annotation views involved in the collision are removed from the map view and 
+        replaced by a clustering annotation view, which displays the title from one of the annotations and 
+        provides access to the other annotations.
+    type: String
+    default: null
+    platforms: [iphone, ipad]
+    osver: {ios: {min: "11.0"} }
+    since: "6.3.0"
+
   - name: draggable
     summary: Determines whether the pin can be dragged by the user.
     description: |

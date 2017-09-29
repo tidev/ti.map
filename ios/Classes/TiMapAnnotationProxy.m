@@ -414,6 +414,116 @@
 	}
 }
 
+-(void)setShowAsMarker:(id)marker
+{
+    id current = [self valueForUndefinedKey:@"showAsMarker"];
+    [self replaceValue:marker forKey:@"showAsMarker" notification:NO];
+    if ([current isEqual: marker] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerGlyphText:(id)markerGlyphText
+{
+    id current = [self valueForUndefinedKey:@"markerGlyphText"];
+    [self replaceValue:markerGlyphText forKey:@"markerGlyphText" notification:NO];
+    if (![current isEqualToString: markerGlyphText]) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerGlyphColor:(id)markerGlyphColor
+{
+    id current = [self valueForUndefinedKey:@"markerGlyphColor"];
+    [self replaceValue:markerGlyphColor forKey:@"markerGlyphColor" notification:NO];
+    if ([current isEqual: markerGlyphColor] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerColor:(id)markerColor
+{
+    id current = [self valueForUndefinedKey:@"markerColor"];
+    [self replaceValue:markerColor forKey:@"markerColor" notification:NO];
+    if ([current isEqual: markerColor] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerGlyphImage:(id)markerGlyphImage
+{
+    id current = [self valueForUndefinedKey:@"markerGlyphImage"];
+    [self replaceValue:markerGlyphImage forKey:@"markerGlyphImage" notification:NO];
+    if ([current isEqual: markerGlyphImage] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerSelectedGlyphImage:(id)markerSelectedGlyphImage
+{
+    id current = [self valueForUndefinedKey:@"markerSelectedGlyphImage"];
+    [self replaceValue:markerSelectedGlyphImage forKey:@"markerSelectedGlyphImage" notification:NO];
+    if ([current isEqual: markerSelectedGlyphImage] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerAnimatesWhenAdded:(id)animates
+{
+    id current = [self valueForUndefinedKey:@"markerAnimatesWhenAdded"];
+    [self replaceValue:animates forKey:@"markerAnimatesWhenAdded" notification:NO];
+    if ([current isEqual: animates] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerTitleVisibility:(id)titleVisibility
+{
+    id current = [self valueForUndefinedKey:@"markerTitleVisibility"];
+    [self replaceValue:titleVisibility forKey:@"markerTitleVisibility" notification:NO];
+    if ([current isEqual: titleVisibility] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setMarkerSubtitleVisibility:(id)subtitleVisibility
+{
+    id current = [self valueForUndefinedKey:@"markerSubtitleVisibility"];
+    [self replaceValue:subtitleVisibility forKey:@"markerSubtitleVisibility" notification:NO];
+    if ([current isEqual: subtitleVisibility] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setCollisionMode:(id)collisionMode
+{
+    id current = [self valueForUndefinedKey:@"collisionMode"];
+    [self replaceValue:collisionMode forKey:@"collisionMode" notification:NO];
+    if ([current isEqual: collisionMode] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+-(void)setAnnotationDisplayPriority:(id)displayPriority
+{
+    id current = [self valueForUndefinedKey:@"annotationDisplayPriority"];
+    [self replaceValue:displayPriority forKey:@"annotationDisplayPriority" notification:NO];
+    if ([current isEqual: displayPriority] == NO) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+
+#if IS_IOS_11
+-(void)setClusterIdentifier:(id)clusterIdentifier
+{
+    id current = [self valueForUndefinedKey:@"clusterIdentifier"];
+    [self replaceValue:clusterIdentifier forKey:@"clusterIdentifier" notification:NO];
+    if (![current isEqualToString: clusterIdentifier]) {
+        [self setNeedsRefreshingWithSelection:YES];
+    }
+}
+#endif
+
 -(void)setCustomView:(id)customView
 {
 	id current = [self valueForUndefinedKey:@"customView"];
