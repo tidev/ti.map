@@ -1139,7 +1139,7 @@
     annView.centerOffset = ann.offset;
     
 #if IS_IOS_11
-    if ([TiMapView isiOS11OrGreater]) {
+    if ([TiMapView isiOS11OrGreater]) {
         annView.clusteringIdentifier  = [ann valueForUndefinedKey:@"clusterIdentifier"];
         annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
         annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
@@ -1188,7 +1188,7 @@
 
 #ifndef __clang_analyzer__
             // We can ignore this, as it's guarded above
-            id previewingDelegate = [[TiPreviewingDelegate alloc] initWithPreviewContext:previewContext];
+            id previewingDelegate = [[TiPreviewingDelegate alloc] performSelector:@selector(initWithPreviewContext:) withObject:previewContext];
             ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
 #endif
     }
