@@ -4,18 +4,18 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
- 
-#import "TiBase.h"
-#import <MapKit/MapKit.h>
-#import "TiMapView.h"
 
-@interface TiMapImageAnnotationView : MKAnnotationView<TiMapAnnotation> {
-@private
-	
-	NSString * lastHitName;
+#import "TiBase.h"
+#import "TiMapView.h"
+#import <MapKit/MapKit.h>
+
+@interface TiMapImageAnnotationView : MKAnnotationView <TiMapAnnotation> {
+  @private
+
+  NSString *lastHitName;
 }
 
-- (id)initWithAnnotation:(id <MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView*)map image:(UIImage*)image;
--(NSString *)lastHitName;
+- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map image:(UIImage *)image;
+- (NSString *)lastHitName;
 
 @end

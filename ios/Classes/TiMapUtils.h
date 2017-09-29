@@ -9,6 +9,6 @@
 
 @interface TiMapUtils : NSObject
 
-+(id)returnValueOnMainThread:(id(^)(void))block;
++ (id)returnValueOnMainThread:(id (^)(void))block;
 
 @end

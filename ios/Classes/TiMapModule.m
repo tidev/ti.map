@@ -6,9 +6,9 @@
  */
 
 #import "TiMapModule.h"
-#import "TiMapViewProxy.h"
 #import "TiMapCameraProxy.h"
 #import "TiMapConstants.h"
+#import "TiMapViewProxy.h"
 #import <MapKit/MapKit.h>
 
 @implementation TiMapModule
@@ -16,49 +16,49 @@
 #pragma mark Internal
 
 // this is generated for your module, please do not change it
--(id)moduleGUID
+- (id)moduleGUID
 {
-	return @"fee93b77-8eb3-418c-8f04-013664c4af83";
+  return @"fee93b77-8eb3-418c-8f04-013664c4af83";
 }
 
 // this is generated for your module, please do not change it
--(NSString*)moduleId
+- (NSString *)moduleId
 {
-	return @"ti.map";
+  return @"ti.map";
 }
 
--(NSString*)apiName
+- (NSString *)apiName
 {
-    return @"Ti.Map";
+  return @"Ti.Map";
 }
 
 #pragma mark Utils
 
-+(void)logAddedIniOS7Warning:(NSString*)name
++ (void)logAddedIniOS7Warning:(NSString *)name
 {
-    NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
+  NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
 }
 
 #pragma mark Public APIs
 
--(TiMapViewProxy*)createView:(id)args
+- (TiMapViewProxy *)createView:(id)args
 {
-    return [[[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+  return [[[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
--(TiMapCameraProxy*)createCamera:(id)args
+- (TiMapCameraProxy *)createCamera:(id)args
 {
-    if (![TiUtils isIOS7OrGreater]) {
-        [TiMapModule logAddedIniOS7Warning:@"createCamera()"];
-        return nil;
-    }
-    return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
+  if (![TiUtils isIOS7OrGreater]) {
+    [TiMapModule logAddedIniOS7Warning:@"createCamera()"];
+    return nil;
+  }
+  return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
-MAKE_SYSTEM_PROP(STANDARD_TYPE,MKMapTypeStandard);
-MAKE_SYSTEM_PROP(NORMAL_TYPE,MKMapTypeStandard); // For parity with Android
-MAKE_SYSTEM_PROP(SATELLITE_TYPE,MKMapTypeSatellite);
-MAKE_SYSTEM_PROP(HYBRID_TYPE,MKMapTypeHybrid);
+MAKE_SYSTEM_PROP(STANDARD_TYPE, MKMapTypeStandard);
+MAKE_SYSTEM_PROP(NORMAL_TYPE, MKMapTypeStandard); // For parity with Android
+MAKE_SYSTEM_PROP(SATELLITE_TYPE, MKMapTypeSatellite);
+MAKE_SYSTEM_PROP(HYBRID_TYPE, MKMapTypeHybrid);
 #ifdef __IPHONE_9_0
 MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
 MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
@@ -80,14 +80,14 @@ MAKE_SYSTEM_PROP(ANNOTATION_VIOLET, TiMapAnnotationPinColorViolet);
 MAKE_SYSTEM_PROP(ANNOTATION_YELLOW, TiMapAnnotationPinColorYellow);
 #endif
 
-MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_NONE,MKAnnotationViewDragStateNone);
-MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START,MKAnnotationViewDragStateStarting);
-MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_DRAG,MKAnnotationViewDragStateDragging);
-MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_CANCEL,MKAnnotationViewDragStateCanceling);
-MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_END,MKAnnotationViewDragStateEnding);
+MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_NONE, MKAnnotationViewDragStateNone);
+MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START, MKAnnotationViewDragStateStarting);
+MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_DRAG, MKAnnotationViewDragStateDragging);
+MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_CANCEL, MKAnnotationViewDragStateCanceling);
+MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_END, MKAnnotationViewDragStateEnding);
 
-MAKE_IOS7_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_LABELS,MKOverlayLevelAboveLabels);
-MAKE_IOS7_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_ROADS,MKOverlayLevelAboveRoads);
+MAKE_IOS7_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_LABELS, MKOverlayLevelAboveLabels);
+MAKE_IOS7_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_ROADS, MKOverlayLevelAboveRoads);
 
 MAKE_SYSTEM_PROP(POLYLINE_PATTERN_DASHED, TiMapOverlyPatternTypeDashed);
 MAKE_SYSTEM_PROP(POLYLINE_PATTERN_DOTTED, TiMapOverlyPatternTypeDotted);

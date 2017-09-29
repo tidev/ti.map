@@ -10,17 +10,18 @@
 
 @implementation TiMapUtils
 
-+(id)returnValueOnMainThread:(id(^)(void))block
++ (id)returnValueOnMainThread:(id (^)(void))block
 {
-    if ([NSThread isMainThread]) {
-        return block();
-    }
+  if ([NSThread isMainThread]) {
+    return block();
+  }
 
-    __block id result = nil;
-    TiThreadPerformOnMainThread(^{
-        result = [block() retain];
-    }, YES);
-    return [result autorelease];
+  __block id result = nil;
+  TiThreadPerformOnMainThread(^{
+    result = [block() retain];
+  },
+      YES);
+  return [result autorelease];
 }
 
 @end
