@@ -585,6 +585,11 @@
             polygonProxies = [[NSMutableArray alloc] init];
         }
         [polygonProxies addObject:polygonProxy];
+
+        // NOTE: this is intended to fix a bug where MKMapView doesnt call
+        // through to [MKOverlayRenderer canDrawMapRect:zoomScale:] until a user
+        // moves the map
+        map.camera.centerCoordinate = map.camera.centerCoordinate;
     }, NO);
 }
 
