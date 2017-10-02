@@ -7,17 +7,6 @@
 
 #import "TiModule.h"
 
-#define MAKE_IOS7_SYSTEM_PROP(name, map)                                            \
-  -(NSNumber *)name                                                                 \
-  {                                                                                 \
-    if (![TiUtils isIOS7OrGreater]) {                                               \
-      const char *propName = #name;                                                 \
-      [TiMapModule logAddedIniOS7Warning:[NSString stringWithUTF8String:propName]]; \
-      return nil;                                                                   \
-    }                                                                               \
-    return [NSNumber numberWithInt:map];                                            \
-  }
-
 @interface TiMapModule : TiModule {
   UIColor *colorRed;
 }
