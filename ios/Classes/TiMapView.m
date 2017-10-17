@@ -982,7 +982,6 @@
     BOOL isSelected = [view isSelected];
     MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 
-    RELEASE_TO_NIL(selectedAnnotation);
     selectedAnnotation = [ann retain];
 
     // If canShowCallout == true we will try to find calloutView to hadleTap on callout
