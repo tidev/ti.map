@@ -10,5 +10,5 @@
 	</android>
    <modules>
       <module platform="android">ti.playservices</module>
-   </modules>>
+   </modules>
 </ti:module>
