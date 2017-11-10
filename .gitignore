@@ -28,5 +28,6 @@ android/.classpath
 android/.settings
 android/dist/
 android/launch-*
+android/java-sources.txt
 nbproject
 /ios/metadata.json
