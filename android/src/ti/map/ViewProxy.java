@@ -818,7 +818,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			if (TiApplication.isUIThread()) {
-				handleAddAnnotations(lines);
+				handleAddPolylines(lines);
 			} else {
 				TiMessenger.sendBlockingMainMessage(getMainHandler()
 						.obtainMessage(MSG_ADD_POLYLINES), lines);
