@@ -1,4 +1,7 @@
 # Change Log
+
+Important note: This changelog has been replaced by the official Github [releases tab](https://github.com/appcelerator-modules/ti.map/releases). 
+
 <pre>
 v3.3.1    Compile using 6.2.0.GA [TIMOB-25288]
 v3.3.0    Expose "regionwillchange" event for iOS-parity [MOD-2343]
