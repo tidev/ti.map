@@ -1148,7 +1148,7 @@
 
     if (!TiPreviewingDelegate) {
       NSLog(@"[ERROR] Unable to receive TiPreviewingDelegate class!");
-      return;
+      return nil;
     }
 
 #ifndef __clang_analyzer__
