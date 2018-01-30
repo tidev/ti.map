@@ -89,6 +89,11 @@ public class AnnotationProxy extends KrollProxy
 
 	@Override
 	public void release() {
+		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
+			TiViewProxy customView = (TiViewProxy) getProperty(MapModule.PROPERTY_CUSTOM_VIEW);
+			customView.release();
+		}
+		/*
 		if (markerOptions != null) {
 			markerOptions = null;
 		}
@@ -101,6 +106,7 @@ public class AnnotationProxy extends KrollProxy
 		if (delegate != null) {
 			delegate = null;
 		}
+		*/
 		super.release();
 	}
 
