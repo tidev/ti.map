@@ -278,8 +278,10 @@
   // descriptors for them, we have to check and make sure there is
   // no overlap and remember/forget appropriately.
 
-  for (TiMapAnnotationProxy *annProxy in currentAnnotations) {
-    if (![newAnnotations containsObject:annProxy]) {
+  for (id annProxy in currentAnnotations) {
+    // Remove old proxy references that should not rendered anymore
+    // Also only forget proxies, not native annotations like cluster annotations
+    if ([annProxy isKindOfClass:[TiMapAnnotationProxy class]] && ![newAnnotations containsObject:annProxy]) {
       [self forgetProxy:annProxy];
     }
   }

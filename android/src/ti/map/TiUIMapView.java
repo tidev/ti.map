@@ -464,6 +464,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		for (int i = 0; i < timarkers.size(); i++) {
 			TiMarker timarker = timarkers.get(i);
 			timarker.getMarker().remove();
+			timarker.release();
 		}
 		timarkers.clear();
 	}
@@ -491,6 +492,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		if (timarker != null) {
 			timarkers.remove(timarker);
 			timarker.getMarker().remove();
+			timarker.release();
 		}
 	}
 
