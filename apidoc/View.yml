@@ -643,13 +643,12 @@ properties:
     platforms: [android]
     permission: read-only
 
-  - name: getZoom
+  - name: zoom
     summary: Returns the current zoom level from the current camera position.
     description: |
         Returns the current zoom level from the current camera position.
-
-        This will only give the correct value after the 'complete' event is fired.
-    since: "7.0.0"
+        Note: This will only return the correct value once the `complete` event is fired.
+    since: "7.1.0"
     type: Number
     platforms: [android]
     permission: read-only
