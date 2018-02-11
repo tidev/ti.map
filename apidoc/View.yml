@@ -151,18 +151,19 @@ methods:
     
   - name: setPadding
     summary: Sets the distance between each edges of the view to the map controls, where the maps controls may be obscured by other elements.
+    since: "7.1.0"
     parameters:
       - name: left
-        summary: Left padding
+        summary: Left padding of the map view.
         type: Number
       - name: top
-        summary: Top padding
+        summary: Top padding of the map view.
         type: Number
       - name: right
-        summary: Right padding
+        summary: Right padding of the map view.
         type: Number
       - name: bottom
-        summary: Bottom padding
+        summary: Bottom padding of the map view.
         type: Number
         
   - name: zoom
