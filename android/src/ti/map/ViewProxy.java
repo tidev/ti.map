@@ -46,10 +46,10 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final int MSG_REMOVE_ROUTE = MSG_FIRST_ID + 508;
 	private static final int MSG_CHANGE_ZOOM = MSG_FIRST_ID + 509;
 	private static final int MSG_SET_LOCATION = MSG_FIRST_ID + 510;
-	private static final int MSG_ZOOM = MSG_FIRST_ID + 511;
-	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 512;
-	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 513;
-	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 514;
+	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
+	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 512;
+	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
+	private static final int MSG_ZOOM = MSG_FIRST_ID + 514;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
