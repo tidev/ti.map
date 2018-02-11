@@ -1046,7 +1046,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		if (view instanceof TiUIMapView) {
 			return ((TiUIMapView) view).getMap().getCameraPosition().zoom;
 		} else {
-			return 0;
+			return 0.0;
 		}
 	}
 
