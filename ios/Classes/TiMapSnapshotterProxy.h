@@ -9,7 +9,7 @@
 #import <MapKit/MapKit.h>
 
 @interface TiMapSnapshotterProxy : TiProxy {
-    MKMapSnapshotOptions *options;
+  MKMapSnapshotOptions *options;
 }
 
 @end

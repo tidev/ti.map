@@ -11,17 +11,17 @@
 
 + (UIColor *)azureColor
 {
-    return [UIColor colorWithRed:0.0 green:0.5 blue:1.0 alpha:1.0];
+  return [UIColor colorWithRed:0.0 green:0.5 blue:1.0 alpha:1.0];
 }
 
 + (UIColor *)violetColor
 {
-    return [UIColor colorWithRed:0.5 green:0.0 blue:1.0 alpha:1.0];
+  return [UIColor colorWithRed:0.5 green:0.0 blue:1.0 alpha:1.0];
 }
 
 + (UIColor *)roseColor
 {
-    return [UIColor colorWithRed:1.0 green:0.0 blue:0.5 alpha:1.0];
+  return [UIColor colorWithRed:1.0 green:0.0 blue:0.5 alpha:1.0];
 }
 
 @end
