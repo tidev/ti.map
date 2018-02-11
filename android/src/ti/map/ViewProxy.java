@@ -1116,6 +1116,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	}
 
 	@Kroll.method
+        @Kroll.setProperty
 	public void setPadding(int left, int top, int right, int bottom) {
 		KrollDict args = new KrollDict();
 		args.put(TiC.PROPERTY_LEFT, left);
