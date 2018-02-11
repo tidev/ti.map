@@ -1,4 +1,7 @@
 # Change Log
+
+⚠️ Important note: This changelog has been replaced by the official Github [releases tab](https://github.com/appcelerator-modules/ti.map/releases). 
+
 ```
 v2.12.0 Support peek-and-pop in annotations [TIMOB-24375]
 v2.11.0 Support for overlay patterns [MOD-2346]

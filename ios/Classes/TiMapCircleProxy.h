@@ -15,12 +15,12 @@
 @class TiMapViewProxy;
 
 @interface TiMapCircleProxy : TiProxy {
-    CLLocationCoordinate2D center;
-    double radius;
-    double alpha;
-    double strokeWidth;
-    TiColor *strokeColor;
-    TiColor *fillColor;
+  CLLocationCoordinate2D center;
+  double radius;
+  double alpha;
+  double strokeWidth;
+  TiColor *strokeColor;
+  TiColor *fillColor;
 }
 
 @property (nonatomic, readonly) MKCircleRenderer *circleRenderer;

@@ -54,10 +54,12 @@
 		CED651D117D7AA21007C2954 /* TiMapViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = CED651C517D7AA21007C2954 /* TiMapViewProxy.m */; };
 		CEE33CF319EC4C150005E745 /* TiMapUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = CEE33CF119EC4C150005E745 /* TiMapUtils.h */; };
 		CEE33CF419EC4C150005E745 /* TiMapUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE33CF219EC4C150005E745 /* TiMapUtils.m */; };
+		DB0CCA002010840900597F24 /* TiMapMarkerAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = DB0CC9FE2010840900597F24 /* TiMapMarkerAnnotationView.m */; };
+		DB0CCA012010840900597F24 /* TiMapMarkerAnnotationView.h in Headers */ = {isa = PBXBuildFile; fileRef = DB0CC9FF2010840900597F24 /* TiMapMarkerAnnotationView.h */; };
+		DB0CCA052010843000597F24 /* TiMapOverlayPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = DB0CCA032010843000597F24 /* TiMapOverlayPattern.m */; };
+		DB0CCA062010843000597F24 /* TiMapOverlayPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = DB0CCA042010843000597F24 /* TiMapOverlayPattern.h */; };
 		DB3656FE1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h in Headers */ = {isa = PBXBuildFile; fileRef = DB3656FC1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h */; };
 		DB3656FF1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3656FD1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m */; };
-		DB932FF71F0C5D9C0099E6A8 /* TiMapOverlayPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = DB932FF51F0C5D9C0099E6A8 /* TiMapOverlayPattern.h */; };
-		DB932FF81F0C5D9C0099E6A8 /* TiMapOverlayPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = DB932FF61F0C5D9C0099E6A8 /* TiMapOverlayPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,11 +110,13 @@
 		CEE33CF119EC4C150005E745 /* TiMapUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapUtils.h; path = Classes/TiMapUtils.h; sourceTree = "<group>"; };
 		CEE33CF219EC4C150005E745 /* TiMapUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapUtils.m; path = Classes/TiMapUtils.m; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libTiMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTiMap.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB0CC9FE2010840900597F24 /* TiMapMarkerAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapMarkerAnnotationView.m; path = Classes/TiMapMarkerAnnotationView.m; sourceTree = "<group>"; };
+		DB0CC9FF2010840900597F24 /* TiMapMarkerAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapMarkerAnnotationView.h; path = Classes/TiMapMarkerAnnotationView.h; sourceTree = "<group>"; };
+		DB0CCA032010843000597F24 /* TiMapOverlayPattern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapOverlayPattern.m; path = Classes/TiMapOverlayPattern.m; sourceTree = "<group>"; };
+		DB0CCA042010843000597F24 /* TiMapOverlayPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapOverlayPattern.h; path = Classes/TiMapOverlayPattern.h; sourceTree = "<group>"; };
 		DB3656EF1E50BA740040E0B9 /* TiMapConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapConstants.h; path = Classes/TiMapConstants.h; sourceTree = "<group>"; };
 		DB3656FC1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+AndroidHueParity.h"; path = "Classes/UIColor+AndroidHueParity.h"; sourceTree = "<group>"; };
 		DB3656FD1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+AndroidHueParity.m"; path = "Classes/UIColor+AndroidHueParity.m"; sourceTree = "<group>"; };
-		DB932FF51F0C5D9C0099E6A8 /* TiMapOverlayPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMapOverlayPattern.h; sourceTree = "<group>"; };
-		DB932FF61F0C5D9C0099E6A8 /* TiMapOverlayPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiMapOverlayPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,18 +161,18 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DB07496C1E081A59009D8A71 /* Annotation */,
+				DB07496F1E081A8A009D8A71 /* Camera */,
 				DB3657001E50C4C40040E0B9 /* Extensions */,
 				DB0749711E081A97009D8A71 /* MapView */,
-				DB07496C1E081A59009D8A71 /* Annotation */,
 				DB07496E1E081A79009D8A71 /* Overlays */,
-				DB07496F1E081A8A009D8A71 /* Camera */,
 				DB0749701E081A8F009D8A71 /* Route */,
 				DB0749721E081AAB009D8A71 /* Snapshotter */,
+				DB3656EF1E50BA740040E0B9 /* TiMapConstants.h */,
 				24DD6CF71134B3F500162E58 /* TiMapModule.h */,
 				24DD6CF81134B3F500162E58 /* TiMapModule.m */,
 				24DE9E0F11C5FE74003F90F6 /* TiMapModuleAssets.h */,
 				24DE9E1011C5FE74003F90F6 /* TiMapModuleAssets.m */,
-				DB3656EF1E50BA740040E0B9 /* TiMapConstants.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -211,6 +215,8 @@
 				CED651BF17D7AA21007C2954 /* TiMapImageAnnotationView.m */,
 				CED651C017D7AA21007C2954 /* TiMapPinAnnotationView.h */,
 				CED651C117D7AA21007C2954 /* TiMapPinAnnotationView.m */,
+				DB0CC9FF2010840900597F24 /* TiMapMarkerAnnotationView.h */,
+				DB0CC9FE2010840900597F24 /* TiMapMarkerAnnotationView.m */,
 			);
 			name = Annotation;
 			sourceTree = "<group>";
@@ -227,11 +233,10 @@
 		DB07496E1E081A79009D8A71 /* Overlays */ = {
 			isa = PBXGroup;
 			children = (
-				DB07496A1E081A23009D8A71 /* Polyline */,
-				DB07496B1E081A36009D8A71 /* Polygon */,
 				DB07496D1E081A6A009D8A71 /* Circle */,
-				DB932FF51F0C5D9C0099E6A8 /* TiMapOverlayPattern.h */,
-				DB932FF61F0C5D9C0099E6A8 /* TiMapOverlayPattern.m */,
+				DB0CCA022010841A00597F24 /* Pattern */,
+				DB07496B1E081A36009D8A71 /* Polygon */,
+				DB07496A1E081A23009D8A71 /* Polyline */,
 			);
 			name = Overlays;
 			sourceTree = "<group>";
@@ -279,6 +284,15 @@
 			name = Snapshotter;
 			sourceTree = "<group>";
 		};
+		DB0CCA022010841A00597F24 /* Pattern */ = {
+			isa = PBXGroup;
+			children = (
+				DB0CCA042010843000597F24 /* TiMapOverlayPattern.h */,
+				DB0CCA032010843000597F24 /* TiMapOverlayPattern.m */,
+			);
+			name = Pattern;
+			sourceTree = "<group>";
+		};
 		DB3657001E50C4C40040E0B9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,16 +315,17 @@
 				24DE9E1111C5FE74003F90F6 /* TiMapModuleAssets.h in Headers */,
 				DB3656FE1E50C4C10040E0B9 /* UIColor+AndroidHueParity.h in Headers */,
 				CED651C617D7AA21007C2954 /* TiMapAnnotationProxy.h in Headers */,
-				DB932FF71F0C5D9C0099E6A8 /* TiMapOverlayPattern.h in Headers */,
 				CE92EC2517DF9A640082E943 /* TiMapCameraProxy.h in Headers */,
 				815136F31D355BF5009E3E2C /* TiMapSnapshotterProxy.h in Headers */,
 				CEE33CF319EC4C150005E745 /* TiMapUtils.h in Headers */,
 				CEC39B4617EB97BA00DCE1EE /* TiMapRouteProxy.h in Headers */,
 				CED651C817D7AA21007C2954 /* TiMapCustomAnnotationView.h in Headers */,
+				DB0CCA012010840900597F24 /* TiMapMarkerAnnotationView.h in Headers */,
 				CED651CA17D7AA21007C2954 /* TiMapImageAnnotationView.h in Headers */,
 				CED651CC17D7AA21007C2954 /* TiMapPinAnnotationView.h in Headers */,
 				CED651CE17D7AA21007C2954 /* TiMapView.h in Headers */,
 				CED651D017D7AA21007C2954 /* TiMapViewProxy.h in Headers */,
+				DB0CCA062010843000597F24 /* TiMapOverlayPattern.h in Headers */,
 				27A609E619F54FC300CA150A /* TiMapPolygonProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,8 +406,9 @@
 				CED651C717D7AA21007C2954 /* TiMapAnnotationProxy.m in Sources */,
 				DB3656FF1E50C4C10040E0B9 /* UIColor+AndroidHueParity.m in Sources */,
 				CED651C917D7AA21007C2954 /* TiMapCustomAnnotationView.m in Sources */,
+				DB0CCA052010843000597F24 /* TiMapOverlayPattern.m in Sources */,
 				CEC39B4717EB97BA00DCE1EE /* TiMapRouteProxy.m in Sources */,
-				DB932FF81F0C5D9C0099E6A8 /* TiMapOverlayPattern.m in Sources */,
+				DB0CCA002010840900597F24 /* TiMapMarkerAnnotationView.m in Sources */,
 				27A609E719F54FC300CA150A /* TiMapPolygonProxy.m in Sources */,
 				CE92EC2617DF9A640082E943 /* TiMapCameraProxy.m in Sources */,
 				27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */,
@@ -504,9 +520,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_UNGUARDED_AVAILABILITY = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DSTROOT = /tmp/TiMap.dst;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -523,6 +541,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-DDEBUG",
@@ -543,7 +562,9 @@
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = NO;
 				DSTROOT = /tmp/TiMap.dst;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -560,7 +581,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = TiMap;

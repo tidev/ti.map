@@ -29,7 +29,8 @@ import android.os.Message;
 		TiC.PROPERTY_MAP_TYPE, TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS,
 		TiC.PROPERTY_ANIMATE, MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE,
 		TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, MapModule.PROPERTY_COMPASS_ENABLED,
-		MapModule.PROPERTY_CLUSTERING })
+		MapModule.PROPERTY_CLUSTERING,
+		MapModule.PROPERTY_POLYLINES })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final String TAG = "MapViewProxy";
 
@@ -55,8 +56,9 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final int MSG_REMOVE_ALL_POLYGONS = MSG_FIRST_ID + 903;
 
 	private static final int MSG_ADD_POLYLINE = MSG_FIRST_ID + 910;
-	private static final int MSG_REMOVE_POLYLINE = MSG_FIRST_ID + 911;
-	private static final int MSG_REMOVE_ALL_POLYLINES = MSG_FIRST_ID + 912;
+	private static final int MSG_ADD_POLYLINES = MSG_FIRST_ID + 911;
+	private static final int MSG_REMOVE_POLYLINE = MSG_FIRST_ID + 912;
+	private static final int MSG_REMOVE_ALL_POLYLINES = MSG_FIRST_ID + 913;
 
 	private static final int MSG_ADD_CIRCLE = MSG_FIRST_ID + 921;
 	private static final int MSG_REMOVE_CIRCLE = MSG_FIRST_ID + 922;
@@ -208,6 +210,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		case MSG_ADD_POLYLINE: {
 			result = (AsyncResult) msg.obj;
 			handleAddPolyline(result.getArg());
+			result.setResult(null);
+			return true;
+		}
+
+		case MSG_ADD_POLYLINES: {
+			result = (AsyncResult) msg.obj;
+			handleAddPolylines((Object[]) result.getArg());
 			result.setResult(null);
 			return true;
 		}
@@ -782,7 +791,50 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		} else {
 			addPreloadPolyline(p);
 		}
+	}
 
+	@Kroll.method
+	public void addPolylines(Object polylinesObject) {
+		if (!(polylinesObject instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to addPolylines",  Log.DEBUG_MODE);
+			return;
+		}
+		Object[] lines = (Object[])polylinesObject;
+
+		//Update the JS object
+		Object polylines = getProperty(MapModule.PROPERTY_POLYLINES);
+		if (polylines instanceof Object[]) {
+			ArrayList<Object> polylinesList = new ArrayList<Object>(
+					Arrays.asList((Object[]) polylines));
+			for (int i = 0; i < lines.length; i++) {
+				Object polylineObject = lines[i];
+				if (polylineObject instanceof AnnotationProxy) {
+					polylinesList.add(polylineObject);
+				}
+			}
+			setProperty(MapModule.PROPERTY_POLYLINES, polylinesList.toArray());
+		} else {
+			setProperty(MapModule.PROPERTY_POLYLINES, lines);
+		}
+
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			if (TiApplication.isUIThread()) {
+				handleAddPolylines(lines);
+			} else {
+				TiMessenger.sendBlockingMainMessage(getMainHandler()
+						.obtainMessage(MSG_ADD_POLYLINES), lines);
+			}
+		}
+	}
+
+	private void handleAddPolylines(Object[] polylines) {
+		for (int i = 0; i < polylines.length; i++) {
+			Object polyline = polylines[i];
+			if (polyline instanceof PolylineProxy) {
+				handleAddPolyline((PolylineProxy) polyline);
+			}
+		}
 	}
 
 	public void addPreloadPolyline(PolylineProxy p) {

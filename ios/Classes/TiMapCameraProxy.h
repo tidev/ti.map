@@ -9,14 +9,14 @@
 #import <MapKit/MapKit.h>
 
 @interface TiMapCameraProxy : TiProxy {
-    
-@private
-    MKMapCamera *camera_;
+
+  @private
+  MKMapCamera *camera_;
 }
 
--(id)init;
--(id)initWithCamera:(MKMapCamera*)camera;
+- (id)init;
+- (id)initWithCamera:(MKMapCamera *)camera;
 
--(MKMapCamera*)camera;
+- (MKMapCamera *)camera;
 
 @end

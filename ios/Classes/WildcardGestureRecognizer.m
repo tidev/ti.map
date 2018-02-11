@@ -11,21 +11,22 @@
 
 - (void)dealloc
 {
-    [touchesBeganCallback release];
-    [super dealloc];
+  [touchesBeganCallback release];
+  [super dealloc];
 }
 
--(id)init{
-    if (self = [super init]) {
-        self.cancelsTouchesInView = NO;
-    }
-    return self;
+- (id)init
+{
+  if (self = [super init]) {
+    self.cancelsTouchesInView = NO;
+  }
+  return self;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (touchesBeganCallback)
-        touchesBeganCallback(touches, event);
+  if (touchesBeganCallback)
+    touchesBeganCallback(touches, event);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
@@ -50,12 +51,12 @@
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer
 {
-    return NO;
+  return NO;
 }
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer
 {
-    return NO;
+  return NO;
 }
 
 @end
