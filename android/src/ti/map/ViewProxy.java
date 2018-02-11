@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
@@ -49,7 +50,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
 	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 512;
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
-	private static final int MSG_ZOOM = MSG_FIRST_ID + 514;
+	private static final int MSG_SET_PADDING = MSG_FIRST_ID + 514;
+	private static final int MSG_ZOOM = MSG_FIRST_ID + 515;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -188,6 +190,15 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 
 		case MSG_SNAP_SHOT: {
 			handleSnapshot();
+			return true;
+		}
+
+		case MSG_SET_PADDING: {
+			Object argsObj = msg.obj;
+			if (argsObj instanceof KrollDict) {
+				KrollDict args = (KrollDict) argsObj;
+				handleSetPadding(args);
+			}
 			return true;
 		}
 
@@ -1101,6 +1112,31 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		} else {
 			Log.e(TAG,
 					"Unable to refresh annotation since the map view has not been created yet.");
+		}
+	}
+
+	@Kroll.method
+        @Kroll.setProperty
+	public void setPadding(int left, int top, int right, int bottom) {
+		KrollDict args = new KrollDict();
+		args.put(TiC.PROPERTY_LEFT, left);
+		args.put(TiC.PROPERTY_TOP, top);
+		args.put(TiC.PROPERTY_RIGHT, right);
+		args.put(TiC.PROPERTY_BOTTOM, bottom);
+
+		if (TiApplication.isUIThread()) {
+			handleSetPadding(args);
+		} else {
+			getMainHandler().obtainMessage(MSG_SET_PADDING, args)
+					.sendToTarget();
+		}
+	}
+
+	public void handleSetPadding(KrollDict args) {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).setPadding(args.getInt(TiC.PROPERTY_LEFT), args.getInt(TiC.PROPERTY_TOP),
+				args.getInt(TiC.PROPERTY_RIGHT), args.getInt(TiC.PROPERTY_BOTTOM));
 		}
 	}
 
