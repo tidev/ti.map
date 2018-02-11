@@ -49,6 +49,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final int MSG_MAX_ZOOM = MSG_FIRST_ID + 511;
 	private static final int MSG_MIN_ZOOM = MSG_FIRST_ID + 512;
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
+	private static final int MSG_ZOOM = MSG_FIRST_ID + 514;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -171,6 +172,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 
 		case MSG_CHANGE_ZOOM: {
 			handleZoom(msg.arg1);
+			return true;
+		}
+
+		case MSG_ZOOM: {
+			result = (AsyncResult) msg.obj;
+			result.setResult(handleGetZoom());
 			return true;
 		}
 
@@ -1021,6 +1028,26 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).changeZoomLevel(delta);
+		}
+	}
+
+	@Kroll.method
+	@Kroll.getProperty
+	public float getZoom() {
+		if (TiApplication.isUIThread()) {
+			return handleGetZoom();
+		} else {
+			return (Float) TiMessenger.sendBlockingMainMessage(getMainHandler()
+					.obtainMessage(MSG_ZOOM));
+		}
+	}
+
+	private float handleGetZoom() {
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			return ((TiUIMapView) view).getMap().getCameraPosition().zoom;
+		} else {
+			return 0.0;
 		}
 	}
 

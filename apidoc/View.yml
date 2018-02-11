@@ -643,6 +643,16 @@ properties:
     platforms: [android]
     permission: read-only
 
+  - name: zoom
+    summary: Returns the current zoom level from the current camera position.
+    description: |
+        Returns the current zoom level from the current camera position.
+        Note: This will only return the correct value once the `complete` event is fired.
+    since: "7.1.0"
+    type: Number
+    platforms: [android]
+    permission: read-only
+
   - name: traffic
     summary: Toggles the traffic layer on or off.
     description: |
