@@ -1032,6 +1032,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	}
 
 	@Kroll.method
+	@Kroll.getProperty
 	public float getZoom() {
 		if (TiApplication.isUIThread()) {
 			return handleGetZoom();
