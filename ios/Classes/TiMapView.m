@@ -722,8 +722,6 @@
   [imageOverlayProxies removeAllObjects];
 }
 
-#pragma mark Public APIs iOS 7
-
 - (void)setTintColor_:(id)color
 {
   TiColor *ticolor = [TiUtils colorValue:color];
@@ -834,6 +832,16 @@
   } else {
     NSLog(@"[WARN] The property 'showsTraffic' is only available on iOS 9 and later.");
   }
+}
+
+- (void)setPadding_:(id)value
+{
+  TiThreadPerformOnMainThread(^{
+    [[self map] setVisibleMapRect:self.map.visibleMapRect
+                      edgePadding:[TiUtils contentInsets:value]
+                         animated:[TiUtils boolValue:@"animated" properties:value]];
+  },
+      YES);
 }
 
 - (void)animateCamera:(id)args
