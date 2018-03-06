@@ -383,9 +383,11 @@ events:
 
         Note that only one annotation can be selected at any given time.
 
-        The `click` event includes a value, `clicksource`, which describes the part of the annotation that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton` on iOS and pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. If the user deselects an annotation
-        by clicking on the pin, `clicksource` is `pin`. If the user deselects the
-        annotation by clicking elsewhere in the map view, `clicksource` is `map`.
+        The `click` event includes a value, `clicksource`, which describes the part of the annotation 
+        that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton` 
+        on iOS and `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. 
+        If the user deselects an annotation by clicking on the pin, `clicksource` is `pin`. 
+        If the user deselects the annotation by clicking elsewhere in the map view, `clicksource` is `map`.
 
         For polygon, polyline or circle, The `click` event includes the following values.
         `clicksource` is a string describing the shape type. `map` is the map view instance.
