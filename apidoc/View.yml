@@ -690,7 +690,7 @@ properties:
     description: |
         Returns the current zoom level from the current camera position.
         Note: This will only return the correct value once the `complete` event is fired.
-    since: "7.3.0"
+    since: "7.1.0"
     type: Number
     platforms: [android]
     permission: read-only
