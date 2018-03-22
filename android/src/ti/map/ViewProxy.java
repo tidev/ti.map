@@ -1142,6 +1142,10 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		}
 	}
 
+	@Kroll.method
+	public void setClusterAnnotation() {
+	}
+
 	public String getApiName()
 	{
 		return "Ti.Map";

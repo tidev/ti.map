@@ -49,7 +49,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 	TiC.PROPERTY_RIGHT_VIEW,
 	MapModule.PROPERTY_SHOW_INFO_WINDOW,
 	MapModule.PROPERTY_CENTER_OFFSET,
-	MapModule.PROPERTY_HIDDEN
+	MapModule.PROPERTY_HIDDEN,
+	MapModule.PROPERTY_CLUSTERIDENTIFIER
 })
 public class AnnotationProxy extends KrollProxy
 {
@@ -86,6 +87,7 @@ public class AnnotationProxy extends KrollProxy
 		markerOptions = new MarkerOptions();
 		annoTitle = "";
 		defaultValues.put(MapModule.PROPERTY_SHOW_INFO_WINDOW, true);
+		defaultValues.put(MapModule.PROPERTY_CLUSTERIDENTIFIER, null);
 	}
 
 	@Override
