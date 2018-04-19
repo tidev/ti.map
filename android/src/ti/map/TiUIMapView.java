@@ -61,7 +61,7 @@ import com.google.maps.android.clustering.Cluster;
 public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
 	GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter,
 	GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback, OnMapReadyCallback,
-	GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, 
+	GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener,
 	ClusterManager.OnClusterClickListener<TiClusterMarker>
 {
 
@@ -504,7 +504,9 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		timarkers.clear();
 
 		// clear cluster markers
-		mClusterManager.clearItems();
+		if (mClusterManager != null){
+			mClusterManager.clearItems();
+		}
 	}
 
 	public TiMarker findMarkerByTitle(String title) {

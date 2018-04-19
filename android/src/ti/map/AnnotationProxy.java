@@ -70,6 +70,7 @@ public class AnnotationProxy extends KrollProxy
 	// the correct clicksource for the click event.
 	private int iconImageHeight = 0;
 	private int iconImageWidth = 0;
+	private String subTitle;
 	private String annoTitle;
 	private AnnotationDelegate delegate = null;
 
@@ -85,6 +86,7 @@ public class AnnotationProxy extends KrollProxy
 	{
 		super();
 		markerOptions = new MarkerOptions();
+		subTitle = "";
 		annoTitle = "";
 		defaultValues.put(MapModule.PROPERTY_SHOW_INFO_WINDOW, true);
 		defaultValues.put(MapModule.PROPERTY_CLUSTERIDENTIFIER, null);
@@ -131,6 +133,10 @@ public class AnnotationProxy extends KrollProxy
 
 	public String getTitle() {
 		return annoTitle;
+	}
+
+	public String getSubtitle() {
+		return subTitle;
 	}
 
 	@Override
@@ -225,6 +231,7 @@ public class AnnotationProxy extends KrollProxy
 			}
 			if (hasProperty(TiC.PROPERTY_SUBTITLE)) {
 				infoWindow.setSubtitle(TiConvert.toString(getProperty(TiC.PROPERTY_SUBTITLE)));
+				subTitle = TiConvert.toString(getProperty(TiC.PROPERTY_SUBTITLE));
 			} else{
 				infoWindow.setSubtitle(null);
 			}
@@ -402,6 +409,7 @@ public class AnnotationProxy extends KrollProxy
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_SUBTITLE)) {
 			getOrCreateMapInfoWindow().setSubtitle(TiConvert.toString(value));
+			subTitle = TiConvert.toString(value);
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_LEFT_BUTTON)) {
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.LEFT_PANE);

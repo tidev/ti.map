@@ -11,20 +11,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 public class TiClusterMarker implements ClusterItem {
- 
+
     private LatLng position;
 	private AnnotationProxy proxy;
- 
+
     public TiClusterMarker(AnnotationProxy p) {
         proxy = p;
         position = p.getMarkerOptions().getPosition();
     }
- 
+
     @Override
     public LatLng getPosition() {
         return position;
     }
- 
+
     public void setPosition( LatLng position ) {
         this.position = position;
     }
@@ -40,9 +40,9 @@ public class TiClusterMarker implements ClusterItem {
 
     @Override
     public String getSnippet() {
-        return null;
+        return proxy.getSubtitle();
     }
-    
+
     public void release() {
         if (proxy != null) {
             proxy.release();
