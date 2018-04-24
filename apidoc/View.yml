@@ -324,11 +324,11 @@ methods:
             An [ImageOverlay](Modules.Map.ImageOverlay) object
         type: Modules.Map.ImageOverlay
 
-  - name: removeImageOverlays
+  - name: removeAllImageOverlays
     summary: Remove all image overlays from the map.
     since: "7.2.0"
     platforms: [iphone, ipad]
-    
+
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
     description: |
