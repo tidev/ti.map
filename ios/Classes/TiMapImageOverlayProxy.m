@@ -37,7 +37,7 @@
 
 - (NSArray *)keySequence
 {
-  return @[ @"image", @"midCoordinate", @"rectCoordinate" ];
+  return @[ @"image", @"boundsCoordinate" ];
 }
 
 - (void)_initWithProperties:(NSDictionary *)properties
@@ -46,8 +46,8 @@
     [self throwException:@"missing required image property" subreason:nil location:CODELOCATION];
   }
 
-  if ([properties objectForKey:@"rectCoordinate"] == nil) {
-    [self throwException:@"missing required rectCoordinate property" subreason:nil location:CODELOCATION];
+  if ([properties objectForKey:@"boundsCoordinate"] == nil) {
+    [self throwException:@"missing required boundsCoordinate property" subreason:nil location:CODELOCATION];
   }
   [super _initWithProperties:properties];
 }
@@ -62,20 +62,21 @@
 - (TiMapImageOverlayRenderer *)imageOverlayRenderer
 {
   if (imageOverlayRenderer == nil) {
-    imageOverlay = [[TiMapImageOverlay alloc] initWithMidCoordinate:coordinate andMapRect:mapRect];
+    imageOverlay = [[TiMapImageOverlay alloc] initWithMidCoordinate:midCoordinate andMapRect:mapRect];
     imageOverlayRenderer = [[[TiMapImageOverlayRenderer alloc] initWithOverlay:imageOverlay overlayImage:image] retain];
   }
 
   return imageOverlayRenderer;
 }
 
+#pragma mark Public APIs
+
 - (void)setImage:(id)value
 {
   if (!value) {
     [self throwException:@"missing required image data" subreason:nil location:CODELOCATION];
   }
-  ENSURE_STRING(value);
-  image = [[UIImage imageNamed:value] retain];
+  image = [[TiUtils image:value proxy:self] retain];
   [self replaceValue:value forKey:@"image" notification:NO];
 }
 
@@ -94,7 +95,7 @@
   CLLocationDegrees topLeftLong = [TiUtils doubleValue:[topLeftDict objectForKey:@"longitude"]];
   CLLocationDegrees bottomRightLat = [TiUtils doubleValue:[bottomRightDict objectForKey:@"latitude"]];
   CLLocationDegrees bottomRightLong = [TiUtils doubleValue:[bottomRightDict objectForKey:@"longitude"]];
-  coordinate = CLLocationCoordinate2DMake((topLeftLat + bottomRightLat) / 2, (topLeftLong + bottomRightLong) / 2);
+  midCoordinate = CLLocationCoordinate2DMake((topLeftLat + bottomRightLat) / 2, (topLeftLong + bottomRightLong) / 2);
 
   MKMapPoint topLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(topLeftLat, topLeftLong));
   MKMapPoint bottomRight = MKMapPointForCoordinate(CLLocationCoordinate2DMake(bottomRightLat, bottomRightLong));

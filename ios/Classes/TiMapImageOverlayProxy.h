@@ -17,7 +17,7 @@
 @interface TiMapImageOverlayProxy : TiProxy {
   @private
   UIImage *image;
-  CLLocationCoordinate2D coordinate;
+  CLLocationCoordinate2D midCoordinate;
   MKMapRect mapRect;
 }
 @property (nonatomic, readonly) TiMapImageOverlayRenderer *imageOverlayRenderer;
