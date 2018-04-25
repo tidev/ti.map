@@ -30,7 +30,7 @@
 {
   RELEASE_TO_NIL(imageOverlayRenderer);
   RELEASE_TO_NIL(imageOverlay);
-  RELEASE_TO_NIL(image);
+  RELEASE_TO_NIL(_image);
 
   [super dealloc];
 }
@@ -62,8 +62,8 @@
 - (TiMapImageOverlayRenderer *)imageOverlayRenderer
 {
   if (imageOverlayRenderer == nil) {
-    imageOverlay = [[TiMapImageOverlay alloc] initWithMidCoordinate:midCoordinate andMapRect:mapRect];
-    imageOverlayRenderer = [[[TiMapImageOverlayRenderer alloc] initWithOverlay:imageOverlay overlayImage:image] retain];
+    imageOverlay = [[TiMapImageOverlay alloc] initWithMidCoordinate:_midCoordinate andMapRect:_mapRect];
+    imageOverlayRenderer = [[[TiMapImageOverlayRenderer alloc] initWithOverlay:imageOverlay overlayImage:_image] retain];
   }
 
   return imageOverlayRenderer;
@@ -74,34 +74,35 @@
 - (void)setImage:(id)value
 {
   if (!value) {
-    [self throwException:@"missing required image data" subreason:nil location:CODELOCATION];
+    [self throwException:@"Missing required \"image\" property." subreason:nil location:CODELOCATION];
   }
-  image = [[TiUtils image:value proxy:self] retain];
+  _image = [[TiUtils image:value proxy:self] retain];
   [self replaceValue:value forKey:@"image" notification:NO];
 }
 
 - (void)setBoundsCoordinate:(id)value
 {
   if (!value) {
-    [self throwException:@"missing required bounds coordinate data" subreason:nil location:CODELOCATION];
+    [self throwException:@"Missing required \"boundsCoordinate\" property." subreason:nil location:CODELOCATION];
   }
 
   ENSURE_DICT(value);
   ENSURE_ARG_COUNT(value, 2)
-  NSDictionary *topLeftDict = [value objectForKey:@"topLeft"];
-  NSDictionary *bottomRightDict = [value objectForKey:@"bottomRight"];
+  NSDictionary *topLeftDictionary = [value objectForKey:@"topLeft"];
+  NSDictionary *bottomRightDictionary = [value objectForKey:@"bottomRight"];
 
-  CLLocationDegrees topLeftLat = [TiUtils doubleValue:[topLeftDict objectForKey:@"latitude"]];
-  CLLocationDegrees topLeftLong = [TiUtils doubleValue:[topLeftDict objectForKey:@"longitude"]];
-  CLLocationDegrees bottomRightLat = [TiUtils doubleValue:[bottomRightDict objectForKey:@"latitude"]];
-  CLLocationDegrees bottomRightLong = [TiUtils doubleValue:[bottomRightDict objectForKey:@"longitude"]];
-  midCoordinate = CLLocationCoordinate2DMake((topLeftLat + bottomRightLat) / 2, (topLeftLong + bottomRightLong) / 2);
+  CLLocationDegrees topLeftLatitude = [TiUtils doubleValue:[topLeftDictionary objectForKey:@"latitude"]];
+  CLLocationDegrees topLeftLongitude = [TiUtils doubleValue:[topLeftDictionary objectForKey:@"longitude"]];
+  CLLocationDegrees bottomRightLatitude = [TiUtils doubleValue:[bottomRightDictionary objectForKey:@"latitude"]];
+  CLLocationDegrees bottomRightLongitude = [TiUtils doubleValue:[bottomRightDictionary objectForKey:@"longitude"]];
+  _midCoordinate = CLLocationCoordinate2DMake((topLeftLatitude + bottomRightLatitude) / 2, (topLeftLongitude + bottomRightLongitude) / 2);
 
-  MKMapPoint topLeft = MKMapPointForCoordinate(CLLocationCoordinate2DMake(topLeftLat, topLeftLong));
-  MKMapPoint bottomRight = MKMapPointForCoordinate(CLLocationCoordinate2DMake(bottomRightLat, bottomRightLong));
+  MKMapPoint topLeftPoint = MKMapPointForCoordinate(CLLocationCoordinate2DMake(topLeftLatitude, topLeftLongitude));
+  MKMapPoint bottomRightPoint = MKMapPointForCoordinate(CLLocationCoordinate2DMake(bottomRightLatitude, bottomRightLongitude));
 
-  mapRect = MKMapRectMake(topLeft.x, topLeft.y, fabs(topLeft.x - bottomRight.x), fabs(topLeft.y - bottomRight.y));
+  _mapRect = MKMapRectMake(topLeftPoint.x, topLeftPoint.y, fabs(topLeftPoint.x - bottomRightPoint.x), fabs(topLeftPoint.y - bottomRightPoint.y));
 
   [self replaceValue:value forKey:@"boundsCoordinate" notification:NO];
 }
+
 @end

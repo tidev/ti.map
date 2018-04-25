@@ -16,20 +16,13 @@ properties:
   - name: boundsCoordinate
     summary: An object representing diagonal coordinate (topLeft and bottomRight) on map in which image will be shown.
     availability: creation
-    properties:
+    type: MapBoundsCoordinateType
 
-      - name: topLeft
-        summary: An object with longitude and latitude values.
-        type: MapPointType
-
-      - name: bottomRight
-        summary: An object with longitude and latitude values.
-        type: MapPointType
 
   - name: image
     summary: The image, which needs to show on map as overlay.
     availability: creation
-    type: [String, TiBlob]
+    type: [String, Titanium.Blob]
 
 ---
 name: MapPointType
@@ -43,3 +36,16 @@ properties:
   - name: latitude
     summary: Latitude value of the map point, in decimal degrees.
     type: Number
+
+---
+name: MapBoundsCoordinateType
+summary: Simple object representing bound coordinate on the map.
+properties:
+
+  - name: topLeft
+    summary: An object with longitude and latitude values.
+    type: MapPointType
+
+  - name: bottomRight
+    summary: An object with longitude and latitude values.
+    type: MapPointType

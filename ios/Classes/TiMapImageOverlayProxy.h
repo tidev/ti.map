@@ -8,17 +8,15 @@
 #import "TiMapImageOverlayRenderer.h"
 #import "TiProxy.h"
 
-@interface TiMapImageOverlay : NSObject <MKOverlay> {
-  @private
-  UIImage *image;
-}
+@interface TiMapImageOverlay : NSObject <MKOverlay>
+
 @end
 
 @interface TiMapImageOverlayProxy : TiProxy {
   @private
-  UIImage *image;
-  CLLocationCoordinate2D midCoordinate;
-  MKMapRect mapRect;
+  UIImage *_image;
+  CLLocationCoordinate2D _midCoordinate;
+  MKMapRect _mapRect;
 }
 @property (nonatomic, readonly) TiMapImageOverlayRenderer *imageOverlayRenderer;
 @property (nonatomic, readonly) TiMapImageOverlay *imageOverlay;

@@ -6,6 +6,7 @@
  */
 
 #import "TiMapImageOverlayRenderer.h"
+#import "TiProxy.h"
 
 @interface TiMapImageOverlayRenderer ()
 
@@ -14,6 +15,12 @@
 @end
 
 @implementation TiMapImageOverlayRenderer
+
+- (void)dealloc
+{
+  RELEASE_TO_NIL(_overlayImage);
+  [super dealloc];
+}
 
 - (instancetype)initWithOverlay:(id<MKOverlay>)overlay overlayImage:(UIImage *)overlayImage
 {
