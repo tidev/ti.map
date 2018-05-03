@@ -1116,18 +1116,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	}
 
 	@Kroll.method
-        @Kroll.setProperty
-	public void setPadding(int left, int top, int right, int bottom) {
-		KrollDict args = new KrollDict();
-		args.put(TiC.PROPERTY_LEFT, left);
-		args.put(TiC.PROPERTY_TOP, top);
-		args.put(TiC.PROPERTY_RIGHT, right);
-		args.put(TiC.PROPERTY_BOTTOM, bottom);
-
+  	@Kroll.setProperty
+	public void setPadding(KrollDict padding) {
 		if (TiApplication.isUIThread()) {
-			handleSetPadding(args);
+			handleSetPadding(padding);
 		} else {
-			getMainHandler().obtainMessage(MSG_SET_PADDING, args)
+			getMainHandler().obtainMessage(MSG_SET_PADDING, padding)
 					.sendToTarget();
 		}
 	}
@@ -1135,13 +1129,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	public void handleSetPadding(KrollDict args) {
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			((TiUIMapView) view).setPadding(args.getInt(TiC.PROPERTY_LEFT), args.getInt(TiC.PROPERTY_TOP),
-				args.getInt(TiC.PROPERTY_RIGHT), args.getInt(TiC.PROPERTY_BOTTOM));
+      			int left = TiConvert.toInt(args.getInt(TiC.PROPERTY_LEFT), 0);
+      			int top = TiConvert.toInt(args.getInt(TiC.PROPERTY_TOP), 0);
+      			int right = TiConvert.toInt(args.getInt(TiC.PROPERTY_RIGHT), 0);
+      			int bottom = TiConvert.toInt(args.getInt(TiC.PROPERTY_BOTTOM), 0);
+
+			((TiUIMapView) view).setPadding(left, top, right, bottom);
 		}
 	}
 
-	public String getApiName()
-	{
+	public String getApiName() {
 		return "Ti.Map";
 	}
 }

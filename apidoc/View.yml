@@ -148,24 +148,6 @@ methods:
             Dictionary specifying the location and the zoom level for the map.
         type: MapLocationTypeV2
     since: "3.1.0"
-    
-  - name: setPadding
-    summary: Sets the distance between each edges of the view to the map controls.
-    description: The map view controls may be obscured by other elements.
-    since: "7.1.0"
-    parameters:
-      - name: left
-        summary: Left padding of the map view.
-        type: Number
-      - name: top
-        summary: Top padding of the map view.
-        type: Number
-      - name: right
-        summary: Right padding of the map view.
-        type: Number
-      - name: bottom
-        summary: Bottom padding of the map view.
-        type: Number
         
   - name: zoom
     summary: Zooms in or out of the map.
@@ -625,6 +607,12 @@ properties:
         A dictionary specifying the location and zoom level of the map.
     type: MapRegionTypev2
     default: latitude 0, longitude 0
+    
+  - name: padding
+    summary: Sets the distance between each edges of the view to the map controls.
+    description: The map view controls may be obscured by other elements.
+    since: "7.3.0"
+    type: MapViewPadding
 
   - name: userLocation
     summary: |
@@ -840,10 +828,29 @@ properties:
     platforms: [iphone, ipad]
     
 ---
+name: MapViewPadding
+summary: The padding applied to the map view using <Modules.Map.View.padding>.
+properties:
+  - name: left
+    summary: Left padding of the map view.
+    type: Number
+  - name: top
+    summary: Top padding of the map view.
+    type: Number
+  - name: right
+    summary: Right padding of the map view.
+    type: Number
+  - name: bottom
+    summary: Bottom padding of the map view.
+    type: Number
+  - name: animated
+    summary: Whether or not setting the padding should be animated (iOS only).
+    type: Number
+
+---
 name: MapRegionTypev2
 summary: Simple object representing a map location and zoom level.
 properties:
-
   - name: bearing
     summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
     description: |
