@@ -753,6 +753,15 @@ properties:
     type: Boolean
     since: "3.2.0"
     platforms: [iphone, ipad]
+    
+  - name: scrollEnabled
+    summary: A Boolean value indicating whether the map can be scrolled by dragging gesture.
+    description: |
+        When this property is set to `true` the a map view can be panned or scrolled by dragging the map view.
+    type: Boolean
+    default: true
+    since: "7.2.0"
+    platforms: [iphone, ipad]
 
   - name: showsBuildings
     summary: A Boolean indicating whether the map displays extruded building information.
@@ -819,6 +828,17 @@ properties:
     since: "6.1.0"
     platforms: [android]
 
+  - name: zoomEnabled
+    summary: A Boolean value indicating whether the map can be zoomed by pinching or tapping.
+    description: |
+        When this property is set to `true` the a map view can be zoomed by pinching inwards to zoom out 
+        and reverse to zoom in. Zooming in can also be accoplished by double-tapping the map view. Zooming 
+        out can also be accomplished by two-finger tapping the map view.
+    type: Boolean
+    default: true
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    
 ---
 name: MapRegionTypev2
 summary: Simple object representing a map location and zoom level.

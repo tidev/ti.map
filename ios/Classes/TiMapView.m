@@ -756,6 +756,22 @@
       YES);
 }
 
+- (void)setScrollEnabled_:(id)value
+{
+  TiThreadPerformOnMainThread(^{
+    [self map].scrollEnabled = [TiUtils boolValue:value];
+  },
+      YES);
+}
+
+- (void)setZoomEnabled_:(id)value
+{
+  TiThreadPerformOnMainThread(^{
+    [self map].zoomEnabled = [TiUtils boolValue:value];
+  },
+      YES);
+}
+
 - (void)setShowsBuildings_:(id)value
 {
   TiThreadPerformOnMainThread(^{
