@@ -295,6 +295,40 @@ methods:
   - name: removeAllCircles
     summary: Remove all circles from the map.
 
+  - name: addImageOverlay
+    summary: Adds a new image overlay to the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    parameters:
+      - name: imageOverlay
+        summary: A <Modules.Map.ImageOverlay> instance.
+        type: Modules.Map.ImageOverlay
+
+  - name: addImageOverlays
+    summary: Adds one or more new image overlays to the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    parameters:
+      - name: imageOverlays
+        summary: |
+            Array of [ImageOverlay](Modules.Map.ImageOverlay) objects
+        type: Array<Modules.Map.ImageOverlay>
+
+  - name: removeImageOverlay
+    summary: Remove an image overlay from the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    parameters:
+      - name: imageOverlay
+        summary: |
+            An [ImageOverlay](Modules.Map.ImageOverlay) object
+        type: Modules.Map.ImageOverlay
+
+  - name: removeAllImageOverlays
+    summary: Remove all image overlays from the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
     description: |

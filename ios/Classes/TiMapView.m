@@ -12,6 +12,7 @@
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
+#import "TiMapImageOverlayProxy.h"
 #import "TiMapMarkerAnnotationView.h"
 #import "TiMapModule.h"
 #import "TiMapPinAnnotationView.h"
@@ -41,6 +42,7 @@
   RELEASE_TO_NIL(polygonProxies);
   RELEASE_TO_NIL(polylineProxies);
   RELEASE_TO_NIL(circleProxies);
+  RELEASE_TO_NIL(imageOverlayProxies);
 #if IS_IOS_11
   RELEASE_TO_NIL(clusterAnnotations);
 #endif
@@ -670,6 +672,54 @@
     [self removePolyline:proxy remove:NO];
   }
   [polylineProxies removeAllObjects];
+}
+
+- (void)addImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy
+{
+  TiThreadPerformOnMainThread(^{
+    TiMapImageOverlayRenderer *renderer = [imageOverlayProxy imageOverlayRenderer];
+    TiMapImageOverlay *overlay = [imageOverlayProxy imageOverlay];
+    CFDictionaryAddValue(mapObjects2View, overlay, renderer);
+    [map addOverlay:overlay];
+    if (imageOverlayProxies == nil) {
+      imageOverlayProxies = [[NSMutableArray alloc] init];
+    }
+    [imageOverlayProxies addObject:imageOverlayProxy];
+  },
+      NO);
+}
+
+- (void)addImageOverlays:(NSMutableArray *)imageOverlays
+{
+  for (TiMapImageOverlayProxy *imageOverlay in imageOverlays) {
+    [self addImageOverlay:imageOverlay];
+  }
+}
+- (void)removeImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy
+{
+  [self removeImageOverlay:imageOverlayProxy remove:YES];
+}
+
+- (void)removeImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy remove:(BOOL)r
+{
+  TiThreadPerformOnMainThread(^{
+    TiMapImageOverlay *imageOverlay = [imageOverlayProxy imageOverlay];
+    CFDictionaryRemoveValue(mapObjects2View, imageOverlay);
+    [map removeOverlay:imageOverlay];
+    if (r) {
+      [imageOverlayProxies removeObject:imageOverlayProxy];
+    }
+  },
+      NO);
+}
+
+- (void)removeAllImageOverlays
+{
+  for (int i = 0; i < [imageOverlayProxies count]; i++) {
+    TiMapImageOverlayProxy *imageOverlay = [imageOverlayProxies objectAtIndex:i];
+    [self removeImageOverlay:imageOverlay remove:NO];
+  }
+  [imageOverlayProxies removeAllObjects];
 }
 
 #pragma mark Public APIs iOS 7
