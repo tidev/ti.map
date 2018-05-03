@@ -8,7 +8,7 @@ description: |
     Use the <Modules.Map.createImageOverlay> method to create an image overlay.
 
 extends: Titanium.Proxy
-since: {iphone: "7.2.0", ipad: "7.2.0" }
+since: { iphone: "7.2.0", ipad: "7.2.0" }
 platforms: [iphone, ipad]
 
 properties:
