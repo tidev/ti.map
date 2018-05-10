@@ -24,6 +24,9 @@
   NSMutableArray *circlesToRemove;
   NSMutableArray *polylinesToAdd;
   NSMutableArray *polylinesToRemove;
+  NSMutableArray *imageOvelaysToAdd;
+  NSMutableArray *imageOvelaysToRemove;
+
   int zoomCount; // Number of times to zoom in/out on initial display
 }
 
@@ -55,6 +58,11 @@
 - (void)addPolyline:(id)args;
 - (void)removePolyline:(id)args;
 - (void)removeAllPolylines:(id)args;
+- (void)addImageOverlay:(id)arg;
+- (void)addImageOverlays:(id)args;
+- (void)removeImageOverlay:(id)arg;
+- (void)removeAllImageOverlays:(id)args;
+
 #if IS_IOS_11
 - (void)setClusterAnnotation:(id)args;
 #endif

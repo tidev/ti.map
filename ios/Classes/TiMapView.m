@@ -12,6 +12,7 @@
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
+#import "TiMapImageOverlayProxy.h"
 #import "TiMapMarkerAnnotationView.h"
 #import "TiMapModule.h"
 #import "TiMapPinAnnotationView.h"
@@ -41,6 +42,7 @@
   RELEASE_TO_NIL(polygonProxies);
   RELEASE_TO_NIL(polylineProxies);
   RELEASE_TO_NIL(circleProxies);
+  RELEASE_TO_NIL(imageOverlayProxies);
 #if IS_IOS_11
   RELEASE_TO_NIL(clusterAnnotations);
 #endif
@@ -672,7 +674,53 @@
   [polylineProxies removeAllObjects];
 }
 
-#pragma mark Public APIs iOS 7
+- (void)addImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy
+{
+  TiThreadPerformOnMainThread(^{
+    TiMapImageOverlayRenderer *renderer = [imageOverlayProxy imageOverlayRenderer];
+    TiMapImageOverlay *overlay = [imageOverlayProxy imageOverlay];
+    CFDictionaryAddValue(mapObjects2View, overlay, renderer);
+    [map addOverlay:overlay];
+    if (imageOverlayProxies == nil) {
+      imageOverlayProxies = [[NSMutableArray alloc] init];
+    }
+    [imageOverlayProxies addObject:imageOverlayProxy];
+  },
+      NO);
+}
+
+- (void)addImageOverlays:(NSMutableArray *)imageOverlays
+{
+  for (TiMapImageOverlayProxy *imageOverlay in imageOverlays) {
+    [self addImageOverlay:imageOverlay];
+  }
+}
+- (void)removeImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy
+{
+  [self removeImageOverlay:imageOverlayProxy remove:YES];
+}
+
+- (void)removeImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy remove:(BOOL)r
+{
+  TiThreadPerformOnMainThread(^{
+    TiMapImageOverlay *imageOverlay = [imageOverlayProxy imageOverlay];
+    CFDictionaryRemoveValue(mapObjects2View, imageOverlay);
+    [map removeOverlay:imageOverlay];
+    if (r) {
+      [imageOverlayProxies removeObject:imageOverlayProxy];
+    }
+  },
+      NO);
+}
+
+- (void)removeAllImageOverlays
+{
+  for (int i = 0; i < [imageOverlayProxies count]; i++) {
+    TiMapImageOverlayProxy *imageOverlay = [imageOverlayProxies objectAtIndex:i];
+    [self removeImageOverlay:imageOverlay remove:NO];
+  }
+  [imageOverlayProxies removeAllObjects];
+}
 
 - (void)setTintColor_:(id)color
 {
@@ -702,6 +750,22 @@
 {
   TiThreadPerformOnMainThread(^{
     [self map].rotateEnabled = [TiUtils boolValue:value];
+  },
+      YES);
+}
+
+- (void)setScrollEnabled_:(id)value
+{
+  TiThreadPerformOnMainThread(^{
+    [self map].scrollEnabled = [TiUtils boolValue:value];
+  },
+      YES);
+}
+
+- (void)setZoomEnabled_:(id)value
+{
+  TiThreadPerformOnMainThread(^{
+    [self map].zoomEnabled = [TiUtils boolValue:value];
   },
       YES);
 }
@@ -768,6 +832,16 @@
   } else {
     NSLog(@"[WARN] The property 'showsTraffic' is only available on iOS 9 and later.");
   }
+}
+
+- (void)setPadding_:(id)value
+{
+  TiThreadPerformOnMainThread(^{
+    [[self map] setVisibleMapRect:self.map.visibleMapRect
+                      edgePadding:[TiUtils contentInsets:value]
+                         animated:[TiUtils boolValue:@"animated" properties:value]];
+  },
+      YES);
 }
 
 - (void)animateCamera:(id)args

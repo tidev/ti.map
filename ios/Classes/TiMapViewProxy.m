@@ -6,6 +6,7 @@
  */
 
 #import "TiMapViewProxy.h"
+#import "TiMapImageOverlayProxy.h"
 #import "TiMapModule.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
@@ -37,6 +38,8 @@
   RELEASE_TO_NIL(circlesToRemove);
   RELEASE_TO_NIL(polylinesToAdd);
   RELEASE_TO_NIL(polylinesToRemove);
+  RELEASE_TO_NIL(imageOvelaysToAdd);
+  RELEASE_TO_NIL(imageOvelaysToRemove);
   [super _destroy];
 }
 
@@ -114,6 +117,14 @@
 
   for (id arg in polylinesToRemove) {
     [ourView removePolyline:arg];
+  }
+
+  for (id arg in imageOvelaysToAdd) {
+    [ourView addImageOverlay:arg];
+  }
+
+  for (id arg in imageOvelaysToRemove) {
+    [ourView removeImageOverlay:arg];
   }
 
   [ourView selectAnnotation:selectedAnnotation];
@@ -712,6 +723,99 @@
     RELEASE_TO_NIL(polylinesToRemove);
 
     polylinesToAdd = [[NSMutableArray alloc] initWithArray:initialPolylines];
+  }
+}
+
+- (void)addImageOverlays:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, NSArray);
+
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(^{
+      [(TiMapView *)[self view] addImageOverlays:arg];
+    },
+        NO);
+  } else {
+    for (id circle in arg) {
+      [self addImageOverlay:circle];
+    }
+  }
+}
+
+- (void)addImageOverlay:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, TiMapImageOverlayProxy);
+
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(^{
+      [(TiMapView *)[self view] addImageOverlay:arg];
+    },
+        NO);
+  } else {
+    if (imageOvelaysToAdd == nil) {
+      imageOvelaysToAdd = [[NSMutableArray alloc] init];
+    }
+    if (imageOvelaysToRemove != nil && [imageOvelaysToRemove containsObject:arg]) {
+      [imageOvelaysToRemove removeObject:arg];
+    } else {
+      [imageOvelaysToAdd addObject:arg];
+    }
+  }
+}
+
+- (void)removeImageOverlay:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, TiMapImageOverlayProxy);
+
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(^{
+      [(TiMapView *)[self view] removeImageOverlay:arg];
+    },
+        NO);
+  } else {
+    if (imageOvelaysToRemove == nil) {
+      imageOvelaysToRemove = [[NSMutableArray alloc] init];
+    }
+    if (imageOvelaysToAdd != nil && [imageOvelaysToAdd containsObject:arg]) {
+      [imageOvelaysToAdd removeObject:arg];
+    } else {
+      [imageOvelaysToRemove addObject:arg];
+    }
+  }
+}
+
+- (void)removeAllImageOverlays:(id)args
+{
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(^{
+      [(TiMapView *)[self view] removeAllImageOverlays];
+    },
+        NO);
+  }
+}
+
+- (void)setImageOverlays:(id)args
+{
+  ENSURE_TYPE(args, NSArray);
+
+  NSMutableArray *initialImageOverlays = [NSMutableArray arrayWithCapacity:[args count]];
+  for (id imageOverlay in args) {
+    ENSURE_TYPE(imageOverlay, TiMapImageOverlayProxy);
+    [initialImageOverlays addObject:imageOverlay];
+  }
+
+  BOOL attached = [self viewAttached];
+
+  if (attached) {
+    TiThreadPerformOnMainThread(^{
+      [(TiMapView *)[self view] addImageOverlays:imageOvelaysToAdd];
+      [initialImageOverlays release];
+    },
+        NO);
+  } else {
+    RELEASE_TO_NIL(imageOvelaysToAdd);
+    RELEASE_TO_NIL(imageOvelaysToRemove);
+    imageOvelaysToAdd = [[NSMutableArray alloc] initWithArray:initialImageOverlays];
   }
 }
 

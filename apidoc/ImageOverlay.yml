@@ -1,0 +1,52 @@
+---
+name: Modules.Map.ImageOverlay
+summary: Represents a bounded area on the map that has an image overlay.
+description: |
+    The `ImageOverlay` object gives you low-level control over image overlays that can be added to a
+    [map view](Modules.Map.View). An image overlay must have a `boundsCoordinate` property and a `image` 
+    set to appear on a map.
+
+    Use the <Modules.Map.createImageOverlay> method to create an image overlay.
+
+extends: Titanium.Proxy
+since: { iphone: "7.2.0", ipad: "7.2.0" }
+platforms: [iphone, ipad]
+
+properties:
+
+  - name: boundsCoordinate
+    summary: An object representing diagonal coordinates (`topLeft` and `bottomRight`) on the map.
+    availability: creation
+    type: MapBoundsCoordinateType
+
+
+  - name: image
+    summary: The image that is shown as an overlay on the map.
+    availability: creation
+    type: [String, Titanium.Blob]
+
+---
+name: MapPointType
+summary: An object representing a point on the map.
+properties:
+
+  - name: longitude
+    summary: Longitude value of the map point, in decimal degrees.
+    type: Number
+
+  - name: latitude
+    summary: Latitude value of the map point, in decimal degrees.
+    type: Number
+
+---
+name: MapBoundsCoordinateType
+summary: An object representing the bound coordinates on the map.
+properties:
+
+  - name: topLeft
+    summary: An object with longitude and latitude values.
+    type: MapPointType
+
+  - name: bottomRight
+    summary: An object with longitude and latitude values.
+    type: MapPointType

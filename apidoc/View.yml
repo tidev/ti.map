@@ -148,24 +148,6 @@ methods:
             Dictionary specifying the location and the zoom level for the map.
         type: MapLocationTypeV2
     since: "3.1.0"
-    
-  - name: setPadding
-    summary: Sets the distance between each edges of the view to the map controls.
-    description: The map view controls may be obscured by other elements.
-    since: "7.1.0"
-    parameters:
-      - name: left
-        summary: Left padding of the map view.
-        type: Number
-      - name: top
-        summary: Top padding of the map view.
-        type: Number
-      - name: right
-        summary: Right padding of the map view.
-        type: Number
-      - name: bottom
-        summary: Bottom padding of the map view.
-        type: Number
         
   - name: zoom
     summary: Zooms in or out of the map.
@@ -295,6 +277,40 @@ methods:
   - name: removeAllCircles
     summary: Remove all circles from the map.
 
+  - name: addImageOverlay
+    summary: Adds a new image overlay to the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    parameters:
+      - name: imageOverlay
+        summary: A <Modules.Map.ImageOverlay> instance.
+        type: Modules.Map.ImageOverlay
+
+  - name: addImageOverlays
+    summary: Adds one or more new image overlays to the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    parameters:
+      - name: imageOverlays
+        summary: |
+            Array of [ImageOverlay](Modules.Map.ImageOverlay) objects
+        type: Array<Modules.Map.ImageOverlay>
+
+  - name: removeImageOverlay
+    summary: Remove an image overlay from the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    parameters:
+      - name: imageOverlay
+        summary: |
+            An [ImageOverlay](Modules.Map.ImageOverlay) object
+        type: Modules.Map.ImageOverlay
+
+  - name: removeAllImageOverlays
+    summary: Remove all image overlays from the map.
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
     description: |
@@ -383,9 +399,11 @@ events:
 
         Note that only one annotation can be selected at any given time.
 
-        The `click` event includes a value, `clicksource`, which describes the part of the annotation that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton` on iOS and pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. If the user deselects an annotation
-        by clicking on the pin, `clicksource` is `pin`. If the user deselects the
-        annotation by clicking elsewhere in the map view, `clicksource` is `map`.
+        The `click` event includes a value, `clicksource`, which describes the part of the annotation 
+        that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton` 
+        on iOS and `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. 
+        If the user deselects an annotation by clicking on the pin, `clicksource` is `pin`. 
+        If the user deselects the annotation by clicking elsewhere in the map view, `clicksource` is `map`.
 
         For polygon, polyline or circle, The `click` event includes the following values.
         `clicksource` is a string describing the shape type. `map` is the map view instance.
@@ -589,6 +607,12 @@ properties:
         A dictionary specifying the location and zoom level of the map.
     type: MapRegionTypev2
     default: latitude 0, longitude 0
+    
+  - name: padding
+    summary: Sets the distance between each edges of the view to the map controls.
+    description: The map view controls may be obscured by other elements.
+    since: "7.2.0"
+    type: MapViewPadding
 
   - name: userLocation
     summary: |
@@ -717,6 +741,15 @@ properties:
     type: Boolean
     since: "3.2.0"
     platforms: [iphone, ipad]
+    
+  - name: scrollEnabled
+    summary: A Boolean value indicating whether the map can be scrolled by dragging gesture.
+    description: |
+        When this property is set to `true` the a map view can be panned or scrolled by dragging the map view.
+    type: Boolean
+    default: true
+    since: "7.2.0"
+    platforms: [iphone, ipad]
 
   - name: showsBuildings
     summary: A Boolean indicating whether the map displays extruded building information.
@@ -783,11 +816,41 @@ properties:
     since: "6.1.0"
     platforms: [android]
 
+  - name: zoomEnabled
+    summary: A Boolean value indicating whether the map can be zoomed by pinching or tapping.
+    description: |
+        When this property is set to `true` the a map view can be zoomed by pinching inwards to zoom out 
+        and reverse to zoom in. Zooming in can also be accoplished by double-tapping the map view. Zooming 
+        out can also be accomplished by two-finger tapping the map view.
+    type: Boolean
+    default: true
+    since: "7.2.0"
+    platforms: [iphone, ipad]
+    
+---
+name: MapViewPadding
+summary: The padding applied to the map view using <Modules.Map.View.padding>.
+properties:
+  - name: left
+    summary: Left padding of the map view.
+    type: Number
+  - name: top
+    summary: Top padding of the map view.
+    type: Number
+  - name: right
+    summary: Right padding of the map view.
+    type: Number
+  - name: bottom
+    summary: Bottom padding of the map view.
+    type: Number
+  - name: animated
+    summary: Whether or not setting the padding should be animated (iOS only).
+    type: Number
+
 ---
 name: MapRegionTypev2
 summary: Simple object representing a map location and zoom level.
 properties:
-
   - name: bearing
     summary: The direction in which a vertical line on the map points, measured in degrees clockwise from north.
     description: |
