@@ -30,7 +30,6 @@ import android.os.Message;
 		TiC.PROPERTY_MAP_TYPE, TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS,
 		TiC.PROPERTY_ANIMATE, MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE,
 		TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, MapModule.PROPERTY_COMPASS_ENABLED,
-		MapModule.PROPERTY_CLUSTERING,
 		MapModule.PROPERTY_POLYLINES })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 	private static final String TAG = "MapViewProxy";
@@ -76,7 +75,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate {
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
-		defaultValues.put(MapModule.PROPERTY_CLUSTERING, false);
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();

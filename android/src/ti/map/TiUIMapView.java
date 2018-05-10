@@ -478,7 +478,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 		// add annotation to map view
 		if (annotation.getProperty(MapModule.PROPERTY_CLUSTERIDENTIFIER) == null) {
 			// if annotation already on map, remove it first then re-add it
-			TiMarker tiMarker = annotation.getTiMarker();
+			tiMarker = annotation.getTiMarker();
 			if (tiMarker != null) {
 				timarkers.remove(tiMarker);
 				tiMarker.getMarker().remove();
