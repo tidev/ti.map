@@ -14,6 +14,7 @@ import org.appcelerator.titanium.TiApplication;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 
@@ -100,6 +101,7 @@ public class MapModule extends KrollModule
 	public MapModule()
 	{
 		super();
+		MapsInitializer.initialize(TiApplication.getInstance().getApplicationContext());
 	}
 
 	@Kroll.method
