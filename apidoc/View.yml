@@ -280,7 +280,7 @@ methods:
   - name: addImageOverlay
     summary: Adds a new image overlay to the map.
     since: "7.2.0"
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
     parameters:
       - name: imageOverlay
         summary: A <Modules.Map.ImageOverlay> instance.
@@ -289,7 +289,7 @@ methods:
   - name: addImageOverlays
     summary: Adds one or more new image overlays to the map.
     since: "7.2.0"
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
     parameters:
       - name: imageOverlays
         summary: |
@@ -299,7 +299,7 @@ methods:
   - name: removeImageOverlay
     summary: Remove an image overlay from the map.
     since: "7.2.0"
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
     parameters:
       - name: imageOverlay
         summary: |
@@ -309,7 +309,7 @@ methods:
   - name: removeAllImageOverlays
     summary: Remove all image overlays from the map.
     since: "7.2.0"
-    platforms: [iphone, ipad]
+    platforms: [iphone, ipad, android]
 
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
