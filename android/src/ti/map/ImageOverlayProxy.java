@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2018 by Axway, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -24,12 +24,12 @@ public class ImageOverlayProxy extends KrollProxy {
 
 	private static final String TAG = "ImageOverlayProxy";
 
-	private final String PROPERTY_BOUNDS_COORDINATE = "boundsCoordinate";
-	private final String PROPERTY_IMAGE = "image";
-	private final String PROPERTY_TOP_LEFT = "topLeft";
-	private final String PROPERTY_BOTTOM_RIGHT = "bottomRight";
-	private final String PROPERTY_LATITUDE = "latitude";
-	private final String PROPERTY_LONGITUDE = "longitude";
+	private static final String PROPERTY_BOUNDS_COORDINATE = "boundsCoordinate";
+	private static final String PROPERTY_IMAGE = "image";
+	private static final String PROPERTY_TOP_LEFT = "topLeft";
+	private static final String PROPERTY_BOTTOM_RIGHT = "bottomRight";
+	private static final String PROPERTY_LATITUDE = "latitude";
+	private static final String PROPERTY_LONGITUDE = "longitude";
 
 	private GroundOverlay groundOverlay;
 
@@ -66,8 +66,10 @@ public class ImageOverlayProxy extends KrollProxy {
 
 	private void handleImage(Object image) {
 		TiDrawableReference source = TiDrawableReference.fromObject(this, image);
-		BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(source.getBitmap());
-		groundOverlayOptions.image(bitmapDescriptor);
+		if (!source.isTypeNull()) {
+			BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(source.getBitmap());
+			groundOverlayOptions.image(bitmapDescriptor);
+		}
 	}
 
 	public GroundOverlayOptions getGroundOverlayOptions() {

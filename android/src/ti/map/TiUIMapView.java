@@ -156,7 +156,7 @@ public class TiUIMapView extends TiUIFragment implements GoogleMap.OnMarkerClick
 	}
 
 	protected void processOverlaysList() {
-		for (ImageOverlayProxy imageOverlayProxy: ((ViewProxy) proxy).getOverlaysList()) {
+		for (ImageOverlayProxy imageOverlayProxy : ((ViewProxy) proxy).getOverlaysList()) {
 			addImageOverlay(imageOverlayProxy);
 		}
 	}
