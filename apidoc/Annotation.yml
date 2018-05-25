@@ -215,8 +215,8 @@ properties:
     type: String
     default: null
     platforms: [android, iphone, ipad]
-    osver: {ios: {min: "11.0"} }
-    since: { android: "7.2.0", iphone: "6.3.0", ipad: "6.3.0" }
+    osver: { ios: { min: "11.0" } }
+    since: { android: "7.4.0", iphone: "6.3.0", ipad: "6.3.0" }
 
   - name: draggable
     summary: Determines whether the pin can be dragged by the user.
