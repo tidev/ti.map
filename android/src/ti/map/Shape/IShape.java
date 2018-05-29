@@ -6,5 +6,4 @@ import ti.map.TiMarker;
 import com.google.android.gms.maps.model.Marker;
 
 public interface IShape {
-	
 }

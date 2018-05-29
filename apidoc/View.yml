@@ -320,9 +320,9 @@ methods:
       - name: clusterAnnotationParam
         summary: Properties for creating cluster annotation.
         type: ClusterAnnotationParams
-    osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
-    since: "6.3.0"
+    osver: { ios: { min: "11.0" } }
+    platforms: [android, iphone, ipad]
+    since: { android: "7.4.0", iphone: "6.3.0", ipad: "6.3.0" }
 
 events:
   - name: clusterstart

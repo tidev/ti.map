@@ -16,8 +16,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
-
-@Kroll.module(name="Map", id="ti.map")
+@Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule
 {
 	public static final String PROPERTY_DRAGGABLE = "draggable";
@@ -47,9 +46,10 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_STREET_NAMES = "streetNames";
 	public static final String PROPERTY_USER_NAVIGATION = "userNavigation";
 	public static final String PROPERTY_HIDDEN = "hidden";
+	public static final String PROPERTY_CLUSTER_IDENTIFIER = "clusterIdentifier";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
-	public static final String EVENT_REGION_WILL_CHANGE  = "regionwillchange";
+	public static final String EVENT_REGION_WILL_CHANGE = "regionwillchange";
 
 	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
 	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
@@ -65,37 +65,67 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_CENTER = "center";
 	public static final String PROPERTY_RADIUS = "radius";
 
-	@Kroll.constant public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
-	@Kroll.constant public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
-	@Kroll.constant public static final int SATELLITE_TYPE = GoogleMap.MAP_TYPE_SATELLITE;
-	@Kroll.constant public static final int HYBRID_TYPE = GoogleMap.MAP_TYPE_HYBRID;
-	@Kroll.constant public static final int ANNOTATION_DRAG_STATE_START = 0;
-	@Kroll.constant public static final int ANNOTATION_DRAG_STATE_END = 1;
+	@Kroll.constant
+	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
+	@Kroll.constant
+	public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;
+	@Kroll.constant
+	public static final int SATELLITE_TYPE = GoogleMap.MAP_TYPE_SATELLITE;
+	@Kroll.constant
+	public static final int HYBRID_TYPE = GoogleMap.MAP_TYPE_HYBRID;
+	@Kroll.constant
+	public static final int MUTED_STANDARD_TYPE = GoogleMap.MAP_TYPE_NORMAL;
+	@Kroll.constant
+	public static final int ANNOTATION_DRAG_STATE_START = 0;
+	@Kroll.constant
+	public static final int ANNOTATION_DRAG_STATE_END = 1;
 
-	@Kroll.constant public static final int SUCCESS = 0;
-	@Kroll.constant public static final int SERVICE_MISSING = 1;
-	@Kroll.constant public static final int SERVICE_VERSION_UPDATE_REQUIRED = 2;
-	@Kroll.constant public static final int SERVICE_DISABLED = 3;
-	@Kroll.constant public static final int SERVICE_INVALID = 9;
+	@Kroll.constant
+	public static final int SUCCESS = 0;
+	@Kroll.constant
+	public static final int SERVICE_MISSING = 1;
+	@Kroll.constant
+	public static final int SERVICE_VERSION_UPDATE_REQUIRED = 2;
+	@Kroll.constant
+	public static final int SERVICE_DISABLED = 3;
+	@Kroll.constant
+	public static final int SERVICE_INVALID = 9;
 
-	@Kroll.constant public static final float ANNOTATION_AZURE = BitmapDescriptorFactory.HUE_AZURE;
-	@Kroll.constant public static final float ANNOTATION_BLUE = BitmapDescriptorFactory.HUE_BLUE;
-	@Kroll.constant public static final float ANNOTATION_CYAN = BitmapDescriptorFactory.HUE_CYAN;
-	@Kroll.constant public static final float ANNOTATION_GREEN = BitmapDescriptorFactory.HUE_GREEN;
-	@Kroll.constant public static final float ANNOTATION_MAGENTA = BitmapDescriptorFactory.HUE_MAGENTA;
-	@Kroll.constant public static final float ANNOTATION_ORANGE = BitmapDescriptorFactory.HUE_ORANGE;
-	@Kroll.constant public static final float ANNOTATION_RED = BitmapDescriptorFactory.HUE_RED;
-	@Kroll.constant public static final float ANNOTATION_ROSE = BitmapDescriptorFactory.HUE_ROSE;
-	@Kroll.constant public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
-	@Kroll.constant public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
-	@Kroll.constant public static final float ANNOTATION_PURPLE = 276.92f; // Based on the HUI color scheme
+	@Kroll.constant
+	public static final float ANNOTATION_AZURE = BitmapDescriptorFactory.HUE_AZURE;
+	@Kroll.constant
+	public static final float ANNOTATION_BLUE = BitmapDescriptorFactory.HUE_BLUE;
+	@Kroll.constant
+	public static final float ANNOTATION_CYAN = BitmapDescriptorFactory.HUE_CYAN;
+	@Kroll.constant
+	public static final float ANNOTATION_GREEN = BitmapDescriptorFactory.HUE_GREEN;
+	@Kroll.constant
+	public static final float ANNOTATION_MAGENTA = BitmapDescriptorFactory.HUE_MAGENTA;
+	@Kroll.constant
+	public static final float ANNOTATION_ORANGE = BitmapDescriptorFactory.HUE_ORANGE;
+	@Kroll.constant
+	public static final float ANNOTATION_RED = BitmapDescriptorFactory.HUE_RED;
+	@Kroll.constant
+	public static final float ANNOTATION_ROSE = BitmapDescriptorFactory.HUE_ROSE;
+	@Kroll.constant
+	public static final float ANNOTATION_VIOLET = BitmapDescriptorFactory.HUE_VIOLET;
+	@Kroll.constant
+	public static final float ANNOTATION_YELLOW = BitmapDescriptorFactory.HUE_YELLOW;
+	@Kroll.constant
+	public static final float ANNOTATION_PURPLE = 276.92f; // Based on the HUI color scheme
 
-	@Kroll.constant public static final int REASON_API_ANIMATION = GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION;
-	@Kroll.constant public static final int REASON_DEVELOPER_ANIMATION = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
-	@Kroll.constant public static final int REASON_GESTURE = GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
+	@Kroll.constant
+	public static final int REASON_API_ANIMATION = GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION;
+	@Kroll.constant
+	public static final int REASON_DEVELOPER_ANIMATION =
+		GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
+	@Kroll.constant
+	public static final int REASON_GESTURE = GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
 
-  @Kroll.constant public static final int POLYLINE_PATTERN_DASHED = 0;
-	@Kroll.constant public static final int POLYLINE_PATTERN_DOTTED = 1;
+	@Kroll.constant
+	public static final int POLYLINE_PATTERN_DASHED = 0;
+	@Kroll.constant
+	public static final int POLYLINE_PATTERN_DOTTED = 1;
 
 	public MapModule()
 	{
@@ -103,7 +133,8 @@ public class MapModule extends KrollModule
 	}
 
 	@Kroll.method
-	public int isGooglePlayServicesAvailable() {
+	public int isGooglePlayServicesAvailable()
+	{
 		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(TiApplication.getAppRootOrCurrentActivity());
 	}
 }

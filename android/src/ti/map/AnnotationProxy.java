@@ -32,25 +32,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-@Kroll.proxy(creatableInModule=MapModule.class, propertyAccessors = {
-	TiC.PROPERTY_SUBTITLE,
-	TiC.PROPERTY_SUBTITLEID,
-	TiC.PROPERTY_TITLE,
-	TiC.PROPERTY_TITLEID,
-	TiC.PROPERTY_LATITUDE,
-	TiC.PROPERTY_LONGITUDE,
-	MapModule.PROPERTY_DRAGGABLE,
-	TiC.PROPERTY_IMAGE,
-	TiC.PROPERTY_PINCOLOR,
-	MapModule.PROPERTY_CUSTOM_VIEW,
-	TiC.PROPERTY_LEFT_BUTTON,
-	TiC.PROPERTY_LEFT_VIEW,
-	TiC.PROPERTY_RIGHT_BUTTON,
-	TiC.PROPERTY_RIGHT_VIEW,
-	MapModule.PROPERTY_SHOW_INFO_WINDOW,
-	MapModule.PROPERTY_CENTER_OFFSET,
-	MapModule.PROPERTY_HIDDEN
-})
+@Kroll.proxy(creatableInModule = MapModule.class,
+			 propertyAccessors = { TiC.PROPERTY_SUBTITLE, TiC.PROPERTY_SUBTITLEID, TiC.PROPERTY_TITLE,
+								   TiC.PROPERTY_TITLEID, TiC.PROPERTY_LATITUDE, TiC.PROPERTY_LONGITUDE,
+								   MapModule.PROPERTY_DRAGGABLE, TiC.PROPERTY_IMAGE, TiC.PROPERTY_PINCOLOR,
+								   MapModule.PROPERTY_CUSTOM_VIEW, TiC.PROPERTY_LEFT_BUTTON, TiC.PROPERTY_LEFT_VIEW,
+								   TiC.PROPERTY_RIGHT_BUTTON, TiC.PROPERTY_RIGHT_VIEW,
+								   MapModule.PROPERTY_SHOW_INFO_WINDOW, MapModule.PROPERTY_CENTER_OFFSET,
+								   MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
 public class AnnotationProxy extends KrollProxy
 {
 	public interface AnnotationDelegate {
@@ -61,13 +50,15 @@ public class AnnotationProxy extends KrollProxy
 
 	private MarkerOptions markerOptions;
 	private TiMarker marker;
+	private TiClusterMarker clusterMarker;
 	private TiMapInfoWindow infoWindow = null;
 	private static final String defaultIconImageHeight = "40dip"; //The height of the default marker icon
-	private static final String defaultIconImageWidth = "36dip"; //The width of the default marker icon
+	private static final String defaultIconImageWidth = "36dip";  //The width of the default marker icon
 	// The height of the marker icon in the unit of "px". Will use it to analyze the touch event to find out
 	// the correct clicksource for the click event.
 	private int iconImageHeight = 0;
 	private int iconImageWidth = 0;
+	private String subTitle;
 	private String annoTitle;
 	private AnnotationDelegate delegate = null;
 
@@ -83,12 +74,15 @@ public class AnnotationProxy extends KrollProxy
 	{
 		super();
 		markerOptions = new MarkerOptions();
+		subTitle = "";
 		annoTitle = "";
 		defaultValues.put(MapModule.PROPERTY_SHOW_INFO_WINDOW, true);
+		defaultValues.put(MapModule.PROPERTY_CLUSTER_IDENTIFIER, null);
 	}
 
 	@Override
-	public void release() {
+	public void release()
+	{
 		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
 			TiViewProxy customView = (TiViewProxy) getProperty(MapModule.PROPERTY_CUSTOM_VIEW);
 			customView.release();
@@ -100,6 +94,9 @@ public class AnnotationProxy extends KrollProxy
 		if (marker != null) {
 			marker = null;
 		}
+		if (clusterMarker != null) {
+			clusterMarker = null;
+		}
 		if (infoWindow != null) {
 			infoWindow = null;
 		}
@@ -110,7 +107,8 @@ public class AnnotationProxy extends KrollProxy
 		super.release();
 	}
 
-	public void setDelegate(AnnotationDelegate delegate) {
+	public void setDelegate(AnnotationDelegate delegate)
+	{
 		this.delegate = delegate;
 	}
 
@@ -123,8 +121,14 @@ public class AnnotationProxy extends KrollProxy
 		return table;
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return annoTitle;
+	}
+
+	public String getSubtitle()
+	{
+		return subTitle;
 	}
 
 	@Override
@@ -148,11 +152,11 @@ public class AnnotationProxy extends KrollProxy
 			}
 
 			case MSG_SET_HIDDEN: {
- 				result = (AsyncResult) msg.obj;
- 				marker.getMarker().setVisible(!(Boolean) result.getArg());
- 				result.setResult(null);
- 				return true;
- 			}
+				result = (AsyncResult) msg.obj;
+				marker.getMarker().setVisible(!(Boolean) result.getArg());
+				result.setResult(null);
+				return true;
+			}
 
 			case MSG_SET_DRAGGABLE: {
 				result = (AsyncResult) msg.obj;
@@ -175,6 +179,7 @@ public class AnnotationProxy extends KrollProxy
 	public void setPosition(double latitude, double longitude)
 	{
 		marker.getMarker().setPosition(new LatLng(latitude, longitude));
+		clusterMarker.setPosition(new LatLng(latitude, longitude));
 	}
 
 	public void processOptions()
@@ -218,7 +223,8 @@ public class AnnotationProxy extends KrollProxy
 			}
 			if (hasProperty(TiC.PROPERTY_SUBTITLE)) {
 				infoWindow.setSubtitle(TiConvert.toString(getProperty(TiC.PROPERTY_SUBTITLE)));
-			} else{
+				subTitle = TiConvert.toString(getProperty(TiC.PROPERTY_SUBTITLE));
+			} else {
 				infoWindow.setSubtitle(null);
 			}
 		}
@@ -228,8 +234,8 @@ public class AnnotationProxy extends KrollProxy
 		}
 
 		if (hasProperty(MapModule.PROPERTY_HIDDEN)) {
- 			markerOptions.visible(!TiConvert.toBoolean(getProperty(MapModule.PROPERTY_HIDDEN)));
- 		}
+			markerOptions.visible(!TiConvert.toBoolean(getProperty(MapModule.PROPERTY_HIDDEN)));
+		}
 
 		// customView, image and pincolor must be defined before adding to mapview. Once added, their values are final.
 		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
@@ -237,7 +243,8 @@ public class AnnotationProxy extends KrollProxy
 		} else if (hasProperty(TiC.PROPERTY_IMAGE)) {
 			handleImage(getProperty(TiC.PROPERTY_IMAGE));
 		} else if (hasProperty(TiC.PROPERTY_PINCOLOR)) {
-			markerOptions.icon(BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
+			markerOptions.icon(
+				BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
 			setIconImageDimensions(-1, -1);
 		} else {
 			setIconImageDimensions(-1, -1);
@@ -275,8 +282,11 @@ public class AnnotationProxy extends KrollProxy
 			TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) image);
 			Bitmap bitmap = imageref.getBitmap();
 			if (bitmap != null) {
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				try {
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				} catch (Exception e) {
+				}
 				return;
 			}
 		}
@@ -305,9 +315,19 @@ public class AnnotationProxy extends KrollProxy
 		marker = m;
 	}
 
+	public void setClusterMarker(TiClusterMarker m)
+	{
+		clusterMarker = m;
+	}
+
 	public TiMarker getTiMarker()
 	{
 		return marker;
+	}
+
+	public TiClusterMarker getClusterMarker()
+	{
+		return clusterMarker;
 	}
 
 	public void showInfo()
@@ -383,6 +403,7 @@ public class AnnotationProxy extends KrollProxy
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_SUBTITLE)) {
 			getOrCreateMapInfoWindow().setSubtitle(TiConvert.toString(value));
+			subTitle = TiConvert.toString(value);
 			updateInfoWindow();
 		} else if (name.equals(TiC.PROPERTY_LEFT_BUTTON)) {
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.LEFT_PANE);
@@ -397,12 +418,14 @@ public class AnnotationProxy extends KrollProxy
 			getOrCreateMapInfoWindow().setLeftOrRightPane(value, TiMapInfoWindow.RIGHT_PANE);
 			updateInfoWindow();
 		} else if (name.equals(MapModule.PROPERTY_DRAGGABLE)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_DRAGGABLE), TiConvert.toBoolean(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_DRAGGABLE),
+												TiConvert.toBoolean(value));
 		} else if (name.equals(TiC.PROPERTY_PINCOLOR)) {
 			requestRefresh();
 		} else if (name.equals(MapModule.PROPERTY_HIDDEN)) {
- 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HIDDEN), TiConvert.toBoolean(value));
-  		}
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HIDDEN),
+												TiConvert.toBoolean(value));
+		}
 	}
 
 	private TiMapInfoWindow getOrCreateMapInfoWindow()
@@ -428,7 +451,8 @@ public class AnnotationProxy extends KrollProxy
 		}
 	}
 
-	private void requestRefresh() {
+	private void requestRefresh()
+	{
 		if (this.delegate != null) {
 			this.delegate.refreshAnnotation(this);
 		}
