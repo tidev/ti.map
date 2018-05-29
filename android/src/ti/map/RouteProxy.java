@@ -22,12 +22,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-@Kroll.proxy(creatableInModule=MapModule.class, propertyAccessors = {
-	MapModule.PROPERTY_POINTS,
-	TiC.PROPERTY_COLOR,
-	TiC.PROPERTY_WIDTH
-})
-public class RouteProxy extends KrollProxy{
+@Kroll.proxy(creatableInModule = MapModule.class,
+			 propertyAccessors = { MapModule.PROPERTY_POINTS, TiC.PROPERTY_COLOR, TiC.PROPERTY_WIDTH })
+public class RouteProxy extends KrollProxy
+{
 
 	private PolylineOptions options;
 	private Polyline route;
@@ -38,7 +36,8 @@ public class RouteProxy extends KrollProxy{
 	private static final int MSG_SET_COLOR = MSG_FIRST_ID + 401;
 	private static final int MSG_SET_WIDTH = MSG_FIRST_ID + 402;
 
-	public RouteProxy() {
+	public RouteProxy()
+	{
 		super();
 	}
 
@@ -48,37 +47,38 @@ public class RouteProxy extends KrollProxy{
 		AsyncResult result = null;
 		switch (msg.what) {
 
-		case MSG_SET_POINTS: {
-			result = (AsyncResult) msg.obj;
-			route.setPoints(processPoints(result.getArg(), true));
-			result.setResult(null);
-			return true;
-		}
+			case MSG_SET_POINTS: {
+				result = (AsyncResult) msg.obj;
+				route.setPoints(processPoints(result.getArg(), true));
+				result.setResult(null);
+				return true;
+			}
 
-		case MSG_SET_COLOR: {
-			result = (AsyncResult) msg.obj;
-			route.setColor((Integer)result.getArg());
-			result.setResult(null);
-			return true;
-		}
+			case MSG_SET_COLOR: {
+				result = (AsyncResult) msg.obj;
+				route.setColor((Integer) result.getArg());
+				result.setResult(null);
+				return true;
+			}
 
-		case MSG_SET_WIDTH: {
-			result = (AsyncResult) msg.obj;
-			route.setWidth((Float)result.getArg());
-			result.setResult(null);
-			return true;
-		}
-		default : {
-			return super.handleMessage(msg);
-		}
+			case MSG_SET_WIDTH: {
+				result = (AsyncResult) msg.obj;
+				route.setWidth((Float) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			default: {
+				return super.handleMessage(msg);
+			}
 		}
 	}
-	public void processOptions() {
+	public void processOptions()
+	{
 
 		options = new PolylineOptions();
 
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
-			 processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
+			processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
 		}
 
 		if (hasProperty(TiC.PROPERTY_WIDTH)) {
@@ -86,12 +86,12 @@ public class RouteProxy extends KrollProxy{
 		}
 
 		if (hasProperty(TiC.PROPERTY_COLOR)) {
-			options.color(TiConvert.toColor((String)getProperty(TiC.PROPERTY_COLOR)));
+			options.color(TiConvert.toColor((String) getProperty(TiC.PROPERTY_COLOR)));
 		}
-
 	}
 
-	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
+	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list)
+	{
 		if (loc instanceof HashMap) {
 			HashMap<String, String> point = (HashMap<String, String>) loc;
 			Object latitude = point.get(TiC.PROPERTY_LATITUDE);
@@ -107,7 +107,8 @@ public class RouteProxy extends KrollProxy{
 		}
 	}
 
-	public ArrayList<LatLng> processPoints(Object points, boolean list) {
+	public ArrayList<LatLng> processPoints(Object points, boolean list)
+	{
 
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
 		//multiple points
@@ -125,20 +126,24 @@ public class RouteProxy extends KrollProxy{
 		return locationArray;
 	}
 
-	public PolylineOptions getOptions() {
+	public PolylineOptions getOptions()
+	{
 		return options;
 	}
 
-	public void setRoute(Polyline r) {
+	public void setRoute(Polyline r)
+	{
 		route = r;
 	}
 
-	public Polyline getRoute() {
+	public Polyline getRoute()
+	{
 		return route;
 	}
 
 	@Override
-	public void onPropertyChanged(String name, Object value) {
+	public void onPropertyChanged(String name, Object value)
+	{
 		super.onPropertyChanged(name, value);
 		if (route == null) {
 			return;
@@ -149,13 +154,14 @@ public class RouteProxy extends KrollProxy{
 		}
 
 		else if (name.equals(TiC.PROPERTY_COLOR)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_COLOR), TiConvert.toColor((String)value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_COLOR),
+												TiConvert.toColor((String) value));
 		}
 
 		else if (name.equals(TiC.PROPERTY_WIDTH)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_WIDTH), TiConvert.toFloat(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_WIDTH),
+												TiConvert.toFloat(value));
 		}
-
 	}
 
 	@Override
@@ -163,5 +169,4 @@ public class RouteProxy extends KrollProxy{
 	{
 		return (super.getProperty(name) != null);
 	}
-
 }

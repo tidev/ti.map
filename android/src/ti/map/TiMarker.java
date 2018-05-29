@@ -9,27 +9,33 @@ package ti.map;
 
 import com.google.android.gms.maps.model.Marker;
 
-public class TiMarker {
+public class TiMarker
+{
 	private Marker marker;
 	private AnnotationProxy proxy;
-	
-	public TiMarker(Marker m, AnnotationProxy p) {
+
+	public TiMarker(Marker m, AnnotationProxy p)
+	{
 		marker = m;
 		proxy = p;
 	}
-	
-	public void setMarker(Marker m) {
+
+	public void setMarker(Marker m)
+	{
 		marker = m;
 	}
-	public Marker getMarker() {
+	public Marker getMarker()
+	{
 		return marker;
 	}
-	
-	public AnnotationProxy getProxy() {
+
+	public AnnotationProxy getProxy()
+	{
 		return proxy;
 	}
 
-	public void release() {
+	public void release()
+	{
 		if (marker != null) {
 			marker.remove();
 			marker = null;

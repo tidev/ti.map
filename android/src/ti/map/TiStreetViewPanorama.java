@@ -39,7 +39,8 @@ public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPa
 		return streetView;
 	}
 
-	private void setPosition(HashMap<String, Object> position) {
+	private void setPosition(HashMap<String, Object> position)
+	{
 		double longitude = 0;
 		double latitude = 0;
 		if (position.containsKey(TiC.PROPERTY_LONGITUDE) && position.get(TiC.PROPERTY_LONGITUDE) != null) {
@@ -53,7 +54,8 @@ public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPa
 		panorama.setPosition(location);
 	}
 
-	public void processStreetProperties(KrollDict options) {
+	public void processStreetProperties(KrollDict options)
+	{
 		if (options.containsKey(TiC.PROPERTY_POSITION)) {
 			setPosition(options.getKrollDict(TiC.PROPERTY_POSITION));
 		}
@@ -72,14 +74,14 @@ public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPa
 	}
 
 	@Override
-	public void propertyChanged(String key, Object oldValue, Object newValue,
-		KrollProxy proxy) {
+	public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy)
+	{
 		if (panorama == null || newValue == null) {
 			return;
 		}
 
 		if (key.equals(TiC.PROPERTY_POSITION)) {
-			setPosition((HashMap)newValue);
+			setPosition((HashMap) newValue);
 		} else if (key.equals(MapModule.PROPERTY_PANNING)) {
 			panorama.setPanningGesturesEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(MapModule.PROPERTY_ZOOM)) {
@@ -105,7 +107,5 @@ public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPa
 	protected void onViewCreated()
 	{
 		// Keep this method for backward compat.
-
 	}
-
 }
