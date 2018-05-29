@@ -9,5 +9,5 @@ This is the Map Module for Titanium. Please use [JIRA](http://jira.appcelerator.
 
 ## Legal
 
-This module is Copyright (c) 2010-2016 by Appcelerator, Inc. All Rights Reserved. Usage of this module is subject to 
+This module is Copyright (c) 2010-present by Axway Appcelerator, Inc. All Rights Reserved. Usage of this module is subject to 
 the Terms of Service agreement with Appcelerator, Inc.  
