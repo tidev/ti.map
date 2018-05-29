@@ -170,7 +170,8 @@ public class TiMapInfoWindow extends RelativeLayout
 		pane.setVisibility(VISIBLE);
 		if (obj instanceof String) {
 			ImageView imageview = new ImageView(getContext());
-			TiDrawableReference imageref = TiDrawableReference.fromUrl(TiApplication.getAppCurrentActivity(), proxy.resolveUrl(null, (String) obj));
+			TiDrawableReference imageref = TiDrawableReference.fromUrl(TiApplication.getAppCurrentActivity(),
+																	   proxy.resolveUrl(null, (String) obj));
 			Bitmap bitmap = imageref.getBitmap();
 			if (bitmap != null) {
 				imageview.setImageBitmap(bitmap);
@@ -216,7 +217,8 @@ public class TiMapInfoWindow extends RelativeLayout
 		if (evX > markerPoint.x - infoWindowHalfWidth && evX < markerPoint.x + infoWindowHalfWidth
 			&& evY > markerPoint.y - infoWindowHeight - iconImageHeight && evY < markerPoint.y - iconImageHeight) {
 			MotionEvent evCopy = MotionEvent.obtain(ev);
-			evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth, -markerPoint.y + infoWindowHeight + iconImageHeight);
+			evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth,
+								  -markerPoint.y + infoWindowHeight + iconImageHeight);
 
 			int x = (int) evCopy.getX();
 			int y = (int) evCopy.getY();
@@ -231,7 +233,7 @@ public class TiMapInfoWindow extends RelativeLayout
 					v.getHitRect(hitRect);
 
 					// The title and subtitle are the children of a relative layout which is the child of this.
-					if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)){
+					if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)) {
 						Rect textLayoutRect = new Rect();
 						((ViewGroup) (v.getParent())).getHitRect(textLayoutRect);
 						hitRect.offset(textLayoutRect.left, textLayoutRect.top);

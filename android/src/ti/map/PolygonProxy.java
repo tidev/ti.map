@@ -24,15 +24,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-@Kroll.proxy(name = "Polygon", creatableInModule=MapModule.class, propertyAccessors = {
+@Kroll.proxy(name = "Polygon", creatableInModule = MapModule.class,
+			 propertyAccessors =
+				 {
 
-MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR,
-		MapModule.PROPERTY_STROKE_WIDTH, MapModule.PROPERTY_ZINDEX,
-		MapModule.PROPERTY_POINTS, PolygonProxy.PROPERTY_HOLES,
-		TiC.PROPERTY_TOUCH_ENABLED
+					 MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
+					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS, PolygonProxy.PROPERTY_HOLES,
+					 TiC.PROPERTY_TOUCH_ENABLED
 
-})
-public class PolygonProxy extends KrollProxy implements IShape {
+				 })
+public class PolygonProxy extends KrollProxy implements IShape
+{
 
 	private PolygonOptions options;
 	private Polygon polygon;
@@ -50,65 +52,68 @@ public class PolygonProxy extends KrollProxy implements IShape {
 
 	public static final String PROPERTY_HOLES = "holes";
 
-	public PolygonProxy() {
+	public PolygonProxy()
+	{
 		super();
 		clickable = true;
 	}
 
 	@Override
-	public boolean handleMessage(Message msg) {
+	public boolean handleMessage(Message msg)
+	{
 
 		AsyncResult result = null;
 		switch (msg.what) {
-		case MSG_SET_POINTS: {
-			result = (AsyncResult) msg.obj;
-			polygon.setPoints(processPoints(result.getArg(), true));
-			result.setResult(null);
-			return true;
-		}
-		case MSG_SET_HOLES: {
-			result = (AsyncResult) msg.obj;
-			polygon.setHoles(processHoles(result.getArg(), true));
-			result.setResult(null);
-			return true;
-		}
-		case MSG_SET_FILL_COLOR: {
-			result = (AsyncResult) msg.obj;
-			polygon.setFillColor((Integer) result.getArg());
-			result.setResult(null);
-			return true;
-		}
-		case MSG_SET_STROKE_WIDTH: {
-			result = (AsyncResult) msg.obj;
-			polygon.setStrokeWidth((Float) result.getArg());
-			result.setResult(null);
-			return true;
-		}
-		case MSG_SET_STROKE_COLOR: {
-			result = (AsyncResult) msg.obj;
-			polygon.setStrokeColor((Integer) result.getArg());
-			result.setResult(null);
-			return true;
-		}
-		case MSG_SET_ZINDEX: {
-			result = (AsyncResult) msg.obj;
-			polygon.setZIndex((Float) result.getArg());
-			result.setResult(null);
-			return true;
-		}
-		case MSG_SET_TOUCH_ENABLED: {
-			result = (AsyncResult) msg.obj;
-			clickable = TiConvert.toBoolean(result.getArg(), true);
-			result.setResult(null);
-			return true;
-		}
-		default: {
-			return super.handleMessage(msg);
-		}
+			case MSG_SET_POINTS: {
+				result = (AsyncResult) msg.obj;
+				polygon.setPoints(processPoints(result.getArg(), true));
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_HOLES: {
+				result = (AsyncResult) msg.obj;
+				polygon.setHoles(processHoles(result.getArg(), true));
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_FILL_COLOR: {
+				result = (AsyncResult) msg.obj;
+				polygon.setFillColor((Integer) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_STROKE_WIDTH: {
+				result = (AsyncResult) msg.obj;
+				polygon.setStrokeWidth((Float) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_STROKE_COLOR: {
+				result = (AsyncResult) msg.obj;
+				polygon.setStrokeColor((Integer) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_ZINDEX: {
+				result = (AsyncResult) msg.obj;
+				polygon.setZIndex((Float) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_TOUCH_ENABLED: {
+				result = (AsyncResult) msg.obj;
+				clickable = TiConvert.toBoolean(result.getArg(), true);
+				result.setResult(null);
+				return true;
+			}
+			default: {
+				return super.handleMessage(msg);
+			}
 		}
 	}
 
-	public void processOptions() {
+	public void processOptions()
+	{
 
 		options = new PolygonOptions();
 
@@ -140,7 +145,8 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		}
 	}
 
-	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list) {
+	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list)
+	{
 		LatLng location = parseLocation(loc);
 		if (list) {
 			locationArray.add(location);
@@ -149,7 +155,8 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		}
 	}
 
-	public ArrayList<LatLng> processPoints(Object points, boolean list) {
+	public ArrayList<LatLng> processPoints(Object points, boolean list)
+	{
 
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
 		// multiple points
@@ -173,8 +180,8 @@ public class PolygonProxy extends KrollProxy implements IShape {
 	 * holes: [ [ { latitude: .., longitude: .. } ] ]
 	 *
 	 */
-	public ArrayList<ArrayList<LatLng>> processHoles(Object holesList,
-			boolean list) {
+	public ArrayList<ArrayList<LatLng>> processHoles(Object holesList, boolean list)
+	{
 
 		ArrayList<ArrayList<LatLng>> holesArray = new ArrayList<ArrayList<LatLng>>();
 
@@ -191,7 +198,6 @@ public class PolygonProxy extends KrollProxy implements IShape {
 					for (int i = 0; i < pointsArray.length; i++) {
 						Object obj = pointsArray[i];
 						holeContainerArray.add(parseLocation(obj));
-
 					}
 				}
 
@@ -219,37 +225,42 @@ public class PolygonProxy extends KrollProxy implements IShape {
 			return null;
 		} else
 			return holesArray;
-
 	}
 
-	public PolygonOptions getOptions() {
+	public PolygonOptions getOptions()
+	{
 		return options;
 	}
 
 	@Kroll.method
-	public void setHoles(Object[] holesList) {
-		TiMessenger.sendBlockingMainMessage(
-				getMainHandler().obtainMessage(MSG_SET_HOLES), holesList);
+	public void setHoles(Object[] holesList)
+	{
+		TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HOLES), holesList);
 	}
 
-	public void setPolygon(Polygon r) {
+	public void setPolygon(Polygon r)
+	{
 		polygon = r;
 	}
 
-	public Polygon getPolygon() {
+	public Polygon getPolygon()
+	{
 		return polygon;
 	}
 
-	public boolean getClickable() {
+	public boolean getClickable()
+	{
 		return clickable;
 	}
 
-	public List<? extends List<LatLng>> getHoles() {
+	public List<? extends List<LatLng>> getHoles()
+	{
 		return polygon.getHoles();
 	}
 
 	@Override
-	public void onPropertyChanged(String name, Object value) {
+	public void onPropertyChanged(String name, Object value)
+	{
 
 		super.onPropertyChanged(name, value);
 
@@ -258,56 +269,49 @@ public class PolygonProxy extends KrollProxy implements IShape {
 		}
 
 		else if (name.equals(MapModule.PROPERTY_POINTS)) {
-			TiMessenger.sendBlockingMainMessage(
-					getMainHandler().obtainMessage(MSG_SET_POINTS), value);
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_POINTS), value);
 		} else if (name.equals(PolygonProxy.PROPERTY_HOLES)) {
-			TiMessenger.sendBlockingMainMessage(
-					getMainHandler().obtainMessage(MSG_SET_HOLES), value);
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HOLES), value);
 		} else if (name.equals(MapModule.PROPERTY_STROKE_WIDTH)) {
-			TiMessenger.sendBlockingMainMessage(
-					getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH),
-					TiConvert.toFloat(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_WIDTH),
+												TiConvert.toFloat(value));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_STROKE_COLOR)) {
-			TiMessenger.sendBlockingMainMessage(
-					getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
-					TiConvert.toColor((String) value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
+												TiConvert.toColor((String) value));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_FILL_COLOR)) {
-			TiMessenger.sendBlockingMainMessage(
-					getMainHandler().obtainMessage(MSG_SET_FILL_COLOR),
-					TiConvert.toColor((String) value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_FILL_COLOR),
+												TiConvert.toColor((String) value));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_ZINDEX)) {
-			TiMessenger.sendBlockingMainMessage(
-					getMainHandler().obtainMessage(MSG_SET_ZINDEX),
-					TiConvert.toFloat(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_ZINDEX),
+												TiConvert.toFloat(value));
 		}
 
 		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED), TiConvert.toBoolean(value));
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED),
+												TiConvert.toBoolean(value));
 		}
-
 	}
 
 	// A location can either be a an array of longitude, latitude pairings or
 	// an array of longitude, latitude objects.
 	// e.g. [123.33, 34.44], OR {longitude: 123.33, latitude, 34.44}
-	private LatLng parseLocation(Object loc) {
+	private LatLng parseLocation(Object loc)
+	{
 		LatLng location = null;
 		if (loc instanceof HashMap) {
 			HashMap<String, String> point = (HashMap<String, String>) loc;
-			location = new LatLng(TiConvert.toDouble(point
-					.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(point
-					.get(TiC.PROPERTY_LONGITUDE)));
+			location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)),
+								  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 		} else if (loc instanceof Object[]) {
 			Object[] temp = (Object[]) loc;
 			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
 		}
 		return location;
 	}
-
 }
