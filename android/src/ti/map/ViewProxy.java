@@ -626,10 +626,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	@Kroll
-		.method
-		@Kroll.getProperty
-		public float getMaxZoomLevel()
+	// clang-format off
+	@Kroll.method
+	@Kroll.getProperty
+	public float getMaxZoomLevel()
+	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
 			return getMaxZoom();
@@ -638,10 +639,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	@Kroll
-		.method
-		@Kroll.getProperty
-		public float getMinZoomLevel()
+	// clang-format off
+	@Kroll.method
+	@Kroll.getProperty
+	public float getMinZoomLevel()
+	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
 			return getMinZoom();
@@ -1066,10 +1068,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	@Kroll
-		.method
-		@Kroll.getProperty
-		public float getZoom()
+	// clang-format off
+	@Kroll.method
+	@Kroll.getProperty
+	public float getZoom()
+	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
 			return handleGetZoom();
@@ -1138,10 +1141,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	@Kroll
-		.method
-		@Kroll.setProperty
-		public void setPadding(KrollDict padding)
+	// clang-format off
+	@Kroll.method
+	@Kroll.setProperty
+	public void setPadding(KrollDict padding)
+	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
 			handleSetPadding(padding);
