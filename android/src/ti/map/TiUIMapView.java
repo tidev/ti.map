@@ -73,6 +73,7 @@ public class TiUIMapView extends TiUIFragment
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
+	private ArrayList<ImageOverlayProxy> currentImageOverlays;
 	private ClusterManager<TiClusterMarker> mClusterManager;
 	public static HashMap<String, TiClusterMarker> markerItemMap = new HashMap<String, TiClusterMarker>();
 
@@ -83,6 +84,7 @@ public class TiUIMapView extends TiUIFragment
 		currentCircles = new ArrayList<CircleProxy>();
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
+		currentImageOverlays = new ArrayList<ImageOverlayProxy>();
 	}
 
 	/**
@@ -161,6 +163,12 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
+	protected void processOverlaysList() {
+		for (ImageOverlayProxy imageOverlayProxy : ((ViewProxy) proxy).getOverlaysList()) {
+			addImageOverlay(imageOverlayProxy);
+		}
+	}
+
 	@Override
 	public void onMapReady(GoogleMap gMap)
 	{
@@ -180,6 +188,7 @@ public class TiUIMapView extends TiUIFragment
 		processPreloadPolygons();
 		processPreloadCircles();
 		processPreloadPolylines();
+		processOverlaysList();
 		map.setOnMarkerClickListener(mClusterManager);
 		map.setOnMapClickListener(this);
 		map.setOnCameraIdleListener(this);
@@ -793,6 +802,30 @@ public class TiUIMapView extends TiUIFragment
 			circleProxy.setCircle(null);
 		}
 		currentCircles.clear();
+	}
+
+	public void addImageOverlay(ImageOverlayProxy proxy)
+  {
+		proxy.setGroundOverlay(map.addGroundOverlay(proxy.getGroundOverlayOptions()));
+		currentImageOverlays.add(proxy);
+	}
+
+	public void removeImageOverlay(ImageOverlayProxy proxy)
+  {
+		if (currentImageOverlays.contains(proxy)) {
+			proxy.getGroundOverlay().remove();
+			proxy.setGroundOverlay(null);
+			currentImageOverlays.remove(proxy);
+		}
+	}
+
+	public void removeAllImageOverlays()
+  {
+		for (ImageOverlayProxy imageOverlayProxy: currentImageOverlays) {
+			imageOverlayProxy.getGroundOverlay().remove();
+			imageOverlayProxy.setGroundOverlay(null);
+		}
+		currentImageOverlays.clear();
 	}
 
 	public void changeZoomLevel(int delta)
