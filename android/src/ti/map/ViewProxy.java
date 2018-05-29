@@ -710,7 +710,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		return preloadRoutes;
 	}
 
-	public ArrayList<ImageOverlayProxy> getOverlaysList() {
+	public ArrayList<ImageOverlayProxy> getOverlaysList()
+	{
 		return preloadOverlaysList;
 	}
 
@@ -1186,14 +1187,14 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	private void addPreloadImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		if (!(preloadOverlaysList.contains(proxy))) {
 			preloadOverlaysList.add(proxy);
 		}
 	}
 
 	private void removePreloadImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		if (preloadOverlaysList.contains(proxy)) {
 			preloadOverlaysList.remove(proxy);
 		}
@@ -1201,25 +1202,24 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	@Kroll.method
 	public void addImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		if (TiApplication.isUIThread()) {
 			handleAddImageOverlay(proxy);
 		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler()
-				.obtainMessage(MSG_ADD_IMAGE_OVERLAY), proxy);
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_IMAGE_OVERLAY), proxy);
 		}
 	}
 
 	@Kroll.method
 	public void addImageOverlays(Object proxy)
-  {
+	{
 		if (!(proxy instanceof Object[])) {
-			Log.e(TAG, "Invalid argument to addImageOverlays",  Log.DEBUG_MODE);
+			Log.e(TAG, "Invalid argument to addImageOverlays", Log.DEBUG_MODE);
 			return;
 		}
 
 		Object[] proxies = ((Object[]) proxy);
-		for (Object imageOverlayProxy: proxies) {
+		for (Object imageOverlayProxy : proxies) {
 			if (imageOverlayProxy instanceof ImageOverlayProxy) {
 				addImageOverlay(((ImageOverlayProxy) imageOverlayProxy));
 			}
@@ -1228,30 +1228,28 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	@Kroll.method
 	public void removeImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		if (TiApplication.isUIThread()) {
 			handleRemoveImageOverlay(proxy);
 		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler()
-				.obtainMessage(MSG_REMOVE_IMAGE_OVERLAY), proxy);
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_IMAGE_OVERLAY), proxy);
 		}
 	}
 
 	@Kroll.method
 	public void removeAllImageOverlays()
-  {
+	{
 		if (view instanceof TiUIMapView) {
 			if (TiApplication.isUIThread()) {
 				handleRemoveAllImageOverlays();
 			} else {
-				TiMessenger.sendBlockingMainMessage(getMainHandler()
-					.obtainMessage(MSG_REMOVE_ALL_IMAGE_OVERLAYS));
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_IMAGE_OVERLAYS));
 			}
 		}
 	}
 
 	private void handleAddImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			TiUIMapView mapView = (TiUIMapView) view;
@@ -1266,7 +1264,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	private void handleRemoveImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			TiUIMapView mapView = (TiUIMapView) view;
@@ -1281,7 +1279,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	private void handleRemoveAllImageOverlays()
-  {
+	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			TiUIMapView mapView = (TiUIMapView) view;

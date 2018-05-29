@@ -20,7 +20,8 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
 @Kroll.proxy(creatableInModule = MapModule.class)
-public class ImageOverlayProxy extends KrollProxy {
+public class ImageOverlayProxy extends KrollProxy
+{
 
 	private static final String TAG = "ImageOverlayProxy";
 
@@ -35,7 +36,8 @@ public class ImageOverlayProxy extends KrollProxy {
 
 	private GroundOverlayOptions groundOverlayOptions = new GroundOverlayOptions();
 	@Override
-	public void handleCreationDict(KrollDict dict) {
+	public void handleCreationDict(KrollDict dict)
+	{
 		super.handleCreationDict(dict);
 		if (dict.containsKeyAndNotNull(PROPERTY_BOUNDS_COORDINATE)) {
 			handleBoundsCoordinate(dict.getKrollDict(PROPERTY_BOUNDS_COORDINATE));
@@ -45,26 +47,32 @@ public class ImageOverlayProxy extends KrollProxy {
 		}
 	}
 
-	public GroundOverlay getGroundOverlay() {
+	public GroundOverlay getGroundOverlay()
+	{
 		return groundOverlay;
 	}
 
-	public void setGroundOverlay(GroundOverlay groundOverlay) {
+	public void setGroundOverlay(GroundOverlay groundOverlay)
+	{
 		this.groundOverlay = groundOverlay;
 	}
 
-	private void handleBoundsCoordinate(KrollDict boundsCoordinateDict) {
+	private void handleBoundsCoordinate(KrollDict boundsCoordinateDict)
+	{
 		KrollDict topLeft = boundsCoordinateDict.getKrollDict(PROPERTY_TOP_LEFT);
 		KrollDict botRight = boundsCoordinateDict.getKrollDict(PROPERTY_BOTTOM_RIGHT);
 		// Switching some coordinates to transform from topLeft/botRight to southWest/northEast base
-		LatLng southWest = new LatLng(botRight.getDouble(PROPERTY_LATITUDE).doubleValue(), topLeft.getDouble(PROPERTY_LONGITUDE).doubleValue());
-		LatLng northEast = new LatLng(topLeft.getDouble(PROPERTY_LATITUDE).doubleValue(), botRight.getDouble(PROPERTY_LONGITUDE).doubleValue());
+		LatLng southWest = new LatLng(botRight.getDouble(PROPERTY_LATITUDE).doubleValue(),
+									  topLeft.getDouble(PROPERTY_LONGITUDE).doubleValue());
+		LatLng northEast = new LatLng(topLeft.getDouble(PROPERTY_LATITUDE).doubleValue(),
+									  botRight.getDouble(PROPERTY_LONGITUDE).doubleValue());
 		LatLngBounds latLng = new LatLngBounds(southWest, northEast);
 		groundOverlayOptions.positionFromBounds(latLng);
 		groundOverlayOptions.visible(true);
 	}
 
-	private void handleImage(Object image) {
+	private void handleImage(Object image)
+	{
 		TiDrawableReference source = TiDrawableReference.fromObject(this, image);
 		if (!source.isTypeNull()) {
 			BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(source.getBitmap());
@@ -72,12 +80,14 @@ public class ImageOverlayProxy extends KrollProxy {
 		}
 	}
 
-	public GroundOverlayOptions getGroundOverlayOptions() {
+	public GroundOverlayOptions getGroundOverlayOptions()
+	{
 		return groundOverlayOptions;
 	}
 
 	@Override
-	public String getApiName() {
+	public String getApiName()
+	{
 		return TAG;
 	}
 }

@@ -163,7 +163,8 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
-	protected void processOverlaysList() {
+	protected void processOverlaysList()
+	{
 		for (ImageOverlayProxy imageOverlayProxy : ((ViewProxy) proxy).getOverlaysList()) {
 			addImageOverlay(imageOverlayProxy);
 		}
@@ -805,13 +806,13 @@ public class TiUIMapView extends TiUIFragment
 	}
 
 	public void addImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		proxy.setGroundOverlay(map.addGroundOverlay(proxy.getGroundOverlayOptions()));
 		currentImageOverlays.add(proxy);
 	}
 
 	public void removeImageOverlay(ImageOverlayProxy proxy)
-  {
+	{
 		if (currentImageOverlays.contains(proxy)) {
 			proxy.getGroundOverlay().remove();
 			proxy.setGroundOverlay(null);
@@ -820,8 +821,8 @@ public class TiUIMapView extends TiUIFragment
 	}
 
 	public void removeAllImageOverlays()
-  {
-		for (ImageOverlayProxy imageOverlayProxy: currentImageOverlays) {
+	{
+		for (ImageOverlayProxy imageOverlayProxy : currentImageOverlays) {
 			imageOverlayProxy.getGroundOverlay().remove();
 			imageOverlayProxy.setGroundOverlay(null);
 		}
