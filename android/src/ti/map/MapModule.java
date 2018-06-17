@@ -51,6 +51,7 @@ public class MapModule extends KrollModule
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	public static final String EVENT_REGION_WILL_CHANGE = "regionwillchange";
+	public static final String EVENT_USER_LOCATION = "userLocation";
 
 	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
 	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";

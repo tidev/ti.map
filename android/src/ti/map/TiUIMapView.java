@@ -58,7 +58,7 @@ public class TiUIMapView extends TiUIFragment
 	implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener,
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
-			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener,
+			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
 			   ClusterManager.OnClusterClickListener<TiClusterMarker>
 {
 
@@ -200,6 +200,7 @@ public class TiUIMapView extends TiUIFragment
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
+		map.setOnMyLocationChangeListener(this);
 		mClusterManager.setOnClusterClickListener(this);
 
 		((ViewProxy) proxy).clearPreloadObjects();
@@ -1082,6 +1083,15 @@ public class TiUIMapView extends TiUIFragment
 			}
 			fireClickEvent(marker, annoProxy, clicksource);
 		}
+	}
+
+	@Override
+	public void onMyLocationChange(Location arg0)
+	{
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
+		d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
+		proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
 	}
 
 	@Override
