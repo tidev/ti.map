@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.Cluster;
 
@@ -63,6 +64,7 @@ public class TiUIMapView extends TiUIFragment
 {
 
 	private static final String TAG = "TiUIMapView";
+	private static final String DEFAULT_COLLECTION_ID = "defaultCollection";
 	private GoogleMap map;
 	protected boolean animate = false;
 	protected boolean preLayout = true;
@@ -75,6 +77,7 @@ public class TiUIMapView extends TiUIFragment
 	private ArrayList<PolylineProxy> currentPolylines;
 	private ArrayList<ImageOverlayProxy> currentImageOverlays;
 	private ClusterManager<TiClusterMarker> mClusterManager;
+	private MarkerManager mMarkerManager;
 	public static HashMap<String, TiClusterMarker> markerItemMap = new HashMap<String, TiClusterMarker>();
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
@@ -181,7 +184,12 @@ public class TiUIMapView extends TiUIFragment
 			View rootView = proxy.getActivity().findViewById(android.R.id.content);
 			setBackgroundTransparent(rootView);
 		}
-		mClusterManager = new ClusterManager<TiClusterMarker>(TiApplication.getInstance().getApplicationContext(), map);
+
+		mMarkerManager = new MarkerManager(map);
+		mMarkerManager.newCollection(DEFAULT_COLLECTION_ID);
+		mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).setOnMarkerClickListener(this);
+
+		mClusterManager = new ClusterManager<TiClusterMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
 		mClusterManager.setRenderer(
 			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager));
 		processMapProperties(proxy.getProperties());
@@ -190,7 +198,7 @@ public class TiUIMapView extends TiUIFragment
 		processPreloadCircles();
 		processPreloadPolylines();
 		processOverlaysList();
-		map.setOnMarkerClickListener(mClusterManager);
+		map.setOnMarkerClickListener(mMarkerManager);
 		map.setOnMapClickListener(this);
 		map.setOnCameraIdleListener(this);
 		map.setOnCameraMoveStartedListener(this);
@@ -509,7 +517,7 @@ public class TiUIMapView extends TiUIFragment
 			}
 			annotation.processOptions();
 			if (map != null) {
-				Marker marker = map.addMarker(annotation.getMarkerOptions());
+				Marker marker = mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
 				tiMarker = new TiMarker(marker, annotation);
 				annotation.setTiMarker(tiMarker);
 				timarkers.add(tiMarker);
