@@ -60,11 +60,11 @@ public class TiUIMapView extends TiUIFragment
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
 			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener,
-			   ClusterManager.OnClusterClickListener<TiClusterMarker>
+			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
 {
 
+	public static final String DEFAULT_COLLECTION_ID = "defaultCollection";
 	private static final String TAG = "TiUIMapView";
-	private static final String DEFAULT_COLLECTION_ID = "defaultCollection";
 	private GoogleMap map;
 	protected boolean animate = false;
 	protected boolean preLayout = true;
@@ -76,9 +76,9 @@ public class TiUIMapView extends TiUIFragment
 	private ArrayList<PolygonProxy> currentPolygons;
 	private ArrayList<PolylineProxy> currentPolylines;
 	private ArrayList<ImageOverlayProxy> currentImageOverlays;
-	private ClusterManager<TiClusterMarker> mClusterManager;
+	private ClusterManager<TiMarker> mClusterManager;
 	private MarkerManager mMarkerManager;
-	public static HashMap<String, TiClusterMarker> markerItemMap = new HashMap<String, TiClusterMarker>();
+	public static HashMap<String, TiMarker> markerItemMap = new HashMap<String, TiMarker>();
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -189,7 +189,7 @@ public class TiUIMapView extends TiUIFragment
 		mMarkerManager.newCollection(DEFAULT_COLLECTION_ID);
 		mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).setOnMarkerClickListener(this);
 
-		mClusterManager = new ClusterManager<TiClusterMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
+		mClusterManager = new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
 		mClusterManager.setRenderer(
 			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager));
 		processMapProperties(proxy.getProperties());
@@ -209,6 +209,7 @@ public class TiUIMapView extends TiUIFragment
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
 		mClusterManager.setOnClusterClickListener(this);
+		mClusterManager.setOnClusterItemClickListener(this);
 
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
@@ -499,44 +500,28 @@ public class TiUIMapView extends TiUIFragment
 			return;
 		}
 
-		// if annotation already on map, remove it first then re-add it
 		TiMarker tiMarker = annotation.getTiMarker();
 		if (tiMarker != null) {
 			timarkers.remove(tiMarker);
 			tiMarker.getMarker().remove();
 		}
-		annotation.processOptions();
 
-		// add annotation to map view
-		if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
-			// if annotation already on map, remove it first then re-add it
-			tiMarker = annotation.getTiMarker();
-			if (tiMarker != null) {
-				timarkers.remove(tiMarker);
-				tiMarker.getMarker().remove();
-			}
+		if (map != null) {
 			annotation.processOptions();
-			if (map != null) {
+			if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
 				Marker marker = mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
-				tiMarker = new TiMarker(marker, annotation);
-				annotation.setTiMarker(tiMarker);
-				timarkers.add(tiMarker);
-			}
-		} else {
-			// if annotation already on map, remove it first then re-add it
-			TiClusterMarker clusterItem = annotation.getClusterMarker();
-			if (clusterItem != null) {
-				mClusterManager.removeItem(clusterItem);
-			}
-			annotation.processOptions();
-			if (map != null) {
-				clusterItem = new TiClusterMarker(annotation);
-				annotation.setClusterMarker(clusterItem);
+				tiMarker = new TiMarker(marker, annotation);	
+			} else {
+				// TiClusterRenderer is responsible for creating the Marker in this case.
+				// It is assigned to the TiMarker instance after it has been rendered in
+				// onClusterItemRendered callback.
+				tiMarker = new TiMarker(null, annotation);	
 				if (mClusterManager != null) {
-					mClusterManager.addItem(clusterItem);
+					mClusterManager.addItem((TiMarker)tiMarker);
 				}
-				mClusterManager.cluster();
 			}
+			annotation.setTiMarker(tiMarker);
+			timarkers.add(tiMarker);
 		}
 	}
 
@@ -1074,7 +1059,7 @@ public class TiUIMapView extends TiUIFragment
 
 		// check for cluster marker
 		if (annoProxy == null) {
-			TiClusterMarker tm = (TiClusterMarker) markerItemMap.get(marker.getId());
+			TiMarker tm = (TiMarker) markerItemMap.get(marker.getId());
 			if (tm != null) {
 				annoProxy = tm.getProxy();
 			}
@@ -1120,6 +1105,8 @@ public class TiUIMapView extends TiUIFragment
 		currentPolylines = null;
 		map = null;
 		timarkers.clear();
+		mClusterManager = null;
+		mMarkerManager = null;
 		super.release();
 	}
 
@@ -1227,10 +1214,10 @@ public class TiUIMapView extends TiUIFragment
 	}
 
 	@Override
-	public boolean onClusterClick(Cluster<TiClusterMarker> cluster)
+	public boolean onClusterClick(Cluster<TiMarker> cluster)
 	{
 		LatLngBounds.Builder builder = LatLngBounds.builder();
-		for (TiClusterMarker item : cluster.getItems()) {
+		for (TiMarker item : cluster.getItems()) {
 			builder.include(item.getPosition());
 		}
 		final LatLngBounds bounds = builder.build();
@@ -1243,5 +1230,10 @@ public class TiUIMapView extends TiUIFragment
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public boolean onClusterItemClick(TiMarker tiMarker) {
+		return onMarkerClick(tiMarker.getMarker());
 	}
 }

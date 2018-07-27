@@ -18,24 +18,23 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiBlob;
 
-public class TiClusterRenderer extends DefaultClusterRenderer<TiClusterMarker>
+public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 {
 	private static final String TAG = "ClusterRender";
 	private static final String defaultIconImageHeight = "40dip"; //The height of the default marker icon
 	private static final String defaultIconImageWidth = "36dip";  //The width of the default marker icon
 	private int iconImageHeight = 0;
 	private int iconImageWidth = 0;
-	private ClusterManager<TiClusterMarker> clusterManager;
 
-	public TiClusterRenderer(Context context, GoogleMap map, ClusterManager<TiClusterMarker> clusterManager)
+	public TiClusterRenderer(Context context, GoogleMap map, ClusterManager<TiMarker> clusterManager)
 	{
 		super(context, map, clusterManager);
-		this.clusterManager = clusterManager;
 	}
 
 	@Override
-	protected void onBeforeClusterItemRendered(TiClusterMarker clusterItem, MarkerOptions markerOptions)
+	protected void onBeforeClusterItemRendered(TiMarker clusterItem, MarkerOptions markerOptions)
 	{
+
 		AnnotationProxy anno = clusterItem.getProxy();
 
 		if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
@@ -83,10 +82,10 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiClusterMarker>
 	}
 
 	@Override
-	protected void onClusterItemRendered(TiClusterMarker clusterItem, Marker marker)
+	protected void onClusterItemRendered(TiMarker clusterItem, Marker marker)
 	{
 		super.onClusterItemRendered(clusterItem, marker);
-		TiUIMapView.markerItemMap.put(marker.getId(), clusterItem);
+		clusterItem.setMarker(marker);
 	}
 
 	public void setIconImageDimensions(int w, int h)
