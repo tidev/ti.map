@@ -78,7 +78,6 @@ public class TiUIMapView extends TiUIFragment
 	private ArrayList<ImageOverlayProxy> currentImageOverlays;
 	private ClusterManager<TiMarker> mClusterManager;
 	private MarkerManager mMarkerManager;
-	public static HashMap<String, TiMarker> markerItemMap = new HashMap<String, TiMarker>();
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -1057,13 +1056,6 @@ public class TiUIMapView extends TiUIFragment
 		AnnotationProxy annoProxy = null;
 		annoProxy = getProxyByMarker(marker);
 
-		// check for cluster marker
-		if (annoProxy == null) {
-			TiMarker tm = (TiMarker) markerItemMap.get(marker.getId());
-			if (tm != null) {
-				annoProxy = tm.getProxy();
-			}
-		}
 		if (annoProxy != null) {
 			String clicksource = annoProxy.getMapInfoWindow().getClicksource();
 			// The clicksource is null means the click event is not inside
