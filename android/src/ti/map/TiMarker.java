@@ -41,7 +41,7 @@ public class TiMarker
 			marker = null;
 		}
 		if (proxy != null) {
-			proxy.release();
+			proxy.releaseMarker();
 			proxy = null;
 		}
 	}

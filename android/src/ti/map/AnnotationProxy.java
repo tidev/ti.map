@@ -91,9 +91,6 @@ public class AnnotationProxy extends KrollProxy
 		if (markerOptions != null) {
 			markerOptions = null;
 		}
-		if (marker != null) {
-			marker = null;
-		}
 		if (clusterMarker != null) {
 			clusterMarker = null;
 		}
@@ -105,6 +102,12 @@ public class AnnotationProxy extends KrollProxy
 		}
 		*/
 		super.release();
+	}
+
+	public void releaseMarker() {
+		if (marker != null) {
+			marker = null;
+		}
 	}
 
 	public void setDelegate(AnnotationDelegate delegate)
