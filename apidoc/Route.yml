@@ -28,14 +28,14 @@ properties:
     description: |
         For information about color values, see the "Colors" section of <Titanium.UI>.
 
-        **iOS Note:** Changing the color of an existing route will only work on iOS 7 and later 
+        **iOS Note:** Changing the color of an existing route will only work on iOS 7 and later. 
     type: String
     default: black
 
   - name: width
     summary: Line width in pixels to use when drawing the route.
     description: |
-        **iOS Note:** Changing the width of an existing route will only work on iOS 7 and later
+        **iOS Note:** Changing the width of an existing route will only work on iOS 7 and later.
     type: Number
     default: 10
 
@@ -49,5 +49,18 @@ properties:
     availability: creation
     type: Number
     since: "3.2.0"
-    default: <Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS>
+    default: Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS
     platforms: [iphone, ipad]
+
+---
+name: MapPointType
+summary: An object representing a point on the map.
+properties:
+
+  - name: longitude
+    summary: Longitude value of the map point, in decimal degrees.
+    type: Number
+
+  - name: latitude
+    summary: Latitude value of the map point, in decimal degrees.
+    type: Number
