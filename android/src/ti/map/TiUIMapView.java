@@ -914,11 +914,23 @@ public class TiUIMapView extends TiUIFragment
 		if (annoProxy == null) {
 			Log.e(TAG, "Marker can not be found, click event won't fired.", Log.DEBUG_MODE);
 			return false;
-		} else if (selectedAnnotation != null && selectedAnnotation.equals(annoProxy)) {
+		}
+		if (selectedAnnotation != null) {
 			selectedAnnotation.hideInfo();
-			selectedAnnotation = null;
-			fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
-			return true;
+			// Clicking on the selected annotation again.
+			// After hiding the info window, send deselected
+			// event and return from this listener.
+			if (selectedAnnotation.equals(annoProxy)) {
+				selectedAnnotation = null;
+				fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
+				return true;
+			} else {
+				// Clicking from a selected annotation to another one.
+				// After hiding the info window, send deselected
+				// event for the selected annotation and proceed with
+				// this listener for the marker parameter.
+				fireClickEvent(marker, selectedAnnotation, MapModule.PROPERTY_PIN);
+			}
 		}
 		fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
 		selectedAnnotation = annoProxy;
@@ -1023,7 +1035,7 @@ public class TiUIMapView extends TiUIFragment
 		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
 		d.put(TiC.PROPERTY_LONGITUDE, point.longitude);
 		d.put(MapModule.PROPERTY_MAP, proxy);
-		proxy.fireEvent(MapModule.PROPERTY_MAP_CLICK, d);
+		proxy.fireEvent(MapModule.EVENT_MAP_CLICK, d);
 	}
 
 	@Override

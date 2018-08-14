@@ -2,17 +2,6 @@
 name: Modules.Map
 summary: Add-on Map module
 description: |
-    ## Android
-
-    This module is a replacement for the built-in Titanium.Map module on Android, which uses the Google Maps API v1.
-    The Google Maps API v1 is deprecated and Google will no longer issue new Maps API v1 keys after March 3rd, 2013. New
-    applications should use this module on Android.
-
-    Applications with existing Maps API v1 keys can continue to use the Titanium.Map module on Android,
-    or transition to the new ti.map add-on module.
-
-    For more instructions and examples of using the module, refer to the
-    [Google Maps v2 for Android guide](https://docs.appcelerator.com/platform/latest/#!/guide/Google_Maps_v2_for_Android).
 
     ### Requirements
 
@@ -461,7 +450,7 @@ methods:
 
 examples:
 
-  - title: Map Example
+  - title: Basic Map Example
     example: |
         This is a basic map example that places a custom annotation on the map, and
         listens for click events on the annotation.
@@ -476,35 +465,42 @@ examples:
             var win = Titanium.UI.createWindow();
 
             var mountainView = Map.createAnnotation({
-                latitude:37.390749,
-                longitude:-122.081651,
-                title:"Appcelerator Headquarters",
-                subtitle:'Mountain View, CA',
-                pincolor:Map.ANNOTATION_RED,
-                myid:1 // Custom property to uniquely identify this annotation.
+                latitude: 37.390749,
+                longitude: -122.081651,
+                title: 'Appcelerator Headquarters',
+                subtitle: 'Mountain View, CA',
+                pincolor: Map.ANNOTATION_RED,
+                myid: 1 // Custom property to uniquely identify this annotation.
             });
 
             var mapview = Map.createView({
                 mapType: Map.NORMAL_TYPE,
-                region: {latitude:33.74511, longitude:-84.38993,
-                        latitudeDelta:0.01, longitudeDelta:0.01},
-                animate:true,
-                regionFit:true,
-                userLocation:true,
-                annotations:[mountainView]
+                region: { 
+                    latitude: 33.74511,
+                    longitude: -84.38993,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01
+                },
+                animate: true,
+                regionFit: true,
+                userLocation: true,
+                annotations: [ mountainView ]
             });
 
             var circle = Map.createCircle({
-                center: { latitude: 33.74511, longitude: -84.38993 },
-                radius: 1000, //1km
-                fillColor: "#20FF0000"
+                center: {
+                    latitude: 33.74511,
+                    longitude: -84.38993
+                },
+                radius: 1000, // = 1.0 km
+                fillColor: '#20FF0000'
             });
             mapview.addCircle(circle);
 
             win.add(mapview);
-            // Handle click events on any annotations on this map.
-            mapview.addEventListener('click', function(evt) {
-                Ti.API.info("Clicked " + evt.clicksource + " on " + evt.latitude + "," + evt.longitude);
+
+            mapview.addEventListener('click', function(event) {
+                Ti.API.info('Clicked ' + event.clicksource + ' on ' + event.latitude + ', ' + event.longitude);
             });
             win.open();
 
@@ -521,8 +517,8 @@ examples:
 
         `alloy.js`:
 
-            // Loads the map module, which can be referenced by Alloy.Globals.Map
-            Alloy.Globals.Map = require("ti.map");
+            // Loads the map module to the global Alloy scope, which can be referenced by Alloy.Globals.Map
+            Alloy.Globals.Map = require('ti.map');
 
         `app/views/index.xml`:
 
@@ -536,15 +532,15 @@ examples:
 
         `app/styles/index.tss`:
 
-            "#mapview" : {
-                region : {
-                    latitude:33.74511,
-                    longitude:-84.38993,
-                    latitudeDelta:0.01,
-                    longitudeDelta:0.01
+            "#mapview": {
+                region: {
+                    latitude: 33.74511,
+                    longitude: -84.38993,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01
                 }
             },
-            "#appcHQ" : {
+            "#appcHQ": {
                 latitude: 37.368122,
                 longitude: -121.913653,
                 title: "Appcelerator Headquarters",
@@ -555,66 +551,66 @@ examples:
 
         `app/controllers/index.js`:
 
-            function report(e) {
-                Ti.API.info("Annotation " + e.title + " clicked, ID: " + e.annotation.myID);
+            function report(event) {
+                Ti.API.info('Annotation ' + event.title + ' clicked, ID: ' + event.annotation.myID);
             }
 
             $.index.open();
 
-  - title: Map Example With Marker Annotation and Clustering
+  - title: Map Clustering (iOS 11+)
     example: |
         This is a map-example which creates marker annotation and clustering of annotations.
 
+        The `clusterIdentifier` property and the `clusterstart` event are required in order to enable 
+        clustering. You can control the clustering by defining the `collisionMode` property and
+        setting special cluster annotations using the `setClusterAnnotation` method on your map
+        view instance.
+
             var Map = require('ti.map');
-
             var win = Titanium.UI.createWindow();
-
-            var ann = [];
+            var annotations = [];
 
             for (var i = 0; i < 10; i++) {
-
-                ann.push(Map.createAnnotation({
-                    clusterIdentifier:'abc',
+                annotations.push(Map.createAnnotation({
+                    title: 'Appcelerator Inc.',
+                    subtitle: 'TiRocks!',
+                    clusterIdentifier: 'abc', // Required for clusters
                     collisionMode: Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE,
-                    showAsMarker:true,
-                    markerGlyphText:i.toString(),
-                    markerColor:'blue',
-                    markerGlyphColor:'green',
-                    title:'Title',
-                    subtitle: 'subtitle',
+                    showAsMarker: true,
+                    markerGlyphText: i.toString(),
+                    markerColor: 'blue',
+                    markerGlyphColor: 'green',
                     markerTitleVisibility: Map.FEATURE_VISIBILITY_VISIBLE,
                     markerSubtitleVisibility: Map.FEATURE_VISIBILITY_HIDDEN,
-                    markerGlyphImage:'Flag.png',
-                    markerSelectedGlyphImage:'social-facebook-icon.png',
-                    annotationDisplayPriority:Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW,
-                    latitude : Math.random() * 10 + 40,
-                    longitude : Math.random() * 10,
+                    markerGlyphImage: 'path/to/flag.png',
+                    markerSelectedGlyphImage: 'path/to/flag-selected.png',
+                    annotationDisplayPriority: Map.FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW,
+                    latitude: (Math.random() * 10) + 40,
+                    longitude: Math.random() * 10,
                 }));
             }
 
             var mapview = Map.createView({
-                annotations:ann,
-                bottom : 0,
-                right : 0,
-                width : Ti.UI.FILL,
-                height : Ti.UI.FILL,
-                rotateEnabled : true,
-                mapType : Map.MUTED_STANDARD_TYPE,
-                showsPointsOfInterest : false,
-                userLocation : true,
+                annotations: annotations,
+                rotateEnabled: true,
+                mapType: Map.MUTED_STANDARD_TYPE,
+                showsPointsOfInterest: false,
+                userLocation: true
             });
 
-            mapview.addEventListener('clusterstart', function(e){
-                Ti.API.info('clustering started');
+            mapview.addEventListener('clusterstart', function(e) {
+                Ti.API.info('clustering started!');
+
                 var clusterAnnotation = Map.createAnnotation({
-                    showAsMarker:true,
-                    markerText:e.memberAnnotations.length.toString(),
-                    title:'Cluster Title',
+                    showAsMarker: true,
+                    markerText: e.memberAnnotations.length.toString(),
+                    title: 'Cluster Title',
                     subtitle: 'Cluster Subtitle',
                 });
+
                 mapview.setClusterAnnotation({
-                    annotation:clusterAnnotation,
-                    memberAnnotations:e.memberAnnotations
+                    annotation: clusterAnnotation,
+                    memberAnnotations: e.memberAnnotations
                 });
             });
             win.add(mapview);
