@@ -175,6 +175,10 @@ public class TiUIMapView extends TiUIFragment
 	{
 		map = gMap;
 
+		if (proxy == null) {
+			return;
+		}
+
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
 		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
 		if (Build.VERSION.SDK_INT < 16) {
@@ -853,7 +857,9 @@ public class TiUIMapView extends TiUIFragment
 		d.put(MapModule.PROPERTY_SHAPE, shapeProxy);
 		d.put(MapModule.PROPERTY_SHAPE_TYPE, clickSource);
 
-		proxy.fireEvent(TiC.EVENT_CLICK, d);
+		if (proxy != null) {
+			proxy.fireEvent(TiC.EVENT_CLICK, d);
+		}
 	}
 
 	public void fireClickEvent(Marker marker, AnnotationProxy annoProxy, String clickSource)
@@ -875,7 +881,9 @@ public class TiUIMapView extends TiUIFragment
 		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
 		d.put(TiC.PROPERTY_SOURCE, proxy);
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
-		proxy.fireEvent(TiC.EVENT_CLICK, d);
+		if (proxy != null) {
+			proxy.fireEvent(TiC.EVENT_CLICK, d);
+		}
 	}
 
 	public void fireLongClickEvent(LatLng point)
@@ -886,7 +894,9 @@ public class TiUIMapView extends TiUIFragment
 		d.put(MapModule.PROPERTY_MAP, proxy);
 		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_LONGCLICK);
 		d.put(TiC.PROPERTY_SOURCE, proxy);
-		proxy.fireEvent(TiC.EVENT_LONGCLICK, d);
+		if (proxy != null) {
+			proxy.fireEvent(TiC.EVENT_LONGCLICK, d);
+		}
 	}
 
 	public void firePinChangeDragStateEvent(Marker marker, AnnotationProxy annoProxy, int dragState)
@@ -903,7 +913,9 @@ public class TiUIMapView extends TiUIFragment
 		d.put(TiC.PROPERTY_SOURCE, proxy);
 		d.put(MapModule.PROPERTY_NEWSTATE, dragState);
 		d.put(TiC.PROPERTY_TYPE, MapModule.EVENT_PIN_CHANGE_DRAG_STATE);
-		proxy.fireEvent(MapModule.EVENT_PIN_CHANGE_DRAG_STATE, d);
+		if (proxy != null) {
+			proxy.fireEvent(MapModule.EVENT_PIN_CHANGE_DRAG_STATE, d);
+		}
 	}
 
 	@Override
@@ -1034,7 +1046,9 @@ public class TiUIMapView extends TiUIFragment
 		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
 		d.put(TiC.PROPERTY_LONGITUDE, point.longitude);
 		d.put(MapModule.PROPERTY_MAP, proxy);
-		proxy.fireEvent(MapModule.EVENT_MAP_CLICK, d);
+		if (proxy != null) {
+			proxy.fireEvent(MapModule.EVENT_MAP_CLICK, d);
+		}
 	}
 
 	@Override
@@ -1213,7 +1227,9 @@ public class TiUIMapView extends TiUIFragment
 					KrollDict data = new KrollDict();
 					data.put("snapshot", sblob);
 					data.put("source", proxy);
-					proxy.fireEvent(MapModule.EVENT_ON_SNAPSHOT_READY, data);
+					if (proxy != null) {
+						proxy.fireEvent(MapModule.EVENT_ON_SNAPSHOT_READY, data);
+					}
 				}
 			});
 		}
@@ -1222,7 +1238,9 @@ public class TiUIMapView extends TiUIFragment
 	@Override
 	public void onMapLoaded()
 	{
-		proxy.fireEvent(TiC.EVENT_COMPLETE, null);
+		if (proxy != null) {
+			proxy.fireEvent(TiC.EVENT_COMPLETE, null);
+		}
 	}
 
 	protected void onViewCreated()
