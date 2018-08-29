@@ -522,6 +522,7 @@ public class TiUIMapView extends TiUIFragment
 				if (mClusterManager != null) {
 					mClusterManager.addItem((TiMarker)tiMarker);
 				}
+				mClusterManager.cluster();
 			}
 			annotation.setTiMarker(tiMarker);
 			timarkers.add(tiMarker);
@@ -552,14 +553,17 @@ public class TiUIMapView extends TiUIFragment
 		// clear normal markers
 		for (int i = 0; i < timarkers.size(); i++) {
 			TiMarker timarker = timarkers.get(i);
-			timarker.getMarker().remove();
-			timarker.release();
+			if (timarker.getMarker() != null) {
+				timarker.getMarker().remove();
+				timarker.release();
+			}
 		}
 		timarkers.clear();
 
 		// clear cluster markers
 		if (mClusterManager != null) {
 			mClusterManager.clearItems();
+			mClusterManager.cluster();
 		}
 	}
 
@@ -585,10 +589,16 @@ public class TiUIMapView extends TiUIFragment
 		} else if (annotation instanceof String) {
 			timarker = findMarkerByTitle((String) annotation);
 		}
-		if (timarker != null) {
+		if (timarker != null && timarkers.contains(timarker)) {
+			if (mClusterManager != null) {
+				mClusterManager.removeItem(timarker);
+				mClusterManager.cluster();
+			}
+			if (timarker.getMarker() != null) {
+				timarker.getMarker().remove();
+				timarker.release();
+			}
 			timarkers.remove(timarker);
-			timarker.getMarker().remove();
-			timarker.release();
 		}
 	}
 
