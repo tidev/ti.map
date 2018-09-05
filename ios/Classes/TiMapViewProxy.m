@@ -385,8 +385,10 @@
         YES);
 
     for (id object in currentAnnotations) {
-      TiMapAnnotationProxy *annProxy = [self annotationFromArg:object];
-      [self forgetProxy:annProxy];
+      if (![object isKindOfClass:[MKClusterAnnotation class]]) {
+        TiMapAnnotationProxy *annProxy = [self annotationFromArg:object];
+        [self forgetProxy:annProxy];
+      }
     }
     [currentAnnotations release];
     TiThreadPerformOnMainThread(^{
