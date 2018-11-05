@@ -22,6 +22,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		194D001C2047DB4A002150BD /* TiMapImageOverlayProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 194D001A2047DB4A002150BD /* TiMapImageOverlayProxy.h */; };
+		194D001D2047DB4A002150BD /* TiMapImageOverlayProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 194D001B2047DB4A002150BD /* TiMapImageOverlayProxy.m */; };
+		194D00202047DDED002150BD /* TiMapImageOverlayRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 194D001E2047DDED002150BD /* TiMapImageOverlayRenderer.h */; };
+		194D00212047DDED002150BD /* TiMapImageOverlayRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 194D001F2047DDED002150BD /* TiMapImageOverlayRenderer.m */; };
 		24DD6CF91134B3F500162E58 /* TiMapModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* TiMapModule.h */; };
 		24DD6CFA1134B3F500162E58 /* TiMapModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* TiMapModule.m */; };
 		24DE9E1111C5FE74003F90F6 /* TiMapModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* TiMapModuleAssets.h */; };
@@ -73,6 +77,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		194D001A2047DB4A002150BD /* TiMapImageOverlayProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapImageOverlayProxy.h; path = Classes/TiMapImageOverlayProxy.h; sourceTree = SOURCE_ROOT; };
+		194D001B2047DB4A002150BD /* TiMapImageOverlayProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TiMapImageOverlayProxy.m; path = Classes/TiMapImageOverlayProxy.m; sourceTree = SOURCE_ROOT; };
+		194D001E2047DDED002150BD /* TiMapImageOverlayRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapImageOverlayRenderer.h; path = Classes/TiMapImageOverlayRenderer.h; sourceTree = SOURCE_ROOT; };
+		194D001F2047DDED002150BD /* TiMapImageOverlayRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TiMapImageOverlayRenderer.m; path = Classes/TiMapImageOverlayRenderer.m; sourceTree = SOURCE_ROOT; };
 		24DD6CF71134B3F500162E58 /* TiMapModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapModule.h; path = Classes/TiMapModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* TiMapModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapModule.m; path = Classes/TiMapModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
@@ -177,6 +185,17 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		194D00192047DABE002150BD /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				194D001A2047DB4A002150BD /* TiMapImageOverlayProxy.h */,
+				194D001B2047DB4A002150BD /* TiMapImageOverlayProxy.m */,
+				194D001E2047DDED002150BD /* TiMapImageOverlayRenderer.h */,
+				194D001F2047DDED002150BD /* TiMapImageOverlayRenderer.m */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,6 +252,7 @@
 		DB07496E1E081A79009D8A71 /* Overlays */ = {
 			isa = PBXGroup;
 			children = (
+				194D00192047DABE002150BD /* Image */,
 				DB07496D1E081A6A009D8A71 /* Circle */,
 				DB0CCA022010841A00597F24 /* Pattern */,
 				DB07496B1E081A36009D8A71 /* Polygon */,
@@ -309,6 +329,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				194D001C2047DB4A002150BD /* TiMapImageOverlayProxy.h in Headers */,
 				AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */,
 				CE92EC2217DF8B020082E943 /* TiMKOverlayPathUniversal.h in Headers */,
 				24DD6CF91134B3F500162E58 /* TiMapModule.h in Headers */,
@@ -324,6 +345,7 @@
 				CED651CA17D7AA21007C2954 /* TiMapImageAnnotationView.h in Headers */,
 				CED651CC17D7AA21007C2954 /* TiMapPinAnnotationView.h in Headers */,
 				CED651CE17D7AA21007C2954 /* TiMapView.h in Headers */,
+				194D00202047DDED002150BD /* TiMapImageOverlayRenderer.h in Headers */,
 				CED651D017D7AA21007C2954 /* TiMapViewProxy.h in Headers */,
 				DB0CCA062010843000597F24 /* TiMapOverlayPattern.h in Headers */,
 				27A609E619F54FC300CA150A /* TiMapPolygonProxy.h in Headers */,
@@ -400,7 +422,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				194D00212047DDED002150BD /* TiMapImageOverlayRenderer.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* TiMapModule.m in Sources */,
+				194D001D2047DB4A002150BD /* TiMapImageOverlayProxy.m in Sources */,
 				27A609F019F711B700CA150A /* TiMapPolylineProxy.m in Sources */,
 				24DE9E1211C5FE74003F90F6 /* TiMapModuleAssets.m in Sources */,
 				CED651C717D7AA21007C2954 /* TiMapAnnotationProxy.m in Sources */,

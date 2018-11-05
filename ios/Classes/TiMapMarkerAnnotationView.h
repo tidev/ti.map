@@ -6,17 +6,16 @@
  */
 #if IS_IOS_11
 #import "TiBase.h"
-#import <MapKit/MapKit.h>
 #import "TiMapView.h"
+#import <MapKit/MapKit.h>
 
-@interface TiMapMarkerAnnotationView : MKMarkerAnnotationView<TiMapAnnotation>
-{
-@private
-    NSString *lastHitName;
+@interface TiMapMarkerAnnotationView : MKMarkerAnnotationView <TiMapAnnotation> {
+  @private
+  NSString *lastHitName;
 }
 
--(id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map;
--(NSString *)lastHitName;
+- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map;
+- (NSString *)lastHitName;
 
 @end
 #endif

@@ -7,29 +7,37 @@
 
 package ti.map;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.clustering.ClusterItem;
 
-public class TiMarker {
+public class TiMarker implements ClusterItem
+{
 	private Marker marker;
-	private AnnotationProxy proxy;
-	
-	public TiMarker(Marker m, AnnotationProxy p) {
+	protected AnnotationProxy proxy;
+
+	public TiMarker(Marker m, AnnotationProxy p)
+	{
 		marker = m;
 		proxy = p;
 	}
-	
-	public void setMarker(Marker m) {
+
+	public void setMarker(Marker m)
+	{
 		marker = m;
 	}
-	public Marker getMarker() {
+	public Marker getMarker()
+	{
 		return marker;
 	}
-	
-	public AnnotationProxy getProxy() {
+
+	public AnnotationProxy getProxy()
+	{
 		return proxy;
 	}
 
-	public void release() {
+	public void release()
+	{
 		if (marker != null) {
 			marker.remove();
 			marker = null;
@@ -38,5 +46,20 @@ public class TiMarker {
 			proxy.release();
 			proxy = null;
 		}
+	}
+
+	@Override
+	public LatLng getPosition() {
+		return proxy.getMarkerOptions().getPosition();
+	}
+
+	@Override
+	public String getTitle() {
+		return proxy.getTitle();
+	}
+
+	@Override
+	public String getSnippet() {
+		return proxy.getSubtitle();
 	}
 }
