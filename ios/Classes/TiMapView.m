@@ -844,6 +844,14 @@
       YES);
 }
 
+- (void)setLayoutMargins_:(id)value
+{    
+  TiThreadPerformOnMainThread(^{
+    [self map].layoutMargins = [TiUtils contentInsets:value];
+  },
+      YES);
+}
+
 - (void)animateCamera:(id)args
 {
   enum Args {
