@@ -53,6 +53,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
 	private static final int MSG_SET_PADDING = MSG_FIRST_ID + 514;
 	private static final int MSG_ZOOM = MSG_FIRST_ID + 515;
+	private static final int MSG_SHOW_ANNOTATIONS = MSG_FIRST_ID + 516;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -304,6 +305,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 				return true;
 			}
 
+			case MSG_SHOW_ANNOTATIONS: {
+				result = ((AsyncResult) msg.obj);
+				handleShowAnnotations((Object[]) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -401,6 +409,30 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).snapshot();
+		}
+	}
+
+	@Kroll.method
+	public void showAnnotations(Object[] annotations) {
+		if (TiApplication.isUIThread()) {
+			handleShowAnnotations(annotations);
+		} else {
+			getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS).sendToTarget();
+		}
+	}
+
+	private void handleShowAnnotations(Object[] annotations) {
+		for (int i = 0; i < annotations.length; i++) {
+			Object annotation = annotations[i];
+			if (!(annotation instanceof AnnotationProxy)) {
+				Log.e(TAG, "Supplied annotation is no real annotation");
+				return;
+			}
+		}
+
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		if (mapView.getMap() != null) {
+			mapView.showAnnotations(annotations);
 		}
 	}
 

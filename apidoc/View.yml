@@ -189,15 +189,16 @@ methods:
   - name: showAnnotations
     summary: |
         Sets the visible region so that the map displays the specified annotations. If no array is passed
-        annotations on the map will be shown.
+        annotations on the map will be shown. The default padding of 20px is applied and can be changed by
+        using the <Modules.Map.View.padding> property.
     parameters:
       - name: annotations
         summary: |
             An array of <Modules.Map.Annotation> to display.
         type: Array<Modules.Map.Annotation>
         optional: true
-    since: "3.2.0"
-    platforms: [iphone, ipad]
+    since: { android: "8.0.0", iphone: "3.2.0", ipad: "3.2.0" }
+    platforms: [iphone, ipad, android]
 
   - name: addPolygon
     summary: Adds a new polygon to the map.

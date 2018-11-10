@@ -408,6 +408,31 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
+	protected void showAnnotations(Object[] annotations) {
+		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
+
+		// Use supplied annotations first. If none available, select all (parity with iOS)
+		if (annotations != null) {
+			for (int i = 0; i < annotations.length; i++) {
+				markers.add(((AnnotationProxy) annotations[i]).getTiMarker());
+			}
+		} else {
+			markers = timarkers;
+		}
+
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+		for (TiMarker marker : markers) {
+			builder.include(marker.getPosition());
+		}
+
+		LatLngBounds bounds = builder.build();
+
+		int padding = 20;
+		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+		map.animateCamera(cu);
+	}
+
 	protected void setZoomControlsEnabled(boolean enabled)
 	{
 		if (map != null) {
