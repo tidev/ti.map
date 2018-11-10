@@ -837,16 +837,6 @@
 - (void)setPadding_:(id)value
 {
   TiThreadPerformOnMainThread(^{
-    [[self map] setVisibleMapRect:self.map.visibleMapRect
-                      edgePadding:[TiUtils contentInsets:value]
-                         animated:[TiUtils boolValue:@"animated" properties:value]];
-  },
-      YES);
-}
-
-- (void)setLayoutMargins_:(id)value
-{    
-  TiThreadPerformOnMainThread(^{
     [self map].layoutMargins = [TiUtils contentInsets:value];
   },
       YES);
