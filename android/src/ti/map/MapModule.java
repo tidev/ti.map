@@ -40,6 +40,8 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_SHOW_INFO_WINDOW = "showInfoWindow";
 	public static final String PROPERTY_USER_LOCATION_BUTTON = "userLocationButton";
 	public static final String PROPERTY_COMPASS_ENABLED = "compassEnabled";
+	public static final String PROPERTY_SCROLL_ENABLED = "scrollEnabled";
+	public static final String PROPERTY_ZOOM_ENABLED = "zoomEnabled";
 	public static final String PROPERTY_MAP_TOOLBAR_ENABLED = "mapToolbarEnabled";
 	public static final String PROPERTY_PADDING = "padding";
 	public static final String PROPERTY_TILT = "tilt";

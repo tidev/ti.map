@@ -30,7 +30,8 @@ proxy(creatableInModule = MapModule.class,
 	  propertyAccessors = { TiC.PROPERTY_USER_LOCATION, MapModule.PROPERTY_USER_LOCATION_BUTTON, TiC.PROPERTY_MAP_TYPE,
 							TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS, TiC.PROPERTY_ANIMATE,
 							MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS,
-							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_POLYLINES })
+							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED, MapModule.PROPERTY_ZOOM_ENABLED,
+							MapModule.PROPERTY_POLYLINES })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 {
 	private static final String TAG = "MapViewProxy";
@@ -83,6 +84,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_SCROLL_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_ZOOM_ENABLED, true);
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();

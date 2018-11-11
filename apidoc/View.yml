@@ -749,8 +749,8 @@ properties:
         When this property is set to `true` the a map view can be panned or scrolled by dragging the map view.
     type: Boolean
     default: true
-    since: "7.2.0"
-    platforms: [iphone, ipad]
+    since: { android: "8.0.0", iphone: "7.2.0", ipad: "7.2.0" }
+    platforms: [iphone, ipad, android]
 
   - name: showsBuildings
     summary: A Boolean indicating whether the map displays extruded building information.
@@ -825,8 +825,8 @@ properties:
         out can also be accomplished by two-finger tapping the map view.
     type: Boolean
     default: true
-    since: "7.2.0"
-    platforms: [iphone, ipad]
+    since: { android: "8.0.0", iphone: "7.2.0", ipad: "7.2.0" }
+    platforms: [iphone, ipad, android]
     
 ---
 name: MapViewPadding

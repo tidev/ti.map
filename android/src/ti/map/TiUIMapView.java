@@ -277,6 +277,12 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(MapModule.PROPERTY_COMPASS_ENABLED)) {
 			setCompassEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_COMPASS_ENABLED, true));
 		}
+		if (d.containsKey(MapModule.PROPERTY_SCROLL_ENABLED)) {
+			setScrollEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_SCROLL_ENABLED, true));
+		}
+		if (d.containsKey(MapModule.PROPERTY_ZOOM_ENABLED)) {
+			setZoomEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_ZOOM_ENABLED, true));
+		}
 		if (d.containsKey(TiC.PROPERTY_STYLE)) {
 			setStyle(d.getString(TiC.PROPERTY_STYLE));
 		}
@@ -308,6 +314,10 @@ public class TiUIMapView extends TiUIFragment
 			updateAnnotations((Object[]) newValue);
 		} else if (key.equals(MapModule.PROPERTY_COMPASS_ENABLED)) {
 			setCompassEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(MapModule.PROPERTY_SCROLL_ENABLED)) {
+			setScrollEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(MapModule.PROPERTY_ZOOM_ENABLED)) {
+			setZoomEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_STYLE)) {
@@ -437,6 +447,20 @@ public class TiUIMapView extends TiUIFragment
 	{
 		if (map != null) {
 			map.getUiSettings().setZoomControlsEnabled(enabled);
+		}
+	}
+
+	protected void setScrollEnabled(boolean enabled)
+	{
+		if (map != null) {
+			map.getUiSettings().setScrollGesturesEnabled(enabled);
+		}
+	}
+
+	protected void setZoomEnabled(boolean enabled)
+	{
+		if (map != null) {
+			map.getUiSettings().setZoomGesturesEnabled(enabled);
 		}
 	}
 
