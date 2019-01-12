@@ -29,7 +29,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 				 {
 
 					 MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
-					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS, PolygonProxy.PROPERTY_HOLES,
+					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS,
 					 TiC.PROPERTY_TOUCH_ENABLED
 
 				 })
