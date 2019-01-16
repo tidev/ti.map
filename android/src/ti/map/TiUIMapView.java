@@ -8,6 +8,9 @@
 package ti.map;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONTokener;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -344,8 +347,15 @@ public class TiUIMapView extends TiUIFragment
 			try {
 				// Handle .json files
 				if (style.endsWith(".json")) {
-					JSONObject jsonStyle = new JSONObject(loadJSONFromAsset(style));
-					style = jsonStyle.toString();
+					Object json = new JSONTokener(loadJSONFromAsset(style)).nextValue();
+
+					if (json instanceof JSONObject) {
+						style = ((JSONObject)json).toString();
+					} else if (json instanceof JSONArray) {
+						style = ((JSONArray)json).toString();
+					} else {
+						Log.e(TAG, "Invalid JSON style.");
+					}
 				}
 
 				// Handle raw JSON
