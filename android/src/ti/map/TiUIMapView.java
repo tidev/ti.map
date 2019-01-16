@@ -7,6 +7,11 @@
 
 package ti.map;
 
+import org.json.JSONObject;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +24,7 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.io.TiFileFactory;
 
 import ti.map.Shape.Boundary;
 import ti.map.Shape.IShape;
@@ -334,14 +340,24 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void setStyle(String style)
 	{
-		if (map != null && style != null && style != "") {
+		if (map != null && style != null) {
 			try {
+				// Handle .json files
+				if (style.endsWith(".json")) {
+					JSONObject jsonStyle = new JSONObject(loadJSONFromAsset(style));
+					style = jsonStyle.toString();
+				}
+
+				// Handle raw JSON
 				boolean success = map.setMapStyle(new MapStyleOptions(style));
+
 				if (!success) {
-					Log.e("MapsActivityRaw", "Style parsing failed.");
+					Log.e(TAG, "Style parsing failed.");
 				}
 			} catch (Resources.NotFoundException e) {
-				Log.e("MapsActivityRaw", "Can't find style.", e);
+				Log.e(TAG, "Cannot find JSON style", e);
+			} catch (JSONException e) {
+				Log.e(TAG, "Cannot parse JSON", e);
 			}
 		}
 	}
@@ -959,6 +975,25 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
+	private String loadJSONFromAsset(String filename)
+	{
+		String json = null;
+
+		try {
+			String url = proxy.resolveUrl(null, filename);
+			InputStream inStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
+			byte[] buffer = new byte[inStream.available()];
+			inStream.read(buffer);
+			inStream.close();
+			json = new String(buffer, "UTF-8");
+		} catch (IOException ex) {
+			Log.e(TAG, "Error opening file: " + ex.getMessage());
+			return "";
+		}
+
+		return json;
+	}
+
 	@Override
 	public boolean onMarkerClick(Marker marker)
 	{
@@ -1230,7 +1265,10 @@ public class TiUIMapView extends TiUIFragment
 			proxy.setProperty(TiC.PROPERTY_REGION, d);
 			proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
 		}
-		mClusterManager.onCameraIdle();
+
+		if (mClusterManager != null) {
+			mClusterManager.onCameraIdle();
+		}
 	}
 
 	// Intercept the touch event to find out the correct clicksource if clicking
