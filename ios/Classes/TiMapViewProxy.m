@@ -853,6 +853,14 @@
       NO);
 }
 
+- (void)showAllAnnotations:(id)unused
+{
+  TiThreadPerformOnMainThread(^{
+    [(TiMapView *)[self view] showAllAnnotations:unused];
+  },
+                              NO);
+}
+
 - (void)showAnnotations:(id)args
 {
   TiThreadPerformOnMainThread(^{

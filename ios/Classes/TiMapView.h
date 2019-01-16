@@ -62,6 +62,7 @@
 
 - (void)animateCamera:(id)args;
 - (void)showAnnotations:(id)args;
+- (void)showAllAnnotations:(id)value;
 - (void)addAnnotation:(id)args;
 - (void)addAnnotations:(id)args;
 - (void)setAnnotations_:(id)value;
