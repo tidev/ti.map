@@ -83,7 +83,7 @@ public class PolygonProxy extends KrollProxy implements IShape
 			}
 			case MSG_SET_STROKE_WIDTH: {
 				result = (AsyncResult) msg.obj;
-				polygon.setStrokeWidth((Float) result.getArg());
+				polygon.setStrokeWidth((float) result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -95,7 +95,7 @@ public class PolygonProxy extends KrollProxy implements IShape
 			}
 			case MSG_SET_ZINDEX: {
 				result = (AsyncResult) msg.obj;
-				polygon.setZIndex((Float) result.getArg());
+				polygon.setZIndex((float) result.getArg());
 				result.setResult(null);
 				return true;
 			}

@@ -450,7 +450,10 @@ public class TiUIMapView extends TiUIFragment
 		// Use supplied annotations first. If none available, select all (parity with iOS)
 		if (annotations != null) {
 			for (int i = 0; i < annotations.length; i++) {
-				markers.add(((AnnotationProxy) annotations[i]).getTiMarker());
+				Object annotation = annotations[i];
+				if (annotation instanceof AnnotationProxy) {
+					markers.add(((AnnotationProxy) annotation).getTiMarker());
+				}
 			}
 		} else {
 			markers = timarkers;

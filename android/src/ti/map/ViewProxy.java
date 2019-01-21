@@ -416,7 +416,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void showAnnotations(Object[] annotations) {
+	public void showAnnotations(Object annotations) {
 		if (TiApplication.isUIThread()) {
 			handleShowAnnotations(annotations);
 		} else {
@@ -424,18 +424,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	private void handleShowAnnotations(Object[] annotations) {
-		for (int i = 0; i < annotations.length; i++) {
-			Object annotation = annotations[i];
-			if (!(annotation instanceof AnnotationProxy)) {
-				Log.e(TAG, "Supplied annotation is no real annotation");
-				return;
-			}
+	private void handleShowAnnotations(Object annotations) {
+		if (!(annotations instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
+			return;
 		}
+		Object[] annos = (Object[]) annotations;
 
 		TiUIMapView mapView = (TiUIMapView) peekView();
 		if (mapView.getMap() != null) {
-			mapView.showAnnotations(annotations);
+			mapView.showAnnotations(annos);
 		}
 	}
 
