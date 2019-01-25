@@ -14,7 +14,7 @@ The `Map` variable is a reference to the Module object.
 
 ## Getting Started
 
-View the [Using Titanium Modules](http://docs.appcelerator.com/titanium/latest/#!/guide/Using_Titanium_Modules) document for instructions on getting
+View the [Using Titanium Modules](http://docs.appcelerator.com/platform/latest/#!/guide/Using_Titanium_Modules) document for instructions on getting
 started with using this module in your application.
 
 ## Requirements
@@ -28,7 +28,7 @@ Applications using this module must be built using Xcode 5 or later.
 See documentation
 
 ## Documentation
-* [Map Module API Reference Documentation](http://docs.appcelerator.com/titanium/latest/#!/api/Modules.Map)
+* [Map Module API Reference Documentation](http://docs.appcelerator.com/platform/latest/#!/api/Modules.Map)
 
 ## Author
 
