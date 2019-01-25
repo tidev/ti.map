@@ -87,6 +87,7 @@ public class TiUIMapView extends TiUIFragment
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
 		currentImageOverlays = new ArrayList<ImageOverlayProxy>();
+		proxy.setProperty(MapModule.PROPERTY_INDOOR_ENABLED, true);
 	}
 
 	/**
@@ -280,6 +281,9 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(TiC.PROPERTY_STYLE)) {
 			setStyle(d.getString(TiC.PROPERTY_STYLE));
 		}
+		if (d.containsKey(MapModule.PROPERTY_INDOOR_ENABLED)) {
+			setIndoorEnabled(d.getBoolean(MapModule.PROPERTY_INDOOR_ENABLED));
+		}
 	}
 
 	@Override
@@ -312,6 +316,8 @@ public class TiUIMapView extends TiUIFragment
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_STYLE)) {
 			setStyle(TiConvert.toString(newValue, ""));
+		} else if (key.equals(MapModule.PROPERTY_INDOOR_ENABLED)) {
+			setIndoorEnabled(TiConvert.toBoolean(newValue, true));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -354,6 +360,13 @@ public class TiUIMapView extends TiUIFragment
 	{
 		if (map != null) {
 			map.getUiSettings().setCompassEnabled(enabled);
+		}
+	}
+
+	protected void setIndoorEnabled(boolean enabled)
+	{
+		if (map != null) {
+			map.setIndoorEnabled(enabled);
 		}
 	}
 
