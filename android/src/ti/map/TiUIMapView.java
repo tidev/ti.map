@@ -521,8 +521,8 @@ public class TiUIMapView extends TiUIFragment
 				tiMarker = new TiMarker(null, annotation);	
 				if (mClusterManager != null) {
 					mClusterManager.addItem((TiMarker)tiMarker);
+					mClusterManager.cluster();
 				}
-				mClusterManager.cluster();
 			}
 			annotation.setTiMarker(tiMarker);
 			timarkers.add(tiMarker);
@@ -555,8 +555,8 @@ public class TiUIMapView extends TiUIFragment
 			TiMarker timarker = timarkers.get(i);
 			if (timarker.getMarker() != null) {
 				timarker.getMarker().remove();
-				timarker.release();
 			}
+			timarker.release();
 		}
 		timarkers.clear();
 
@@ -596,8 +596,8 @@ public class TiUIMapView extends TiUIFragment
 			}
 			if (timarker.getMarker() != null) {
 				timarker.getMarker().remove();
-				timarker.release();
 			}
+			timarker.release();
 			timarkers.remove(timarker);
 		}
 	}
