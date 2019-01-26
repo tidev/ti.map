@@ -843,6 +843,17 @@ properties:
     since: "7.2.0"
     platforms: [iphone, ipad]
 
+  - name: indoorEnabled
+    summary: A Boolean value indicating whether the indoor mapping is enabled.
+    description: |
+        This property is used to enabled/disable the indoor mapping feature of Google Maps.
+        Changing the value after the MapView is drawn can cause flickering. 
+        You can read more at:
+        [Google Indoor Maps](https://www.google.com/maps/about/partners/indoormaps/)
+    type: Boolean
+    default: true
+    since: "7.5.0"
+    platforms: [android]
 ---
 name: MapViewPadding
 summary: The padding applied to the map view using <Modules.Map.View.padding>.
