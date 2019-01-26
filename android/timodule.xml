@@ -2,7 +2,9 @@
 <ti:module xmlns:ti="http://ti.appcelerator.org" xmlns:android="http://schemas.android.com/apk/res/android">
   <android>
     <manifest>
-      <uses-library android:name="org.apache.http.legacy" android:required="false" />
+      <application>
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+      </application>
       <uses-feature android:glEsVersion="0x00020000" android:required="true" />
       <uses-permission android:name="${tiapp.properties['id']}.permission.MAPS_RECEIVE" />
       <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
