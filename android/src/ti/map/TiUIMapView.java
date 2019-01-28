@@ -68,7 +68,7 @@ public class TiUIMapView extends TiUIFragment
 	implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener,
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
-			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener,
+			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
 			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
 {
 
@@ -96,6 +96,7 @@ public class TiUIMapView extends TiUIFragment
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
 		currentImageOverlays = new ArrayList<ImageOverlayProxy>();
+		proxy.setProperty(MapModule.PROPERTY_INDOOR_ENABLED, true);
 	}
 
 	/**
@@ -201,7 +202,8 @@ public class TiUIMapView extends TiUIFragment
 		mMarkerManager.newCollection(DEFAULT_COLLECTION_ID);
 		mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).setOnMarkerClickListener(this);
 
-		mClusterManager = new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
+		mClusterManager =
+			new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
 		mClusterManager.setRenderer(
 			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager));
 		processMapProperties(proxy.getProperties());
@@ -220,6 +222,7 @@ public class TiUIMapView extends TiUIFragment
 		map.setInfoWindowAdapter(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
+		map.setOnMyLocationChangeListener(this);
 		mClusterManager.setOnClusterClickListener(this);
 		mClusterManager.setOnClusterItemClickListener(this);
 
@@ -295,6 +298,9 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(TiC.PROPERTY_STYLE)) {
 			setStyle(d.getString(TiC.PROPERTY_STYLE));
 		}
+		if (d.containsKey(MapModule.PROPERTY_INDOOR_ENABLED)) {
+			setIndoorEnabled(d.getBoolean(MapModule.PROPERTY_INDOOR_ENABLED));
+		}
 	}
 
 	@Override
@@ -331,6 +337,8 @@ public class TiUIMapView extends TiUIFragment
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_STYLE)) {
 			setStyle(TiConvert.toString(newValue, ""));
+		} else if (key.equals(MapModule.PROPERTY_INDOOR_ENABLED)) {
+			setIndoorEnabled(TiConvert.toBoolean(newValue, true));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -390,6 +398,13 @@ public class TiUIMapView extends TiUIFragment
 	{
 		if (map != null) {
 			map.getUiSettings().setCompassEnabled(enabled);
+		}
+	}
+
+	protected void setIndoorEnabled(boolean enabled)
+	{
+		if (map != null) {
+			map.setIndoorEnabled(enabled);
 		}
 	}
 
@@ -590,15 +605,17 @@ public class TiUIMapView extends TiUIFragment
 		if (map != null) {
 			annotation.processOptions();
 			if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
-				Marker marker = mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
-				tiMarker = new TiMarker(marker, annotation);	
+				Marker marker =
+					mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
+				tiMarker = new TiMarker(marker, annotation);
 			} else {
 				// TiClusterRenderer is responsible for creating the Marker in this case.
 				// It is assigned to the TiMarker instance after it has been rendered in
 				// onClusterItemRendered callback.
-				tiMarker = new TiMarker(null, annotation);	
+				tiMarker = new TiMarker(null, annotation);
 				if (mClusterManager != null) {
-					mClusterManager.addItem((TiMarker)tiMarker);
+					mClusterManager.addItem((TiMarker) tiMarker);
+					mClusterManager.cluster();
 				}
 			}
 			annotation.setTiMarker(tiMarker);
@@ -630,7 +647,9 @@ public class TiUIMapView extends TiUIFragment
 		// clear normal markers
 		for (int i = 0; i < timarkers.size(); i++) {
 			TiMarker timarker = timarkers.get(i);
-			timarker.getMarker().remove();
+			if (timarker.getMarker() != null) {
+				timarker.getMarker().remove();
+			}
 			timarker.release();
 		}
 		timarkers.clear();
@@ -638,6 +657,7 @@ public class TiUIMapView extends TiUIFragment
 		// clear cluster markers
 		if (mClusterManager != null) {
 			mClusterManager.clearItems();
+			mClusterManager.cluster();
 		}
 	}
 
@@ -663,13 +683,16 @@ public class TiUIMapView extends TiUIFragment
 		} else if (annotation instanceof String) {
 			timarker = findMarkerByTitle((String) annotation);
 		}
-		if (timarker != null) {
-			timarkers.remove(timarker);
-			timarker.release();
-
+		if (timarker != null && timarkers.contains(timarker)) {
+			if (mClusterManager != null) {
+				mClusterManager.removeItem(timarker);
+				mClusterManager.cluster();
+			}
 			if (timarker.getMarker() != null) {
 				timarker.getMarker().remove();
 			}
+			timarker.release();
+			timarkers.remove(timarker);
 		}
 	}
 
@@ -1196,6 +1219,15 @@ public class TiUIMapView extends TiUIFragment
 	}
 
 	@Override
+	public void onMyLocationChange(Location arg0)
+	{
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
+		d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
+		proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+	}
+
+	@Override
 	public View getInfoContents(Marker marker)
 	{
 		AnnotationProxy annoProxy = getProxyByMarker(marker);
@@ -1281,7 +1313,6 @@ public class TiUIMapView extends TiUIFragment
 			proxy.setProperty(TiC.PROPERTY_REGION, d);
 			proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
 		}
-
 		if (mClusterManager != null) {
 			mClusterManager.onCameraIdle();
 		}
@@ -1358,7 +1389,8 @@ public class TiUIMapView extends TiUIFragment
 	}
 
 	@Override
-	public boolean onClusterItemClick(TiMarker tiMarker) {
+	public boolean onClusterItemClick(TiMarker tiMarker)
+	{
 		return onMarkerClick(tiMarker.getMarker());
 	}
 }

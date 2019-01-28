@@ -43,7 +43,7 @@ public class TiMarker implements ClusterItem
 			marker = null;
 		}
 		if (proxy != null) {
-			proxy.release();
+			proxy.releaseMarker();
 			proxy = null;
 		}
 	}
