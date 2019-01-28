@@ -193,7 +193,8 @@ public class TiUIMapView extends TiUIFragment
 		mMarkerManager.newCollection(DEFAULT_COLLECTION_ID);
 		mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).setOnMarkerClickListener(this);
 
-		mClusterManager = new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
+		mClusterManager =
+			new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
 		mClusterManager.setRenderer(
 			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager));
 		processMapProperties(proxy.getProperties());
@@ -525,15 +526,16 @@ public class TiUIMapView extends TiUIFragment
 		if (map != null) {
 			annotation.processOptions();
 			if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
-				Marker marker = mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
-				tiMarker = new TiMarker(marker, annotation);	
+				Marker marker =
+					mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
+				tiMarker = new TiMarker(marker, annotation);
 			} else {
 				// TiClusterRenderer is responsible for creating the Marker in this case.
 				// It is assigned to the TiMarker instance after it has been rendered in
 				// onClusterItemRendered callback.
-				tiMarker = new TiMarker(null, annotation);	
+				tiMarker = new TiMarker(null, annotation);
 				if (mClusterManager != null) {
-					mClusterManager.addItem((TiMarker)tiMarker);
+					mClusterManager.addItem((TiMarker) tiMarker);
 					mClusterManager.cluster();
 				}
 			}
@@ -1204,7 +1206,9 @@ public class TiUIMapView extends TiUIFragment
 			proxy.setProperty(TiC.PROPERTY_REGION, d);
 			proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
 		}
-		mClusterManager.onCameraIdle();
+		if (mClusterManager != null) {
+			mClusterManager.onCameraIdle();
+		}
 	}
 
 	// Intercept the touch event to find out the correct clicksource if clicking
@@ -1278,7 +1282,8 @@ public class TiUIMapView extends TiUIFragment
 	}
 
 	@Override
-	public boolean onClusterItemClick(TiMarker tiMarker) {
+	public boolean onClusterItemClick(TiMarker tiMarker)
+	{
 		return onMarkerClick(tiMarker.getMarker());
 	}
 }
