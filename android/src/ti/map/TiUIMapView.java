@@ -467,7 +467,7 @@ public class TiUIMapView extends TiUIFragment
 
 		LatLngBounds bounds = builder.build();
 
-		int padding = 20;
+		int padding = 30;
 		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 		map.animateCamera(cu);
 	}
@@ -665,8 +665,11 @@ public class TiUIMapView extends TiUIFragment
 		}
 		if (timarker != null) {
 			timarkers.remove(timarker);
-			timarker.getMarker().remove();
 			timarker.release();
+
+			if (timarker.getMarker() != null) {
+				timarker.getMarker().remove();
+			}
 		}
 	}
 
