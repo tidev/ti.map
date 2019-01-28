@@ -29,7 +29,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 				 {
 
 					 MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
-					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS, PolygonProxy.PROPERTY_HOLES,
+					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS,
 					 TiC.PROPERTY_TOUCH_ENABLED
 
 				 })
@@ -232,10 +232,16 @@ public class PolygonProxy extends KrollProxy implements IShape
 		return options;
 	}
 
-	@Kroll.method
+	@Kroll.setProperty
 	public void setHoles(Object[] holesList)
 	{
 		TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HOLES), holesList);
+	}
+
+	@Kroll.getProperty
+	public Object[] getHoles()
+	{
+		return (Object[])getProperty(PolygonProxy.PROPERTY_HOLES);
 	}
 
 	public void setPolygon(Polygon r)
@@ -253,10 +259,10 @@ public class PolygonProxy extends KrollProxy implements IShape
 		return clickable;
 	}
 
-	public List<? extends List<LatLng>> getHoles()
+	/*public List<? extends List<LatLng>> getHoles()
 	{
 		return polygon.getHoles();
-	}
+	}*/
 
 	@Override
 	public void onPropertyChanged(String name, Object value)

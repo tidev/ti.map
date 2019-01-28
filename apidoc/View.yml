@@ -148,7 +148,7 @@ methods:
             Dictionary specifying the location and the zoom level for the map.
         type: MapLocationTypeV2
     since: "3.1.0"
-        
+
   - name: zoom
     summary: Zooms in or out of the map.
     description: |
@@ -314,7 +314,7 @@ methods:
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
     description: |
-      This method should be called inside the `clusterstart` event. 
+      This method should be called inside the `clusterstart` event.
       See the example "Map Example With Marker Annotation and Clustering".
     parameters:
       - name: clusterAnnotationParam
@@ -399,10 +399,10 @@ events:
 
         Note that only one annotation can be selected at any given time.
 
-        The `click` event includes a value, `clicksource`, which describes the part of the annotation 
-        that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton` 
-        on iOS and `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android. 
-        If the user deselects an annotation by clicking on the pin, `clicksource` is `pin`. 
+        The `click` event includes a value, `clicksource`, which describes the part of the annotation
+        that was clicked. The `clicksource` can be one of `pin`, `infoWindow`, `leftButton` or `rightButton`
+        on iOS and `pin`, `title`, `subtitle`, `leftPane`, `rightPane`, `infoWindow` or `null` on Android.
+        If the user deselects an annotation by clicking on the pin, `clicksource` is `pin`.
         If the user deselects the annotation by clicking elsewhere in the map view, `clicksource` is `map`.
 
         For polygon, polyline or circle, The `click` event includes the following values.
@@ -427,8 +427,8 @@ events:
       - name: clicksource
         summary: |
             Source of the click event. Can be one of `pin`, `leftPane`, `rightPane`, `infoWindow` or `null`.
-            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`. On Android, this also applies 
-            for `title` and `subtitle`. 
+            If it's a shape, it can be one of `polygon`, `polyline`, or `circle`. On Android, this also applies
+            for `title` and `subtitle`.
         type: String
 
       - name: annotation
@@ -452,7 +452,7 @@ events:
     summary: |
         Fired when the user clicks on the map
     description: |
-        The `mapclick` event is fired when the user clicks on the map and returns the longitude/latitude of 
+        The `mapclick` event is fired when the user clicks on the map and returns the longitude/latitude of
         that position.
     properties:
       - name: map
@@ -502,10 +502,10 @@ events:
         since: "3.2.0"
         type: Boolean
         platforms: [android, iphone, ipad]
-        
+
       - name: reason
         summary: |
-            The reason for the camera change, either <Modules.Map.REASON_API_ANIMATION>, 
+            The reason for the camera change, either <Modules.Map.REASON_API_ANIMATION>,
             <Modules.Map.REASON_DEVELOPER_ANIMATION> or <Modules.Map.REASON_GESTURE>.
         since: "6.0.0"
         type: Number
@@ -566,6 +566,22 @@ events:
         summary: The map view instance.
         type: Modules.Map.View
 
+  - name: userLocation
+    summary: |
+        Fired when the user changes on the map.
+    description: |
+        When the user location is available or changes at the map it will fire the event.
+    since: { android: "7.3.0" }
+    properties:
+
+      - name: latitude
+        summary: latitude of the point on the ground that was pressed.
+        type: Number
+
+      - name: longitude
+        summary: longitude of the point on the ground that was pressed.
+        type: Number
+
 properties:
 
   - name: animate
@@ -588,7 +604,7 @@ properties:
   - name: mapType
     summary: |
         Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
-        <Modules.Map.TERRAIN_TYPE>, <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or 
+        <Modules.Map.TERRAIN_TYPE>, <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or
         <Modules.Map.SATELLITE_FLYOVER_TYPE>.
     type: Number
     default: NORMAL_TYPE
@@ -607,11 +623,11 @@ properties:
         A dictionary specifying the location and zoom level of the map.
     type: MapRegionTypev2
     default: latitude 0, longitude 0
-    
+
   - name: padding
     summary: Sets the distance between each edges of the view to the map controls.
     description: The map view controls may be obscured by other elements.
-    since: "7.2.0"
+    since: "7.4.0"
     type: MapViewPadding
 
   - name: userLocation
@@ -721,7 +737,7 @@ properties:
     platforms: [iphone, ipad]
 
   - name: pitchEnabled
-    summary: A Boolean value indicating whether the map camera's pitch information is used. 
+    summary: A Boolean value indicating whether the map camera's pitch information is used.
     description: |
         When this property is set to `true` and a valid camera is associated with the map,
         the camera's pitch angle is used to tilt the plane of the map. When this property
@@ -741,7 +757,7 @@ properties:
     type: Boolean
     since: "3.2.0"
     platforms: [iphone, ipad]
-    
+
   - name: scrollEnabled
     summary: A Boolean value indicating whether the map can be scrolled by dragging gesture.
     description: |
@@ -798,7 +814,7 @@ properties:
   - name: showsTraffic
     summary: A Boolean value indicating whether the map displays traffic information.
     description: |
-        The mapType property must be set to <Modules.Map.NORMAL_TYPE> or <Modules.Map.HYBRID_TYPE> for 
+        The mapType property must be set to <Modules.Map.NORMAL_TYPE> or <Modules.Map.HYBRID_TYPE> for
         traffic information to be shown.
     type: Boolean
     osver: { ios: {min: "9.0"} }
@@ -819,32 +835,40 @@ properties:
   - name: zoomEnabled
     summary: A Boolean value indicating whether the map can be zoomed by pinching or tapping.
     description: |
-        When this property is set to `true` the a map view can be zoomed by pinching inwards to zoom out 
-        and reverse to zoom in. Zooming in can also be accoplished by double-tapping the map view. Zooming 
+        When this property is set to `true` the a map view can be zoomed by pinching inwards to zoom out
+        and reverse to zoom in. Zooming in can also be accoplished by double-tapping the map view. Zooming
         out can also be accomplished by two-finger tapping the map view.
     type: Boolean
     default: true
     since: "7.2.0"
     platforms: [iphone, ipad]
-    
+
+  - name: indoorEnabled
+    summary: A Boolean value indicating whether the indoor mapping is enabled.
+    description: |
+        This property is used to enabled/disable the indoor mapping feature of Google Maps.
+        Changing the value after the MapView is drawn can cause flickering. 
+        You can read more at:
+        [Google Indoor Maps](https://www.google.com/maps/about/partners/indoormaps/)
+    type: Boolean
+    default: true
+    since: "7.5.0"
+    platforms: [android]
 ---
 name: MapViewPadding
 summary: The padding applied to the map view using <Modules.Map.View.padding>.
 properties:
-  - name: left
-    summary: Left padding of the map view.
-    type: Number
   - name: top
     summary: Top padding of the map view.
     type: Number
-  - name: right
-    summary: Right padding of the map view.
+  - name: left
+    summary: Left padding of the map view.
     type: Number
   - name: bottom
     summary: Bottom padding of the map view.
     type: Number
-  - name: animated
-    summary: Whether or not setting the padding should be animated (iOS only).
+  - name: right
+    summary: Right padding of the map view.
     type: Number
 
 ---
@@ -957,13 +981,13 @@ properties:
 
   - name: memberAnnotations
     summary: |
-      Array of Modules.Map.Annotation, which is recieved in event 'clusteringstarted' as 
+      Array of Modules.Map.Annotation, which is recieved in event 'clusteringstarted' as
       memberAnnotations.
     type: Array<Modules.Map.Annotation>
 
   - name: annotation
     summary: |
-      <Modules.Map.Annotation> instance, which you want to show as clustered annotation. There is no 
+      <Modules.Map.Annotation> instance, which you want to show as clustered annotation. There is no
       need to provide latitude and longitude as clustered annotation decides its location itself.
     type: Modules.Map.Annotation
 
