@@ -41,6 +41,8 @@
 - (void)removeAnnotation:(id)args;
 - (void)removeAnnotations:(id)args;
 - (void)removeAllAnnotations:(id)args;
+- (void)showAnnotations:(id)args;
+- (void)showAllAnnotations:(id)unused;
 - (void)selectAnnotation:(id)args;
 - (void)deselectAnnotation:(id)args;
 - (void)zoom:(id)args;

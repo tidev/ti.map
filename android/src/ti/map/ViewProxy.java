@@ -30,7 +30,8 @@ proxy(creatableInModule = MapModule.class,
 	  propertyAccessors = { TiC.PROPERTY_USER_LOCATION, MapModule.PROPERTY_USER_LOCATION_BUTTON, TiC.PROPERTY_MAP_TYPE,
 							TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS, TiC.PROPERTY_ANIMATE,
 							MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS,
-							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_POLYLINES })
+							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED, MapModule.PROPERTY_ZOOM_ENABLED,
+							MapModule.PROPERTY_POLYLINES })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 {
 	private static final String TAG = "MapViewProxy";
@@ -53,6 +54,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_SNAP_SHOT = MSG_FIRST_ID + 513;
 	private static final int MSG_SET_PADDING = MSG_FIRST_ID + 514;
 	private static final int MSG_ZOOM = MSG_FIRST_ID + 515;
+	private static final int MSG_SHOW_ANNOTATIONS = MSG_FIRST_ID + 516;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -82,6 +84,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_SCROLL_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_ZOOM_ENABLED, true);
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();
@@ -304,6 +308,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 				return true;
 			}
 
+			case MSG_SHOW_ANNOTATIONS: {
+				result = ((AsyncResult) msg.obj);
+				handleShowAnnotations((Object[]) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -401,6 +412,28 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).snapshot();
+		}
+	}
+
+	@Kroll.method
+	public void showAnnotations(Object annotations) {
+		if (TiApplication.isUIThread()) {
+			handleShowAnnotations(annotations);
+		} else {
+			getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS).sendToTarget();
+		}
+	}
+
+	private void handleShowAnnotations(Object annotations) {
+		if (!(annotations instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
+			return;
+		}
+		Object[] annos = (Object[]) annotations;
+
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		if (mapView.getMap() != null) {
+			mapView.showAnnotations(annos);
 		}
 	}
 

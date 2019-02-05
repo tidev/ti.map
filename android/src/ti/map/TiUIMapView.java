@@ -7,8 +7,17 @@
 
 package ti.map;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONTokener;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.ByteArrayOutputStream;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -19,6 +28,7 @@ import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.io.TiFileFactory;
 
 import ti.map.Shape.Boundary;
 import ti.map.Shape.IShape;
@@ -280,6 +290,12 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(MapModule.PROPERTY_COMPASS_ENABLED)) {
 			setCompassEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_COMPASS_ENABLED, true));
 		}
+		if (d.containsKey(MapModule.PROPERTY_SCROLL_ENABLED)) {
+			setScrollEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_SCROLL_ENABLED, true));
+		}
+		if (d.containsKey(MapModule.PROPERTY_ZOOM_ENABLED)) {
+			setZoomEnabled(TiConvert.toBoolean(d, MapModule.PROPERTY_ZOOM_ENABLED, true));
+		}
 		if (d.containsKey(TiC.PROPERTY_STYLE)) {
 			setStyle(d.getString(TiC.PROPERTY_STYLE));
 		}
@@ -314,6 +330,10 @@ public class TiUIMapView extends TiUIFragment
 			updateAnnotations((Object[]) newValue);
 		} else if (key.equals(MapModule.PROPERTY_COMPASS_ENABLED)) {
 			setCompassEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(MapModule.PROPERTY_SCROLL_ENABLED)) {
+			setScrollEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(MapModule.PROPERTY_ZOOM_ENABLED)) {
+			setZoomEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(newValue, true));
 		} else if (key.equals(TiC.PROPERTY_STYLE)) {
@@ -332,14 +352,31 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void setStyle(String style)
 	{
-		if (map != null && style != null && style != "") {
+		if (map != null && style != null && !style.isEmpty()) {
 			try {
+				// Handle .json files
+				if (style.endsWith(".json")) {
+					Object json = new JSONTokener(loadJSONFromAsset(style)).nextValue();
+
+					if (json instanceof JSONObject) {
+						style = ((JSONObject)json).toString();
+					} else if (json instanceof JSONArray) {
+						style = ((JSONArray)json).toString();
+					} else {
+						Log.e(TAG, "Invalid JSON style.");
+					}
+				}
+
+				// Handle raw JSON
 				boolean success = map.setMapStyle(new MapStyleOptions(style));
+
 				if (!success) {
-					Log.e("MapsActivityRaw", "Style parsing failed.");
+					Log.e(TAG, "Style parsing failed.");
 				}
 			} catch (Resources.NotFoundException e) {
-				Log.e("MapsActivityRaw", "Can't find style.", e);
+				Log.e(TAG, "Cannot find JSON style", e);
+			} catch (JSONException e) {
+				Log.e(TAG, "Cannot parse JSON", e);
 			}
 		}
 	}
@@ -423,10 +460,50 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
+	protected void showAnnotations(Object[] annotations) {
+		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
+
+		// Use supplied annotations first. If none available, select all (parity with iOS)
+		if (annotations != null) {
+			for (int i = 0; i < annotations.length; i++) {
+				Object annotation = annotations[i];
+				if (annotation instanceof AnnotationProxy) {
+					markers.add(((AnnotationProxy) annotation).getTiMarker());
+				}
+			}
+		} else {
+			markers = timarkers;
+		}
+
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		for (TiMarker marker : markers) {
+			builder.include(marker.getPosition());
+		}
+		LatLngBounds bounds = builder.build();
+
+		int padding = 30;
+		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+		map.animateCamera(cu);
+	}
+
 	protected void setZoomControlsEnabled(boolean enabled)
 	{
 		if (map != null) {
 			map.getUiSettings().setZoomControlsEnabled(enabled);
+		}
+	}
+
+	protected void setScrollEnabled(boolean enabled)
+	{
+		if (map != null) {
+			map.getUiSettings().setScrollGesturesEnabled(enabled);
+		}
+	}
+
+	protected void setZoomEnabled(boolean enabled)
+	{
+		if (map != null) {
+			map.getUiSettings().setZoomGesturesEnabled(enabled);
 		}
 	}
 
@@ -934,6 +1011,31 @@ public class TiUIMapView extends TiUIFragment
 		if (proxy != null) {
 			proxy.fireEvent(MapModule.EVENT_PIN_CHANGE_DRAG_STATE, d);
 		}
+	}
+
+	private String loadJSONFromAsset(String filename)
+	{
+		String json = null;
+
+		try {
+			String url = proxy.resolveUrl(null, filename);
+			InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
+			byte[] buffer = new byte[4096];
+			int length;
+
+			while ((length = inputStream.read(buffer)) != -1) {
+				result.write(buffer, 0, length);
+			}
+
+			json = result.toString("UTF-8");
+			inputStream.close();
+			result.close();
+		} catch (IOException ex) {
+			Log.e(TAG, "Error opening file: " + ex.getMessage());
+		}
+
+		return json;
 	}
 
 	@Override

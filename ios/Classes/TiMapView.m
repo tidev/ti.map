@@ -834,6 +834,18 @@
   }
 }
 
+- (void)showAllAnnotations:(id)value
+{
+  MKMapRect zoomRect = MKMapRectNull;
+  for (id <MKAnnotation> annotation in self.map.annotations)
+  {
+    MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
+    MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0.1, 0.1);
+    zoomRect = MKMapRectUnion(zoomRect, pointRect);
+  }
+  [self.map setVisibleMapRect:zoomRect animated:YES];
+}
+
 - (void)setPadding_:(id)value
 {
   TiThreadPerformOnMainThread(^{
