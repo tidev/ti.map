@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.ByteArrayOutputStream;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -351,7 +352,7 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void setStyle(String style)
 	{
-		if (map != null && style != null) {
+		if (map != null && style != null && !style.isEmpty()) {
 			try {
 				// Handle .json files
 				if (style.endsWith(".json")) {
@@ -475,11 +476,9 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
 		for (TiMarker marker : markers) {
 			builder.include(marker.getPosition());
 		}
-
 		LatLngBounds bounds = builder.build();
 
 		int padding = 30;
@@ -1020,14 +1019,20 @@ public class TiUIMapView extends TiUIFragment
 
 		try {
 			String url = proxy.resolveUrl(null, filename);
-			InputStream inStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
-			byte[] buffer = new byte[inStream.available()];
-			inStream.read(buffer);
-			inStream.close();
-			json = new String(buffer, "UTF-8");
+			InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
+			byte[] buffer = new byte[4096];
+			int length;
+
+			while ((length = inputStream.read(buffer)) != -1) {
+				result.write(buffer, 0, length);
+			}
+
+			json = result.toString("UTF-8");
+			inputStream.close();
+			result.close();
 		} catch (IOException ex) {
 			Log.e(TAG, "Error opening file: " + ex.getMessage());
-			return "";
 		}
 
 		return json;
