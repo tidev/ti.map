@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 public class MapModule extends KrollModule
 {
 	public static final String EVENT_MAP_CLICK = "mapclick";
+	public static final String EVENT_POI_CLICK = "poiclick";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	public static final String EVENT_REGION_WILL_CHANGE = "regionwillchange";
@@ -68,6 +69,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_CENTER = "center";
 	public static final String PROPERTY_RADIUS = "radius";
 	public static final String PROPERTY_INDOOR_ENABLED = "indoorEnabled";
+	public static final String PROPERTY_PLACE_ID = "placeID";
 
 	@Kroll.constant
 	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;

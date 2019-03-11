@@ -61,6 +61,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.Cluster;
@@ -70,7 +71,7 @@ public class TiUIMapView extends TiUIFragment
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
 			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
-			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
+			   GoogleMap.OnPoiClickListener, ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
 {
 
 	public static final String DEFAULT_COLLECTION_ID = "defaultCollection";
@@ -994,6 +995,20 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
+	public void firePOIClickEvent(PointOfInterest poi)
+	{
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, poi.latLng.latitude);
+		d.put(TiC.PROPERTY_LONGITUDE, poi.latLng.longitude);
+		d.put(TiC.PROPERTY_NAME, poi.name);
+		d.put(MapModule.PROPERTY_PLACE_ID, poi.placeId);
+		d.put(TiC.PROPERTY_TYPE, MapModule.EVENT_POI_CLICK);
+		d.put(TiC.PROPERTY_SOURCE, proxy);
+		if (proxy != null) {
+			proxy.fireEvent(MapModule.EVENT_POI_CLICK, d);
+		}
+	}
+
 	public void firePinChangeDragStateEvent(Marker marker, AnnotationProxy annoProxy, int dragState)
 	{
 		KrollDict d = new KrollDict();
@@ -1169,6 +1184,12 @@ public class TiUIMapView extends TiUIFragment
 		if (proxy != null) {
 			proxy.fireEvent(MapModule.EVENT_MAP_CLICK, d);
 		}
+	}
+
+	@Override
+	public void onPoiClick(PointOfInterest poi)
+	{
+		firePOIClickEvent(poi);
 	}
 
 	@Override
