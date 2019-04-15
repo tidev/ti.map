@@ -32,3 +32,8 @@ android/java-sources.txt
 nbproject
 /ios/metadata.json
 /ios/dist
+/ios/ti.map-iphone-*.zip
+
+node_modules/
+
+TESTS-*.xml
