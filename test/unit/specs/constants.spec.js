@@ -1,5 +1,8 @@
 let Map;
 
+const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
+const ANDROID = (Ti.Platform.osname === 'android');
+
 describe('ti.map', function () {
 
 	it('can be required', () => {
@@ -7,123 +10,127 @@ describe('ti.map', function () {
 		expect(Map).toBeDefined();
 	});
 
+	it('.apiName', () => {
+		expect(Map.apiName).toBe('Ti.Map');
+	});
+
 	describe('constants', () => {
-		it('apiName', () => {
-			expect(Map.apiName).toBe('Ti.Map');
+
+		describe('ANNOTATION_* colors', () => {
+			it('ANNOTATION_GREEN', () => {
+				expect(Map.ANNOTATION_GREEN).toEqual(jasmine.any(Number));
+			});
+
+			it('ANNOTATION_RED', () => {
+				expect(Map.ANNOTATION_RED).toEqual(jasmine.any(Number));
+			});
+
+			// FIXME get working on iOS, says value is undefined, not a Number
+			it('ANNOTATION_YELLOW', () => {
+				expect(Map.ANNOTATION_YELLOW).toEqual(jasmine.any(Number));
+			});
+
+			// Android specific colors...
+			if (ANDROID) {
+				it('ANNOTATION_AZURE', () => {
+					expect(Map.ANNOTATION_AZURE).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_BLUE', () => {
+					expect(Map.ANNOTATION_BLUE).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_CYAN', () => {
+					expect(Map.ANNOTATION_CYAN).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_MAGENTA', () => {
+					expect(Map.ANNOTATION_MAGENTA).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_ORANGE', () => {
+					expect(Map.ANNOTATION_ORANGE).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_PURPLE', () => {
+					expect(Map.ANNOTATION_PURPLE).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_ROSE', () => {
+					expect(Map.ANNOTATION_ROSE).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_VIOLET', () => {
+					expect(Map.ANNOTATION_VIOLET).toEqual(jasmine.any(Number));
+				});
+			}
 		});
 
-		// Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_AZURE', function () {
-		// 	should(Map).have.constant('ANNOTATION_AZURE').which.is.a.Number;
-		// });
+		describe('ANNOTATION_DRAG_STATE_*', () => {
+			it('ANNOTATION_DRAG_STATE_END', () => {
+				expect(Map.ANNOTATION_DRAG_STATE_END).toEqual(jasmine.any(Number));
+			});
 
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_BLUE', function () {
-		// 	should(Map).have.constant('ANNOTATION_BLUE').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_CYAN', function () {
-		// 	should(Map).have.constant('ANNOTATION_CYAN').which.is.a.Number;
-		// });
-
-		it('ANNOTATION_GREEN', function () {
-			expect(Map.ANNOTATION_GREEN).toEqual(jasmine.any(Number));
+			it('ANNOTATION_DRAG_STATE_START', () => {
+				expect(Map.ANNOTATION_DRAG_STATE_START).toEqual(jasmine.any(Number));
+			});
 		});
 
-		// Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_MAGENTA', function () {
-		// 	should(Map).have.constant('ANNOTATION_MAGENTA').which.is.a.Number;
-		// });
+		if (IOS) {
+			describe('OVERLAY_LEVEL_*', () => {
+				it('OVERLAY_LEVEL_ABOVE_LABELS', () => {
+					expect(Map.OVERLAY_LEVEL_ABOVE_LABELS).toEqual(jasmine.any(Number));
+				});
 
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_ORANGE', function () {
-		// 	should(Map).have.constant('ANNOTATION_ORANGE').which.is.a.Number;
-		// });
+				it('OVERLAY_LEVEL_ABOVE_ROADS', () => {
+					expect(Map.OVERLAY_LEVEL_ABOVE_ROADS).toEqual(jasmine.any(Number));
+				});
+			});
+		}
 
-		// // Intentional skip, constant only for iOS
-		// it.iosMissing('ANNOTATION_PURPLE', function () {
-		// 	should(Map).have.constant('ANNOTATION_PURPLE').which.is.a.Number;
-		// });
+		if (ANDROID) {
+			describe('SERVICE_*', () => {
+				it('SERVICE_DISABLED', () => {
+					expect(Map.SERVICE_DISABLED).toEqual(jasmine.any(Number));
+				});
 
-		it('ANNOTATION_RED', function () {
-			expect(Map.ANNOTATION_RED).toEqual(jasmine.any(Number));
+				it('SERVICE_INVALID', () => {
+					expect(Map.SERVICE_INVALID).toEqual(jasmine.any(Number));
+				});
+
+				it('SERVICE_MISSING', () => {
+					expect(Map.SERVICE_MISSING).toEqual(jasmine.any(Number));
+				});
+
+				it('SERVICE_VERSION_UPDATE_REQUIRED', () => {
+					expect(Map.SERVICE_VERSION_UPDATE_REQUIRED).toEqual(jasmine.any(Number));
+				});
+
+				it('SUCCESS', () => {
+					expect(Map.SUCCESS).toEqual(jasmine.any(Number));
+				});
+			});
+		}
+
+		describe('*_TYPE', () => {
+			it('NORMAL_TYPE', () => {
+				expect(Map.NORMAL_TYPE).toEqual(jasmine.any(Number));
+			});
+
+			it('SATELLITE_TYPE', () => {
+				expect(Map.SATELLITE_TYPE).toEqual(jasmine.any(Number));
+			});
+
+			it('HYBRID_TYPE', () => {
+				expect(Map.HYBRID_TYPE).toEqual(jasmine.any(Number));
+			});
+
+			if (ANDROID) {
+				it('TERRAIN_TYPE', () => {
+					exepect(Map.TERRAIN_TYPE).toEqual(jasmine.any(Number));
+				});
+			}
 		});
-
-		// Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_ROSE', function () {
-		// 	should(Map).have.constant('ANNOTATION_ROSE').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('ANNOTATION_VIOLET', function () {
-		// 	should(Map).have.constant('ANNOTATION_VIOLET').which.is.a.Number;
-		// });
-
-		// // FIXME get working on iOS, says value is undefined, not a Number
-		// it.iosBroken('ANNOTATION_YELLOW', function () {
-		// 	should(Map).have.constant('ANNOTATION_YELLOW').which.is.a.Number;
-		// });
-
-		it('ANNOTATION_DRAG_STATE_END', function () {
-			expect(Map.ANNOTATION_DRAG_STATE_END).toEqual(jasmine.any(Number));
-		});
-
-		it('ANNOTATION_DRAG_STATE_START', function () {
-			expect(Map.ANNOTATION_DRAG_STATE_START).toEqual(jasmine.any(Number));
-		});
-
-		// Intentionally skip on Android, constant doesn't exist
-		// it.androidMissing('OVERLAY_LEVEL_ABOVE_LABELS', function () {
-		// 	should(Map).have.constant('OVERLAY_LEVEL_ABOVE_LABELS').which.is.a.Number;
-		// });
-
-		// // Intentionally skip on Android, constant doesn't exist
-		// it.androidMissing('OVERLAY_LEVEL_ABOVE_ROADS', function () {
-		// 	should(Map).have.constant('OVERLAY_LEVEL_ABOVE_ROADS').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('SERVICE_DISABLED', function () {
-		// 	should(Map).have.constant('SERVICE_DISABLED').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('SERVICE_INVALID', function () {
-		// 	should(Map).have.constant('SERVICE_INVALID').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('SERVICE_MISSING', function () {
-		// 	should(Map).have.constant('SERVICE_MISSING').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('SERVICE_VERSION_UPDATE_REQUIRED', function () {
-		// 	should(Map).have.constant('SERVICE_VERSION_UPDATE_REQUIRED').which.is.a.Number;
-		// });
-
-		// // Intentional skip, constant only for Android
-		// it.iosMissing('SUCCESS', function () {
-		// 	should(Map).have.constant('SUCCESS').which.is.a.Number;
-		// });
-
-		it('NORMAL_TYPE', function () {
-			expect(Map.NORMAL_TYPE).toEqual(jasmine.any(Number));
-		});
-
-		it('SATELLITE_TYPE', function () {
-			expect(Map.SATELLITE_TYPE).toEqual(jasmine.any(Number));
-		});
-
-		it('HYBRID_TYPE', function () {
-			expect(Map.HYBRID_TYPE).toEqual(jasmine.any(Number));
-		});
-
-		// Intentional skip for iOS, constant only for Android
-		// it.iosMissing('TERRAIN_TYPE', function () {
-		// 	should(Map).have.constant('TERRAIN_TYPE').which.is.a.Number;
-		// });
 	});
 
 });
