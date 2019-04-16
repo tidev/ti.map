@@ -49,7 +49,7 @@ describe('ti.map', function () {
 				title: 'Mountain View',
 				subtitle: 'Mountain View city',
 			});
-			expect(annotation).toEqual(jasmine.any(Function));
+			expect(annotation).toEqual(jasmine.any(Object));
 	
 			const view = Map.createView({
 				mapType: Map.NORMAL_TYPE,
@@ -60,7 +60,7 @@ describe('ti.map', function () {
 					longitudeDelta: 0.1
 				}
 			});
-			expect(view).toEqual(jasmine.any(Function));
+			expect(view).toEqual(jasmine.any(Object));
 	
 			view.addAnnotation(annotation);
 	
