@@ -127,7 +127,7 @@ describe('ti.map', function () {
 
 			if (ANDROID) {
 				it('TERRAIN_TYPE', () => {
-					exepect(Map.TERRAIN_TYPE).toEqual(jasmine.any(Number));
+					expect(Map.TERRAIN_TYPE).toEqual(jasmine.any(Number));
 				});
 			}
 		});
