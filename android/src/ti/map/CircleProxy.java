@@ -272,4 +272,9 @@ public class CircleProxy extends KrollProxy implements IShape
 		//		Log.w("TiApp MAP", "center lat lng " + location.latitude + ", " + location.longitude);
 		return location;
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.Circle";
+	}
 }
