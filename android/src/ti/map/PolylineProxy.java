@@ -312,4 +312,9 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 		return DEFAULT_DASHED_PATTERN;
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.Polyline";
+	}
 }
