@@ -6,8 +6,14 @@
  */
 package ti.map;
 
+import android.graphics.Bitmap;
+import android.os.Message;
+import android.view.View;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
-
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -22,15 +28,6 @@ import org.appcelerator.titanium.TiPoint;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiDrawableReference;
-
-import android.graphics.Bitmap;
-import android.os.Message;
-import android.view.View;
-
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 @Kroll.proxy(creatableInModule = MapModule.class,
 			 propertyAccessors = { TiC.PROPERTY_SUBTITLE, TiC.PROPERTY_SUBTITLEID, TiC.PROPERTY_TITLE,

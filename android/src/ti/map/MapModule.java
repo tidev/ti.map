@@ -8,14 +8,13 @@
  */
 package ti.map;
 
-import org.appcelerator.kroll.KrollModule;
-import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiApplication;
-
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import org.appcelerator.kroll.KrollModule;
+import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.titanium.TiApplication;
 
 @Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule
@@ -69,6 +68,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_RADIUS = "radius";
 	public static final String PROPERTY_INDOOR_ENABLED = "indoorEnabled";
 	public static final String PROPERTY_DESELECTED = "deselected";
+	public static final String PROPERTY_LITE_MODE = "liteMode";
 
 	@Kroll.constant
 	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
