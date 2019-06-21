@@ -711,6 +711,16 @@ properties:
     platforms: [android]
     permission: read-only
 
+  - name: minClusterSize
+    summary: Sets the minium size of a cluster.
+    description: |
+        The minium cluster size is the smallest number of annotations that are merged together and
+        (minClusterSize + 1) is the smallest number that will appear on the cluster.
+    since: "5.2.0"
+    type: Number
+    default: 4
+    platforms: [android]
+
   - name: zoom
     summary: Returns the current zoom level from the current camera position.
     description: |
