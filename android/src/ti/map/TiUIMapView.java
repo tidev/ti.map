@@ -225,6 +225,7 @@ public class TiUIMapView extends TiUIFragment
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
 		map.setOnMyLocationChangeListener(this);
+		map.setOnPoiClickListener(this);
 		mClusterManager.setOnClusterClickListener(this);
 		mClusterManager.setOnClusterItemClickListener(this);
 
@@ -269,22 +270,18 @@ public class TiUIMapView extends TiUIFragment
 			Object[] annotations = (Object[]) d.get(TiC.PROPERTY_ANNOTATIONS);
 			addAnnotations(annotations);
 		}
-
 		if (d.containsKey(MapModule.PROPERTY_POLYGONS)) {
 			Object[] polygons = (Object[]) d.get(MapModule.PROPERTY_POLYGONS);
 			addPolygons(polygons);
 		}
-
 		if (d.containsKey(MapModule.PROPERTY_POLYLINES)) {
 			Object[] polylines = (Object[]) d.get(MapModule.PROPERTY_POLYLINES);
 			addPolylines(polylines);
 		}
-
 		if (d.containsKey(MapModule.PROPERTY_CIRCLES)) {
 			Object[] circles = (Object[]) d.get(MapModule.PROPERTY_CIRCLES);
 			addCircles(circles);
 		}
-
 		if (d.containsKey(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(d, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, true));
 		}
@@ -302,6 +299,9 @@ public class TiUIMapView extends TiUIFragment
 		}
 		if (d.containsKey(MapModule.PROPERTY_INDOOR_ENABLED)) {
 			setIndoorEnabled(d.getBoolean(MapModule.PROPERTY_INDOOR_ENABLED));
+		}
+		if (d.containsKey(TiC.PROPERTY_PADDING)) {
+			setPadding(d.getKrollDict(TiC.PROPERTY_PADDING));
 		}
 	}
 
@@ -341,6 +341,8 @@ public class TiUIMapView extends TiUIFragment
 			setStyle(TiConvert.toString(newValue, ""));
 		} else if (key.equals(MapModule.PROPERTY_INDOOR_ENABLED)) {
 			setIndoorEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(TiC.PROPERTY_PADDING)) {
+			setPadding(new KrollDict((HashMap) newValue));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -454,14 +456,19 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
-	protected void setPadding(int left, int top, int right, int bottom)
+	protected void setPadding(KrollDict args)
 	{
+		int left = TiConvert.toInt(args.getInt(TiC.PROPERTY_LEFT), 0);
+		int top = TiConvert.toInt(args.getInt(TiC.PROPERTY_TOP), 0);
+		int right = TiConvert.toInt(args.getInt(TiC.PROPERTY_RIGHT), 0);
+		int bottom = TiConvert.toInt(args.getInt(TiC.PROPERTY_BOTTOM), 0);
+
 		if (map != null) {
 			map.setPadding(left, top, right, bottom);
 		}
 	}
 
-	protected void showAnnotations(Object[] annotations) {
+	protected void showAnnotations(Object[] annotations, int padding, boolean animated) {
 		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
 
 		// Use supplied annotations first. If none available, select all (parity with iOS)
@@ -478,13 +485,19 @@ public class TiUIMapView extends TiUIFragment
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 		for (TiMarker marker : markers) {
-			builder.include(marker.getPosition());
+			if (marker != null) {
+				builder.include(marker.getPosition());
+			}
 		}
 		LatLngBounds bounds = builder.build();
 
-		int padding = 30;
-		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-		map.animateCamera(cu);
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+		if (animated) {
+			map.animateCamera(cameraUpdate);
+		} else {
+			map.moveCamera(cameraUpdate);
+		}
 	}
 
 	protected void setZoomControlsEnabled(boolean enabled)

@@ -31,7 +31,7 @@ proxy(creatableInModule = MapModule.class,
 							TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS, TiC.PROPERTY_ANIMATE,
 							MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS,
 							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED, MapModule.PROPERTY_ZOOM_ENABLED,
-							MapModule.PROPERTY_POLYLINES })
+							MapModule.PROPERTY_POLYLINES, TiC.PROPERTY_PADDING })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 {
 	private static final String TAG = "MapViewProxy";
@@ -310,7 +310,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_SHOW_ANNOTATIONS: {
 				result = ((AsyncResult) msg.obj);
-				handleShowAnnotations((Object[]) result.getArg());
+				handleShowAnnotations((Object[]) result.getArg(), 30, false);
 				result.setResult(null);
 				return true;
 			}
@@ -416,15 +416,15 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void showAnnotations(Object annotations) {
+	public void showAnnotations(Object annotations, int padding, boolean animated) {
 		if (TiApplication.isUIThread()) {
-			handleShowAnnotations(annotations);
+			handleShowAnnotations(annotations, padding, animated);
 		} else {
 			getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS).sendToTarget();
 		}
 	}
 
-	private void handleShowAnnotations(Object annotations) {
+	private void handleShowAnnotations(Object annotations, int padding, boolean animated) {
 		if (!(annotations instanceof Object[])) {
 			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
 			return;
@@ -433,7 +433,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 		TiUIMapView mapView = (TiUIMapView) peekView();
 		if (mapView.getMap() != null) {
-			mapView.showAnnotations(annos);
+			mapView.showAnnotations(annos, padding, animated);
 		}
 	}
 
@@ -1206,19 +1206,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	// clang-format off
-	@Kroll.method
-	@Kroll.setProperty
-	public void setPadding(KrollDict padding)
-	// clang-format on
-	{
-		if (TiApplication.isUIThread()) {
-			handleSetPadding(padding);
-		} else {
-			getMainHandler().obtainMessage(MSG_SET_PADDING, padding).sendToTarget();
-		}
-	}
-
 	private void addPreloadImageOverlay(ImageOverlayProxy proxy)
 	{
 		if (!(preloadOverlaysList.contains(proxy))) {
@@ -1330,12 +1317,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			int left = TiConvert.toInt(args.getInt(TiC.PROPERTY_LEFT), 0);
-			int top = TiConvert.toInt(args.getInt(TiC.PROPERTY_TOP), 0);
-			int right = TiConvert.toInt(args.getInt(TiC.PROPERTY_RIGHT), 0);
-			int bottom = TiConvert.toInt(args.getInt(TiC.PROPERTY_BOTTOM), 0);
-
-			((TiUIMapView) view).setPadding(left, top, right, bottom);
+			((TiUIMapView) view).setPadding(args);
 		}
 	}
 
