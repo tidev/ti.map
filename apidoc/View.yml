@@ -446,6 +446,13 @@ events:
             Longitude of the clicked annotation or the point clicked in the polygon, polyline and circle.
         type: Number
 
+      - name: deselected
+        summary: |
+            Will show if the annotation was selected (false) or deselected (true)
+        type: Boolean
+        since: "4.5.0"
+        platforms: [android]
+
   - name: complete
     summary: Fired when the map completes loading.
 
@@ -848,7 +855,7 @@ properties:
     summary: A Boolean value indicating whether the indoor mapping is enabled.
     description: |
         This property is used to enabled/disable the indoor mapping feature of Google Maps.
-        Changing the value after the MapView is drawn can cause flickering. 
+        Changing the value after the MapView is drawn can cause flickering.
         You can read more at:
         [Google Indoor Maps](https://www.google.com/maps/about/partners/indoormaps/)
     type: Boolean

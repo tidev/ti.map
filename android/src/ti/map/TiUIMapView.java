@@ -7,33 +7,11 @@
 
 package ti.map;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONTokener;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.io.ByteArrayOutputStream;
-
-import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.kroll.common.Log;
-import org.appcelerator.titanium.TiBlob;
-import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.proxy.TiViewProxy;
-import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.view.TiUIFragment;
-import org.appcelerator.titanium.TiApplication;
-import org.appcelerator.titanium.io.TiFileFactory;
-
-import ti.map.Shape.Boundary;
-import ti.map.Shape.IShape;
-import ti.map.Shape.PolylineBoundary;
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -44,11 +22,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.content.res.Resources;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.Manifest;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,11 +32,34 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
-import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
+import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.io.TiFileFactory;
+import org.appcelerator.titanium.proxy.TiViewProxy;
+import org.appcelerator.titanium.util.TiConvert;
+import org.appcelerator.titanium.view.TiUIFragment;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import ti.map.Shape.Boundary;
+import ti.map.Shape.IShape;
+import ti.map.Shape.PolylineBoundary;
 
 public class TiUIMapView extends TiUIFragment
 	implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener,
@@ -359,9 +355,9 @@ public class TiUIMapView extends TiUIFragment
 					Object json = new JSONTokener(loadJSONFromAsset(style)).nextValue();
 
 					if (json instanceof JSONObject) {
-						style = ((JSONObject)json).toString();
+						style = ((JSONObject) json).toString();
 					} else if (json instanceof JSONArray) {
-						style = ((JSONArray)json).toString();
+						style = ((JSONArray) json).toString();
 					} else {
 						Log.e(TAG, "Invalid JSON style.");
 					}
@@ -460,7 +456,8 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
-	protected void showAnnotations(Object[] annotations) {
+	protected void showAnnotations(Object[] annotations)
+	{
 		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
 
 		// Use supplied annotations first. If none available, select all (parity with iOS)
@@ -957,7 +954,7 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
-	public void fireClickEvent(Marker marker, AnnotationProxy annoProxy, String clickSource)
+	public void fireClickEvent(Marker marker, AnnotationProxy annoProxy, String clickSource, boolean deselected)
 	{
 		KrollDict d = new KrollDict();
 		String title = null;
@@ -976,6 +973,7 @@ public class TiUIMapView extends TiUIFragment
 		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
 		d.put(TiC.PROPERTY_SOURCE, proxy);
 		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, clickSource);
+		d.put(MapModule.PROPERTY_DESELECTED, deselected);
 		if (proxy != null) {
 			proxy.fireEvent(TiC.EVENT_CLICK, d);
 		}
@@ -1053,17 +1051,17 @@ public class TiUIMapView extends TiUIFragment
 			// event and return from this listener.
 			if (selectedAnnotation.equals(annoProxy)) {
 				selectedAnnotation = null;
-				fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
+				fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN, true);
 				return true;
 			} else {
 				// Clicking from a selected annotation to another one.
 				// After hiding the info window, send deselected
 				// event for the selected annotation and proceed with
 				// this listener for the marker parameter.
-				fireClickEvent(marker, selectedAnnotation, MapModule.PROPERTY_PIN);
+				fireClickEvent(marker, selectedAnnotation, MapModule.PROPERTY_PIN, true);
 			}
 		}
-		fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN);
+		fireClickEvent(marker, annoProxy, MapModule.PROPERTY_PIN, false);
 		selectedAnnotation = annoProxy;
 		boolean showInfoWindow = TiConvert.toBoolean(annoProxy.getProperty(MapModule.PROPERTY_SHOW_INFO_WINDOW), true);
 		// Returning false here will enable native behavior, which shows the
@@ -1081,7 +1079,7 @@ public class TiUIMapView extends TiUIFragment
 		if (selectedAnnotation != null) {
 			TiMarker tiMarker = selectedAnnotation.getTiMarker();
 			if (tiMarker != null) {
-				fireClickEvent(tiMarker.getMarker(), selectedAnnotation, null);
+				fireClickEvent(tiMarker.getMarker(), selectedAnnotation, null, true);
 			}
 			selectedAnnotation = null;
 		}
@@ -1219,7 +1217,7 @@ public class TiUIMapView extends TiUIFragment
 			if (clicksource == null) {
 				clicksource = MapModule.PROPERTY_INFO_WINDOW;
 			}
-			fireClickEvent(marker, annoProxy, clicksource);
+			fireClickEvent(marker, annoProxy, clicksource, false);
 		}
 	}
 
