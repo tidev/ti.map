@@ -25,6 +25,9 @@ import ti.map.AnnotationProxy.AnnotationDelegate;
 import android.app.Activity;
 import android.os.Message;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+
 @Kroll.
 proxy(creatableInModule = MapModule.class,
 	  propertyAccessors = { TiC.PROPERTY_USER_LOCATION, MapModule.PROPERTY_USER_LOCATION_BUTTON, TiC.PROPERTY_MAP_TYPE,
@@ -55,6 +58,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_SET_PADDING = MSG_FIRST_ID + 514;
 	private static final int MSG_ZOOM = MSG_FIRST_ID + 515;
 	private static final int MSG_SHOW_ANNOTATIONS = MSG_FIRST_ID + 516;
+	private static final int MSG_CONTAINS_COORDINATE = MSG_FIRST_ID + 517;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -315,6 +319,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 				return true;
 			}
 
+			case MSG_CONTAINS_COORDINATE: {
+				result = ((AsyncResult) msg.obj);
+				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict)result.getArg())));
+				return true;
+			}
+		  
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -1131,6 +1141,20 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).changeZoomLevel(delta);
 		}
+	}
+
+	@Kroll.method
+	public boolean containsCoordinate(KrollDict coordinate)
+	{
+	  return handleContainsCoordinate(coordinate);
+	}
+	
+	private boolean handleContainsCoordinate(KrollDict coordinate) {
+	  TiUIView view = peekView();
+	  if ((view instanceof TiUIMapView)) {
+		return ((TiUIMapView)view).containsCoordinate(coordinate);
+	  }
+	  return false;
 	}
 
 	// clang-format off
