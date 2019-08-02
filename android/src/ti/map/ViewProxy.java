@@ -1149,11 +1149,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private float handleGetZoom()
 	{
 		TiUIView view = peekView();
+
 		if (view instanceof TiUIMapView) {
-			return ((TiUIMapView) view).getMap().getCameraPosition().zoom;
-		} else {
-			return 0;
+			GoogleMap mapView = ((TiUIMapView) view).getMap();
+
+			if (mapView != null) {
+				return mapView.getCameraPosition().zoom;
+			}
 		}
+
+		return 0;
 	}
 
 	@Kroll.method
