@@ -6,7 +6,6 @@
  */
 
 #import "TiMapCustomAnnotationView.h"
-#import "TiBase.h"
 
 @implementation TiMapCustomAnnotationView
 
@@ -15,7 +14,7 @@
   if (self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier]) {
     self.backgroundColor = [UIColor clearColor];
     wrapperView = [[UIView alloc] initWithFrame:CGRectZero];
-    wrapperView.userInteractionEnabled = false;
+    wrapperView.userInteractionEnabled = NO;
     [self addSubview:wrapperView];
   }
   return self;

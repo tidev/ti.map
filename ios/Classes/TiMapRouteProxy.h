@@ -6,8 +6,7 @@
  */
 
 #import "TiMKOverlayPathUniversal.h"
-#import "TiProxy.h"
-#import "TiUtils.h"
+#import <TitaniumKit/TitaniumKit.h>
 #import <MapKit/MapKit.h>
 
 @interface TiMapRouteProxy : TiProxy {

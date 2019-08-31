@@ -190,7 +190,7 @@
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   if (yn == NO) {
     [map deselectAnnotation:proxy animated:NO];
@@ -451,7 +451,6 @@
 
   // Release the locationManager in case it was already created
   RELEASE_TO_NIL(locationManager);
-  BOOL userLocation = [TiUtils boolValue:value def:NO];
   // the locationManager needs to be created to permissions
   locationManager = [[CLLocationManager alloc] init];
   // set the "userLocation" on the delegate callback to avoid console warnings from the OS
@@ -1007,8 +1006,8 @@
                                       ourProxy, @"map",
                                       title, @"title",
                                       [NSNumber numberWithInteger:[pinview tag]], @"index",
-                                      NUMINT(newState), @"newState",
-                                      NUMINT(oldState), @"oldState",
+                                      NUMINTEGER(newState), @"newState",
+                                      NUMINTEGER(oldState), @"oldState",
                                       nil];
 
   if (parentWants)
@@ -1038,7 +1037,7 @@
 
     selectedAnnotation = [ann retain];
 
-    // If canShowCallout == true we will try to find calloutView to hadleTap on callout
+    // If canShowCallout is YES we will try to find calloutView to hadleTap on callout
     if ([ann canShowCallout]) {
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
         [self findCalloutView:ann];
@@ -1065,14 +1064,13 @@
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
     MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 
     if (selectedAnnotation == ann) {
       RELEASE_TO_NIL(ann);
     }
 
-    [self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
+    [self fireClickEvent:view source:view.isSelected ? @"pin" : @"map"];
   }
 }
 
@@ -1172,6 +1170,8 @@
   annView.userInteractionEnabled = YES;
   annView.tag = [ann tag];
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
   id previewContext = [ann valueForUndefinedKey:@"previewContext"];
   if (previewContext && [TiUtils forceTouchSupported] && [previewContext performSelector:@selector(preview)] != nil) {
     UIViewController *controller = [[[TiApp app] controller] topPresentedController];
@@ -1184,12 +1184,11 @@
       return nil;
     }
 
-#ifndef __clang_analyzer__
     // We can ignore this, as it's guarded above
     id previewingDelegate = [[TiPreviewingDelegate alloc] performSelector:@selector(initWithPreviewContext:) withObject:previewContext];
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
-#endif
   }
+#pragma clang diagnostic pop
 
   return annView;
 }
@@ -1225,7 +1224,8 @@
   if ([mapProxy _hasListeners:@"clusterstart"]) {
     [mapProxy fireEvent:@"clusterstart" withObject:event];
   }
-  return annotation;
+
+  return [annotation autorelease];
 }
 
 // mapView:didAddAnnotationViews: is called after the annotation views have been added and positioned in the map.
@@ -1247,7 +1247,7 @@
         thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
         [UIView animateWithDuration:0.4
                               delay:0.0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                            thisView.frame = viewFrame;
                          }
@@ -1430,12 +1430,7 @@
 - (void)doClickEvent:(id)viewProxy mapProxy:(id)mapProxy event:(NSDictionary *)event
 {
   BOOL parentWants = [mapProxy _hasListeners:@"click"];
-  BOOL viewWants;
-  if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
-    viewWants = [viewProxy _hasListeners:@"click"];
-  } else {
-    viewWants = FALSE;
-  }
+  BOOL viewWants = [viewProxy _hasListeners:@"click"];
 
   if (parentWants) {
     [mapProxy fireEvent:@"click" withObject:event];

@@ -5,10 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiBase.h"
-#import "TiMapView.h"
-#import "TiViewProxy.h"
+#import <TitaniumKit/TitaniumKit.h>
 #import <MapKit/MapKit.h>
+#import "TiMapView.h"
 
 @interface TiMapCustomAnnotationView : MKAnnotationView <TiMapAnnotation> {
   @private

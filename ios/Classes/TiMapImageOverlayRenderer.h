@@ -6,6 +6,7 @@
  */
 
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TitaniumKit.h>
 
 @interface TiMapImageOverlayRenderer : MKOverlayRenderer
 

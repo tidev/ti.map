@@ -6,14 +6,11 @@
  */
 
 #import "TiMapAnnotationProxy.h"
-#import "ImageLoader.h"
 #import "TiButtonUtil.h"
 #import "TiMapConstants.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
 #import "TiUIiOSPreviewContextProxy.h"
-#import "TiUtils.h"
-#import "TiViewProxy.h"
 #import "UIColor+AndroidHueParity.h"
 
 @implementation TiMapAnnotationProxy
@@ -214,7 +211,7 @@
 
 - (id)pincolor
 {
-  return NUMINT([self valueForUndefinedKey:@"pincolor"]);
+  return NUMINT((int)[self valueForUndefinedKey:@"pincolor"]);
 }
 
 - (void)setPincolor:(id)color
@@ -338,6 +335,8 @@
   }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 - (void)setPreviewContext:(id)previewContext
 {
   Class TiUIiOSPreviewContextProxy = NSClassFromString(@"TiUIiOSPreviewContextProxy");
@@ -366,6 +365,7 @@
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
+#pragma clang diagnostic pop
 
 - (void)setImage:(id)image
 {

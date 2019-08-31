@@ -5,14 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef map_TiMapPolylineProxy_h
-#define map_TiMapPolylineProxy_h
-
-#import "TiBase.h"
-#import "TiMapOverlayPattern.h"
-#import "TiViewProxy.h"
-
+#import <TitaniumKit/TitaniumKit.h>
 #import <MapKit/MapKit.h>
+#import "TiMapOverlayPattern.h"
 
 @class TiMapViewProxy;
 
@@ -29,5 +24,3 @@
 @property (nonatomic, readonly) MKPolylineRenderer *polylineRenderer;
 
 @end
-
-#endif

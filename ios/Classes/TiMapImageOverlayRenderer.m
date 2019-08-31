@@ -6,7 +6,6 @@
  */
 
 #import "TiMapImageOverlayRenderer.h"
-#import "TiProxy.h"
 
 @interface TiMapImageOverlayRenderer ()
 

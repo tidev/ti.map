@@ -5,12 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#import <TitaniumKit/TitaniumKit.h>
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCameraProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapPolygonProxy.h"
 #import "TiMapPolylineProxy.h"
-#import "TiViewProxy.h"
 
 @interface TiMapViewProxy : TiViewProxy {
   TiMapAnnotationProxy *selectedAnnotation; // Annotation to select on initial display

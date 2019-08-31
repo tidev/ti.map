@@ -6,7 +6,7 @@
  */
 
 #import "TiMapImageOverlayRenderer.h"
-#import "TiProxy.h"
+#import <TitaniumKit/TitaniumKit.h>
 
 @interface TiMapImageOverlay : NSObject <MKOverlay>
 
