@@ -8,6 +8,7 @@
 #import "TiMapSnapshotterProxy.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
+#import "TiBlob.h"
 
 @implementation TiMapSnapshotterProxy
 

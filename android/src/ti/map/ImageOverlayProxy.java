@@ -88,6 +88,6 @@ public class ImageOverlayProxy extends KrollProxy
 	@Override
 	public String getApiName()
 	{
-		return TAG;
+		return "Ti.Map.ImageOverlay";
 	}
 }

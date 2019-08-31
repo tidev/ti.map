@@ -1357,6 +1357,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	public String getApiName()
 	{
-		return "Ti.Map";
+		return "Ti.Map.View";
 	}
 }
