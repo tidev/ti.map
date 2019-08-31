@@ -234,29 +234,16 @@
   id current = [self valueForUndefinedKey:@"pincolor"];
 
   if ([current isKindOfClass:[NSString class]]) {
-#ifdef __IPHONE_9_0
     return [[TiUtils colorValue:current] color];
-#else
-    return MKPinAnnotationColorRed;
-#endif
   }
 
   switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
   case TiMapAnnotationPinColorGreen: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView greenPinColor];
-#else
-    return MKPinAnnotationColorGreen;
-#endif
   }
   case TiMapAnnotationPinColorPurple: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView purplePinColor];
-#else
-    return MKPinAnnotationColorPurple;
-#endif
   }
-#ifdef __IPHONE_9_0
   case TiMapAnnotationPinColorBlue:
     return [UIColor blueColor];
   case TiMapAnnotationPinColorCyan:
@@ -275,14 +262,9 @@
     return [UIColor roseColor];
   case TiMapAnnotationPinColorViolet:
     return [UIColor violetColor];
-#endif
   case TiMapAnnotationPinColorRed:
   default: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView redPinColor];
-#else
-    return MKPinAnnotationColorRed;
-#endif
   }
   }
 }
@@ -493,7 +475,6 @@
   }
 }
 
-#if IS_IOS_11
 - (void)setClusterIdentifier:(id)clusterIdentifier
 {
   id current = [self valueForUndefinedKey:@"clusterIdentifier"];
@@ -502,7 +483,6 @@
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
-#endif
 
 - (void)setCustomView:(id)customView
 {

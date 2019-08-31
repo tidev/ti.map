@@ -86,7 +86,7 @@
   if (fillColor != nil) {
     RELEASE_TO_NIL(fillColor);
   }
-  fillColor = [[TiColor colorNamed:value] retain];
+  fillColor = [[TiUtils colorValue:value] retain];
   [[self circleRenderer] setFillColor:(fillColor == nil ? [UIColor blackColor] : [fillColor color])];
   [self replaceValue:value forKey:@"fillColor" notification:NO];
 }
@@ -96,7 +96,7 @@
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
-  strokeColor = [[TiColor colorNamed:value] retain];
+  strokeColor = [[TiUtils colorValue:value] retain];
   [[self circleRenderer] setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
   [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }

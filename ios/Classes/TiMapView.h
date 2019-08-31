@@ -32,10 +32,8 @@
   NSMutableArray *circleProxies;
   NSMutableArray *polylineProxies;
   NSMutableArray *imageOverlayProxies;
-
-#if IS_IOS_11
   NSMutableDictionary *clusterAnnotations;
-#endif
+
   //selected annotation
   MKAnnotationView<TiMapAnnotation> *selectedAnnotation;
 
@@ -95,9 +93,7 @@
 - (void)removeAllImageOverlays;
 
 - (void)firePinChangeDragState:(MKAnnotationView *)pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
-#if IS_IOS_11
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members;
-#endif
 
 #pragma mark Utils
 - (void)addOverlay:(MKPolyline *)polyline level:(MKOverlayLevel)level;

@@ -143,7 +143,7 @@
   if (fillColor != nil) {
     RELEASE_TO_NIL(fillColor);
   }
-  fillColor = [[TiColor colorNamed:value] retain];
+  fillColor = [[TiUtils colorValue:value] retain];
   [self applyFillColor];
 }
 
@@ -152,7 +152,7 @@
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
-  strokeColor = [[TiColor colorNamed:value] retain];
+  strokeColor = [[TiUtils colorValue:value] retain];
   [self applyStrokeColor];
 }
 
