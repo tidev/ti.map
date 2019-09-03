@@ -142,4 +142,10 @@ public class MapModule extends KrollModule
 	{
 		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(TiApplication.getAppRootOrCurrentActivity());
 	}
+
+	@Override
+	public String getApiName()
+	{
+		return "Ti.Map";
+	}
 }

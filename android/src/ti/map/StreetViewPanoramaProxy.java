@@ -27,4 +27,9 @@ public class StreetViewPanoramaProxy extends ViewProxy
 	{
 		return new TiStreetViewPanorama(this, activity);
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.StreetViewPanorama";
+	}
 }
