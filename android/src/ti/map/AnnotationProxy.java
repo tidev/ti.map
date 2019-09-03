@@ -448,4 +448,9 @@ public class AnnotationProxy extends KrollProxy
 			this.delegate.refreshAnnotation(this);
 		}
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.Annotation";
+	}
 }

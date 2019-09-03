@@ -320,4 +320,9 @@ public class PolygonProxy extends KrollProxy implements IShape
 		}
 		return location;
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.Polygon";
+	}
 }

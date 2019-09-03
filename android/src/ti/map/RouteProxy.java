@@ -169,4 +169,9 @@ public class RouteProxy extends KrollProxy
 	{
 		return (super.getProperty(name) != null);
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.Route";
+	}
 }
