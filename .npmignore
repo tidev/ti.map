@@ -1,12 +1,8 @@
-android/assets/
 android/documentation/
 android/example/
-android/hooks/
 
-iphone/assets/
 iphone/documentation/
 iphone/example/
-iphone/hooks/
 iphone/platform/
 
 test/
