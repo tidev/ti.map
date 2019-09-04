@@ -8,4 +8,5 @@ buildModule {
 	npmPublish = isMaster
 	npmPublishArgs = '--access public --dry-run'
 	githubPublish = true
+	iosLabels = 'osx && xcode-11'
 }
