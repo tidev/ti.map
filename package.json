@@ -1,8 +1,7 @@
 {
-  "name": "ti.map",
+  "name": "@titanium/ti.map",
   "version": "4.4.0",
   "description": "Provides Map UI elements for Titanium applications",
-  "private": true,
   "scripts": {
     "test": "karma start test/unit/karma.unit.config.js",
     "test:android": "npm test -- --browsers android",
