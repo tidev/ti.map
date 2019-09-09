@@ -3,7 +3,10 @@
   "version": "4.4.0",
   "description": "Provides Map UI elements for Titanium applications",
   "scripts": {
-    "test": "karma start test/unit/karma.unit.config.js",
+    "lint": "npm run lint:docs",
+    "lint:docs": "tdoc-validate -w Titanium.Blob,Titanium.UI.View,Titanium.Proxy,Titanium.Module,Point,Titanium.UI.iOS.PreviewContext apidoc",
+    "test": "npm run lint && npm run test:unit",
+    "test:unit": "karma start test/unit/karma.unit.config.js",
     "test:android": "npm test -- --browsers android",
     "test:ios": "npm test -- --browsers ios"
   },
@@ -28,7 +31,8 @@
     "karma-junit-reporter": "^1.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-titanium-launcher": "^0.7.4",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "titanium-docgen": "^0.2.0"
   },
   "dependencies": {}
 }
