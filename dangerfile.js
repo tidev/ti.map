@@ -4,6 +4,7 @@
 const junit = require('@seadub/danger-plugin-junit').default;
 const dependencies = require('@seadub/danger-plugin-dependencies').default;
 const fs = require('fs');
+const path = require('path');
 const ENV = process.env;
 
 // Add links to artifacts we've stuffed into the ENV.ARTIFACTS variable
