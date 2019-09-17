@@ -8,13 +8,15 @@ const ENV = process.env;
 // Add links to artifacts we've stuffed into the ENV.ARTIFACTS variable
 async function linkToArtifacts() {
 	if (ENV.BUILD_STATUS === 'SUCCESS' || ENV.BUILD_STATUS === 'UNSTABLE') {
-		const artifacts = ENV.ARTIFACTS.split(';');
+		const artifacts = (ENV.ARTIFACTS || '').split(';');
 		if (artifacts.length !== 0) {
 			const artifactsListing = '- ' + artifacts.map(a => danger.utils.href(`${ENV.BUILD_URL}artifact/${a}`, a)).join('\n- ');
 			message(`:floppy_disk: Here are the artifacts produced:\n${artifactsListing}`);
 		}
 	}
 }
+
+// TODO: Spit out output of npm test if that stage failed!
 
 async function main() {
 	// do a bunch of things in parallel
