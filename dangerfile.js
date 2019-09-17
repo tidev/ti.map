@@ -25,7 +25,7 @@ async function checkLintLog() {
 	}
 	const contents = fs.readFileSync(lintLog, 'utf8');
 	fail('`npm run lint` failed, please check messages beloe for output.');
-	message(`:bomb: Here's the output of \`npm run lint\`:\n${contents}`);
+	message(`:bomb: Here's the output of \`npm run lint\`:\n\`\`\`${contents}\`\`\``);
 }
 
 async function main() {
