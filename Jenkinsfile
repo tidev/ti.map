@@ -1,5 +1,5 @@
 #!groovy
-library 'pipeline-library@lint-modules'
+library 'pipeline-library'
 
 def isMaster = env.BRANCH_NAME.equals('master')
 
