@@ -7,8 +7,8 @@
     "lint:docs": "tdoc-validate -w Titanium.Blob,Titanium.UI.View,Titanium.Proxy,Titanium.Module,Point,Titanium.UI.iOS.PreviewContext apidoc",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "karma start test/unit/karma.unit.config.js",
-    "test:android": "npm test -- --browsers android",
-    "test:ios": "npm test -- --browsers ios"
+    "test:android": "npm run test:unit -- --browsers android",
+    "test:ios": "npm run test:unit -- --browsers ios"
   },
   "repository": {
     "type": "git",
