@@ -2,9 +2,9 @@
  External version of Map module to support new Google Map v2 sdk
 
 ## Getting Started
- Obtain map API key from google. You can find instructions here: 
+ Obtain map API key from google. You can find instructions here:
     https://developers.google.com/maps/documentation/android/start#the_google_maps_api_key
-  
+
 
 ## Requirements
  Testing device needs to have Google Play installed. Otherwise map won't work.
@@ -22,7 +22,7 @@
                     android:name="com.google.android.maps.v2.API_KEY" android:value="API KEY HERE"/>
             </application>
         </manifest>
-  
+
 ## Accessing the Ti.Map Module
 To access this module from JavaScript, you would do the following:
 
