@@ -1074,7 +1074,7 @@
         [self findCalloutView:ann];
       });
     }
-    [self fireClickEvent:view source:isSelected ? @"pin" : [ann lastHitName]];
+    [self fireClickEvent:view source:isSelected ? @"pin" : [ann lastHitName] deselected:NO];
   }
 }
 
@@ -1102,7 +1102,8 @@
       RELEASE_TO_NIL(ann);
     }
 
-    [self fireClickEvent:view source:isSelected ? @"pin" : @"map"];
+    // TODO: Fire a deselected event for the annotation?
+    [self fireClickEvent:view source:isSelected ? @"pin" : @"map" deselected:YES];
   }
 }
 
@@ -1116,7 +1117,7 @@
     } else if (aview.rightCalloutAccessoryView == control) {
       clickSource = @"rightButton";
     }
-    [self fireClickEvent:pinview source:clickSource];
+    [self fireClickEvent:pinview source:clickSource deselected:NO];
   }
 }
 
@@ -1342,7 +1343,7 @@
 
 - (void)handleCalloutTap:(UIGestureRecognizer *)sender
 {
-  [self fireClickEvent:selectedAnnotation source:@"infoWindow"];
+  [self fireClickEvent:selectedAnnotation source:@"infoWindow" deselected:NO];
 }
 
 - (void)handleLongPressOnMap:(UIGestureRecognizer *)sender
@@ -1433,7 +1434,7 @@
   [self.proxy fireEvent:event withObject:object];
 }
 
-- (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source
+- (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source deselected:(BOOL)deselected
 {
   if (ignoreClicks) {
     return;
@@ -1456,7 +1457,7 @@
 
   NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
                                           clicksource, @"clicksource", viewProxy, @"annotation", mapProxy, @"map",
-                                      title, @"title", NUMINTEGER(indexNumber), @"index", nil];
+                                      title, @"title", NUMINTEGER(indexNumber), @"index", NUMBOOL(deselected), @"deselected", nil];
 
   [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
 }
