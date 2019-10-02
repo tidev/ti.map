@@ -451,7 +451,7 @@ events:
             Will show if the annotation was selected (false) or deselected (true)
         type: Boolean
         since: "4.5.0"
-        platforms: [android]
+        platforms: [android, iphone, ipad]
 
   - name: complete
     summary: Fired when the map completes loading.
