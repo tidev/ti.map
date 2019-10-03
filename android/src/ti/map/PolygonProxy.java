@@ -241,7 +241,7 @@ public class PolygonProxy extends KrollProxy implements IShape
 	@Kroll.getProperty
 	public Object[] getHoles()
 	{
-		return (Object[])getProperty(PolygonProxy.PROPERTY_HOLES);
+		return (Object[]) getProperty(PolygonProxy.PROPERTY_HOLES);
 	}
 
 	public void setPolygon(Polygon r)

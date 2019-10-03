@@ -103,7 +103,8 @@ public class AnnotationProxy extends KrollProxy
 		super.release();
 	}
 
-	public void releaseMarker() {
+	public void releaseMarker()
+	{
 		if (marker != null) {
 			marker = null;
 		}

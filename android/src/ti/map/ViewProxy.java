@@ -30,8 +30,8 @@ proxy(creatableInModule = MapModule.class,
 	  propertyAccessors = { TiC.PROPERTY_USER_LOCATION, MapModule.PROPERTY_USER_LOCATION_BUTTON, TiC.PROPERTY_MAP_TYPE,
 							TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS, TiC.PROPERTY_ANIMATE,
 							MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS,
-							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED, MapModule.PROPERTY_ZOOM_ENABLED,
-							MapModule.PROPERTY_POLYLINES })
+							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED,
+							MapModule.PROPERTY_ZOOM_ENABLED, MapModule.PROPERTY_POLYLINES })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 {
 	private static final String TAG = "MapViewProxy";
@@ -416,7 +416,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void showAnnotations(Object annotations) {
+	public void showAnnotations(Object annotations)
+	{
 		if (TiApplication.isUIThread()) {
 			handleShowAnnotations(annotations);
 		} else {
@@ -424,7 +425,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	private void handleShowAnnotations(Object annotations) {
+	private void handleShowAnnotations(Object annotations)
+	{
 		if (!(annotations instanceof Object[])) {
 			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
 			return;
