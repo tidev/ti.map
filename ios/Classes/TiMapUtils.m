@@ -10,8 +10,7 @@
 
 @implementation TiMapUtils
 
-+ (id)returnValueOnMainThread:(id (^)(void))block
-{
++ (id)returnValueOnMainThread:(id (^)(void))block {
   if ([NSThread isMainThread]) {
     return block();
   }

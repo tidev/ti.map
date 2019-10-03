@@ -16,8 +16,7 @@
 
 #pragma mark Internal
 
-- (NSArray *)keySequence
-{
+- (NSArray *)keySequence {
   return [NSArray arrayWithObjects:
                       @"animate",
                   @"location",
@@ -25,8 +24,7 @@
                   nil];
 }
 
-- (void)_destroy
-{
+- (void)_destroy {
   RELEASE_TO_NIL(selectedAnnotation);
   RELEASE_TO_NIL(annotationsToAdd);
   RELEASE_TO_NIL(annotationsToRemove);
@@ -43,13 +41,11 @@
   [super _destroy];
 }
 
-- (NSString *)apiName
-{
+- (NSString *)apiName {
   return @"Ti.Map.View";
 }
 
-- (NSNumber *)longitudeDelta
-{
+- (NSNumber *)longitudeDelta {
   __block CLLocationDegrees delta = 0.0;
 
   if ([self viewAttached]) {
@@ -61,8 +57,7 @@
   return [NSNumber numberWithDouble:delta];
 }
 
-- (NSNumber *)latitudeDelta
-{
+- (NSNumber *)latitudeDelta {
   __block CLLocationDegrees delta = 0.0;
 
   if ([self viewAttached]) {
@@ -74,8 +69,7 @@
   return [NSNumber numberWithDouble:delta];
 }
 
-- (void)viewDidAttach
-{
+- (void)viewDidAttach {
   ENSURE_UI_THREAD_0_ARGS;
   TiMapView *ourView = (TiMapView *)[self view];
 
@@ -153,8 +147,7 @@
   [super viewDidAttach];
 }
 
-- (TiMapAnnotationProxy *)annotationFromArg:(id)arg
-{
+- (TiMapAnnotationProxy *)annotationFromArg:(id)arg {
   if ([arg isKindOfClass:[TiMapAnnotationProxy class]]) {
     [(TiMapAnnotationProxy *)arg setDelegate:self];
     [arg setPlaced:NO];
@@ -169,8 +162,7 @@
 
 #pragma mark Public API
 
-- (void)zoom:(id)arg
-{
+- (void)zoom:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSObject);
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
@@ -191,8 +183,7 @@
   }
 }
 
-- (void)selectAnnotation:(id)arg
-{
+- (void)selectAnnotation:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSObject);
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
@@ -207,8 +198,7 @@
   }
 }
 
-- (void)deselectAnnotation:(id)arg
-{
+- (void)deselectAnnotation:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSObject);
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
@@ -220,8 +210,7 @@
   }
 }
 
-- (void)addAnnotation:(id)arg
-{
+- (void)addAnnotation:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSObject);
   TiMapAnnotationProxy *annProxy = [self annotationFromArg:arg];
   [self rememberProxy:annProxy];
@@ -243,8 +232,7 @@
   }
 }
 
-- (void)addAnnotations:(id)arg
-{
+- (void)addAnnotations:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSArray);
   NSMutableArray *newAnnotations = [NSMutableArray arrayWithCapacity:[arg count]];
   for (id ann in arg) {
@@ -265,8 +253,7 @@
   }
 }
 
-- (void)setAnnotations:(id)arg
-{
+- (void)setAnnotations:(id)arg {
   ENSURE_TYPE(arg, NSArray);
 
   NSMutableArray *newAnnotations = [NSMutableArray arrayWithCapacity:[arg count]];
@@ -316,8 +303,7 @@
   }
 }
 
-- (NSArray *)annotations
-{
+- (NSArray *)annotations {
   if ([self viewAttached]) {
     __block NSArray *currentAnnotations = nil;
     TiThreadPerformOnMainThread(^{
@@ -330,8 +316,7 @@
   }
 }
 
-- (void)removeAnnotation:(id)arg
-{
+- (void)removeAnnotation:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSObject);
 
   // For legacy reasons, we can apparently allow the arg here to be a string (0.8 compatibility?!?)
@@ -357,8 +342,7 @@
   }
 }
 
-- (void)removeAnnotations:(id)arg
-{
+- (void)removeAnnotations:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSArray);
   for (id ann in arg) {
     if ([ann isKindOfClass:[TiMapAnnotationProxy class]]) {
@@ -375,8 +359,7 @@
   }
 }
 
-- (void)removeAllAnnotations:(id)unused
-{
+- (void)removeAllAnnotations:(id)unused {
   if ([self viewAttached]) {
     __block NSArray *currentAnnotations = nil;
     TiThreadPerformOnMainThread(^{
@@ -405,8 +388,7 @@
   }
 }
 
-- (void)addRoute:(id)arg
-{
+- (void)addRoute:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapRouteProxy);
 
   if ([self viewAttached]) {
@@ -426,8 +408,7 @@
   }
 }
 
-- (void)removeRoute:(id)arg
-{
+- (void)removeRoute:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapRouteProxy);
 
   if ([self viewAttached]) {
@@ -447,8 +428,7 @@
   }
 }
 
-- (void)addPolygons:(id)arg
-{
+- (void)addPolygons:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
@@ -463,8 +443,7 @@
   }
 }
 
-- (void)addPolygon:(id)arg
-{
+- (void)addPolygon:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapPolygonProxy);
 
   if ([self viewAttached]) {
@@ -484,8 +463,7 @@
   }
 }
 
-- (void)removePolygon:(id)arg
-{
+- (void)removePolygon:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapPolygonProxy);
 
   if ([self viewAttached]) {
@@ -505,8 +483,7 @@
   }
 }
 
-- (void)removeAllPolygons:(id)args
-{
+- (void)removeAllPolygons:(id)args {
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
       [(TiMapView *)[self view] removeAllPolygons];
@@ -515,8 +492,7 @@
   }
 }
 
-- (void)setPolygons:(id)arg
-{
+- (void)setPolygons:(id)arg {
   ENSURE_TYPE(arg, NSArray);
 
   NSMutableArray *initialPolygons = [NSMutableArray arrayWithCapacity:[arg count]];
@@ -541,8 +517,7 @@
   }
 }
 
-- (void)addCircles:(id)arg
-{
+- (void)addCircles:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
@@ -557,8 +532,7 @@
   }
 }
 
-- (void)addCircle:(id)arg
-{
+- (void)addCircle:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapCircleProxy);
 
   if ([self viewAttached]) {
@@ -578,8 +552,7 @@
   }
 }
 
-- (void)removeCircle:(id)arg
-{
+- (void)removeCircle:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapCircleProxy);
 
   if ([self viewAttached]) {
@@ -599,8 +572,7 @@
   }
 }
 
-- (void)removeAllCircles:(id)args
-{
+- (void)removeAllCircles:(id)args {
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
       [(TiMapView *)[self view] removeAllCircles];
@@ -609,8 +581,7 @@
   }
 }
 
-- (void)setCircles:(id)arg
-{
+- (void)setCircles:(id)arg {
   ENSURE_TYPE(arg, NSArray);
 
   NSMutableArray *initialCircles = [NSMutableArray arrayWithCapacity:[arg count]];
@@ -634,8 +605,7 @@
   }
 }
 
-- (void)addPolylines:(id)arg
-{
+- (void)addPolylines:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
@@ -650,8 +620,7 @@
   }
 }
 
-- (void)addPolyline:(id)arg
-{
+- (void)addPolyline:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapPolylineProxy);
 
   if ([self viewAttached]) {
@@ -671,8 +640,7 @@
   }
 }
 
-- (void)removePolyline:(id)arg
-{
+- (void)removePolyline:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapPolylineProxy);
 
   if ([self viewAttached]) {
@@ -692,8 +660,7 @@
   }
 }
 
-- (void)removeAllPolylines:(id)args
-{
+- (void)removeAllPolylines:(id)args {
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
       [(TiMapView *)[self view] removeAllPolylines];
@@ -702,8 +669,7 @@
   }
 }
 
-- (void)setPolylines:(id)arg
-{
+- (void)setPolylines:(id)arg {
   ENSURE_TYPE(arg, NSArray);
 
   NSMutableArray *initialPolylines = [NSMutableArray arrayWithCapacity:[arg count]];
@@ -728,8 +694,7 @@
   }
 }
 
-- (void)addImageOverlays:(id)arg
-{
+- (void)addImageOverlays:(id)arg {
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
@@ -744,8 +709,7 @@
   }
 }
 
-- (void)addImageOverlay:(id)arg
-{
+- (void)addImageOverlay:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapImageOverlayProxy);
 
   if ([self viewAttached]) {
@@ -765,8 +729,7 @@
   }
 }
 
-- (void)removeImageOverlay:(id)arg
-{
+- (void)removeImageOverlay:(id)arg {
   ENSURE_SINGLE_ARG(arg, TiMapImageOverlayProxy);
 
   if ([self viewAttached]) {
@@ -786,8 +749,7 @@
   }
 }
 
-- (void)removeAllImageOverlays:(id)args
-{
+- (void)removeAllImageOverlays:(id)args {
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(^{
       [(TiMapView *)[self view] removeAllImageOverlays];
@@ -796,8 +758,7 @@
   }
 }
 
-- (void)setImageOverlays:(id)args
-{
+- (void)setImageOverlays:(id)args {
   ENSURE_TYPE(args, NSArray);
 
   NSMutableArray *initialImageOverlays = [NSMutableArray arrayWithCapacity:[args count]];
@@ -822,8 +783,7 @@
 }
 
 #if IS_IOS_11
-- (void)setClusterAnnotation:(id)args
-{
+- (void)setClusterAnnotation:(id)args {
   ENSURE_DICT(args);
   NSArray *memberAnnotations = [args objectForKey:@"memberAnnotations"];
   id annotation = [args objectForKey:@"annotation"];
@@ -838,31 +798,27 @@
 
 #pragma mark Public APIs iOS 7
 
-- (TiMapCameraProxy *)camera
-{
+- (TiMapCameraProxy *)camera {
   return [TiMapUtils returnValueOnMainThread:^id {
     return [(TiMapView *)[self view] camera];
   }];
 }
 
-- (void)animateCamera:(id)args
-{
+- (void)animateCamera:(id)args {
   TiThreadPerformOnMainThread(^{
     [(TiMapView *)[self view] animateCamera:args];
   },
       NO);
 }
 
-- (void)showAllAnnotations:(id)unused
-{
+- (void)showAllAnnotations:(id)unused {
   TiThreadPerformOnMainThread(^{
     [(TiMapView *)[self view] showAllAnnotations:unused];
   },
-                              NO);
+      NO);
 }
 
-- (void)showAnnotations:(id)args
-{
+- (void)showAnnotations:(id)args {
   TiThreadPerformOnMainThread(^{
     [(TiMapView *)[self view] showAnnotations:args];
   },

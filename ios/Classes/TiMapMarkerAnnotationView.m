@@ -10,29 +10,25 @@
 
 @implementation TiMapMarkerAnnotationView
 
-- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map_
-{
+- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map_ {
   if (self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier]) {
   }
   return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(lastHitName);
   [super dealloc];
 }
 
-- (NSString *)lastHitName
-{
+- (NSString *)lastHitName {
   NSString *result = lastHitName;
   [lastHitName autorelease];
   lastHitName = nil;
   return result;
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
   UIView *result = [super hitTest:point withEvent:event];
 
   if (result == nil) {

@@ -16,14 +16,12 @@
 
 @implementation TiMapImageOverlayRenderer
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(_overlayImage);
   [super dealloc];
 }
 
-- (instancetype)initWithOverlay:(id<MKOverlay>)overlay overlayImage:(UIImage *)overlayImage
-{
+- (instancetype)initWithOverlay:(id<MKOverlay>)overlay overlayImage:(UIImage *)overlayImage {
   self = [super initWithOverlay:overlay];
   if (self) {
     _overlayImage = overlayImage;
@@ -32,8 +30,7 @@
   return self;
 }
 
-- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context
-{
+- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context {
   CGImageRef imageReference = self.overlayImage.CGImage;
 
   MKMapRect theMapRect = self.overlay.boundingMapRect;

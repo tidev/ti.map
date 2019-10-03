@@ -11,8 +11,7 @@
 @implementation TiMapImageOverlay
 @synthesize coordinate, boundingMapRect;
 
-- (instancetype)initWithMidCoordinate:(CLLocationCoordinate2D)midCoordinate andMapRect:(MKMapRect)mapRect
-{
+- (instancetype)initWithMidCoordinate:(CLLocationCoordinate2D)midCoordinate andMapRect:(MKMapRect)mapRect {
   self = [super init];
   if (self) {
     boundingMapRect = mapRect;
@@ -26,8 +25,7 @@
 
 @synthesize imageOverlayRenderer, imageOverlay;
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(imageOverlayRenderer);
   RELEASE_TO_NIL(imageOverlay);
   RELEASE_TO_NIL(_image);
@@ -35,13 +33,11 @@
   [super dealloc];
 }
 
-- (NSArray *)keySequence
-{
+- (NSArray *)keySequence {
   return @[ @"image", @"boundsCoordinate" ];
 }
 
-- (void)_initWithProperties:(NSDictionary *)properties
-{
+- (void)_initWithProperties:(NSDictionary *)properties {
   if ([properties objectForKey:@"image"] == nil) {
     [self throwException:@"missing required image property" subreason:nil location:CODELOCATION];
   }
@@ -54,13 +50,11 @@
 
 #pragma mark Internal
 
-- (NSString *)apiName
-{
+- (NSString *)apiName {
   return @"Ti.Map.ImageOverlay";
 }
 
-- (TiMapImageOverlayRenderer *)imageOverlayRenderer
-{
+- (TiMapImageOverlayRenderer *)imageOverlayRenderer {
   if (imageOverlayRenderer == nil) {
     imageOverlay = [[TiMapImageOverlay alloc] initWithMidCoordinate:_midCoordinate andMapRect:_mapRect];
     imageOverlayRenderer = [[[TiMapImageOverlayRenderer alloc] initWithOverlay:imageOverlay overlayImage:_image] retain];
@@ -71,8 +65,7 @@
 
 #pragma mark Public APIs
 
-- (void)setImage:(id)value
-{
+- (void)setImage:(id)value {
   if (!value) {
     [self throwException:@"Missing required \"image\" property." subreason:nil location:CODELOCATION];
   }
@@ -80,8 +73,7 @@
   [self replaceValue:value forKey:@"image" notification:NO];
 }
 
-- (void)setBoundsCoordinate:(id)value
-{
+- (void)setBoundsCoordinate:(id)value {
   if (!value) {
     [self throwException:@"Missing required \"boundsCoordinate\" property." subreason:nil location:CODELOCATION];
   }

@@ -14,16 +14,14 @@
 
 @synthesize level, routeLine, routeRenderer;
 
-- (id)init
-{
+- (id)init {
   if (self = [super init]) {
     width = 10; // Default route width
   }
   return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(color);
   RELEASE_TO_NIL(routeLine);
   RELEASE_TO_NIL(routeRenderer);
@@ -31,8 +29,7 @@
   [super dealloc];
 }
 
-- (void)_initWithProperties:(NSDictionary *)properties
-{
+- (void)_initWithProperties:(NSDictionary *)properties {
   if ([properties objectForKey:@"points"] == nil) {
     [self throwException:@"missing required points property" subreason:nil location:CODELOCATION];
   }
@@ -40,13 +37,11 @@
   [super _initWithProperties:properties];
 }
 
-- (NSString *)apiName
-{
+- (NSString *)apiName {
   return @"Ti.Map.Route";
 }
 
-- (void)processPoints:(NSArray *)points
-{
+- (void)processPoints:(NSArray *)points {
   if (routeLine != nil) {
     NSLog(@"[WARN] Route points can not be changed after route creation.");
     return;
@@ -74,15 +69,13 @@
   [self applyWidth];
 }
 
-- (void)applyColor
-{
+- (void)applyColor {
   if (routeRenderer != nil) {
     routeRenderer.fillColor = routeRenderer.strokeColor = color ? [color color] : [UIColor blueColor];
   }
 }
 
-- (void)applyWidth
-{
+- (void)applyWidth {
   if (routeRenderer != nil) {
     routeRenderer.lineWidth = width;
   }
@@ -90,8 +83,7 @@
 
 #pragma mark Public APIs
 
-- (void)setPoints:(id)value
-{
+- (void)setPoints:(id)value {
   ENSURE_TYPE(value, NSArray);
   if (![value count]) {
     [self throwException:@"missing required points data" subreason:nil location:CODELOCATION];
@@ -100,8 +92,7 @@
   [self processPoints:value];
 }
 
-- (void)setColor:(id)value
-{
+- (void)setColor:(id)value {
   if (color != nil) {
     RELEASE_TO_NIL(color);
   }
@@ -109,14 +100,12 @@
   [self applyColor];
 }
 
-- (void)setWidth:(id)value
-{
+- (void)setWidth:(id)value {
   width = [TiUtils floatValue:value];
   [self applyWidth];
 }
 
-- (void)setLevel:(id)value
-{
+- (void)setLevel:(id)value {
   // level is not supported before iOS 7 but it doesn't hurt to capture it.
   if (![TiUtils isIOS7OrGreater]) {
     [TiMapModule logAddedIniOS7Warning:@"level"];

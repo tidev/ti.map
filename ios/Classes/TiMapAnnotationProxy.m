@@ -29,8 +29,7 @@
 
 #pragma mark Internal
 
-- (void)_configure
-{
+- (void)_configure {
   static int mapTags = 0;
   tag = mapTags++;
   needsRefreshingWithSelection = YES;
@@ -38,24 +37,20 @@
   [super _configure];
 }
 
-- (NSString *)apiName
-{
+- (NSString *)apiName {
   return @"Ti.Map.Annotation";
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(controllerPreviewing);
   [super dealloc];
 }
 
-- (NSMutableDictionary *)langConversionTable
-{
+- (NSMutableDictionary *)langConversionTable {
   return [NSMutableDictionary dictionaryWithObjectsAndKeys:@"title", @"titleid", @"subtitle", @"subtitleid", nil];
 }
 
-- (UIView *)makeButton:(id)button tag:(int)buttonTag
-{
+- (UIView *)makeButton:(id)button tag:(int)buttonTag {
   UIView *button_view = nil;
   if ([button isKindOfClass:[NSNumber class]]) {
     // this is button type constant
@@ -78,20 +73,17 @@
   return button_view;
 }
 
-- (void)refreshAfterDelay
-{
+- (void)refreshAfterDelay {
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
     [self refreshIfNeeded];
   });
 }
 
-- (void)setNeedsRefreshingWithSelection:(BOOL)shouldReselect
-{
+- (void)setNeedsRefreshingWithSelection:(BOOL)shouldReselect {
   if (delegate == nil) {
     return; //Nobody to refresh!
   }
-  @synchronized(self)
-  {
+  @synchronized(self) {
     BOOL invokeMethod = !needsRefreshing;
     needsRefreshing = YES;
     needsRefreshingWithSelection |= shouldReselect;
@@ -105,10 +97,8 @@
   }
 }
 
-- (void)refreshIfNeeded
-{
-  @synchronized(self)
-  {
+- (void)refreshIfNeeded {
+  @synchronized(self) {
     if (!needsRefreshing) {
       return; //Already done.
     }
@@ -122,22 +112,19 @@
 
 #pragma mark Public APIs
 
-- (CLLocationCoordinate2D)coordinate
-{
+- (CLLocationCoordinate2D)coordinate {
   CLLocationCoordinate2D result;
   result.latitude = [TiUtils doubleValue:[self valueForUndefinedKey:@"latitude"]];
   result.longitude = [TiUtils doubleValue:[self valueForUndefinedKey:@"longitude"]];
   return result;
 }
 
-- (void)setCoordinate:(CLLocationCoordinate2D)coordinate
-{
+- (void)setCoordinate:(CLLocationCoordinate2D)coordinate {
   [self setValue:[NSNumber numberWithDouble:coordinate.latitude] forUndefinedKey:@"latitude"];
   [self setValue:[NSNumber numberWithDouble:coordinate.longitude] forUndefinedKey:@"longitude"];
 }
 
-- (void)setLatitude:(id)latitude
-{
+- (void)setLatitude:(id)latitude {
   double curValue = [TiUtils doubleValue:[self valueForUndefinedKey:@"latitude"]];
   double newValue = [TiUtils doubleValue:latitude];
   [self replaceValue:latitude forKey:@"latitude" notification:NO];
@@ -146,8 +133,7 @@
   }
 }
 
-- (void)setLongitude:(id)longitude
-{
+- (void)setLongitude:(id)longitude {
   double curValue = [TiUtils doubleValue:[self valueForUndefinedKey:@"longitude"]];
   double newValue = [TiUtils doubleValue:longitude];
   [self replaceValue:longitude forKey:@"longitude" notification:NO];
@@ -157,13 +143,11 @@
 }
 
 // Title and subtitle for use by selection UI.
-- (NSString *)title
-{
+- (NSString *)title {
   return [self valueForUndefinedKey:@"title"];
 }
 
-- (void)setTitle:(id)title
-{
+- (void)setTitle:(id)title {
   title = [TiUtils replaceString:[TiUtils stringValue:title]
                       characters:[NSCharacterSet newlineCharacterSet]
                       withString:@" "];
@@ -176,13 +160,11 @@
   }
 }
 
-- (NSString *)subtitle
-{
+- (NSString *)subtitle {
   return [self valueForUndefinedKey:@"subtitle"];
 }
 
-- (void)setSubtitle:(id)subtitle
-{
+- (void)setSubtitle:(id)subtitle {
   subtitle = [TiUtils replaceString:[TiUtils stringValue:subtitle]
                          characters:[NSCharacterSet newlineCharacterSet]
                          withString:@" "];
@@ -197,8 +179,7 @@
   }
 }
 
-- (void)setHidden:(id)value
-{
+- (void)setHidden:(id)value {
   id current = [self valueForUndefinedKey:@"hidden"];
   [self replaceValue:value forKey:@"hidden" notification:NO];
 
@@ -207,18 +188,15 @@
   }
 }
 
-- (id)hidden
-{
+- (id)hidden {
   return NUMBOOL([TiUtils boolValue:[self valueForUndefinedKey:@"hidden"] def:NO]);
 }
 
-- (id)pincolor
-{
+- (id)pincolor {
   return NUMINT([self valueForUndefinedKey:@"pincolor"]);
 }
 
-- (void)setPincolor:(id)color
-{
+- (void)setPincolor:(id)color {
   id current = [self valueForUndefinedKey:@"pincolor"];
   [self replaceValue:color forKey:@"pincolor" notification:NO];
   if (current != color) {
@@ -229,8 +207,7 @@
 // Mapping both string-colors, color constant and native colors to a pin color
 // This is overcomplicated to maintain iOS < 9 compatibility. Remove this when
 // we have a minimum iOS verion of 9.0+
-- (id)nativePinColor
-{
+- (id)nativePinColor {
   id current = [self valueForUndefinedKey:@"pincolor"];
 
   if ([current isKindOfClass:[NSString class]]) {
@@ -287,13 +264,11 @@
   }
 }
 
-- (BOOL)animatesDrop
-{
+- (BOOL)animatesDrop {
   return [TiUtils boolValue:[self valueForUndefinedKey:@"animate"]];
 }
 
-- (UIView *)leftViewAccessory
-{
+- (UIView *)leftViewAccessory {
   TiViewProxy *viewProxy = [self valueForUndefinedKey:@"leftView"];
   if (viewProxy != nil && [viewProxy isKindOfClass:[TiViewProxy class]]) {
     return [viewProxy view];
@@ -306,8 +281,7 @@
   return nil;
 }
 
-- (UIView *)rightViewAccessory
-{
+- (UIView *)rightViewAccessory {
   TiViewProxy *viewProxy = [self valueForUndefinedKey:@"rightView"];
   if (viewProxy != nil && [viewProxy isKindOfClass:[TiViewProxy class]]) {
     return [viewProxy view];
@@ -320,8 +294,7 @@
   return nil;
 }
 
-- (void)setLeftButton:(id)button
-{
+- (void)setLeftButton:(id)button {
   id current = [self valueForUndefinedKey:@"leftButton"];
   [self replaceValue:button forKey:@"leftButton" notification:NO];
   if (current != button) {
@@ -329,8 +302,7 @@
   }
 }
 
-- (void)setRightButton:(id)button
-{
+- (void)setRightButton:(id)button {
   id current = [self valueForUndefinedKey:@"rightButton"];
   [self replaceValue:button forKey:@"rightButton" notification:NO];
   if (current != button) {
@@ -338,8 +310,7 @@
   }
 }
 
-- (void)setRightView:(id)rightview
-{
+- (void)setRightView:(id)rightview {
   id current = [self valueForUndefinedKey:@"rightView"];
   [self replaceValue:rightview forKey:@"rightView" notification:NO];
   if (current != rightview) {
@@ -347,8 +318,7 @@
   }
 }
 
-- (void)setLeftView:(id)leftview
-{
+- (void)setLeftView:(id)leftview {
   id current = [self valueForUndefinedKey:@"leftView"];
   [self replaceValue:leftview forKey:@"leftView" notification:NO];
   if (current != leftview) {
@@ -356,8 +326,7 @@
   }
 }
 
-- (void)setPreviewContext:(id)previewContext
-{
+- (void)setPreviewContext:(id)previewContext {
   Class TiUIiOSPreviewContextProxy = NSClassFromString(@"TiUIiOSPreviewContextProxy");
 
   if (!TiUIiOSPreviewContextProxy || ![previewContext respondsToSelector:@selector(preview)]) {
@@ -385,8 +354,7 @@
   }
 }
 
-- (void)setImage:(id)image
-{
+- (void)setImage:(id)image {
   id current = [self valueForUndefinedKey:@"image"];
   [self replaceValue:image forKey:@"image" notification:NO];
   if ([current isEqual:image] == NO) {
@@ -394,8 +362,7 @@
   }
 }
 
-- (void)setShowAsMarker:(id)marker
-{
+- (void)setShowAsMarker:(id)marker {
   id current = [self valueForUndefinedKey:@"showAsMarker"];
   [self replaceValue:marker forKey:@"showAsMarker" notification:NO];
   if ([current isEqual:marker] == NO) {
@@ -403,8 +370,7 @@
   }
 }
 
-- (void)setMarkerGlyphText:(id)markerGlyphText
-{
+- (void)setMarkerGlyphText:(id)markerGlyphText {
   id current = [self valueForUndefinedKey:@"markerGlyphText"];
   [self replaceValue:markerGlyphText forKey:@"markerGlyphText" notification:NO];
   if (![current isEqualToString:markerGlyphText]) {
@@ -412,8 +378,7 @@
   }
 }
 
-- (void)setMarkerGlyphColor:(id)markerGlyphColor
-{
+- (void)setMarkerGlyphColor:(id)markerGlyphColor {
   id current = [self valueForUndefinedKey:@"markerGlyphColor"];
   [self replaceValue:markerGlyphColor forKey:@"markerGlyphColor" notification:NO];
   if ([current isEqual:markerGlyphColor] == NO) {
@@ -421,8 +386,7 @@
   }
 }
 
-- (void)setMarkerColor:(id)markerColor
-{
+- (void)setMarkerColor:(id)markerColor {
   id current = [self valueForUndefinedKey:@"markerColor"];
   [self replaceValue:markerColor forKey:@"markerColor" notification:NO];
   if ([current isEqual:markerColor] == NO) {
@@ -430,8 +394,7 @@
   }
 }
 
-- (void)setMarkerGlyphImage:(id)markerGlyphImage
-{
+- (void)setMarkerGlyphImage:(id)markerGlyphImage {
   id current = [self valueForUndefinedKey:@"markerGlyphImage"];
   [self replaceValue:markerGlyphImage forKey:@"markerGlyphImage" notification:NO];
   if ([current isEqual:markerGlyphImage] == NO) {
@@ -439,8 +402,7 @@
   }
 }
 
-- (void)setMarkerSelectedGlyphImage:(id)markerSelectedGlyphImage
-{
+- (void)setMarkerSelectedGlyphImage:(id)markerSelectedGlyphImage {
   id current = [self valueForUndefinedKey:@"markerSelectedGlyphImage"];
   [self replaceValue:markerSelectedGlyphImage forKey:@"markerSelectedGlyphImage" notification:NO];
   if ([current isEqual:markerSelectedGlyphImage] == NO) {
@@ -448,8 +410,7 @@
   }
 }
 
-- (void)setMarkerAnimatesWhenAdded:(id)animates
-{
+- (void)setMarkerAnimatesWhenAdded:(id)animates {
   id current = [self valueForUndefinedKey:@"markerAnimatesWhenAdded"];
   [self replaceValue:animates forKey:@"markerAnimatesWhenAdded" notification:NO];
   if ([current isEqual:animates] == NO) {
@@ -457,8 +418,7 @@
   }
 }
 
-- (void)setMarkerTitleVisibility:(id)titleVisibility
-{
+- (void)setMarkerTitleVisibility:(id)titleVisibility {
   id current = [self valueForUndefinedKey:@"markerTitleVisibility"];
   [self replaceValue:titleVisibility forKey:@"markerTitleVisibility" notification:NO];
   if ([current isEqual:titleVisibility] == NO) {
@@ -466,8 +426,7 @@
   }
 }
 
-- (void)setMarkerSubtitleVisibility:(id)subtitleVisibility
-{
+- (void)setMarkerSubtitleVisibility:(id)subtitleVisibility {
   id current = [self valueForUndefinedKey:@"markerSubtitleVisibility"];
   [self replaceValue:subtitleVisibility forKey:@"markerSubtitleVisibility" notification:NO];
   if ([current isEqual:subtitleVisibility] == NO) {
@@ -475,8 +434,7 @@
   }
 }
 
-- (void)setCollisionMode:(id)collisionMode
-{
+- (void)setCollisionMode:(id)collisionMode {
   id current = [self valueForUndefinedKey:@"collisionMode"];
   [self replaceValue:collisionMode forKey:@"collisionMode" notification:NO];
   if ([current isEqual:collisionMode] == NO) {
@@ -484,8 +442,7 @@
   }
 }
 
-- (void)setAnnotationDisplayPriority:(id)displayPriority
-{
+- (void)setAnnotationDisplayPriority:(id)displayPriority {
   id current = [self valueForUndefinedKey:@"annotationDisplayPriority"];
   [self replaceValue:displayPriority forKey:@"annotationDisplayPriority" notification:NO];
   if ([current isEqual:displayPriority] == NO) {
@@ -494,8 +451,7 @@
 }
 
 #if IS_IOS_11
-- (void)setClusterIdentifier:(id)clusterIdentifier
-{
+- (void)setClusterIdentifier:(id)clusterIdentifier {
   id current = [self valueForUndefinedKey:@"clusterIdentifier"];
   [self replaceValue:clusterIdentifier forKey:@"clusterIdentifier" notification:NO];
   if (![current isEqualToString:clusterIdentifier]) {
@@ -504,8 +460,7 @@
 }
 #endif
 
-- (void)setCustomView:(id)customView
-{
+- (void)setCustomView:(id)customView {
   id current = [self valueForUndefinedKey:@"customView"];
   [self replaceValue:customView forKey:@"customView" notification:NO];
   if ([current isEqual:customView] == NO) {
@@ -517,16 +472,14 @@
   }
 }
 
-- (void)proxyDidRelayout:(id)sender
-{
+- (void)proxyDidRelayout:(id)sender {
   id current = [self valueForUndefinedKey:@"customView"];
   if (([current isEqual:sender] == YES) && (self.placed)) {
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
 
-- (void)setCenterOffset:(id)centeroffset
-{
+- (void)setCenterOffset:(id)centeroffset {
   [self replaceValue:centeroffset forKey:@"centerOffset" notification:NO];
   CGPoint newVal = [TiUtils pointValue:centeroffset];
   if (!CGPointEqualToPoint(newVal, offset)) {
@@ -535,8 +488,7 @@
   }
 }
 
-- (int)tag
-{
+- (int)tag {
   return tag;
 }
 

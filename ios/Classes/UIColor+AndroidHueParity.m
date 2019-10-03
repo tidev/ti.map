@@ -9,18 +9,15 @@
 
 @implementation UIColor (AndroidColors)
 
-+ (UIColor *)azureColor
-{
++ (UIColor *)azureColor {
   return [UIColor colorWithRed:0.0 green:0.5 blue:1.0 alpha:1.0];
 }
 
-+ (UIColor *)violetColor
-{
++ (UIColor *)violetColor {
   return [UIColor colorWithRed:0.5 green:0.0 blue:1.0 alpha:1.0];
 }
 
-+ (UIColor *)roseColor
-{
++ (UIColor *)roseColor {
   return [UIColor colorWithRed:1.0 green:0.0 blue:0.5 alpha:1.0];
 }
 

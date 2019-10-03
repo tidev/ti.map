@@ -12,8 +12,7 @@
 
 @synthesize polyline, polylineRenderer;
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(polyline);
   RELEASE_TO_NIL(polylineRenderer);
   RELEASE_TO_NIL(strokeColor);
@@ -21,8 +20,7 @@
   [super dealloc];
 }
 
-- (void)_initWithProperties:(NSDictionary *)properties
-{
+- (void)_initWithProperties:(NSDictionary *)properties {
   if ([properties objectForKey:@"points"] == nil) {
     [self throwException:@"missing required points property" subreason:nil location:CODELOCATION];
   }
@@ -33,13 +31,11 @@
 
 #pragma mark Internal
 
-- (NSString *)apiName
-{
+- (NSString *)apiName {
   return @"Ti.Map.Polyline";
 }
 
-- (void)setupPolyline
-{
+- (void)setupPolyline {
   id points = [self valueForKey:@"points"];
   CLLocationCoordinate2D *coordArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
 
@@ -62,8 +58,7 @@
 // an array of longitude, latitude objects.
 // e.g. [ [123.33, 34.44], [100.39, 78.23], etc. ]
 // [ {longitude: 123.33, latitude, 34.44}, {longitude: 100.39, latitude: 78.23}, etc. ]
-- (CLLocationCoordinate2D)processLocation:(id)locObj
-{
+- (CLLocationCoordinate2D)processLocation:(id)locObj {
   CLLocationDegrees lat;
   CLLocationDegrees lon;
   CLLocationCoordinate2D coord;
@@ -80,22 +75,19 @@
   return coord;
 }
 
-- (void)applyStrokeColor
-{
+- (void)applyStrokeColor {
   if (polylineRenderer != nil) {
     [polylineRenderer setStrokeColor:strokeColor];
   }
 }
 
-- (void)applyStrokeWidth
-{
+- (void)applyStrokeWidth {
   if (polylineRenderer != nil) {
     [polylineRenderer setLineWidth:strokeWidth];
   }
 }
 
-- (void)applyStrokePattern
-{
+- (void)applyStrokePattern {
   if (polylineRenderer != nil && pattern != nil) {
     [polylineRenderer setLineDashPattern:@[ NUMINTEGER(pattern.dashLength), NUMINTEGER(pattern.gapLength) ]];
 
@@ -115,8 +107,7 @@
 
 #pragma mark Public APIs
 
-- (void)setPoints:(id)value
-{
+- (void)setPoints:(id)value {
   ENSURE_TYPE(value, NSArray);
   if (![value count]) {
     [self throwException:@"missing required points data" subreason:nil location:CODELOCATION];
@@ -124,8 +115,7 @@
   [self replaceValue:value forKey:@"points" notification:NO];
 }
 
-- (void)setStrokeColor:(id)value
-{
+- (void)setStrokeColor:(id)value {
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
@@ -133,14 +123,12 @@
   [self applyStrokeColor];
 }
 
-- (void)setStrokeWidth:(id)value
-{
+- (void)setStrokeWidth:(id)value {
   strokeWidth = [TiUtils floatValue:value];
   [self applyStrokeWidth];
 }
 
-- (void)setPattern:(id)args
-{
+- (void)setPattern:(id)args {
   ENSURE_TYPE(args, NSDictionary);
 
   TiMapOverlyPatternType type = [TiUtils intValue:@"type" properties:args def:TiMapOverlyPatternTypeDashed];

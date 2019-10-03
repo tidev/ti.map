@@ -11,8 +11,7 @@
 
 @synthesize circleRenderer;
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(circleRenderer);
   RELEASE_TO_NIL(fillColor);
   RELEASE_TO_NIL(strokeColor);
@@ -20,13 +19,11 @@
   [super dealloc];
 }
 
-- (NSArray *)keySequence
-{
+- (NSArray *)keySequence {
   return @[ @"center", @"radius" ];
 }
 
-- (void)_initWithProperties:(NSDictionary *)properties
-{
+- (void)_initWithProperties:(NSDictionary *)properties {
   if ([properties objectForKey:@"center"] == nil) {
     [self throwException:@"missing required center property" subreason:nil location:CODELOCATION];
   }
@@ -40,13 +37,11 @@
 
 #pragma mark Internal
 
-- (NSString *)apiName
-{
+- (NSString *)apiName {
   return @"Ti.Map.Circle";
 }
 
-- (MKCircleRenderer *)circleRenderer
-{
+- (MKCircleRenderer *)circleRenderer {
   if (circleRenderer == nil) {
     circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]] retain];
     [circleRenderer setFillColor:fillColor ? [fillColor color] : [UIColor blackColor]];
@@ -60,8 +55,7 @@
 // Center can either be a an array of [longitude, latitude] or
 // a longitude, latitude object.
 // e.g. [123.33, 34.44] or {longitude: 123.33, latitude, 34.44}
-- (void)setCenter:(id)value
-{
+- (void)setCenter:(id)value {
   if (!value) {
     [self throwException:@"missing required center data" subreason:nil location:CODELOCATION];
   }
@@ -81,8 +75,7 @@
   [self replaceValue:value forKey:@"center" notification:NO];
 }
 
-- (void)setFillColor:(id)value
-{
+- (void)setFillColor:(id)value {
   if (fillColor != nil) {
     RELEASE_TO_NIL(fillColor);
   }
@@ -91,8 +84,7 @@
   [self replaceValue:value forKey:@"fillColor" notification:NO];
 }
 
-- (void)setStrokeColor:(id)value
-{
+- (void)setStrokeColor:(id)value {
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
@@ -101,15 +93,13 @@
   [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }
 
-- (void)setStrokeWidth:(id)value
-{
+- (void)setStrokeWidth:(id)value {
   strokeWidth = [TiUtils floatValue:value];
   [[self circleRenderer] setLineWidth:strokeWidth];
   [self replaceValue:value forKey:@"strokeWidth" notification:NO];
 }
 
-- (void)setOpacity:(id)value
-{
+- (void)setOpacity:(id)value {
   alpha = [TiUtils floatValue:value];
   [[self circleRenderer] setAlpha:alpha];
   [self replaceValue:value forKey:@"opacity" notification:NO];

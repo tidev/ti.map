@@ -10,8 +10,7 @@
 
 @implementation TiMapCustomAnnotationView
 
-- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map
-{
+- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier map:(TiMapView *)map {
   if (self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier]) {
     self.backgroundColor = [UIColor clearColor];
     wrapperView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -21,8 +20,7 @@
   return self;
 }
 
-- (void)setProxy:(TiViewProxy *)customView
-{
+- (void)setProxy:(TiViewProxy *)customView {
   if (theProxy != customView) {
     [wrapperView.subviews.firstObject removeFromSuperview];
     RELEASE_TO_NIL(theProxy);
@@ -33,32 +31,28 @@
   }
 }
 
-- (void)initWithProxy:(TiViewProxy *)customView
-{
+- (void)initWithProxy:(TiViewProxy *)customView {
   theProxy = [customView retain];
   TiUIView *theView = [theProxy barButtonViewForSize:CGSizeZero];
   self.frame = wrapperView.frame = [theView bounds];
   [wrapperView addSubview:theView];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
   RELEASE_TO_NIL(wrapperView);
   RELEASE_TO_NIL(lastHitName);
   RELEASE_TO_NIL(theProxy);
   [super dealloc];
 }
 
-- (NSString *)lastHitName
-{
+- (NSString *)lastHitName {
   NSString *result = lastHitName;
   [lastHitName autorelease];
   lastHitName = nil;
   return result;
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
   UIView *result = [super hitTest:point withEvent:event];
 
   if (result == nil) {
