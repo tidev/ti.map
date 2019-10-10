@@ -3,7 +3,7 @@ var nav;
 
 function init(rows, onClick) {
     var win = Ti.UI.createWindow({
-        backgroundColor: '#FFF',
+        backgroundColor: 'gray',
         title: 'Ti.Map',
         translucent: false
     });
@@ -13,7 +13,9 @@ function init(rows, onClick) {
     for (var row in rows) {
         transformedRows.push({
             title: rows[row].title,
-            hasChild: true
+            font: {
+            fontSize: 25
+           }
         });
     }
 
