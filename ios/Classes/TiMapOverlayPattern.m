@@ -9,7 +9,8 @@
 
 @implementation TiMapOverlayPattern
 
-- (instancetype)initWithPatternType:(TiMapOverlyPatternType)patternType andGapLength:(NSInteger)gapLength dashLength:(NSInteger)dashLength {
+- (instancetype)initWithPatternType:(TiMapOverlyPatternType)patternType andGapLength:(NSInteger)gapLength dashLength:(NSInteger)dashLength
+{
   if (self = [super init]) {
     _type = patternType;
     _dashLength = dashLength;

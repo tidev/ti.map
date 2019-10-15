@@ -12,16 +12,19 @@
 
 @implementation TiMapSnapshotterProxy
 
-- (NSString *)apiName {
+- (NSString *)apiName
+{
   return @"Ti.Map.Snapshotter";
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
   RELEASE_TO_NIL(options);
   [super dealloc];
 }
 
-- (MKCoordinateRegion)regionFromDict:(NSDictionary *)dict {
+- (MKCoordinateRegion)regionFromDict:(NSDictionary *)dict
+{
   CLLocationDegrees latitudeDelta = [TiUtils floatValue:@"latitudeDelta" properties:dict];
   CLLocationDegrees longitudeDelta = [TiUtils floatValue:@"longitudeDelta" properties:dict];
 
@@ -31,7 +34,8 @@
   return MKCoordinateRegionMake(CLLocationCoordinate2DMake(latitude, longitude), MKCoordinateSpanMake(latitudeDelta, longitudeDelta));
 }
 
-- (MKMapSnapshotOptions *)options {
+- (MKMapSnapshotOptions *)options
+{
   if (!options) {
     options = [[MKMapSnapshotOptions alloc] init];
     [options setScale:[[UIScreen mainScreen] scale]];
@@ -41,27 +45,32 @@
   return options;
 }
 
-- (void)setRegion:(id)value {
+- (void)setRegion:(id)value
+{
   ENSURE_TYPE(value, NSDictionary);
   [[self options] setRegion:[self regionFromDict:value]];
 }
 
-- (void)setMapType:(id)value {
+- (void)setMapType:(id)value
+{
   ENSURE_TYPE(value, NSNumber);
   [[self options] setMapType:[TiUtils intValue:value]];
 }
 
-- (void)setShowBuilding:(id)value {
+- (void)setShowBuilding:(id)value
+{
   ENSURE_TYPE(value, NSNumber);
   [[self options] setShowsBuildings:[TiUtils boolValue:value]];
 }
 
-- (void)setShowsPointsOfInterest:(id)value {
+- (void)setShowsPointsOfInterest:(id)value
+{
   ENSURE_TYPE(value, NSNumber);
   [[self options] setShowsPointsOfInterest:[TiUtils boolValue:value]];
 }
 
-- (void)setSize:(id)args {
+- (void)setSize:(id)args
+{
   ENSURE_SINGLE_ARG(args, NSDictionary);
   float width = [TiUtils floatValue:[args objectForKey:@"width"]];
   float height = [TiUtils floatValue:[args objectForKey:@"height"]];
@@ -69,7 +78,8 @@
   [[self options] setSize:CGSizeMake(width, height)];
 }
 
-- (void)takeSnapshot:(id)args {
+- (void)takeSnapshot:(id)args
+{
   ENSURE_SINGLE_ARG(args, NSDictionary);
 
   KrollCallback *successCallback = [args objectForKey:@"success"];
