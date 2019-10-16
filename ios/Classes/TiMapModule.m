@@ -16,32 +16,38 @@
 #pragma mark Internal
 
 // this is generated for your module, please do not change it
-- (id)moduleGUID {
+- (id)moduleGUID
+{
   return @"fee93b77-8eb3-418c-8f04-013664c4af83";
 }
 
 // this is generated for your module, please do not change it
-- (NSString *)moduleId {
+- (NSString *)moduleId
+{
   return @"ti.map";
 }
 
-- (NSString *)apiName {
+- (NSString *)apiName
+{
   return @"Ti.Map";
 }
 
 #pragma mark Utils
 
-+ (void)logAddedIniOS7Warning:(NSString *)name {
++ (void)logAddedIniOS7Warning:(NSString *)name
+{
   NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
 }
 
 #pragma mark Public APIs
 
-- (TiMapViewProxy *)createView:(id)args {
+- (TiMapViewProxy *)createView:(id)args
+{
   return [[[TiMapViewProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
-- (TiMapCameraProxy *)createCamera:(id)args {
+- (TiMapCameraProxy *)createCamera:(id)args
+{
   if (![TiUtils isIOS7OrGreater]) {
     [TiMapModule logAddedIniOS7Warning:@"createCamera()"];
     return nil;
