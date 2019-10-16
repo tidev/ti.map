@@ -14,7 +14,7 @@ function init(rows, onClick) {
         transformedRows.push({
             title: rows[row].title,
             font: {
-            fontSize: 25
+                fontSize: 25
            }
         });
     }
