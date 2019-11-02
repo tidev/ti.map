@@ -65,5 +65,6 @@
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays:(id)args;
 - (void)setClusterAnnotation:(id)args;
+- (NSNumber *)containsCoordinate:(id)coordinate;
 
 @end

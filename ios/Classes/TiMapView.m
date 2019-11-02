@@ -1283,6 +1283,18 @@
   return result;
 }
 
+- (NSNumber *)containsCoordinate:(id)coordinate
+{
+  ENSURE_SINGLE_ARG(coordinate, NSDictionary);
+
+  CLLocationDegrees latitude = [TiUtils doubleValue:coordinate[@"latitude"]];
+  CLLocationDegrees longitude = [TiUtils doubleValue:coordinate[@"longitude"]];
+  
+  CLLocationCoordinate2D nativeCoordinate = CLLocationCoordinate2DMake(latitude, longitude);
+
+  return @(MKMapRectContainsPoint(map.visibleMapRect, MKMapPointForCoordinate(nativeCoordinate)));
+}
+
 #pragma mark Event generation
 
 - (void)handleCalloutTap:(UIGestureRecognizer *)sender

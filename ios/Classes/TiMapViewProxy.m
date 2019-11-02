@@ -867,4 +867,9 @@
       NO);
 }
 
+- (NSNumber *)containsCoordinate:(id)coordinate
+{
+  return [(TiMapView *)[self view] containsCoordinate:coordinate];
+}
+
 @end

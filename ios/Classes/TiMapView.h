@@ -90,6 +90,7 @@
 - (void)addImageOverlays:(id)args;
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays;
+- (NSNumber *)containsCoordinate:(id)coordinate;
 
 - (void)firePinChangeDragState:(MKAnnotationView *)pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members;
