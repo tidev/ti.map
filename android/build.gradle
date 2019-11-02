@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+repositories {
+	google()
+	jcenter()
+	mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
+}
+
+configurations.all {
+  transitive = false
+}
+
+task getDeps(type: Copy) {
+	from sourceSets.main.runtimeClasspath
+	into 'lib/'
+}
