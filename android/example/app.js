@@ -1,15 +1,3 @@
-
-/**
- * If the table view rows are too small on Android, add the following to your tiapp.xml
- *
-<android xmlns:android="http://schemas.android.com/apk/res/android">
-    <manifest>
-        <supports-screens android:anyDensity="false"/>
-    </manifest>
-</android>
- *
- */
-
 var IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 var ANDROID = (Ti.Platform.osname === 'android');
 var UI = require('ui');
