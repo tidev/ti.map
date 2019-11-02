@@ -856,7 +856,7 @@
   TiThreadPerformOnMainThread(^{
     [(TiMapView *)[self view] showAllAnnotations:unused];
   },
-                              NO);
+      NO);
 }
 
 - (void)showAnnotations:(id)args

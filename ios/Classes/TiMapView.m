@@ -808,8 +808,7 @@
 - (void)showAllAnnotations:(id)value
 {
   MKMapRect zoomRect = MKMapRectNull;
-  for (id <MKAnnotation> annotation in self.map.annotations)
-  {
+  for (id<MKAnnotation> annotation in self.map.annotations) {
     MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
     MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0.1, 0.1);
     zoomRect = MKMapRectUnion(zoomRect, pointRect);
@@ -1043,7 +1042,7 @@
         [self findCalloutView:ann];
       });
     }
-    [self fireClickEvent:view source:isSelected ? @"pin" : [ann lastHitName]];
+    [self fireClickEvent:view source:isSelected ? @"pin" : [ann lastHitName] deselected:NO];
   }
 }
 
@@ -1070,7 +1069,7 @@
       RELEASE_TO_NIL(ann);
     }
 
-    [self fireClickEvent:view source:view.isSelected ? @"pin" : @"map"];
+    [self fireClickEvent:view source:view.isSelected ? @"pin" : @"map" deselected:YES];
   }
 }
 
@@ -1084,7 +1083,7 @@
     } else if (aview.rightCalloutAccessoryView == control) {
       clickSource = @"rightButton";
     }
-    [self fireClickEvent:pinview source:clickSource];
+    [self fireClickEvent:pinview source:clickSource deselected:NO];
   }
 }
 
@@ -1287,7 +1286,7 @@
 
 - (void)handleCalloutTap:(UIGestureRecognizer *)sender
 {
-  [self fireClickEvent:selectedAnnotation source:@"infoWindow"];
+  [self fireClickEvent:selectedAnnotation source:@"infoWindow" deselected:NO];
 }
 
 - (void)handleLongPressOnMap:(UIGestureRecognizer *)sender
@@ -1378,7 +1377,7 @@
   [self.proxy fireEvent:event withObject:object];
 }
 
-- (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source
+- (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source deselected:(BOOL)deselected
 {
   if (ignoreClicks) {
     return;
@@ -1401,7 +1400,7 @@
 
   NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
                                           clicksource, @"clicksource", viewProxy, @"annotation", mapProxy, @"map",
-                                      title, @"title", NUMINTEGER(indexNumber), @"index", nil];
+                                      title, @"title", NUMINTEGER(indexNumber), @"index", NUMBOOL(deselected), @"deselected", nil];
 
   [self doClickEvent:viewProxy mapProxy:mapProxy event:event];
 }

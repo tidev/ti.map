@@ -87,8 +87,7 @@
   if (delegate == nil) {
     return; //Nobody to refresh!
   }
-  @synchronized(self)
-  {
+  @synchronized(self) {
     BOOL invokeMethod = !needsRefreshing;
     needsRefreshing = YES;
     needsRefreshingWithSelection |= shouldReselect;
@@ -104,8 +103,7 @@
 
 - (void)refreshIfNeeded
 {
-  @synchronized(self)
-  {
+  @synchronized(self) {
     if (!needsRefreshing) {
       return; //Already done.
     }

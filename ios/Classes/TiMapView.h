@@ -99,6 +99,6 @@
 
 #pragma mark Framework
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn;
-- (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source;
+- (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source deselected:(BOOL)deselected;
 
 @end
