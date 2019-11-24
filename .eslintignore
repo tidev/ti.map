@@ -1,0 +1,11 @@
+node_modules
+
+android/bin/
+android/build/
+android/dist/
+ios/build/
+ios/dist/
+
+# These should eventually be linted as well
+android/example/
+ios/example/

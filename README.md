@@ -1,4 +1,4 @@
-# Titanium Map Module [![Build Status](https://travis-ci.org/appcelerator-modules/ti.map.svg)](https://travis-ci.org/appcelerator-modules/ti.map)
+# Titanium Map Module [![Build Status](https://jenkins.appcelerator.org/buildStatus/icon?job=modules%2Fti.map%2Fmaster)](https://jenkins.appcelerator.org/job/modules/job/ti.map/job/master/) [![@titanium-sdk/ti.map](https://img.shields.io/npm/v/@titanium-sdk/ti.map.png)](https://www.npmjs.com/package/@titanium-sdk/ti.map)
 
 This is the Map Module for Titanium. Please use [JIRA](http://jira.appcelerator.org) to report issues or ask our [TiSlack community](http://tislack.org) for help! :rocket:
 

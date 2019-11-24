@@ -11,7 +11,8 @@
 
 @synthesize polygon, polygonRenderer;
 
-- (void)dealloc {
+- (void)dealloc
+{
   RELEASE_TO_NIL(polygon);
   RELEASE_TO_NIL(polygonRenderer);
   RELEASE_TO_NIL(fillColor);
@@ -20,7 +21,8 @@
   [super dealloc];
 }
 
-- (void)_initWithProperties:(NSDictionary *)properties {
+- (void)_initWithProperties:(NSDictionary *)properties
+{
   if ([properties objectForKey:@"points"] == nil) {
     [self throwException:@"missing required points property" subreason:nil location:CODELOCATION];
   }
@@ -32,11 +34,13 @@
 
 #pragma mark Internal
 
-- (NSString *)apiName {
+- (NSString *)apiName
+{
   return @"Ti.Map.Polygon";
 }
 
-- (void)setupPolygon {
+- (void)setupPolygon
+{
   id points = [self valueForKey:@"points"];
   CLLocationCoordinate2D *coordArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
 
@@ -83,7 +87,8 @@
 // an array of longitude, latitude objects.
 // e.g. [ [123.33, 34.44], [100.39, 78.23], etc. ]
 // [ {longitude: 123.33, latitude, 34.44}, {longitude: 100.39, latitude: 78.23}, etc. ]
-- (CLLocationCoordinate2D)processLocation:(id)locObj {
+- (CLLocationCoordinate2D)processLocation:(id)locObj
+{
   CLLocationDegrees lat;
   CLLocationDegrees lon;
   CLLocationCoordinate2D coord;
@@ -101,19 +106,22 @@
   return coord;
 }
 
-- (void)applyFillColor {
+- (void)applyFillColor
+{
   if (polygonRenderer != nil) {
     polygonRenderer.fillColor = fillColor == nil ? [UIColor blackColor] : [fillColor color];
   }
 }
 
-- (void)applyStrokeColor {
+- (void)applyStrokeColor
+{
   if (polygonRenderer != nil) {
     polygonRenderer.strokeColor = strokeColor == nil ? [UIColor blackColor] : [strokeColor color];
   }
 }
 
-- (void)applyStrokeWidth {
+- (void)applyStrokeWidth
+{
   if (polygonRenderer != nil) {
     polygonRenderer.lineWidth = strokeWidth;
   }
@@ -121,7 +129,8 @@
 
 #pragma mark Public APIs
 
-- (void)setPoints:(id)value {
+- (void)setPoints:(id)value
+{
   ENSURE_TYPE(value, NSArray);
   if (![value count]) {
     [self throwException:@"missing required points data" subreason:nil location:CODELOCATION];
@@ -129,7 +138,8 @@
   [self replaceValue:value forKey:@"points" notification:NO];
 }
 
-- (void)setFillColor:(id)value {
+- (void)setFillColor:(id)value
+{
   if (fillColor != nil) {
     RELEASE_TO_NIL(fillColor);
   }
@@ -137,7 +147,8 @@
   [self applyFillColor];
 }
 
-- (void)setStrokeColor:(id)value {
+- (void)setStrokeColor:(id)value
+{
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
@@ -145,7 +156,8 @@
   [self applyStrokeColor];
 }
 
-- (void)setStrokeWidth:(id)value {
+- (void)setStrokeWidth:(id)value
+{
   strokeWidth = [TiUtils floatValue:value];
   [self applyStrokeWidth];
 }
