@@ -40,18 +40,19 @@ describe('ti.map', function () {
 	describe('methods', () => {
 		it('#createAnnotation()', () => {
 			expect(Map.createAnnotation).toEqual(jasmine.any(Function));
-	
+
 			// win = Ti.UI.createWindow();
-	
+
 			const annotation = Map.createAnnotation({
 				latitude: 37.3689,
 				longitude: -122.0353,
 				title: 'Mountain View',
 				subtitle: 'Mountain View city',
 			});
+
 			expect(annotation).toEqual(jasmine.any(Object));
 			expect(annotation.apiName).toEqual('Ti.Map.Annotation');
-	
+
 			// const view = Map.createView({
 			// 	mapType: Map.NORMAL_TYPE,
 			// 	region: { // Mountain View
@@ -62,30 +63,30 @@ describe('ti.map', function () {
 			// 	}
 			// });
 			// expect(view).toEqual(jasmine.any(Object));
-	
+
 			// view.addAnnotation(annotation);
-	
+
 			// win.add(view);
 			// win.open();
 		});
 
 		// TDOO: Test actually adding an annotation to a view
-	
+
 		if (!ANDROID) {
 			it('#createCamera()', () => {
 				expect(Map.createCamera).toEqual(jasmine.any(Function));
 			});
 		}
-	
+
 		it('#createRoute()', () => {
 			expect(Map.createRoute).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#createView()', () => {
 			expect(Map.createView).toEqual(jasmine.any(Function));
-	
-		// 	win = Ti.UI.createWindow();
-	
+
+			// 	win = Ti.UI.createWindow();
+
 			const view = Map.createView({
 				mapType: Map.NORMAL_TYPE,
 				region: { // Mountain View
@@ -95,9 +96,10 @@ describe('ti.map', function () {
 					longitudeDelta: 0.1
 				}
 			});
+
 			expect(view).toEqual(jasmine.any(Object));
 			expect(view.apiName).toEqual('Ti.Map.View');
-	
+
 		// 	win.add(view);
 		// 	win.open();
 		});
@@ -107,11 +109,14 @@ describe('ti.map', function () {
 		if (ANDROID) {
 			it('#isGooglePlayServicesAvailable()', () => {
 				expect(Map.isGooglePlayServicesAvailable).toEqual(jasmine.any(Function));
-		
-				const value = Map.isGooglePlayServicesAvailable(); // TODO: Test on Windows and verify always returns false?
+
+				// TODO: Test on Windows and verify always returns false?
+				const value = Map.isGooglePlayServicesAvailable();
+
 				expect(value).toEqual(jasmine.any(Number));
 
 				const possibleValues = [ Map.SERVICE_DISABLED, Map.SERVICE_INVALID, Map.SERVICE_MISSING, Map.SERVICE_VERSION_UPDATE_REQUIRED, Map.SUCCESS ];
+
 				expect(possibleValues).toContain(value);
 			});
 		}

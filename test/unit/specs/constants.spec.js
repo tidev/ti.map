@@ -7,6 +7,7 @@ describe('ti.map', function () {
 
 	it('can be required', () => {
 		Map = require('ti.map');
+
 		expect(Map).toBeDefined();
 	});
 
