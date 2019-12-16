@@ -53,9 +53,8 @@ public class TiMarker implements ClusterItem
 	{
 		if (proxy != null) {
 			return proxy.getMarkerOptions().getPosition();
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	@Override
@@ -63,9 +62,8 @@ public class TiMarker implements ClusterItem
 	{
 		if (proxy != null) {
 			return proxy.getTitle();
-		} else {
-			return "";
 		}
+		return null;
 	}
 
 	@Override
@@ -73,8 +71,7 @@ public class TiMarker implements ClusterItem
 	{
 		if (proxy != null) {
 			return proxy.getSubtitle();
-		} else {
-			return "";
 		}
+		return null;
 	}
 }
