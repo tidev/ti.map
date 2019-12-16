@@ -1,22 +1,22 @@
 package ti.map;
 
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import com.google.android.gms.maps.GoogleMap;
 import android.content.Context;
-import com.google.maps.android.clustering.ClusterManager;
-import com.google.android.gms.maps.model.Marker;
-import org.appcelerator.titanium.view.TiDrawableReference;
 import android.graphics.Bitmap;
-import com.google.android.gms.maps.model.MarkerOptions;
-import org.appcelerator.titanium.TiApplication;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import android.view.View;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import java.util.HashMap;
+import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
+import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.TiPoint;
-import java.util.HashMap;
-import org.appcelerator.titanium.TiC;
-import org.appcelerator.kroll.common.Log;
-import org.appcelerator.titanium.TiBlob;
+import org.appcelerator.titanium.view.TiDrawableReference;
 
 public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 {
@@ -36,17 +36,18 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 	{
 
 		AnnotationProxy anno = clusterItem.getProxy();
+		if (anno != null) {
+			if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
+				handleImage(anno, markerOptions, anno.getProperty(TiC.PROPERTY_IMAGE));
+			}
 
-		if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
-			handleImage(anno, markerOptions, anno.getProperty(TiC.PROPERTY_IMAGE));
-		}
-
-		if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
-			HashMap centerOffsetProperty = (HashMap) anno.getProperty(MapModule.PROPERTY_CENTER_OFFSET);
-			TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
-			float offsetX = 0.5f - ((float) centerOffset.getX().getValue() / (float) iconImageWidth);
-			float offsetY = 0.5f - ((float) centerOffset.getY().getValue() / (float) iconImageHeight);
-			markerOptions.anchor(offsetX, offsetY);
+			if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
+				HashMap centerOffsetProperty = (HashMap) anno.getProperty(MapModule.PROPERTY_CENTER_OFFSET);
+				TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
+				float offsetX = 0.5f - ((float) centerOffset.getX().getValue() / (float) iconImageWidth);
+				float offsetY = 0.5f - ((float) centerOffset.getY().getValue() / (float) iconImageHeight);
+				markerOptions.anchor(offsetX, offsetY);
+			}
 		}
 	}
 
