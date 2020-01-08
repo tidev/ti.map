@@ -382,11 +382,11 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void setUserLocationEnabled(boolean enabled)
 	{
-		Context context = TiApplication.getInstance().getApplicationContext();
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 
 		if (map != null
 			&& (Build.VERSION.SDK_INT < 23
-				|| context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+				|| currentActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
 					   == PackageManager.PERMISSION_GRANTED)) {
 			map.setMyLocationEnabled(enabled);
 		} else {
