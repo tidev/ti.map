@@ -22,7 +22,7 @@ properties:
   - name: holes
     summary: Array of points arrays that define holes in the polygon.
     availability: creation
-    type: Array<MapPointType>
+    type: Array<Array<MapPointType>>
     optional: true
 
   - name: fillColor
