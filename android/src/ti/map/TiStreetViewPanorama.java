@@ -21,7 +21,7 @@ import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPanoramaReadyCallback
 {
