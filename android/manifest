@@ -2,10 +2,10 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 4.5.1
+version: 5.0.0
 apiversion: 4
-architectures: arm64-v8a armeabi-v7a x86
-description: External version of Map module to support new Google Map v2 sdk
+architectures: arm64-v8a armeabi-v7a x86 x86_64
+description: External version of Map module using native Google Maps library
 author: Appcelerator
 license: Apache Public License v2
 copyright: Copyright (c) 2013-present by Axway, Inc.
@@ -15,5 +15,5 @@ name: map
 moduleid: ti.map
 guid: f0d8fd44-86d2-4730-b67d-bd454577aeee
 platform: android
-minsdk: 7.0.0
+minsdk: 9.0.0
 respackage: com.google.android.gms
