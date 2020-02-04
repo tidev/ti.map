@@ -153,14 +153,20 @@ public class AnnotationProxy extends KrollProxy
 
 			case MSG_SET_HIDDEN: {
 				result = (AsyncResult) msg.obj;
-				marker.getMarker().setVisible(!(Boolean) result.getArg());
+				Marker m = marker.getMarker();
+				if (m != null) {
+					m.setVisible(!(Boolean) result.getArg());
+				}
 				result.setResult(null);
 				return true;
 			}
 
 			case MSG_SET_DRAGGABLE: {
 				result = (AsyncResult) msg.obj;
-				marker.getMarker().setDraggable((Boolean) result.getArg());
+				Marker m = marker.getMarker();
+				if (m != null) {
+					m.setDraggable((Boolean) result.getArg());
+				}
 				result.setResult(null);
 				return true;
 			}
@@ -178,7 +184,10 @@ public class AnnotationProxy extends KrollProxy
 
 	public void setPosition(double latitude, double longitude)
 	{
-		marker.getMarker().setPosition(new LatLng(latitude, longitude));
+		Marker m = marker.getMarker();
+		if (m != null) {
+			m.setPosition(new LatLng(latitude, longitude));
+		}
 	}
 
 	public void processOptions()

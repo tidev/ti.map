@@ -36,17 +36,18 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 	{
 
 		AnnotationProxy anno = clusterItem.getProxy();
+		if (anno != null) {
+			if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
+				handleImage(anno, markerOptions, anno.getProperty(TiC.PROPERTY_IMAGE));
+			}
 
-		if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
-			handleImage(anno, markerOptions, anno.getProperty(TiC.PROPERTY_IMAGE));
-		}
-
-		if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
-			HashMap centerOffsetProperty = (HashMap) anno.getProperty(MapModule.PROPERTY_CENTER_OFFSET);
-			TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
-			float offsetX = 0.5f - ((float) centerOffset.getX().getValue() / (float) iconImageWidth);
-			float offsetY = 0.5f - ((float) centerOffset.getY().getValue() / (float) iconImageHeight);
-			markerOptions.anchor(offsetX, offsetY);
+			if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
+				HashMap centerOffsetProperty = (HashMap) anno.getProperty(MapModule.PROPERTY_CENTER_OFFSET);
+				TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
+				float offsetX = 0.5f - ((float) centerOffset.getX().getValue() / (float) iconImageWidth);
+				float offsetY = 0.5f - ((float) centerOffset.getY().getValue() / (float) iconImageHeight);
+				markerOptions.anchor(offsetX, offsetY);
+			}
 		}
 	}
 
