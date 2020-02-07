@@ -35,7 +35,7 @@
     "@seadub/danger-plugin-titanium-module": "0.0.7",
     "clang-format": "^1.2.3",
     "commitizen": "^4.0.3",
-    "danger": "^7.1.0",
+    "danger": "^9.2.10",
     "eslint": "^5.10.0",
     "eslint-config-axway": "^4.1.1",
     "eslint-plugin-jasmine": "^2.10.1",
