@@ -39,7 +39,7 @@
     "eslint": "^5.10.0",
     "eslint-config-axway": "^4.1.1",
     "eslint-plugin-jasmine": "^2.10.1",
-    "husky": "^3.0.8",
+    "husky": "^4.2.1",
     "jasmine-core": "^3.3.0",
     "karma": "^4.0.0",
     "karma-jasmine": "^2.0.1",
