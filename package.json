@@ -46,7 +46,7 @@
     "karma-junit-reporter": "^1.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-titanium-launcher": "^0.7.5",
-    "lint-staged": "^9.4.1",
+    "lint-staged": "^10.0.7",
     "socket.io": "^2.2.0",
     "titanium-docgen": "^4.2.0"
   },
@@ -59,12 +59,10 @@
   },
   "lint-staged": {
     "ios/**/*.{m,h}": [
-      "npx clang-format -style=file -i",
-      "git add"
+      "npx clang-format -style=file -i"
     ],
     "*.java": [
-      "npx clang-format -style=file -i",
-      "git add"
+      "npx clang-format -style=file -i"
     ],
     "*.js": "eslint"
   },
