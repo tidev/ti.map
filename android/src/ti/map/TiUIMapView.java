@@ -35,6 +35,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -43,6 +45,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -67,7 +71,8 @@ public class TiUIMapView extends TiUIFragment
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
 			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
-			   GoogleMap.OnPoiClickListener, ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
+			   GoogleMap.OnPolylineClickListener, ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>,
+               GoogleMap.OnPoiClickListener
 {
 
 	public static final String DEFAULT_COLLECTION_ID = "defaultCollection";
@@ -210,6 +215,7 @@ public class TiUIMapView extends TiUIFragment
 		processPreloadCircles();
 		processPreloadPolylines();
 		processOverlaysList();
+		
 		map.setOnMarkerClickListener(mMarkerManager);
 		map.setOnMapClickListener(this);
 		map.setOnCameraIdleListener(this);
@@ -222,9 +228,11 @@ public class TiUIMapView extends TiUIFragment
 		map.setOnMapLoadedCallback(this);
 		map.setOnMyLocationChangeListener(this);
 		map.setOnPoiClickListener(this);
+		map.setOnPolylineClickListener(this);
+		
 		mClusterManager.setOnClusterClickListener(this);
 		mClusterManager.setOnClusterItemClickListener(this);
-
+		
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
 
@@ -762,7 +770,13 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		r.processOptions();
-		r.setRoute(map.addPolyline(r.getOptions()));
+		r.setRoute( createPolyLine(r.getOptions()) );
+	}
+	
+	private Polyline createPolyLine(PolylineOptions polylineOptions) {
+		Polyline polyline = map.addPolyline(polylineOptions);
+		polyline.setClickable(true);
+		return polyline;
 	}
 
 	public void removeRoute(RouteProxy r)
@@ -834,8 +848,7 @@ public class TiUIMapView extends TiUIFragment
 			return;
 		}
 		p.processOptions();
-		p.setPolyline(map.addPolyline(p.getOptions()));
-
+		p.setPolyline( createPolyLine(p.getOptions()) );
 		currentPolylines.add(p);
 	}
 
@@ -1147,7 +1160,7 @@ public class TiUIMapView extends TiUIFragment
 			clickableCircles.clear();
 		}
 
-		//	currentPolygons
+		// currentPolygons
 		ArrayList<PolygonProxy> clickablePolygones = new ArrayList<PolygonProxy>();
 		for (PolygonProxy polygonProxy : currentPolygons) {
 			if (polygonProxy.getClickable()) {
@@ -1155,7 +1168,6 @@ public class TiUIMapView extends TiUIFragment
 			}
 		}
 		if (clickablePolygones.size() > 0) {
-
 			Boundary boundary = new Boundary();
 			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(clickablePolygones, point);
 			boundary = null;
@@ -1167,37 +1179,6 @@ public class TiUIMapView extends TiUIFragment
 			}
 			clickablePolygones.clear();
 		}
-
-		// currentPolylines
-		ArrayList<PolylineProxy> clickablePolylines = new ArrayList<PolylineProxy>();
-		for (PolylineProxy polylineProxy : currentPolylines) {
-			if (polylineProxy.getClickable()) {
-				clickablePolylines.add(polylineProxy);
-			}
-		}
-
-		if (map != null && clickablePolylines.size() > 0) {
-			PolylineBoundary boundary = new PolylineBoundary();
-
-			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
-			double side1 = b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude)
-																	   : (b.southwest.latitude - b.northeast.latitude);
-			double side2 = b.northeast.longitude > b.southwest.longitude
-							   ? (b.northeast.longitude - b.southwest.longitude)
-							   : (b.southwest.longitude - b.northeast.longitude);
-			double diagonal = Math.sqrt((side1 * side1) + (side2 * side2));
-			double val = diagonal / map.getCameraPosition().zoom;
-
-			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(clickablePolylines, point, val);
-
-			boundary = null;
-			if (clickedPolylines.size() > 0) {
-				for (PolylineProxy polylineProxy : clickedPolylines) {
-					fireShapeClickEvent(point, polylineProxy, MapModule.PROPERTY_POLYLINE);
-				}
-			}
-		}
-		clickablePolylines.clear();
 
 		KrollDict d = new KrollDict();
 		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
@@ -1440,5 +1421,32 @@ public class TiUIMapView extends TiUIFragment
 	public boolean onClusterItemClick(TiMarker tiMarker)
 	{
 		return onMarkerClick(tiMarker.getMarker());
+	}
+
+	@Override
+	public void onPolylineClick(Polyline polyline) {
+		final String id = polyline.getId();
+		
+		// find the proxy for this polyline
+		PolylineProxy polylineProxy = null;
+		for (PolylineProxy tempPolylineProxy : currentPolylines) {
+			if (tempPolylineProxy.getPolyline().getId().equals(id)) {
+				polylineProxy = tempPolylineProxy;
+				break;
+			}
+		}
+		
+		KrollDict d = new KrollDict();
+		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, MapModule.PROPERTY_POLYLINE);
+		d.put(TiC.PROPERTY_ANNOTATION, false);
+		d.put("overlay", polylineProxy);
+		
+		d.put(MapModule.PROPERTY_MAP, proxy);
+		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
+		d.put(TiC.PROPERTY_SOURCE, polylineProxy);
+
+		if (proxy != null) {
+			proxy.fireEvent(TiC.EVENT_CLICK, d);
+		}
 	}
 }
