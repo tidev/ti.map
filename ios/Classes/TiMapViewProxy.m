@@ -169,6 +169,11 @@
 
 #pragma mark Public API
 
+- (NSNumber *)mapType
+{
+  return @(((TiMapView *)[self view]).map.mapType);
+}
+
 - (void)zoom:(id)arg
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
