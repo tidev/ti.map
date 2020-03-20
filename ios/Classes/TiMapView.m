@@ -1192,6 +1192,10 @@
     annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
     annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
     annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
+      [UIView animateWithDuration:1.0 delay:0.0 options:nil
+         animations:^{
+            annView.transform = CGAffineTransformRotate(annView.transform, 3.141593);
+      } completion:nil];
   }
 #endif
 
