@@ -50,6 +50,8 @@
 @property (nonatomic, readonly) CLLocationDegrees longitudeDelta;
 @property (nonatomic, readonly) CLLocationDegrees latitudeDelta;
 @property (nonatomic, readonly) NSArray *customAnnotations;
+@property (nonatomic, readonly) CLLocation* currentLocation;
+@property(nonatomic, retain)NSTimer *timer;
 
 #pragma mark Private APIs
 
