@@ -27,7 +27,6 @@
 @implementation TiMapView
 
 @synthesize currentLocation;
-@synthesize timer;
 
 #pragma mark Internal
 
@@ -75,7 +74,6 @@
       [map setRegion:region animated:animate];
     }
   }
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateLocation) userInfo:nil repeats:YES];
 }
 
 - (MKMapView *)map
@@ -483,6 +481,10 @@
     // else, just apply the userLocation
     [self map].showsUserLocation = userLocation;
   }
+    
+    if (currentLocation.coordinate.latitude) {
+        [self updateLocation];
+    }
 }
 
 - (void)setLocation_:(id)location
@@ -1263,8 +1265,6 @@
     
     CLLocationCoordinate2D oldLocation;
     CLLocationCoordinate2D newLocation;
-    if (currentLocation) {
-     
         
         oldLocation.latitude = currentLocation.coordinate.latitude;
         oldLocation.longitude = currentLocation.coordinate.longitude;
@@ -1286,7 +1286,6 @@
                              annotationView.transform = CGAffineTransformMakeRotation(getAngle);
                          }];
     
-    }
     }
 }
 
