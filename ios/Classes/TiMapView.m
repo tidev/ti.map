@@ -6,6 +6,7 @@
  */
 
 #import "TiMapView.h"
+#import "MapAnnotation.h"
 #import "TiApp.h"
 #import "TiBase.h"
 #import "TiMapAnnotationProxy.h"
@@ -22,7 +23,6 @@
 #import "TiMapUtils.h"
 #import "TiUtils.h"
 #import <MapKit/MapKit.h>
-#import "MapAnnotation.h"
 
 @implementation TiMapView
 
@@ -473,18 +473,18 @@
     } else {
       NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml. Starting with iOS 8 this is required.");
     }
-          
-          currentLocation = locationManager.location;
+
+    currentLocation = locationManager.location;
     // Create the map
     [self map];
   } else {
     // else, just apply the userLocation
     [self map].showsUserLocation = userLocation;
   }
-    
-    if (currentLocation.coordinate.latitude) {
-        [self updateLocation];
-    }
+
+  if (currentLocation.coordinate.latitude) {
+    [self updateLocation];
+  }
 }
 
 - (void)setLocation_:(id)location
@@ -1202,10 +1202,13 @@
     annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
     annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
     annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
-      [UIView animateWithDuration:1.0 delay:0.0 options:nil
-         animations:^{
-            annView.transform = CGAffineTransformRotate(annView.transform, 3.141593);
-      } completion:nil];
+    [UIView animateWithDuration:1.0
+                          delay:0.0
+                        options:nil
+                     animations:^{
+                       annView.transform = CGAffineTransformRotate(annView.transform, 3.141593);
+                     }
+                     completion:nil];
   }
 #endif
 
@@ -1259,48 +1262,52 @@
   return annView;
 }
 
-- (void)updateLocation {
-    
-    MapAnnotation *myAnnotation ;
-    
-    CLLocationCoordinate2D oldLocation;
-    CLLocationCoordinate2D newLocation;
-        
-        oldLocation.latitude = currentLocation.coordinate.latitude;
-        oldLocation.longitude = currentLocation.coordinate.longitude;
-        dispatch_queue_t serverDelaySimulationThread = dispatch_queue_create("com.xxx.serverDelay", nil);
-        dispatch_async(serverDelaySimulationThread, ^{
-             [NSThread sleepForTimeInterval:1.0];
-        });
-        newLocation.latitude = currentLocation.coordinate.latitude;
-        newLocation.longitude = currentLocation.coordinate.longitude;
-        float getAngle = [self angleFromCoordinate:oldLocation toCoordinate:newLocation];
-        
-//        NSLog(@"Index : %ld, Angle : %f, Latitude : %f, Longtitude : %f",(long)self.index, getAngle, newLocation.latitude, newLocation.longitude);
-    if(myAnnotation.coordinate.latitude){
-        
-        [UIView animateWithDuration:1
-                         animations:^{
-                             myAnnotation.coordinate = newLocation;
-                            MKAnnotationView *annotationView = (MKAnnotationView *)[self.map viewForAnnotation:myAnnotation];
-                             annotationView.transform = CGAffineTransformMakeRotation(getAngle);
-                         }];
-    
-    }
+- (void)updateLocation
+{
+
+  MapAnnotation *myAnnotation;
+
+  CLLocationCoordinate2D oldLocation;
+  CLLocationCoordinate2D newLocation;
+
+  oldLocation.latitude = currentLocation.coordinate.latitude;
+  oldLocation.longitude = currentLocation.coordinate.longitude;
+  dispatch_queue_t serverDelaySimulationThread = dispatch_queue_create("com.xxx.serverDelay", nil);
+  dispatch_async(serverDelaySimulationThread, ^{
+    [NSThread sleepForTimeInterval:1.0];
+  });
+  newLocation.latitude = currentLocation.coordinate.latitude;
+  newLocation.longitude = currentLocation.coordinate.longitude;
+  float getAngle = [self angleFromCoordinate:oldLocation toCoordinate:newLocation];
+
+  //        NSLog(@"Index : %ld, Angle : %f, Latitude : %f, Longtitude : %f",(long)self.index, getAngle, newLocation.latitude, newLocation.longitude);
+  if (myAnnotation.coordinate.latitude) {
+
+    [UIView animateWithDuration:1
+                     animations:^{
+                       myAnnotation.coordinate = newLocation;
+                       MKAnnotationView *annotationView = (MKAnnotationView *)[self.map viewForAnnotation:myAnnotation];
+                       annotationView.transform = CGAffineTransformMakeRotation(getAngle);
+                     }];
+  }
 }
 
 - (float)angleFromCoordinate:(CLLocationCoordinate2D)first
-                toCoordinate:(CLLocationCoordinate2D)second {
-    
-    float deltaLongitude = second.longitude - first.longitude;
-    float deltaLatitude = second.latitude - first.latitude;
-    float angle = (M_PI * .5f) - atan(deltaLatitude / deltaLongitude);
-    
-    if (deltaLongitude > 0)      return angle;
-    else if (deltaLongitude < 0) return angle + M_PI;
-    else if (deltaLatitude < 0)  return M_PI;
-    
-    return 0.0f;
+                toCoordinate:(CLLocationCoordinate2D)second
+{
+
+  float deltaLongitude = second.longitude - first.longitude;
+  float deltaLatitude = second.latitude - first.latitude;
+  float angle = (M_PI * .5f) - atan(deltaLatitude / deltaLongitude);
+
+  if (deltaLongitude > 0)
+    return angle;
+  else if (deltaLongitude < 0)
+    return angle + M_PI;
+  else if (deltaLatitude < 0)
+    return M_PI;
+
+  return 0.0f;
 }
 
 // mapView:viewForAnnotation: provides the view for each annotation.
