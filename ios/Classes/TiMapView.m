@@ -226,6 +226,15 @@
   [[self map] addAnnotations:[self annotationsFromArgs:args]];
 }
 
+- (void)animateAnnotation:(MKAnnotationView *)annotation withCoordinate:(CLLocationCoordinate2D)coordinate
+{
+  [UIView animateWithDuration:0.2f
+                   animations:^{
+                     annotation.annotation.coordinate = coordinate;
+                   }
+                   completion:nil];
+}
+
 - (void)removeAnnotation:(id)args
 {
   ENSURE_SINGLE_ARG(args, NSObject);
@@ -1192,6 +1201,7 @@
     annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
     annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
     annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
+    [self animateAnnotation:annView withCoordinate:locationManager.location.coordinate];
   }
 #endif
 
