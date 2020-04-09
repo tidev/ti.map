@@ -1,9 +1,10 @@
 //
 //  MapAnnotation.h
-//  TestAnnotationMoving
+//  Appcelerator Titanium Mobile
 //
-//  Created by Nishith Shah on 14/11/16.
-//  Copyright © 2016 Ramkrishna Sharma. All rights reserved.
+//  Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
+//  Licensed under the terms of the Apache Public License
+//  Please see the LICENSE included with this distribution for details.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,5 +15,5 @@
 @property (nonatomic, assign) CLLocationCoordinate2D coordinate;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;
-	
+
 @end

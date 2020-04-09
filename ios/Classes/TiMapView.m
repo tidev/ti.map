@@ -1206,7 +1206,7 @@
                           delay:0.0
                         options:nil
                      animations:^{
-                       annView.transform = CGAffineTransformRotate(annView.transform, 3.141593);
+                       annView.transform = CGAffineTransformRotate(annView.transform, M_PI);
                      }
                      completion:nil];
   }
@@ -1264,7 +1264,6 @@
 
 - (void)updateLocation
 {
-
   MapAnnotation *myAnnotation;
 
   CLLocationCoordinate2D oldLocation;
@@ -1272,15 +1271,10 @@
 
   oldLocation.latitude = currentLocation.coordinate.latitude;
   oldLocation.longitude = currentLocation.coordinate.longitude;
-  dispatch_queue_t serverDelaySimulationThread = dispatch_queue_create("com.xxx.serverDelay", nil);
-  dispatch_async(serverDelaySimulationThread, ^{
-    [NSThread sleepForTimeInterval:1.0];
-  });
   newLocation.latitude = currentLocation.coordinate.latitude;
   newLocation.longitude = currentLocation.coordinate.longitude;
   float getAngle = [self angleFromCoordinate:oldLocation toCoordinate:newLocation];
 
-  //        NSLog(@"Index : %ld, Angle : %f, Latitude : %f, Longtitude : %f",(long)self.index, getAngle, newLocation.latitude, newLocation.longitude);
   if (myAnnotation.coordinate.latitude) {
 
     [UIView animateWithDuration:1
@@ -1295,7 +1289,6 @@
 - (float)angleFromCoordinate:(CLLocationCoordinate2D)first
                 toCoordinate:(CLLocationCoordinate2D)second
 {
-
   float deltaLongitude = second.longitude - first.longitude;
   float deltaLatitude = second.latitude - first.latitude;
   float angle = (M_PI * .5f) - atan(deltaLatitude / deltaLongitude);
