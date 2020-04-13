@@ -923,7 +923,7 @@ properties:
         For more details, see [Google Docs](https://developers.google.com/maps/documentation/android/views#zoom).
         Cannot be used in conjunction with [longitudeDelta](MapRegionTypev2.longitudeDelta) or [latitudeDelta](MapRegionTypev2.latitudeDelta)
     type: Number
-    since: "3.2.3"
+    since: "5.0.2"
     platforms: [android]
 
 ---
