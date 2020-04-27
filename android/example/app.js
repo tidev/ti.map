@@ -11,7 +11,8 @@ var rows = [
     require('tests/annotations'),
     require('tests/routes'),
     require('tests/3d'),
-    require('tests/drawing')
+    require('tests/drawing'),
+    require('tests/lite')
 ];
 
 if (IOS) {
