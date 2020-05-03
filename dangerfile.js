@@ -3,6 +3,7 @@
 // requires
 const junit = require('@seadub/danger-plugin-junit').default;
 const dependencies = require('@seadub/danger-plugin-dependencies').default;
+const moduleLint = require('@seadub/danger-plugin-titanium-module').default;
 const fs = require('fs');
 const path = require('path');
 const ENV = process.env;
@@ -36,6 +37,7 @@ async function main() {
 		dependencies({ type: 'npm' }),
 		linkToArtifacts(),
 		checkLintLog(),
+		moduleLint(),
 	]);
 }
 main()

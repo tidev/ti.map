@@ -51,18 +51,27 @@ public class TiMarker implements ClusterItem
 	@Override
 	public LatLng getPosition()
 	{
-		return proxy.getMarkerOptions().getPosition();
+		if (proxy != null) {
+			return proxy.getMarkerOptions().getPosition();
+		}
+		return null;
 	}
 
 	@Override
 	public String getTitle()
 	{
-		return proxy.getTitle();
+		if (proxy != null) {
+			return proxy.getTitle();
+		}
+		return null;
 	}
 
 	@Override
 	public String getSnippet()
 	{
-		return proxy.getSubtitle();
+		if (proxy != null) {
+			return proxy.getSubtitle();
+		}
+		return null;
 	}
 }

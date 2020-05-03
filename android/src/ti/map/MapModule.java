@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -155,7 +155,7 @@ public class MapModule extends KrollModule
 	@Kroll.method
 	public int isGooglePlayServicesAvailable()
 	{
-		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(TiApplication.getAppRootOrCurrentActivity());
+		return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(TiApplication.getInstance());
 	}
 
 	@Kroll.method
