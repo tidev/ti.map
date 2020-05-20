@@ -1067,6 +1067,7 @@
   for (id annotation in [map annotations]) {
     if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
       if ([(TiMapAnnotationProxy *)annotation tag] == pinview.tag) {
+        [annotation setView:pinview];
         return annotation;
       }
     }
