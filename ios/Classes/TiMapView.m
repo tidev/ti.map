@@ -209,6 +209,21 @@
   ignoreClicks = NO;
 }
 
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack
+{
+  NSArray *selected = map.selectedAnnotations;
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  ignoreClicks = YES;
+  [map removeAnnotation:proxy];
+  callBack();
+  [map addAnnotation:proxy];
+  [map setNeedsLayout];
+  if (wasSelected) {
+    [map selectAnnotation:proxy animated:NO];
+  }
+  ignoreClicks = NO;
+}
+
 #pragma mark Public APIs
 
 - (void)addAnnotation:(id)args
@@ -1052,6 +1067,7 @@
   for (id annotation in [map annotations]) {
     if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
       if ([(TiMapAnnotationProxy *)annotation tag] == pinview.tag) {
+        [annotation setView:pinview];
         return annotation;
       }
     }
