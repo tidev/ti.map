@@ -34,10 +34,9 @@ import com.google.android.gms.maps.model.PatternItem;
 			 propertyAccessors = { MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
 								   PolylineProxy.PROPERTY_STROKE_COLOR2, PolylineProxy.PROPERTY_STROKE_WIDTH2,
 								   PolylineProxy.PROPERTY_STROKE_PATTERN2, PolylineProxy.PROPERTY_ZINDEX,
-								   MapModule.PROPERTY_POINTS, TiC.PROPERTY_TOUCH_ENABLED })
+								   MapModule.PROPERTY_POINTS, TiC.PROPERTY_TOUCH_ENABLED, PolylineProxy.PROPERTY_GEODESIC })
 public class PolylineProxy extends KrollProxy implements IShape
 {
-
 	private PolylineOptions options;
 	private Polyline polyline;
 	private boolean clickable;
@@ -52,12 +51,14 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 503;
 	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 504;
 	private static final int MSG_SET_STROKE_PATTERN = MSG_FIRST_ID + 505;
+	private static final int MSG_SET_GEODESIC = MSG_FIRST_ID + 506;
 
 	public static final String PROPERTY_STROKE_COLOR2 = "color";
 	public static final String PROPERTY_STROKE_WIDTH2 = "width";
 	public static final String PROPERTY_STROKE_PATTERN2 = "pattern";
 
 	public static final String PROPERTY_ZINDEX = "zIndex";
+	public static final String PROPERTY_GEODESIC = "geodesic";
 
 	private static final int DEFAULT_PATTERN_DASH_LENGTH_PX = 50;
 	private static final int DEFAULT_PATTERN_GAP_LENGTH_PX = 20;
@@ -116,6 +117,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 				result.setResult(null);
 				return true;
 			}
+			case MSG_SET_GEODESIC: {
+				result = (AsyncResult) msg.obj;
+				polyline.setGeodesic(TiConvert.toBoolean(result.getArg(), false));
+				result.setResult(null);
+				return true;
+			}
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -158,6 +165,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 		if (hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
 			clickable = TiConvert.toBoolean(getProperty(TiC.PROPERTY_TOUCH_ENABLED));
+		}
+
+		if (hasProperty(PolylineProxy.PROPERTY_GEODESIC)) {
+			options = options.geodesic(TiConvert.toBoolean(getProperty(PolylineProxy.PROPERTY_GEODESIC)));
 		}
 
 		if (hasProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2)) {
@@ -223,7 +234,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 	@Override
 	public void onPropertyChanged(String name, Object value)
 	{
-
 		super.onPropertyChanged(name, value);
 
 		if (polyline == null) {
@@ -261,7 +271,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 		else if (name.equals(TiC.PROPERTY_TOUCH_ENABLED)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED),
-												TiConvert.toBoolean(value));
+					TiConvert.toBoolean(value));
+		}
+
+		else if (name.equals(PolylineProxy.PROPERTY_GEODESIC)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_GEODESIC),
+					TiConvert.toBoolean(value));
 		}
 	}
 
