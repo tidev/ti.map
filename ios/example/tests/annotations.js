@@ -16,6 +16,22 @@ exports.run = function(UI, Map) {
         },
         {
             hasChild: true,
+            title: 'animate annotation',
+            run: function() {
+                var newLocation = [-33.09,151.03];
+                anno2.animate(newLocation);
+            }
+        },
+        {
+            hasChild: true,
+            title: 'rotate annotation',
+            run: function() {
+                var angle = 90;
+                anno4.rotate(angle);
+            }
+        },
+        {
+            hasChild: true,
             title: 'add anno3',
             run: function() {
                 map.addAnnotation(anno3);
@@ -86,7 +102,6 @@ exports.run = function(UI, Map) {
     tableView.addEventListener('click', function(e) {
         rows[e.index].run && rows[e.index].run();
     });
-
     var anno = Map.createAnnotation({
         latitude: -33.87365,
         image: 'map_pin.png',
@@ -117,7 +132,6 @@ exports.run = function(UI, Map) {
         subtitle: 'This is anno4',
         draggable: true
     });
-
     Ti.API.info('Latitude:' + anno.latitude);
     Ti.API.info('Title:' + anno.title);
 
@@ -127,8 +141,8 @@ exports.run = function(UI, Map) {
         animate: true,
         annotations: [anno, anno2, anno4],
         region: {
-            latitude: -33.87365,
-            longitude: 151.20689,
+            latitude: -33.86365,
+            longitude: 151.21689,
             latitudeDelta: 0.1,
             longitudeDelta: 0.1
         }, //Sydney
