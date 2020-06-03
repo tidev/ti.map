@@ -101,6 +101,15 @@
   }
 }
 
+- (void)refreshCoordinateChanges:(void (^)())updateValueCallBack
+{
+  if (delegate != nil && [delegate viewAttached]) {
+    [(TiMapView *)[delegate view] refreshCoordinateChanges:self afterRemove:updateValueCallBack];
+  } else {
+    updateValueCallBack();
+  }
+}
+
 - (void)refreshIfNeeded
 {
   @synchronized(self) {
@@ -135,9 +144,10 @@
 {
   double curValue = [TiUtils doubleValue:[self valueForUndefinedKey:@"latitude"]];
   double newValue = [TiUtils doubleValue:latitude];
-  [self replaceValue:latitude forKey:@"latitude" notification:NO];
   if (newValue != curValue) {
-    [self setNeedsRefreshingWithSelection:YES];
+    [self refreshCoordinateChanges:^{
+      [self replaceValue:latitude forKey:@"latitude" notification:NO];
+    }];
   }
 }
 
@@ -145,9 +155,10 @@
 {
   double curValue = [TiUtils doubleValue:[self valueForUndefinedKey:@"longitude"]];
   double newValue = [TiUtils doubleValue:longitude];
-  [self replaceValue:longitude forKey:@"longitude" notification:NO];
   if (newValue != curValue) {
-    [self setNeedsRefreshingWithSelection:YES];
+    [self refreshCoordinateChanges:^{
+      [self replaceValue:longitude forKey:@"longitude" notification:NO];
+    }];
   }
 }
 

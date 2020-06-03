@@ -6,8 +6,11 @@
  */
 package ti.map;
 
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
 import android.graphics.Bitmap;
 import android.os.Message;
+import android.util.Property;
 import android.view.View;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -186,8 +189,23 @@ public class AnnotationProxy extends KrollProxy
 	{
 		Marker m = marker.getMarker();
 		if (m != null) {
-			m.setPosition(new LatLng(latitude, longitude));
+			animateMarkerToPosition(m, new LatLng(latitude, longitude));
 		}
+	}
+
+	private void animateMarkerToPosition(Marker marker, LatLng finalPosition)
+	{
+		TypeEvaluator<LatLng> typeEvaluator = (fraction, startValue, endValue) ->
+		{
+			double lat = (endValue.latitude - startValue.latitude) * fraction + startValue.latitude;
+			double lng = (endValue.longitude - startValue.longitude) * fraction + startValue.longitude;
+			return new LatLng(lat, lng);
+		};
+		Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
+
+		ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
+		animator.setDuration(200);
+		animator.start();
 	}
 
 	public void processOptions()
