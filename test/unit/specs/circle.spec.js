@@ -18,9 +18,13 @@ describe('ti.map.Circle', function () {
 			},
 			radius: 1000,
 			strokeWidth: 2,
-			strokeColor: Map.D2BE1F,
-			fillColor: Map.BFFFE725
+			strokeColor: '#D2BE1F',
+			fillColor: '#BFFFE725' // 75% opacity
 		});
+	});
+
+	it('.apiName', () => {
+		expect(circle.apiName).toEqual('Ti.Map.Circle');
 	});
 
 	it('should have valid radius', () => {

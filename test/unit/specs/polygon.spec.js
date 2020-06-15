@@ -25,11 +25,15 @@ describe('ti.map.Polygon', () => {
 				longitude: 151.232668
 			}
 			],
-			strokeColor: Map.D2BE1F,
-			fillColor: Map.BFFFE725,
+			fillColor: '#F2FA0C',
+			strokeColor: '#D4D93F',
 			strokeWidth: 5,
 			zIndex: 2
 		});
+	});
+
+	it('.apiName', () => {
+		expect(polygon.apiName).toEqual('Ti.Map.Polygon');
 	});
 
 	it('should have valid center', () => {

@@ -22,10 +22,14 @@ describe('ti.map.Polyline', () => {
 				longitude: 151.218033
 			}
 			],
-			strokeColor: Map.D2BE1F,
+			strokeColor: '#60FF0000',
 			strokeWidth: 2,
 			zIndex: 10
 		});
+	});
+
+	it('.apiName', () => {
+		expect(polyline.apiName).toEqual('Ti.Map.Polyline');
 	});
 
 	it('should have valid points', () => {

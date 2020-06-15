@@ -28,7 +28,11 @@ if (IOS) {
 			});
 		});
 
-		it('should have deifined', () => {
+		it('.apiName', () => {
+			expect(snapshotter.apiName).toEqual('Ti.Map.Snapshotter');
+		});
+
+		it('should have defined', () => {
 			expect(snapshotter).not.toEqual(undefined);
 		});
 
