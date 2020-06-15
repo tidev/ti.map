@@ -73,6 +73,72 @@ describe('ti.map', function () {
 		// TDOO: Test actually adding an annotation to a view
 
 		if (!ANDROID) {
+			it('#createCirle()', () => {
+				var circle = Map.createCircle({
+					center: {
+						latitude: -33.87365,
+						longitude: 151.20689
+					},
+					radius: 1000,
+					strokeWidth: 2,
+					strokeColor: '#D2BE1F',
+					fillColor: '#BFFFE725' // 75% opacity
+				});
+
+				expect(circle).toEqual(jasmine.any(Object));
+				expect(circle.apiName).toEqual('Ti.Map.Circle');
+			});
+			it('#createPolygon()', () => {
+				var polygon = Map.createPolygon({
+					points: [
+						[ 151.228290, -33.857280 ],
+						[ 151.224428, -33.855427 ],
+						[ 151.224170, -33.858991 ]
+					],
+					fillColor: '#F2FA0C',
+					strokeColor: '#D4D93F',
+					strokeWidth: 5,
+					zIndex: 3 // should be on top of blue triangle on android
+				});
+
+				expect(polygon).toEqual(jasmine.any(Object));
+				expect(polygon.apiName).toEqual('Ti.Map.Polygon');
+			});
+
+			it('#createPolyline()', () => {
+				var polyline = Map.createPolyline({
+					points: [
+						{ latitude: -33.884717, longitude: 151.187993 },
+						[ 151.203099, -33.882152 ],
+						{ latitude: -33.886783, longitude: 151.218033 }
+					],
+					strokeColor: '#60FF0000',
+					strokeWidth: 2,
+					zIndex: 10
+				});
+
+				expect(polyline).toEqual(jasmine.any(Object));
+				expect(polyline.apiName).toEqual('Ti.Map.Polyline');
+			});
+			it('#createSnapshotter()', () => {
+				var snapshotter = Map.createSnapshotter({
+					mapType: Map.HYBRID_TYPE,
+					region: {
+						latitude: 37.3382,
+						longitude: -121.8863,
+						latitudeDelta: 0.4,
+						longitudeDelta: 0.4
+					},
+					size: {
+						width: 300,
+						height: 200
+					}
+				});
+
+				expect(snapshotter).toEqual(jasmine.any(Object));
+				expect(snapshotter.apiName).toEqual('Ti.Map.Snapshotter');
+			});
+
 			it('#createCamera()', () => {
 				expect(Map.createCamera).toEqual(jasmine.any(Function));
 			});
