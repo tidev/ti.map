@@ -6,13 +6,10 @@ description: |
     [map view](Modules.Map.View). A circle must have a `center` property and a `radius` set to appear on a map.
 
     Use the <Modules.Map.createCircle> method to create a circle.
-
 extends: Titanium.Proxy
 since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
 platforms: [android, iphone, ipad]
-
 properties:
-
   - name: center
     summary: An object with longitude and latitude values. Can also be an array with longitude (index 0), latitude (index 1) touples.
     availability: creation

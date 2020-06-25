@@ -7,13 +7,10 @@ description: |
     set to appear on a map.
 
     Use the <Modules.Map.createImageOverlay> method to create an image overlay.
-
 extends: Titanium.Proxy
 since: { iphone: "7.2.0", ipad: "7.2.0", android: "7.4.0" }
 platforms: [iphone, ipad, android]
-
 properties:
-
   - name: boundsCoordinate
     summary: An object representing diagonal coordinates (`topLeft` and `bottomRight`) on the map.
     availability: creation
@@ -29,7 +26,6 @@ properties:
 name: MapPointType
 summary: An object representing a point on the map.
 properties:
-
   - name: longitude
     summary: Longitude value of the map point, in decimal degrees.
     type: Number
@@ -42,7 +38,6 @@ properties:
 name: MapBoundsCoordinateType
 summary: An object representing the bound coordinates on the map.
 properties:
-
   - name: topLeft
     summary: An object with longitude and latitude values.
     type: MapPointType
