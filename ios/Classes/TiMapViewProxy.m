@@ -167,6 +167,12 @@
   return proxy;
 }
 
+- (MKAnnotationView *)viewForAnnotationProxy:(TiMapAnnotationProxy *)annotationProxy
+{
+  MKMapView *mapView = [(TiMapView *)[self view] map];
+  return [mapView viewForAnnotation:annotationProxy];
+}
+
 #pragma mark Public API
 
 - (void)zoom:(id)arg

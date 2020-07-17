@@ -549,4 +549,8 @@
   return tag;
 }
 
+- (UIView *)view
+{
+  return [delegate viewForAnnotationProxy:self];
+}
 @end
