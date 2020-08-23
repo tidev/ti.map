@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.PatternItem;
+import com.google.maps.android.PolyUtil;
 
 @Kroll.proxy(name = "Polyline", creatableInModule = MapModule.class,
 			 propertyAccessors = { MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
@@ -77,8 +78,8 @@ public class PolylineProxy extends KrollProxy implements IShape
 	@Override
 	public boolean handleMessage(Message msg)
 	{
-
-		AsyncResult result = null;
+		AsyncResult result;
+		
 		switch (msg.what) {
 			case MSG_SET_POINTS: {
 				result = (AsyncResult) msg.obj;
@@ -192,9 +193,14 @@ public class PolylineProxy extends KrollProxy implements IShape
 		}
 	}
 
-	public ArrayList<LatLng> processPoints(Object points, boolean list)
+	public List<LatLng> processPoints(Object points, boolean list)
 	{
+		// Handle encoded points
+		if (points instanceof String) {
+			return PolyUtil.decode((String) points);
+		}
 
+		// Handle an array of points
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
 		//multiple points
 		if (points instanceof Object[]) {
