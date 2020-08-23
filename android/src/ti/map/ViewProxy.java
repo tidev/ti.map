@@ -198,7 +198,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_ZOOM: {
 				result = (AsyncResult) msg.obj;
-				result.setResult(handleGetZoom());
+				result.setResult(handleGetZoomLevel());
 				return true;
 			}
 
@@ -1162,17 +1162,17 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	// clang-format off
 	@Kroll.method
 	@Kroll.getProperty
-	public float getZoom()
+	public float getZoomLevel()
 	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
-			return handleGetZoom();
+			return handleGetZoomLevel();
 		} else {
 			return (Float) TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ZOOM));
 		}
 	}
 
-	private float handleGetZoom()
+	private float handleGetZoomLevel()
 	{
 		TiUIView view = peekView();
 
