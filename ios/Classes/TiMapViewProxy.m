@@ -4,10 +4,12 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
 #import "TiMapViewProxy.h"
+#import "TiMapAnnotationProxy.h"
+#import "TiMapCircleProxy.h"
 #import "TiMapImageOverlayProxy.h"
-#import "TiMapModule.h"
+#import "TiMapPolygonProxy.h"
+#import "TiMapPolylineProxy.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
 #import "TiMapView.h"
