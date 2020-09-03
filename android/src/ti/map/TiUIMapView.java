@@ -1328,6 +1328,7 @@ public class TiUIMapView extends TiUIFragment
 			d.put(TiC.PROPERTY_LATITUDE, position.target.latitude);
 			d.put(TiC.PROPERTY_LONGITUDE, position.target.longitude);
 			d.put(TiC.PROPERTY_SOURCE, proxy);
+			d.put(MapModule.PROPERTY_ZOOM, position.zoom);
 			LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
 			d.put(TiC.PROPERTY_LATITUDE_DELTA, (bounds.northeast.latitude - bounds.southwest.latitude));
 			d.put(TiC.PROPERTY_LONGITUDE_DELTA, (bounds.northeast.longitude - bounds.southwest.longitude));
