@@ -101,6 +101,9 @@
     lat = [TiUtils doubleValue:[locObj objectAtIndex:1]];
     lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
     coord = CLLocationCoordinate2DMake(lat, lon);
+  } else {
+    [self throwException:@"Invalid coordinate tyoe" subreason:@"Use either a dictionary or array" location:CODELOCATION];
+    coord = CLLocationCoordinate2DMake(0.0, 0.0);
   }
 
   return coord;
@@ -143,7 +146,7 @@
   if (fillColor != nil) {
     RELEASE_TO_NIL(fillColor);
   }
-  fillColor = [[TiColor colorNamed:value] retain];
+  fillColor = [[TiUtils colorValue:value] retain];
   [self applyFillColor];
 }
 
@@ -152,7 +155,7 @@
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
-  strokeColor = [[TiColor colorNamed:value] retain];
+  strokeColor = [[TiUtils colorValue:value] retain];
   [self applyStrokeColor];
 }
 

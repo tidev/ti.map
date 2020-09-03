@@ -6,14 +6,11 @@
  */
 
 #import "TiMapAnnotationProxy.h"
-#import "ImageLoader.h"
 #import "TiButtonUtil.h"
 #import "TiMapConstants.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
 #import "TiUIiOSPreviewContextProxy.h"
-#import "TiUtils.h"
-#import "TiViewProxy.h"
 #import "UIColor+AndroidHueParity.h"
 
 @implementation TiMapAnnotationProxy
@@ -223,7 +220,7 @@
 
 - (id)pincolor
 {
-  return NUMINT([self valueForUndefinedKey:@"pincolor"]);
+  return NUMINT((int)[self valueForUndefinedKey:@"pincolor"]);
 }
 
 - (void)setPincolor:(id)color
@@ -243,29 +240,16 @@
   id current = [self valueForUndefinedKey:@"pincolor"];
 
   if ([current isKindOfClass:[NSString class]]) {
-#ifdef __IPHONE_9_0
     return [[TiUtils colorValue:current] color];
-#else
-    return MKPinAnnotationColorRed;
-#endif
   }
 
   switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
   case TiMapAnnotationPinColorGreen: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView greenPinColor];
-#else
-    return MKPinAnnotationColorGreen;
-#endif
   }
   case TiMapAnnotationPinColorPurple: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView purplePinColor];
-#else
-    return MKPinAnnotationColorPurple;
-#endif
   }
-#ifdef __IPHONE_9_0
   case TiMapAnnotationPinColorBlue:
     return [UIColor blueColor];
   case TiMapAnnotationPinColorCyan:
@@ -284,14 +268,9 @@
     return [UIColor roseColor];
   case TiMapAnnotationPinColorViolet:
     return [UIColor violetColor];
-#endif
   case TiMapAnnotationPinColorRed:
   default: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView redPinColor];
-#else
-    return MKPinAnnotationColorRed;
-#endif
   }
   }
 }
@@ -365,6 +344,8 @@
   }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 - (void)setPreviewContext:(id)previewContext
 {
   Class TiUIiOSPreviewContextProxy = NSClassFromString(@"TiUIiOSPreviewContextProxy");
@@ -393,6 +374,7 @@
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
+#pragma clang diagnostic pop
 
 - (void)setImage:(id)image
 {
@@ -502,7 +484,6 @@
   }
 }
 
-#if IS_IOS_11
 - (void)setClusterIdentifier:(id)clusterIdentifier
 {
   id current = [self valueForUndefinedKey:@"clusterIdentifier"];
@@ -511,7 +492,6 @@
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
-#endif
 
 - (void)setCustomView:(id)customView
 {

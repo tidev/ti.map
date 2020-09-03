@@ -43,9 +43,8 @@
   RELEASE_TO_NIL(polylineProxies);
   RELEASE_TO_NIL(circleProxies);
   RELEASE_TO_NIL(imageOverlayProxies);
-#if IS_IOS_11
   RELEASE_TO_NIL(clusterAnnotations);
-#endif
+
   [super dealloc];
 }
 
@@ -79,9 +78,6 @@
     map.delegate = self;
     map.userInteractionEnabled = YES;
     map.autoresizingMask = UIViewAutoresizingNone;
-    if (![TiUtils isIOS8OrGreater]) {
-      map.showsUserLocation = [TiUtils boolValue:[self.proxy valueForKey:@"userLocation"] def:NO];
-    }
     [self addSubview:map];
     mapObjects2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     [self registerTouchEvents];
@@ -194,7 +190,7 @@
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   if (yn == NO) {
     [map deselectAnnotation:proxy animated:NO];
@@ -470,26 +466,19 @@
 
   // Release the locationManager in case it was already created
   RELEASE_TO_NIL(locationManager);
-  BOOL userLocation = [TiUtils boolValue:value def:NO];
-  // if userLocation is true and this is iOS 8 or greater, then ask for permission
-  if (userLocation && [TiUtils isIOS8OrGreater]) {
-    // the locationManager needs to be created to permissions
-    locationManager = [[CLLocationManager alloc] init];
-    // set the "userLocation" on the delegate callback to avoid console warnings from the OS
-    locationManager.delegate = self;
-    if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationAlwaysUsageDescription"]) {
-      [locationManager requestAlwaysAuthorization];
-    } else if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"]) {
-      [locationManager requestWhenInUseAuthorization];
-    } else {
-      NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml. Starting with iOS 8 this is required.");
-    }
-    // Create the map
-    [self map];
+  // the locationManager needs to be created to permissions
+  locationManager = [[CLLocationManager alloc] init];
+  // set the "userLocation" on the delegate callback to avoid console warnings from the OS
+  locationManager.delegate = self;
+  if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationAlwaysUsageDescription"]) {
+    [locationManager requestAlwaysAuthorization];
+  } else if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"]) {
+    [locationManager requestWhenInUseAuthorization];
   } else {
-    // else, just apply the userLocation
-    [self map].showsUserLocation = userLocation;
+    NSLog(@"[ERROR] The keys NSLocationAlwaysUsageDescription or NSLocationWhenInUseUsageDescription are not defined in your tiapp.xml. Starting with iOS 8 this is required.");
   }
+  // Create the map
+  [self map];
 }
 
 - (void)setLocation_:(id)location
@@ -809,44 +798,26 @@
 
 - (void)setCompassEnabled_:(id)value
 {
-  if ([TiUtils isIOS9OrGreater] == YES) {
-#ifdef __IPHONE_9_0
-    TiThreadPerformOnMainThread(^{
-      [[self map] setShowsCompass:[TiUtils boolValue:value]];
-    },
-        YES);
-#endif
-  } else {
-    NSLog(@"[WARN] The property 'compassEnabled' is only available on iOS 9 and later.");
-  }
+  TiThreadPerformOnMainThread(^{
+    [[self map] setShowsCompass:[TiUtils boolValue:value]];
+  },
+      YES);
 }
 
 - (void)setShowsScale_:(id)value
 {
-  if ([TiUtils isIOS9OrGreater] == YES) {
-#ifdef __IPHONE_9_0
-    TiThreadPerformOnMainThread(^{
-      [self map].showsScale = [TiUtils boolValue:value];
-    },
-        YES);
-#endif
-  } else {
-    NSLog(@"[WARN] The property 'showsScale' is only available on iOS 9 and later.");
-  }
+  TiThreadPerformOnMainThread(^{
+    [self map].showsScale = [TiUtils boolValue:value];
+  },
+      YES);
 }
 
 - (void)setShowsTraffic_:(id)value
 {
-  if ([TiUtils isIOS9OrGreater] == YES) {
-#ifdef __IPHONE_9_0
-    TiThreadPerformOnMainThread(^{
-      [self map].showsTraffic = [TiUtils boolValue:value];
-    },
-        YES);
-#endif
-  } else {
-    NSLog(@"[WARN] The property 'showsTraffic' is only available on iOS 9 and later.");
-  }
+  TiThreadPerformOnMainThread(^{
+    [self map].showsTraffic = [TiUtils boolValue:value];
+  },
+      YES);
 }
 
 - (void)showAllAnnotations:(id)value
@@ -911,7 +882,6 @@
       NO);
 }
 
-#if IS_IOS_11
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members
 {
   if (!clusterAnnotations) {
@@ -930,7 +900,6 @@
 {
   return [clusterAnnotations objectForKey:members];
 }
-#endif
 
 #pragma mark Utils
 
@@ -1051,8 +1020,8 @@
                                       ourProxy, @"map",
                                       title, @"title",
                                       [NSNumber numberWithInteger:[pinview tag]], @"index",
-                                      NUMINT(newState), @"newState",
-                                      NUMINT(oldState), @"oldState",
+                                      NUMINTEGER(newState), @"newState",
+                                      NUMINTEGER(oldState), @"oldState",
                                       nil];
 
   if (parentWants)
@@ -1083,7 +1052,7 @@
 
     selectedAnnotation = [ann retain];
 
-    // If canShowCallout == true we will try to find calloutView to hadleTap on callout
+    // If canShowCallout is YES we will try to find calloutView to hadleTap on callout
     if ([ann canShowCallout]) {
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
         [self findCalloutView:ann];
@@ -1110,15 +1079,13 @@
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
     MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 
     if (selectedAnnotation == ann) {
       RELEASE_TO_NIL(ann);
     }
 
-    // TODO: Fire a deselected event for the annotation?
-    [self fireClickEvent:view source:isSelected ? @"pin" : @"map" deselected:YES];
+    [self fireClickEvent:view source:view.isSelected ? @"pin" : @"map" deselected:YES];
   }
 }
 
@@ -1162,10 +1129,8 @@
   if (annView == nil) {
     if ([identifier isEqualToString:@"timap-customView"]) {
       annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-#if IS_IOS_11
     } else if ([TiMapView isiOS11OrGreater] && [identifier isEqualToString:@"timap-marker"]) {
       annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-#endif
     } else if ([identifier isEqualToString:@"timap-image"]) {
       annView = [[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
     } else {
@@ -1176,7 +1141,6 @@
     [((TiMapCustomAnnotationView *)annView) setProxy:customView];
   } else if ([identifier isEqualToString:@"timap-image"]) {
     annView.image = image;
-#if IS_IOS_11
   } else if ([TiMapView isiOS11OrGreater] && [identifier isEqualToString:@"timap-marker"]) {
     MKMarkerAnnotationView *markerView = (MKMarkerAnnotationView *)annView;
     markerView.markerTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerColor"]] color];
@@ -1187,15 +1151,10 @@
     markerView.selectedGlyphImage = [TiUtils image:[ann valueForUndefinedKey:@"markerSelectedGlyphImage"] proxy:ann];
     markerView.titleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerTitleVisibility"]];
     markerView.subtitleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerSubtitleVisibility"]];
-#endif
   } else {
     MKPinAnnotationView *pinview = (MKPinAnnotationView *)annView;
 
-#ifdef __IPHONE_9_0
     pinview.pinTintColor = [ann nativePinColor];
-#else
-    pinview.pinColor = [ann nativePinColor];
-#endif
     pinview.animatesDrop = [ann animatesDrop] && ![ann placed];
     annView.calloutOffset = CGPointMake(-8, 0);
   }
@@ -1203,13 +1162,11 @@
   annView.enabled = YES;
   annView.centerOffset = ann.offset;
 
-#if IS_IOS_11
   if ([TiMapView isiOS11OrGreater]) {
     annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
     annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
     annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
   }
-#endif
 
   UIView *left = [ann leftViewAccessory];
   UIView *right = [ann rightViewAccessory];
@@ -1218,27 +1175,18 @@
 
   if (left != nil) {
     annView.leftCalloutAccessoryView = left;
-  } else {
-    //ios7 requires this to be explicitly set as nil if nil
-    if (![TiUtils isIOS8OrGreater]) {
-      annView.leftCalloutAccessoryView = nil;
-    }
   }
 
   if (right != nil) {
     annView.rightCalloutAccessoryView = right;
-  } else {
-    //ios7 requires this to be explicitly set as nil if nil
-
-    if (![TiUtils isIOS8OrGreater]) {
-      annView.rightCalloutAccessoryView = nil;
-    }
   }
 
   [annView setDraggable:[TiUtils boolValue:[ann valueForUndefinedKey:@"draggable"]]];
   annView.userInteractionEnabled = YES;
   annView.tag = [ann tag];
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
   id previewContext = [ann valueForUndefinedKey:@"previewContext"];
   if (previewContext && [TiUtils forceTouchSupported] && [previewContext performSelector:@selector(preview)] != nil) {
     UIViewController *controller = [[[TiApp app] controller] topPresentedController];
@@ -1251,12 +1199,11 @@
       return nil;
     }
 
-#ifndef __clang_analyzer__
     // We can ignore this, as it's guarded above
     id previewingDelegate = [[TiPreviewingDelegate alloc] performSelector:@selector(initWithPreviewContext:) withObject:previewContext];
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
-#endif
   }
+#pragma clang diagnostic pop
 
   return annView;
 }
@@ -1269,7 +1216,6 @@
   if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
     TiMapAnnotationProxy *annotationProxy = (TiMapAnnotationProxy *)annotation;
     return [self mapView:mapView viewForAnnotationProxy:annotationProxy];
-#if IS_IOS_11
   } else if ([TiMapView isiOS11OrGreater] && [annotation isKindOfClass:[MKClusterAnnotation class]]) {
     TiMapAnnotationProxy *annotationProxy = [self clusterAnnotationProxyForMembers:((MKClusterAnnotation *)annotation).memberAnnotations];
     if (!annotationProxy) {
@@ -1279,12 +1225,10 @@
     clusterAnnotation.title = [annotationProxy valueForUndefinedKey:@"title"];
     clusterAnnotation.subtitle = [annotationProxy valueForUndefinedKey:@"subtitle"];
     return [self mapView:mapView viewForAnnotationProxy:annotationProxy];
-#endif
   }
   return nil;
 }
 
-#if IS_IOS_11
 - (MKClusterAnnotation *)mapView:(MKMapView *)mapView clusterAnnotationForMemberAnnotations:(NSArray<id<MKAnnotation>> *)memberAnnotations
 {
   MKClusterAnnotation *annotation = [[MKClusterAnnotation alloc] initWithMemberAnnotations:memberAnnotations];
@@ -1295,9 +1239,9 @@
   if ([mapProxy _hasListeners:@"clusterstart"]) {
     [mapProxy fireEvent:@"clusterstart" withObject:event];
   }
-  return annotation;
+
+  return [annotation autorelease];
 }
-#endif
 
 // mapView:didAddAnnotationViews: is called after the annotation views have been added and positioned in the map.
 // The delegate can implement this method to animate the adding of the annotations views.
@@ -1318,7 +1262,7 @@
         thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
         [UIView animateWithDuration:0.4
                               delay:0.0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                            thisView.frame = viewFrame;
                          }
@@ -1352,6 +1296,18 @@
     }
   }
   return result;
+}
+
+- (NSNumber *)containsCoordinate:(id)coordinate
+{
+  ENSURE_SINGLE_ARG(coordinate, NSDictionary);
+
+  CLLocationDegrees latitude = [TiUtils doubleValue:coordinate[@"latitude"]];
+  CLLocationDegrees longitude = [TiUtils doubleValue:coordinate[@"longitude"]];
+  
+  CLLocationCoordinate2D nativeCoordinate = CLLocationCoordinate2DMake(latitude, longitude);
+
+  return @(MKMapRectContainsPoint(map.visibleMapRect, MKMapPointForCoordinate(nativeCoordinate)));
 }
 
 #pragma mark Event generation
@@ -1501,12 +1457,7 @@
 - (void)doClickEvent:(id)viewProxy mapProxy:(id)mapProxy event:(NSDictionary *)event
 {
   BOOL parentWants = [mapProxy _hasListeners:@"click"];
-  BOOL viewWants;
-  if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
-    viewWants = [viewProxy _hasListeners:@"click"];
-  } else {
-    viewWants = FALSE;
-  }
+  BOOL viewWants = [viewProxy _hasListeners:@"click"];
 
   if (parentWants) {
     [mapProxy fireEvent:@"click" withObject:event];

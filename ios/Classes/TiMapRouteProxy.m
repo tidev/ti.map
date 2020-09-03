@@ -6,9 +6,7 @@
  */
 
 #import "TiMapRouteProxy.h"
-#import "TiBase.h"
 #import "TiMapModule.h"
-#import "TiUtils.h"
 
 @implementation TiMapRouteProxy
 
@@ -65,11 +63,7 @@
   routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] retain];
   free(pointArray);
 
-  // Using the TiMKOverlayPathUniversal protocol so Xcode can resolve methods
-  // MKPolylineView is deprecated in iOS 7, still here for backward compatibility.
-  // MKPolylineView can be removed when support is dropped for iOS 6 and below.
-  Class rendererClass = ([TiUtils isIOS7OrGreater]) ? [MKPolylineRenderer class] : [MKPolylineView class];
-  routeRenderer = [(id<TiMKOverlayPathUniversal>)[[rendererClass alloc] initWithPolyline:routeLine] retain];
+  routeRenderer = [(id<TiMKOverlayPathUniversal>)[[MKPolylineRenderer alloc] initWithPolyline:routeLine] retain];
   [self applyColor];
   [self applyWidth];
 }
@@ -105,7 +99,7 @@
   if (color != nil) {
     RELEASE_TO_NIL(color);
   }
-  color = [[TiColor colorNamed:value] retain];
+  color = [[TiUtils colorValue:value] retain];
   [self applyColor];
 }
 
@@ -117,10 +111,6 @@
 
 - (void)setLevel:(id)value
 {
-  // level is not supported before iOS 7 but it doesn't hurt to capture it.
-  if (![TiUtils isIOS7OrGreater]) {
-    [TiMapModule logAddedIniOS7Warning:@"level"];
-  }
   level = [[TiUtils numberFromObject:value] unsignedIntegerValue];
 }
 

@@ -5,12 +5,11 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiBase.h"
+#import <TitaniumKit/TitaniumKit.h>
+#import <MapKit/MapKit.h>
 #import "TiMKOverlayPathUniversal.h"
 #import "TiMapCameraProxy.h"
-#import "TiUIView.h"
 #import "WildcardGestureRecognizer.h"
-#import <MapKit/MapKit.h>
 
 @class TiMapAnnotationProxy;
 
@@ -32,10 +31,8 @@
   NSMutableArray *circleProxies;
   NSMutableArray *polylineProxies;
   NSMutableArray *imageOverlayProxies;
-
-#if IS_IOS_11
   NSMutableDictionary *clusterAnnotations;
-#endif
+
   //selected annotation
   MKAnnotationView<TiMapAnnotation> *selectedAnnotation;
 
@@ -93,11 +90,10 @@
 - (void)addImageOverlays:(id)args;
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays;
+- (NSNumber *)containsCoordinate:(id)coordinate;
 
 - (void)firePinChangeDragState:(MKAnnotationView *)pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
-#if IS_IOS_11
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members;
-#endif
 
 #pragma mark Utils
 - (void)addOverlay:(MKPolyline *)polyline level:(MKOverlayLevel)level;

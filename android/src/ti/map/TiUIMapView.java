@@ -9,7 +9,6 @@ package ti.map;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -33,18 +32,22 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.MarkerManager;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.collections.MarkerManager;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
@@ -59,14 +62,14 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import ti.map.Shape.Boundary;
 import ti.map.Shape.IShape;
-import ti.map.Shape.PolylineBoundary;
 
 public class TiUIMapView extends TiUIFragment
 	implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener,
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
 			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
-			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
+			   GoogleMap.OnPolylineClickListener, ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>,
+               GoogleMap.OnPoiClickListener
 {
 
 	public static final String DEFAULT_COLLECTION_ID = "defaultCollection";
@@ -209,6 +212,7 @@ public class TiUIMapView extends TiUIFragment
 		processPreloadCircles();
 		processPreloadPolylines();
 		processOverlaysList();
+		
 		map.setOnMarkerClickListener(mMarkerManager);
 		map.setOnMapClickListener(this);
 		map.setOnCameraIdleListener(this);
@@ -220,9 +224,12 @@ public class TiUIMapView extends TiUIFragment
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
 		map.setOnMyLocationChangeListener(this);
+		map.setOnPoiClickListener(this);
+		map.setOnPolylineClickListener(this);
+		
 		mClusterManager.setOnClusterClickListener(this);
 		mClusterManager.setOnClusterItemClickListener(this);
-
+		
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
 
@@ -264,22 +271,18 @@ public class TiUIMapView extends TiUIFragment
 			Object[] annotations = (Object[]) d.get(TiC.PROPERTY_ANNOTATIONS);
 			addAnnotations(annotations);
 		}
-
 		if (d.containsKey(MapModule.PROPERTY_POLYGONS)) {
 			Object[] polygons = (Object[]) d.get(MapModule.PROPERTY_POLYGONS);
 			addPolygons(polygons);
 		}
-
 		if (d.containsKey(MapModule.PROPERTY_POLYLINES)) {
 			Object[] polylines = (Object[]) d.get(MapModule.PROPERTY_POLYLINES);
 			addPolylines(polylines);
 		}
-
 		if (d.containsKey(MapModule.PROPERTY_CIRCLES)) {
 			Object[] circles = (Object[]) d.get(MapModule.PROPERTY_CIRCLES);
 			addCircles(circles);
 		}
-
 		if (d.containsKey(TiC.PROPERTY_ENABLE_ZOOM_CONTROLS)) {
 			setZoomControlsEnabled(TiConvert.toBoolean(d, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS, true));
 		}
@@ -297,6 +300,9 @@ public class TiUIMapView extends TiUIFragment
 		}
 		if (d.containsKey(MapModule.PROPERTY_INDOOR_ENABLED)) {
 			setIndoorEnabled(d.getBoolean(MapModule.PROPERTY_INDOOR_ENABLED));
+		}
+		if (d.containsKey(TiC.PROPERTY_PADDING)) {
+			setPadding(d.getKrollDict(TiC.PROPERTY_PADDING));
 		}
 	}
 
@@ -336,6 +342,8 @@ public class TiUIMapView extends TiUIFragment
 			setStyle(TiConvert.toString(newValue, ""));
 		} else if (key.equals(MapModule.PROPERTY_INDOOR_ENABLED)) {
 			setIndoorEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(TiC.PROPERTY_PADDING)) {
+			setPadding(new KrollDict((HashMap) newValue));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}
@@ -379,11 +387,11 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void setUserLocationEnabled(boolean enabled)
 	{
-		Context context = TiApplication.getInstance().getApplicationContext();
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 
 		if (map != null
 			&& (Build.VERSION.SDK_INT < 23
-				|| context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+				|| currentActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
 					   == PackageManager.PERMISSION_GRANTED)) {
 			map.setMyLocationEnabled(enabled);
 		} else {
@@ -449,15 +457,20 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
-	protected void setPadding(int left, int top, int right, int bottom)
+	protected void setPadding(KrollDict args)
 	{
+		int left = TiConvert.toInt(args.getInt(TiC.PROPERTY_LEFT), 0);
+		int top = TiConvert.toInt(args.getInt(TiC.PROPERTY_TOP), 0);
+		int right = TiConvert.toInt(args.getInt(TiC.PROPERTY_RIGHT), 0);
+		int bottom = TiConvert.toInt(args.getInt(TiC.PROPERTY_BOTTOM), 0);
+
 		if (map != null) {
 			map.setPadding(left, top, right, bottom);
 		}
 	}
 
-	protected void showAnnotations(Object[] annotations)
-	{
+	protected void showAnnotations(Object[] annotations, int padding, boolean animated)
+  {
 		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
 
 		// Use supplied annotations first. If none available, select all (parity with iOS)
@@ -474,13 +487,19 @@ public class TiUIMapView extends TiUIFragment
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 		for (TiMarker marker : markers) {
-			builder.include(marker.getPosition());
+			if (marker != null) {
+				builder.include(marker.getPosition());
+			}
 		}
 		LatLngBounds bounds = builder.build();
 
-		int padding = 30;
-		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-		map.animateCamera(cu);
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+		if (animated) {
+			map.animateCamera(cameraUpdate);
+		} else {
+			map.moveCamera(cameraUpdate);
+		}
 	}
 
 	protected void setZoomControlsEnabled(boolean enabled)
@@ -748,7 +767,13 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		r.processOptions();
-		r.setRoute(map.addPolyline(r.getOptions()));
+		r.setRoute( createPolyLine(r.getOptions()) );
+	}
+	
+	private Polyline createPolyLine(PolylineOptions polylineOptions) {
+		Polyline polyline = map.addPolyline(polylineOptions);
+		polyline.setClickable(true);
+		return polyline;
 	}
 
 	public void removeRoute(RouteProxy r)
@@ -820,8 +845,7 @@ public class TiUIMapView extends TiUIFragment
 			return;
 		}
 		p.processOptions();
-		p.setPolyline(map.addPolyline(p.getOptions()));
-
+		p.setPolyline( createPolyLine(p.getOptions()) );
 		currentPolylines.add(p);
 	}
 
@@ -931,6 +955,17 @@ public class TiUIMapView extends TiUIFragment
 		moveCamera(camUpdate, animate);
 	}
 
+	protected boolean containsCoordinate(KrollDict coordinate) {
+		if (map == null) {
+		  return false;
+		}
+		
+		LatLngBounds mapBounds = map.getProjection().getVisibleRegion().latLngBounds;
+		LatLng nativeCoordinate = new LatLng(coordinate.getDouble("latitude").doubleValue(), coordinate.getDouble("longitude").doubleValue());
+		
+		return mapBounds.contains(nativeCoordinate);
+	}
+
 	public void fireShapeClickEvent(LatLng clickPosition, IShape shapeProxy, String clickSource)
 	{
 
@@ -989,6 +1024,20 @@ public class TiUIMapView extends TiUIFragment
 		d.put(TiC.PROPERTY_SOURCE, proxy);
 		if (proxy != null) {
 			proxy.fireEvent(TiC.EVENT_LONGCLICK, d);
+		}
+	}
+
+	public void firePOIClickEvent(PointOfInterest poi)
+	{
+		KrollDict d = new KrollDict();
+		d.put(TiC.PROPERTY_LATITUDE, poi.latLng.latitude);
+		d.put(TiC.PROPERTY_LONGITUDE, poi.latLng.longitude);
+		d.put(TiC.PROPERTY_NAME, poi.name);
+		d.put(MapModule.PROPERTY_PLACE_ID, poi.placeId);
+		d.put(TiC.PROPERTY_TYPE, MapModule.EVENT_POI_CLICK);
+		d.put(TiC.PROPERTY_SOURCE, proxy);
+		if (proxy != null) {
+			proxy.fireEvent(MapModule.EVENT_POI_CLICK, d);
 		}
 	}
 
@@ -1108,7 +1157,7 @@ public class TiUIMapView extends TiUIFragment
 			clickableCircles.clear();
 		}
 
-		//	currentPolygons
+		// currentPolygons
 		ArrayList<PolygonProxy> clickablePolygones = new ArrayList<PolygonProxy>();
 		for (PolygonProxy polygonProxy : currentPolygons) {
 			if (polygonProxy.getClickable()) {
@@ -1116,7 +1165,6 @@ public class TiUIMapView extends TiUIFragment
 			}
 		}
 		if (clickablePolygones.size() > 0) {
-
 			Boundary boundary = new Boundary();
 			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(clickablePolygones, point);
 			boundary = null;
@@ -1129,37 +1177,6 @@ public class TiUIMapView extends TiUIFragment
 			clickablePolygones.clear();
 		}
 
-		// currentPolylines
-		ArrayList<PolylineProxy> clickablePolylines = new ArrayList<PolylineProxy>();
-		for (PolylineProxy polylineProxy : currentPolylines) {
-			if (polylineProxy.getClickable()) {
-				clickablePolylines.add(polylineProxy);
-			}
-		}
-
-		if (map != null && clickablePolylines.size() > 0) {
-			PolylineBoundary boundary = new PolylineBoundary();
-
-			LatLngBounds b = map.getProjection().getVisibleRegion().latLngBounds;
-			double side1 = b.northeast.latitude > b.southwest.latitude ? (b.northeast.latitude - b.southwest.latitude)
-																	   : (b.southwest.latitude - b.northeast.latitude);
-			double side2 = b.northeast.longitude > b.southwest.longitude
-							   ? (b.northeast.longitude - b.southwest.longitude)
-							   : (b.southwest.longitude - b.northeast.longitude);
-			double diagonal = Math.sqrt((side1 * side1) + (side2 * side2));
-			double val = diagonal / map.getCameraPosition().zoom;
-
-			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(clickablePolylines, point, val);
-
-			boundary = null;
-			if (clickedPolylines.size() > 0) {
-				for (PolylineProxy polylineProxy : clickedPolylines) {
-					fireShapeClickEvent(point, polylineProxy, MapModule.PROPERTY_POLYLINE);
-				}
-			}
-		}
-		clickablePolylines.clear();
-
 		KrollDict d = new KrollDict();
 		d.put(TiC.PROPERTY_LATITUDE, point.latitude);
 		d.put(TiC.PROPERTY_LONGITUDE, point.longitude);
@@ -1167,6 +1184,12 @@ public class TiUIMapView extends TiUIFragment
 		if (proxy != null) {
 			proxy.fireEvent(MapModule.EVENT_MAP_CLICK, d);
 		}
+	}
+
+	@Override
+	public void onPoiClick(PointOfInterest poi)
+	{
+		firePOIClickEvent(poi);
 	}
 
 	@Override
@@ -1305,6 +1328,7 @@ public class TiUIMapView extends TiUIFragment
 			d.put(TiC.PROPERTY_LATITUDE, position.target.latitude);
 			d.put(TiC.PROPERTY_LONGITUDE, position.target.longitude);
 			d.put(TiC.PROPERTY_SOURCE, proxy);
+			d.put(MapModule.PROPERTY_ZOOM, position.zoom);
 			LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
 			d.put(TiC.PROPERTY_LATITUDE_DELTA, (bounds.northeast.latitude - bounds.southwest.latitude));
 			d.put(TiC.PROPERTY_LONGITUDE_DELTA, (bounds.northeast.longitude - bounds.southwest.longitude));
@@ -1395,5 +1419,32 @@ public class TiUIMapView extends TiUIFragment
 	public boolean onClusterItemClick(TiMarker tiMarker)
 	{
 		return onMarkerClick(tiMarker.getMarker());
+	}
+
+	@Override
+	public void onPolylineClick(Polyline polyline) {
+		final String id = polyline.getId();
+		
+		// find the proxy for this polyline
+		PolylineProxy polylineProxy = null;
+		for (PolylineProxy tempPolylineProxy : currentPolylines) {
+			if (tempPolylineProxy.getPolyline().getId().equals(id)) {
+				polylineProxy = tempPolylineProxy;
+				break;
+			}
+		}
+		
+		KrollDict d = new KrollDict();
+		d.put(TiC.EVENT_PROPERTY_CLICKSOURCE, MapModule.PROPERTY_POLYLINE);
+		d.put(TiC.PROPERTY_ANNOTATION, false);
+		d.put("overlay", polylineProxy);
+		
+		d.put(MapModule.PROPERTY_MAP, proxy);
+		d.put(TiC.PROPERTY_TYPE, TiC.EVENT_CLICK);
+		d.put(TiC.PROPERTY_SOURCE, polylineProxy);
+
+		if (proxy != null) {
+			proxy.fireEvent(TiC.EVENT_CLICK, d);
+		}
 	}
 }

@@ -169,6 +169,11 @@
 
 #pragma mark Public API
 
+- (NSNumber *)mapType
+{
+  return @(((TiMapView *)[self view]).map.mapType);
+}
+
 - (void)zoom:(id)arg
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
@@ -821,7 +826,6 @@
   }
 }
 
-#if IS_IOS_11
 - (void)setClusterAnnotation:(id)args
 {
   ENSURE_DICT(args);
@@ -834,9 +838,8 @@
     [(TiMapView *)[self view] setClusterAnnotation:annotationProxy forMembers:memberAnnotations];
   }
 }
-#endif
 
-#pragma mark Public APIs iOS 7
+#pragma mark Public API's
 
 - (TiMapCameraProxy *)camera
 {
@@ -867,6 +870,11 @@
     [(TiMapView *)[self view] showAnnotations:args];
   },
       NO);
+}
+
+- (NSNumber *)containsCoordinate:(id)coordinate
+{
+  return [(TiMapView *)[self view] containsCoordinate:coordinate];
 }
 
 @end

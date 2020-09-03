@@ -8,8 +8,7 @@
 #ifndef map_TiMapCircleProxy_h
 #define map_TiMapCircleProxy_h
 
-#import "TiBase.h"
-#import "TiViewProxy.h"
+#import <TitaniumKit/TitaniumKit.h>
 #import <MapKit/MapKit.h>
 
 @class TiMapViewProxy;

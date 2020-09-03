@@ -6,7 +6,7 @@
  */
 
 #import "TiMapCameraProxy.h"
-#import "TiUtils.h"
+#import <TitaniumKit/TitaniumKit.h>
 
 @implementation TiMapCameraProxy
 

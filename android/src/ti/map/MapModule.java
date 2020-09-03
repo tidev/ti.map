@@ -9,18 +9,31 @@
 package ti.map;
 
 import org.appcelerator.kroll.KrollModule;
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.util.TiConvert;
+import org.appcelerator.titanium.TiC;
+
+import com.google.maps.android.PolyUtil;
+
+import android.location.Location;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 
 @Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule
 {
 	public static final String EVENT_MAP_CLICK = "mapclick";
+	public static final String EVENT_POI_CLICK = "poiclick";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	public static final String EVENT_REGION_WILL_CHANGE = "regionwillchange";
@@ -68,6 +81,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_CENTER = "center";
 	public static final String PROPERTY_RADIUS = "radius";
 	public static final String PROPERTY_INDOOR_ENABLED = "indoorEnabled";
+	public static final String PROPERTY_PLACE_ID = "placeID";
 	public static final String PROPERTY_DESELECTED = "deselected";
 
 	@Kroll.constant
@@ -142,6 +156,35 @@ public class MapModule extends KrollModule
 	public int isGooglePlayServicesAvailable()
 	{
 		return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(TiApplication.getInstance());
+	}
+
+	@Kroll.method
+	public boolean geometryContainsLocation(KrollDict dict)
+	{
+		HashMap<String, String> point = (HashMap<String, String>) dict.get("location");
+		LatLng location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)),TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
+		List<LatLng> polygon = new ArrayList<>();
+		Object[] dictPoints =(Object[]) dict.get("points");
+		for (Object _point : dictPoints) {
+			HashMap<String, String> _location = (HashMap<String, String>)_point;
+			polygon.add(new LatLng(TiConvert.toDouble(_location.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(_location.get(TiC.PROPERTY_LONGITUDE))));
+		}
+		return PolyUtil.containsLocation(location, polygon, true);
+	}
+	
+	@Kroll.method
+	public double geometryDistanceBetweenPoints(Object jsLocation1, Object jsLocation2)
+	{
+		HashMap<String, String> location1Dict = (HashMap<String, String>) jsLocation1;
+		HashMap<String, String> location2Dict = (HashMap<String, String>) jsLocation2;
+
+		LatLng location1 = new LatLng(TiConvert.toDouble(location1Dict.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(location1Dict.get(TiC.PROPERTY_LONGITUDE)));
+		LatLng location2 = new LatLng(TiConvert.toDouble(location2Dict.get(TiC.PROPERTY_LATITUDE)), TiConvert.toDouble(location2Dict.get(TiC.PROPERTY_LONGITUDE)));
+
+		float[] results = new float[1];
+		Location.distanceBetween(location1.latitude, location1.longitude, location2.latitude, location2.longitude, results);
+				
+		return results[0];
 	}
 
 	@Override

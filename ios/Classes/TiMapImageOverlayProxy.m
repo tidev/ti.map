@@ -6,7 +6,6 @@
  */
 
 #import "TiMapImageOverlayProxy.h"
-#import "TiUtils.h"
 
 @implementation TiMapImageOverlay
 @synthesize coordinate, boundingMapRect;

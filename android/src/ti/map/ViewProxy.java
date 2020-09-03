@@ -25,13 +25,16 @@ import ti.map.AnnotationProxy.AnnotationDelegate;
 import android.app.Activity;
 import android.os.Message;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+
 @Kroll.
 proxy(creatableInModule = MapModule.class,
 	  propertyAccessors = { TiC.PROPERTY_USER_LOCATION, MapModule.PROPERTY_USER_LOCATION_BUTTON, TiC.PROPERTY_MAP_TYPE,
 							TiC.PROPERTY_REGION, TiC.PROPERTY_ANNOTATIONS, TiC.PROPERTY_ANIMATE,
 							MapModule.PROPERTY_TRAFFIC, TiC.PROPERTY_STYLE, TiC.PROPERTY_ENABLE_ZOOM_CONTROLS,
-							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED,
-							MapModule.PROPERTY_ZOOM_ENABLED, MapModule.PROPERTY_POLYLINES })
+							MapModule.PROPERTY_COMPASS_ENABLED, MapModule.PROPERTY_SCROLL_ENABLED, MapModule.PROPERTY_ZOOM_ENABLED,
+							MapModule.PROPERTY_POLYLINES, TiC.PROPERTY_PADDING })
 public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 {
 	private static final String TAG = "MapViewProxy";
@@ -55,6 +58,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_SET_PADDING = MSG_FIRST_ID + 514;
 	private static final int MSG_ZOOM = MSG_FIRST_ID + 515;
 	private static final int MSG_SHOW_ANNOTATIONS = MSG_FIRST_ID + 516;
+	private static final int MSG_CONTAINS_COORDINATE = MSG_FIRST_ID + 517;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -310,11 +314,17 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_SHOW_ANNOTATIONS: {
 				result = ((AsyncResult) msg.obj);
-				handleShowAnnotations((Object[]) result.getArg());
+				handleShowAnnotations((Object[]) result.getArg(), 30, false);
 				result.setResult(null);
 				return true;
 			}
 
+			case MSG_CONTAINS_COORDINATE: {
+				result = ((AsyncResult) msg.obj);
+				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict)result.getArg())));
+				return true;
+			}
+		  
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -416,17 +426,17 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void showAnnotations(Object annotations)
-	{
+	public void showAnnotations(Object annotations, int padding, boolean animated)
+  {
 		if (TiApplication.isUIThread()) {
-			handleShowAnnotations(annotations);
+			handleShowAnnotations(annotations, padding, animated);
 		} else {
 			getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS).sendToTarget();
 		}
 	}
 
-	private void handleShowAnnotations(Object annotations)
-	{
+	private void handleShowAnnotations(Object annotations, int padding, boolean animated)
+  {
 		if (!(annotations instanceof Object[])) {
 			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
 			return;
@@ -435,7 +445,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 		TiUIMapView mapView = (TiUIMapView) peekView();
 		if (mapView.getMap() != null) {
-			mapView.showAnnotations(annos);
+			mapView.showAnnotations(annos, padding, animated);
 		}
 	}
 
@@ -1135,6 +1145,20 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
+	@Kroll.method
+	public boolean containsCoordinate(KrollDict coordinate)
+	{
+	  return handleContainsCoordinate(coordinate);
+	}
+	
+	private boolean handleContainsCoordinate(KrollDict coordinate) {
+	  TiUIView view = peekView();
+	  if ((view instanceof TiUIMapView)) {
+		return ((TiUIMapView)view).containsCoordinate(coordinate);
+	  }
+	  return false;
+	}
+
 	// clang-format off
 	@Kroll.method
 	@Kroll.getProperty
@@ -1151,11 +1175,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private float handleGetZoomLevel()
 	{
 		TiUIView view = peekView();
+
 		if (view instanceof TiUIMapView) {
-			return ((TiUIMapView) view).getMap().getCameraPosition().zoom;
-		} else {
-			return 0;
+			GoogleMap mapView = ((TiUIMapView) view).getMap();
+
+			if (mapView != null) {
+				return mapView.getCameraPosition().zoom;
+			}
 		}
+
+		return 0;
 	}
 
 	@Kroll.method
@@ -1205,19 +1234,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			}
 		} else {
 			Log.e(TAG, "Unable to refresh annotation since the map view has not been created yet.");
-		}
-	}
-
-	// clang-format off
-	@Kroll.method
-	@Kroll.setProperty
-	public void setPadding(KrollDict padding)
-	// clang-format on
-	{
-		if (TiApplication.isUIThread()) {
-			handleSetPadding(padding);
-		} else {
-			getMainHandler().obtainMessage(MSG_SET_PADDING, padding).sendToTarget();
 		}
 	}
 
@@ -1332,12 +1348,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			int left = TiConvert.toInt(args.getInt(TiC.PROPERTY_LEFT), 0);
-			int top = TiConvert.toInt(args.getInt(TiC.PROPERTY_TOP), 0);
-			int right = TiConvert.toInt(args.getInt(TiC.PROPERTY_RIGHT), 0);
-			int bottom = TiConvert.toInt(args.getInt(TiC.PROPERTY_BOTTOM), 0);
-
-			((TiUIMapView) view).setPadding(left, top, right, bottom);
+			((TiUIMapView) view).setPadding(args);
 		}
 	}
 

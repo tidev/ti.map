@@ -481,6 +481,31 @@ events:
     since: "6.2.0"
     platforms: [android, iphone, ipad]
 
+  - name: poiclick
+    summary: |
+        Fired when the user clicks on a point of interest on the map.
+    description: |
+        The `poiclick` event is fired when the user clicks on a point of interest of  the map and returns 
+        the longitude/latitude and name of that location.
+    properties:
+      - name: name
+        summary: The name of the point of interest.
+        type: String
+
+      - name: placeID
+        summary: The Google place ID of the point of interest.
+        type: String
+
+      - name: latitude
+        summary: The latitude of the clicked position.
+        type: Number
+
+      - name: longitude
+        summary: The longitude of the clicked position.
+        type: Number
+    since: "8.1.0"
+    platforms: [android]
+
   - name: regionwillchange
     since: { android: "6.2.0", iphone: "6.0.0", ipad: "6.0.0" }
     summary: |
