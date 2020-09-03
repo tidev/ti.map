@@ -23,6 +23,7 @@ import android.os.Message;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.PolyUtil;
 
 @Kroll.proxy(name = "Polygon", creatableInModule = MapModule.class,
 			 propertyAccessors =
@@ -154,21 +155,29 @@ public class PolygonProxy extends KrollProxy implements IShape
 		}
 	}
 
-	public ArrayList<LatLng> processPoints(Object points, boolean list)
+	public List<LatLng> processPoints(Object points, boolean list)
 	{
-
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
-		// multiple points
+
+		// Handle an array of points
 		if (points instanceof Object[]) {
 			Object[] pointsArray = (Object[]) points;
 			for (int i = 0; i < pointsArray.length; i++) {
 				Object obj = pointsArray[i];
 				addLocation(obj, locationArray, list);
 			}
+
+			return locationArray;
+		// Handle encoded polyline
+		} else if (points instanceof  String) {
+			for (LatLng point : PolyUtil.decode((String) points)) {
+				addLocation(point, locationArray, list);
+			}
+
 			return locationArray;
 		}
 
-		// single point
+		// Single point
 		addLocation(points, locationArray, list);
 		return locationArray;
 	}

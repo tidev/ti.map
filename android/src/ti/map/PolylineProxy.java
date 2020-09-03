@@ -195,24 +195,27 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 	public List<LatLng> processPoints(Object points, boolean list)
 	{
-		// Handle encoded points
-		if (points instanceof String) {
-			return PolyUtil.decode((String) points);
-		}
+		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
 
 		// Handle an array of points
-		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
-		//multiple points
 		if (points instanceof Object[]) {
 			Object[] pointsArray = (Object[]) points;
 			for (int i = 0; i < pointsArray.length; i++) {
 				Object obj = pointsArray[i];
 				addLocation(obj, locationArray, list);
 			}
+
+			return locationArray;
+		// Handle encoded polyline
+		} else if (points instanceof  String) {
+			for (LatLng point : PolyUtil.decode((String) points)) {
+				addLocation(point, locationArray, list);
+			}
+
 			return locationArray;
 		}
 
-		//single point
+		// Single point
 		addLocation(points, locationArray, list);
 		return locationArray;
 	}
@@ -299,7 +302,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 		} else if (loc instanceof Object[]) {
 			Object[] temp = (Object[]) loc;
 			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
+		} else if (loc instanceof LatLng) {
+			return (LatLng) loc;
 		}
+
 		return location;
 	}
 
