@@ -21,8 +21,11 @@
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
 #import "TiUtils.h"
+#import <MapKit/MapKit.h>
 
 @implementation TiMapView
+
+CLLocationCoordinate2D userNewLocation;
 
 #pragma mark Internal
 
@@ -237,7 +240,6 @@
 {
   ENSURE_TYPE(args, NSArray);
   ENSURE_UI_THREAD(addAnnotations, args);
-
   [[self map] addAnnotations:[self annotationsFromArgs:args]];
 }
 
@@ -1067,7 +1069,6 @@
   for (id annotation in [map annotations]) {
     if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
       if ([(TiMapAnnotationProxy *)annotation tag] == pinview.tag) {
-        [annotation setView:pinview];
         return annotation;
       }
     }
@@ -1202,7 +1203,6 @@
   annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
   annView.enabled = YES;
   annView.centerOffset = ann.offset;
-
 #if IS_IOS_11
   if ([TiMapView isiOS11OrGreater]) {
     annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
@@ -1257,13 +1257,22 @@
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
 #endif
   }
-
   return annView;
 }
+- (void)animateAnnotation:(TiMapAnnotationProxy *)newAnnotation withLocation:(CLLocationCoordinate2D)newLocation
+{
+  userNewLocation.latitude = newLocation.latitude;
+  userNewLocation.longitude = newLocation.longitude;
 
+  [UIView animateWithDuration:2
+                   animations:^{
+                     newAnnotation.coordinate = userNewLocation;
+                     MKAnnotationView *annotationView = (MKAnnotationView *)[self.map viewForAnnotation:newAnnotation];
+                   }];
+}
 // mapView:viewForAnnotation: provides the view for each annotation.
 // This method may be called for all or some of the added annotations.
-// For MapKit provided annotations (eg. MKUserLocation) return nil to use the MapKit provided annotation view.
+// For MapKit provided annotations (eg. MKUserLocation) return nil to use the MapKit provided annotatiown view.
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
   if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
