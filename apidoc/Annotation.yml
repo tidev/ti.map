@@ -325,3 +325,23 @@ properties:
     since: "6.2.0"
     type: Titanium.UI.iOS.PreviewContext
     osver: {ios: {min: "9.0"}}
+
+methods:
+
+  - name: animate
+    summary: Animate annotation to new location.
+    parameters:
+        - name: newLocation
+          summary: latitude and longitude where annotation will animate.
+          type: Array<Number>
+    platforms: [iphone, ipad]
+    since: "9.2.0"
+          
+  - name: rotate
+    summary: Rotate annotation on its location.
+    parameters:
+        - name: angle
+          summary: angle on which annotation will rotate.
+          type: Number
+    platforms: [iphone, ipad]
+    since: "9.2.0"
