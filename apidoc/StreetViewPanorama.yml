@@ -5,16 +5,13 @@ description: |
     Each street view panorama is an image, or set of images, that provides a full 360-degree view from
     a single location. It provides a viewer that renders the panorama as a sphere with a camera at its center.
     A window can only contain one street view.
-
 extends: Titanium.UI.View
 excludes:
     events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
               'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
-
 since: "5.2.0"
 platforms: [android]
 properties:
-
   - name: position
     summary: A dictionary specifying the position of the street view.
     type: StreetViewPosition
@@ -41,11 +38,12 @@ properties:
         view, to move to a new panorama.    
     type: Boolean
     default: true
+
 ---
 name: StreetViewPosition
 summary: Simple object representing a street view coordinates.
+since: "5.2.0"
 properties:
-
   - name: longitude
     summary: Longitude value for the center point of the view, in decimal degrees.
     type: Number
@@ -55,4 +53,3 @@ properties:
     summary: Latitude value for the center point of the view, in decimal degrees.
     type: Number
     default: 0
-since: "5.2.0"

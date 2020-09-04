@@ -40,13 +40,10 @@ description: |
 
     On Android, you must add the click event listener to the map view; the annotation
     itself does not generate these events.
-
 extends: Titanium.Proxy
 since: { android: "3.0.2", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
-
 properties:
-
   - name: canShowCallout
     summary: Defines whether the annotation view is able to display extra information in a callout bubble.
     description: |
