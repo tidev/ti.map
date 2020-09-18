@@ -2,12 +2,9 @@ package ti.map.Shape;
 
 import android.graphics.PointF;
 import android.util.Log;
-
-import java.util.ArrayList;
-
-import ti.map.PolylineProxy;
-
 import com.google.android.gms.maps.model.LatLng;
+import java.util.ArrayList;
+import ti.map.PolylineProxy;
 
 public class PolylineBoundary
 {

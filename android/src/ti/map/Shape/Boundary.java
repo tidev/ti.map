@@ -1,9 +1,9 @@
 package ti.map.Shape;
 
 import android.graphics.Point;
+import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import ti.map.PolygonProxy;
-import com.google.android.gms.maps.model.LatLng;
 
 public class Boundary
 {
