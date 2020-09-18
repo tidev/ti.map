@@ -6,23 +6,20 @@
  */
 package ti.map;
 
+import android.os.Message;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
-
 import ti.map.Shape.IShape;
-import android.os.Message;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 
 @Kroll.proxy(name = "Polygon", creatableInModule = MapModule.class,
 			 propertyAccessors =

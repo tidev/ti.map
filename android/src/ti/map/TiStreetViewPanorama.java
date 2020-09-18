@@ -6,22 +6,19 @@
  */
 package ti.map;
 
+import android.app.Activity;
+import androidx.fragment.app.Fragment;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
+import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
+import com.google.android.gms.maps.model.LatLng;
 import java.util.HashMap;
-
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIFragment;
-
-import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
-import com.google.android.gms.maps.StreetViewPanorama;
-import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
-import com.google.android.gms.maps.model.LatLng;
-
-import android.app.Activity;
-import androidx.fragment.app.Fragment;
 
 public class TiStreetViewPanorama extends TiUIFragment implements OnStreetViewPanoramaReadyCallback
 {

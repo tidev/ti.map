@@ -6,21 +6,18 @@
  */
 package ti.map;
 
+import android.os.Message;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
-
-import android.os.Message;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 @Kroll.proxy(creatableInModule = MapModule.class,
 			 propertyAccessors = { MapModule.PROPERTY_POINTS, TiC.PROPERTY_COLOR, TiC.PROPERTY_WIDTH })

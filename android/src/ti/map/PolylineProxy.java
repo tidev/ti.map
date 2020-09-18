@@ -6,29 +6,26 @@
  */
 package ti.map;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.AsyncResult;
-import org.appcelerator.kroll.common.TiMessenger;
-import org.appcelerator.kroll.common.Log;
-import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.util.TiConvert;
-
-import ti.map.Shape.IShape;
 import android.os.Message;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.Gap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.AsyncResult;
+import org.appcelerator.kroll.common.Log;
+import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.util.TiConvert;
+import ti.map.Shape.IShape;
 
 @Kroll.proxy(name = "Polyline", creatableInModule = MapModule.class,
 			 propertyAccessors = { MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
