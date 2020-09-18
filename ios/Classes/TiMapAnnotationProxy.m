@@ -96,9 +96,10 @@
     needsRefreshingWithSelection |= shouldReselect;
 
     if (invokeMethod) {
-      TiThreadPerformOnMainThread(^{
-        [self refreshAfterDelay];
-      },
+      TiThreadPerformOnMainThread(
+          ^{
+            [self refreshAfterDelay];
+          },
           NO);
     }
   }

@@ -17,9 +17,10 @@
   }
 
   __block id result = nil;
-  TiThreadPerformOnMainThread(^{
-    result = [block() retain];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        result = [block() retain];
+      },
       YES);
   return [result autorelease];
 }
