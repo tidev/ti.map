@@ -5,6 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import "TiViewProxy.h"
+#import <MapKit/MapKit.h>
 
 @class TiMapAnnotationProxy;
 @class TiMapCameraProxy;
