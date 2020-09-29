@@ -6,8 +6,13 @@
  */
 package ti.map;
 
+import android.graphics.Color;
+import android.os.Message;
+import android.view.ViewGroup;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 import java.util.HashMap;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
@@ -16,15 +21,7 @@ import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.util.TiConvert;
-
 import ti.map.Shape.IShape;
-import android.graphics.Color;
-import android.os.Message;
-import android.view.ViewGroup;
-
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
 
 @Kroll.
 proxy(name = "Circle", creatableInModule = MapModule.class,

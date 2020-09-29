@@ -96,9 +96,10 @@
     needsRefreshingWithSelection |= shouldReselect;
 
     if (invokeMethod) {
-      TiThreadPerformOnMainThread(^{
-        [self refreshAfterDelay];
-      },
+      TiThreadPerformOnMainThread(
+          ^{
+            [self refreshAfterDelay];
+          },
           NO);
     }
   }
@@ -547,6 +548,25 @@
 - (int)tag
 {
   return tag;
+}
+- (void)rotate:(id)arg
+{
+  CGFloat getAngle = [[arg objectAtIndex:0] floatValue];
+  [UIView animateWithDuration:1
+                   animations:^{
+                     MKAnnotationView *annotationView = [[(TiMapView *)[delegate view] map] viewForAnnotation:self];
+                     annotationView.transform = CGAffineTransformMakeRotation(getAngle);
+                   }];
+}
+
+- (void)animate:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, NSArray);
+  TiMapAnnotationProxy *newAnnotation = self;
+  CLLocationCoordinate2D newLocation;
+  newLocation.latitude = [[arg objectAtIndex:0] floatValue];
+  newLocation.longitude = [[arg objectAtIndex:1] floatValue];
+  [(TiMapView *)[delegate view] animateAnnotation:newAnnotation withLocation:newLocation];
 }
 
 - (UIView *)view

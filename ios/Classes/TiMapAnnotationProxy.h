@@ -32,15 +32,14 @@
 // Title and subtitle for use by selection UI.
 - (NSString *)title;
 - (NSString *)subtitle;
-
 - (id)pincolor;
 - (id)nativePinColor;
 - (BOOL)animatesDrop;
 - (void)setHidden:(id)value;
-
 - (UIView *)leftViewAccessory;
 - (UIView *)rightViewAccessory;
-
 - (int)tag;
+- (void)animate:(id)arg;
+- (void)rotate:(id)arg;
 
 @end

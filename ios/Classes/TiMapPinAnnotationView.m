@@ -44,7 +44,7 @@
           NSString *labelText = [(UILabel *)ourSubSubView text];
           TiMapAnnotationProxy *ourProxy = (TiMapAnnotationProxy *)[self annotation];
           RELEASE_TO_NIL(lastHitName);
-          if ([labelText isEqualToString:[ourProxy title]]) {
+          if ([labelText isEqualToString:ourProxy.title]) {
             lastHitName = [@"title" retain];
           } else if ([labelText isEqualToString:[ourProxy subtitle]]) {
             lastHitName = [@"subtitle" retain];

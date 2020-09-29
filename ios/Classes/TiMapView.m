@@ -21,8 +21,11 @@
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
 #import "TiUtils.h"
+#import <MapKit/MapKit.h>
 
 @implementation TiMapView
+
+CLLocationCoordinate2D userNewLocation;
 
 #pragma mark Internal
 
@@ -52,9 +55,10 @@
 - (void)render
 {
   if (![NSThread isMainThread]) {
-    TiThreadPerformOnMainThread(^{
-      [self render];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [self render];
+        },
         NO);
     return;
   }
@@ -237,7 +241,6 @@
 {
   ENSURE_TYPE(args, NSArray);
   ENSURE_UI_THREAD(addAnnotations, args);
-
   [[self map] addAnnotations:[self annotationsFromArgs:args]];
 }
 
@@ -260,9 +263,10 @@
     doomedAnnotation = args;
   }
 
-  TiThreadPerformOnMainThread(^{
-    [[self map] removeAnnotation:doomedAnnotation];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [[self map] removeAnnotation:doomedAnnotation];
+      },
       NO);
 }
 
@@ -287,9 +291,10 @@
     }
   }
 
-  TiThreadPerformOnMainThread(^{
-    [[self map] removeAnnotations:doomedAnnotations];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [[self map] removeAnnotations:doomedAnnotations];
+      },
       NO);
 }
 
@@ -525,20 +530,22 @@
 
 - (void)addRoute:(TiMapRouteProxy *)route
 {
-  TiThreadPerformOnMainThread(^{
-    CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
-    [self addOverlay:[route routeLine] level:[route level]];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        CFDictionaryAddValue(mapObjects2View, [route routeLine], [route routeRenderer]);
+        [self addOverlay:[route routeLine] level:[route level]];
+      },
       NO);
 }
 
 - (void)removeRoute:(TiMapRouteProxy *)route
 {
-  TiThreadPerformOnMainThread(^{
-    MKPolyline *routeLine = [route routeLine];
-    CFDictionaryRemoveValue(mapObjects2View, routeLine);
-    [map removeOverlay:routeLine];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        MKPolyline *routeLine = [route routeLine];
+        CFDictionaryRemoveValue(mapObjects2View, routeLine);
+        [map removeOverlay:routeLine];
+      },
       NO);
 }
 
@@ -551,16 +558,17 @@
 
 - (void)addPolygon:(TiMapPolygonProxy *)polygonProxy
 {
-  TiThreadPerformOnMainThread(^{
-    MKPolygon *poly = [polygonProxy polygon];
-    CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
-    [map addOverlay:poly];
+  TiThreadPerformOnMainThread(
+      ^{
+        MKPolygon *poly = [polygonProxy polygon];
+        CFDictionaryAddValue(mapObjects2View, poly, [polygonProxy polygonRenderer]);
+        [map addOverlay:poly];
 
-    if (polygonProxies == nil) {
-      polygonProxies = [[NSMutableArray alloc] init];
-    }
-    [polygonProxies addObject:polygonProxy];
-  },
+        if (polygonProxies == nil) {
+          polygonProxies = [[NSMutableArray alloc] init];
+        }
+        [polygonProxies addObject:polygonProxy];
+      },
       NO);
 }
 
@@ -571,14 +579,15 @@
 
 - (void)removePolygon:(TiMapPolygonProxy *)polygonProxy remove:(BOOL)r
 {
-  TiThreadPerformOnMainThread(^{
-    MKPolygon *poly = [polygonProxy polygon];
-    CFDictionaryRemoveValue(mapObjects2View, poly);
-    [map removeOverlay:poly];
-    if (r) {
-      [polygonProxies removeObject:polygonProxy];
-    }
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        MKPolygon *poly = [polygonProxy polygon];
+        CFDictionaryRemoveValue(mapObjects2View, poly);
+        [map removeOverlay:poly];
+        if (r) {
+          [polygonProxies removeObject:polygonProxy];
+        }
+      },
       NO);
 }
 
@@ -594,16 +603,17 @@
 - (void)addCircle:(TiMapCircleProxy *)circleProxy
 {
 
-  TiThreadPerformOnMainThread(^{
-    MKCircle *circle = [[circleProxy circleRenderer] circle];
-    CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
-    [map addOverlay:circle];
+  TiThreadPerformOnMainThread(
+      ^{
+        MKCircle *circle = [[circleProxy circleRenderer] circle];
+        CFDictionaryAddValue(mapObjects2View, circle, [circleProxy circleRenderer]);
+        [map addOverlay:circle];
 
-    if (circleProxies == nil) {
-      circleProxies = [[NSMutableArray alloc] init];
-    }
-    [circleProxies addObject:circleProxy];
-  },
+        if (circleProxies == nil) {
+          circleProxies = [[NSMutableArray alloc] init];
+        }
+        [circleProxies addObject:circleProxy];
+      },
       NO);
 }
 
@@ -621,14 +631,15 @@
 
 - (void)removeCircle:(TiMapCircleProxy *)circleProxy remove:(BOOL)r
 {
-  TiThreadPerformOnMainThread(^{
-    MKCircle *circle = [[circleProxy circleRenderer] circle];
-    CFDictionaryRemoveValue(mapObjects2View, circle);
-    [map removeOverlay:circle];
-    if (r) {
-      [circleProxies removeObject:circleProxy];
-    }
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        MKCircle *circle = [[circleProxy circleRenderer] circle];
+        CFDictionaryRemoveValue(mapObjects2View, circle);
+        [map removeOverlay:circle];
+        if (r) {
+          [circleProxies removeObject:circleProxy];
+        }
+      },
       NO);
 }
 
@@ -650,15 +661,16 @@
 
 - (void)addPolyline:(TiMapPolylineProxy *)polylineProxy
 {
-  TiThreadPerformOnMainThread(^{
-    MKPolyline *poly = [polylineProxy polyline];
-    CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
-    [map addOverlay:poly];
-    if (polylineProxies == nil) {
-      polylineProxies = [[NSMutableArray alloc] init];
-    }
-    [polylineProxies addObject:polylineProxy];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        MKPolyline *poly = [polylineProxy polyline];
+        CFDictionaryAddValue(mapObjects2View, poly, [polylineProxy polylineRenderer]);
+        [map addOverlay:poly];
+        if (polylineProxies == nil) {
+          polylineProxies = [[NSMutableArray alloc] init];
+        }
+        [polylineProxies addObject:polylineProxy];
+      },
       NO);
 }
 
@@ -669,14 +681,15 @@
 
 - (void)removePolyline:(TiMapPolylineProxy *)polylineProxy remove:(BOOL)r
 {
-  TiThreadPerformOnMainThread(^{
-    MKPolyline *poly = [polylineProxy polyline];
-    CFDictionaryRemoveValue(mapObjects2View, poly);
-    [map removeOverlay:poly];
-    if (r) {
-      [polylineProxies removeObject:polylineProxy];
-    }
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        MKPolyline *poly = [polylineProxy polyline];
+        CFDictionaryRemoveValue(mapObjects2View, poly);
+        [map removeOverlay:poly];
+        if (r) {
+          [polylineProxies removeObject:polylineProxy];
+        }
+      },
       NO);
 }
 
@@ -691,16 +704,17 @@
 
 - (void)addImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy
 {
-  TiThreadPerformOnMainThread(^{
-    TiMapImageOverlayRenderer *renderer = [imageOverlayProxy imageOverlayRenderer];
-    TiMapImageOverlay *overlay = [imageOverlayProxy imageOverlay];
-    CFDictionaryAddValue(mapObjects2View, overlay, renderer);
-    [map addOverlay:overlay];
-    if (imageOverlayProxies == nil) {
-      imageOverlayProxies = [[NSMutableArray alloc] init];
-    }
-    [imageOverlayProxies addObject:imageOverlayProxy];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        TiMapImageOverlayRenderer *renderer = [imageOverlayProxy imageOverlayRenderer];
+        TiMapImageOverlay *overlay = [imageOverlayProxy imageOverlay];
+        CFDictionaryAddValue(mapObjects2View, overlay, renderer);
+        [map addOverlay:overlay];
+        if (imageOverlayProxies == nil) {
+          imageOverlayProxies = [[NSMutableArray alloc] init];
+        }
+        [imageOverlayProxies addObject:imageOverlayProxy];
+      },
       NO);
 }
 
@@ -717,14 +731,15 @@
 
 - (void)removeImageOverlay:(TiMapImageOverlayProxy *)imageOverlayProxy remove:(BOOL)r
 {
-  TiThreadPerformOnMainThread(^{
-    TiMapImageOverlay *imageOverlay = [imageOverlayProxy imageOverlay];
-    CFDictionaryRemoveValue(mapObjects2View, imageOverlay);
-    [map removeOverlay:imageOverlay];
-    if (r) {
-      [imageOverlayProxies removeObject:imageOverlayProxy];
-    }
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        TiMapImageOverlay *imageOverlay = [imageOverlayProxy imageOverlay];
+        CFDictionaryRemoveValue(mapObjects2View, imageOverlay);
+        [map removeOverlay:imageOverlay];
+        if (r) {
+          [imageOverlayProxies removeObject:imageOverlayProxy];
+        }
+      },
       NO);
 }
 
@@ -747,57 +762,64 @@
 
 - (void)setCamera_:(TiMapCameraProxy *)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].camera = [value camera];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].camera = [value camera];
+      },
       YES);
 }
 
 - (void)setPitchEnabled_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].pitchEnabled = [TiUtils boolValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].pitchEnabled = [TiUtils boolValue:value];
+      },
       YES);
 }
 
 - (void)setRotateEnabled_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].rotateEnabled = [TiUtils boolValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].rotateEnabled = [TiUtils boolValue:value];
+      },
       YES);
 }
 
 - (void)setScrollEnabled_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].scrollEnabled = [TiUtils boolValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].scrollEnabled = [TiUtils boolValue:value];
+      },
       YES);
 }
 
 - (void)setZoomEnabled_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].zoomEnabled = [TiUtils boolValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].zoomEnabled = [TiUtils boolValue:value];
+      },
       YES);
 }
 
 - (void)setShowsBuildings_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].showsBuildings = [TiUtils boolValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].showsBuildings = [TiUtils boolValue:value];
+      },
       YES);
 }
 
 - (void)setShowsPointsOfInterest_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].showsPointsOfInterest = [TiUtils boolValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].showsPointsOfInterest = [TiUtils boolValue:value];
+      },
       YES);
 }
 
@@ -811,9 +833,10 @@
 {
   if ([TiUtils isIOS9OrGreater] == YES) {
 #ifdef __IPHONE_9_0
-    TiThreadPerformOnMainThread(^{
-      [[self map] setShowsCompass:[TiUtils boolValue:value]];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [[self map] setShowsCompass:[TiUtils boolValue:value]];
+        },
         YES);
 #endif
   } else {
@@ -825,9 +848,10 @@
 {
   if ([TiUtils isIOS9OrGreater] == YES) {
 #ifdef __IPHONE_9_0
-    TiThreadPerformOnMainThread(^{
-      [self map].showsScale = [TiUtils boolValue:value];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [self map].showsScale = [TiUtils boolValue:value];
+        },
         YES);
 #endif
   } else {
@@ -839,9 +863,10 @@
 {
   if ([TiUtils isIOS9OrGreater] == YES) {
 #ifdef __IPHONE_9_0
-    TiThreadPerformOnMainThread(^{
-      [self map].showsTraffic = [TiUtils boolValue:value];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [self map].showsTraffic = [TiUtils boolValue:value];
+        },
         YES);
 #endif
   } else {
@@ -862,9 +887,10 @@
 
 - (void)setPadding_:(id)value
 {
-  TiThreadPerformOnMainThread(^{
-    [self map].layoutMargins = [TiUtils contentInsets:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self map].layoutMargins = [TiUtils contentInsets:value];
+      },
       YES);
 }
 
@@ -889,15 +915,16 @@
 
   // Apple says to use `mapView:regionDidChangeAnimated:` instead of `completion`
   // to know when the camera animation has completed
-  TiThreadPerformOnMainThread(^{
-    [UIView animateWithDuration:(duration / 1000)
-                          delay:(delay / 1000)
-                        options:curve
-                     animations:^{
-                       [self map].camera = [cameraProxy camera];
-                     }
-                     completion:nil];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [UIView animateWithDuration:(duration / 1000)
+                              delay:(delay / 1000)
+                            options:curve
+                         animations:^{
+                           [self map].camera = [cameraProxy camera];
+                         }
+                         completion:nil];
+      },
       NO);
 }
 
@@ -905,9 +932,10 @@
 {
   ENSURE_SINGLE_ARG_OR_NIL(args, NSArray);
 
-  TiThreadPerformOnMainThread(^{
-    [[self map] showAnnotations:args ?: [self customAnnotations] animated:animate];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [[self map] showAnnotations:args ?: [self customAnnotations] animated:animate];
+      },
       NO);
 }
 
@@ -1201,7 +1229,6 @@
   annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
   annView.enabled = YES;
   annView.centerOffset = ann.offset;
-
 #if IS_IOS_11
   if ([TiMapView isiOS11OrGreater]) {
     annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
@@ -1256,13 +1283,22 @@
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
 #endif
   }
-
   return annView;
 }
+- (void)animateAnnotation:(TiMapAnnotationProxy *)newAnnotation withLocation:(CLLocationCoordinate2D)newLocation
+{
+  userNewLocation.latitude = newLocation.latitude;
+  userNewLocation.longitude = newLocation.longitude;
 
+  [UIView animateWithDuration:2
+                   animations:^{
+                     newAnnotation.coordinate = userNewLocation;
+                     MKAnnotationView *annotationView = (MKAnnotationView *)[self.map viewForAnnotation:newAnnotation];
+                   }];
+}
 // mapView:viewForAnnotation: provides the view for each annotation.
 // This method may be called for all or some of the added annotations.
-// For MapKit provided annotations (eg. MKUserLocation) return nil to use the MapKit provided annotation view.
+// For MapKit provided annotations (eg. MKUserLocation) return nil to use the MapKit provided annotatiown view.
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
   if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {

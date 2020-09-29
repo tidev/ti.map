@@ -7,8 +7,9 @@
 
 #import "TiBase.h"
 #import "TiMapView.h"
-#import "TiViewProxy.h"
 #import <MapKit/MapKit.h>
+
+@class TiViewProxy;
 
 @interface TiMapCustomAnnotationView : MKAnnotationView <TiMapAnnotation> {
   @private

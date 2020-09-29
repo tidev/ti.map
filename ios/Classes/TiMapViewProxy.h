@@ -4,13 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
-#import "TiMapAnnotationProxy.h"
-#import "TiMapCameraProxy.h"
-#import "TiMapCircleProxy.h"
-#import "TiMapPolygonProxy.h"
-#import "TiMapPolylineProxy.h"
 #import "TiViewProxy.h"
+
+@class TiMapAnnotationProxy;
+@class TiMapCameraProxy;
 
 @interface TiMapViewProxy : TiViewProxy {
   TiMapAnnotationProxy *selectedAnnotation; // Annotation to select on initial display

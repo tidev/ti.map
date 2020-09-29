@@ -4,10 +4,12 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
 #import "TiMapViewProxy.h"
+#import "TiMapAnnotationProxy.h"
+#import "TiMapCircleProxy.h"
 #import "TiMapImageOverlayProxy.h"
-#import "TiMapModule.h"
+#import "TiMapPolygonProxy.h"
+#import "TiMapPolylineProxy.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
 #import "TiMapView.h"
@@ -53,9 +55,10 @@
   __block CLLocationDegrees delta = 0.0;
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      delta = [(TiMapView *)[self view] longitudeDelta];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          delta = [(TiMapView *)[self view] longitudeDelta];
+        },
         YES);
   }
   return [NSNumber numberWithDouble:delta];
@@ -66,9 +69,10 @@
   __block CLLocationDegrees delta = 0.0;
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      delta = [(TiMapView *)[self view] latitudeDelta];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          delta = [(TiMapView *)[self view] latitudeDelta];
+        },
         YES);
   }
   return [NSNumber numberWithDouble:delta];
@@ -179,9 +183,10 @@
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] zoom:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] zoom:arg];
+        },
         NO);
   } else {
     double v = [TiUtils doubleValue:arg];
@@ -201,9 +206,10 @@
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] selectAnnotation:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] selectAnnotation:arg];
+        },
         NO);
   } else {
     if (selectedAnnotation != arg) {
@@ -217,9 +223,10 @@
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] deselectAnnotation:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] deselectAnnotation:arg];
+        },
         NO);
   } else {
     RELEASE_TO_NIL(selectedAnnotation);
@@ -233,9 +240,10 @@
   [self rememberProxy:annProxy];
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addAnnotation:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addAnnotation:arg];
+        },
         NO);
   } else {
     if (annotationsToAdd == nil) {
@@ -260,9 +268,10 @@
   }
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addAnnotations:newAnnotations];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addAnnotations:newAnnotations];
+        },
         NO);
   } else {
     for (id annotation in newAnnotations) {
@@ -283,9 +292,10 @@
   BOOL attached = [self viewAttached];
   __block NSArray *currentAnnotations = nil;
   if (attached) {
-    TiThreadPerformOnMainThread(^{
-      currentAnnotations = [[(TiMapView *)[self view] customAnnotations] retain];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          currentAnnotations = [[(TiMapView *)[self view] customAnnotations] retain];
+        },
         YES);
   } else {
     currentAnnotations = annotationsToAdd;
@@ -309,9 +319,10 @@
   }
 
   if (attached) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] setAnnotations_:newAnnotations];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] setAnnotations_:newAnnotations];
+        },
         NO);
     [currentAnnotations release];
   } else {
@@ -326,9 +337,10 @@
 {
   if ([self viewAttached]) {
     __block NSArray *currentAnnotations = nil;
-    TiThreadPerformOnMainThread(^{
-      currentAnnotations = [[(TiMapView *)[self view] customAnnotations] retain];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          currentAnnotations = [[(TiMapView *)[self view] customAnnotations] retain];
+        },
         YES);
     return [currentAnnotations autorelease];
   } else {
@@ -347,9 +359,10 @@
   }
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeAnnotation:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeAnnotation:arg];
+        },
         NO);
   } else {
     if (annotationsToRemove == nil) {
@@ -385,9 +398,10 @@
 {
   if ([self viewAttached]) {
     __block NSArray *currentAnnotations = nil;
-    TiThreadPerformOnMainThread(^{
-      currentAnnotations = [[(TiMapView *)[self view] customAnnotations] retain];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          currentAnnotations = [[(TiMapView *)[self view] customAnnotations] retain];
+        },
         YES);
 
     for (id object in currentAnnotations) {
@@ -397,9 +411,10 @@
       }
     }
     [currentAnnotations release];
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeAllAnnotations:unused];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeAllAnnotations:unused];
+        },
         NO);
   } else {
     for (TiMapAnnotationProxy *annotation in annotationsToAdd) {
@@ -416,9 +431,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapRouteProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addRoute:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addRoute:arg];
+        },
         NO);
   } else {
     if (routesToAdd == nil) {
@@ -437,9 +453,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapRouteProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeRoute:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeRoute:arg];
+        },
         NO);
   } else {
     if (routesToRemove == nil) {
@@ -458,9 +475,10 @@
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addPolygons:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addPolygons:arg];
+        },
         NO);
   } else {
     for (id poly in arg) {
@@ -474,9 +492,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapPolygonProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addPolygon:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addPolygon:arg];
+        },
         NO);
   } else {
     if (polygonsToAdd == nil) {
@@ -495,9 +514,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapPolygonProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removePolygon:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removePolygon:arg];
+        },
         NO);
   } else {
     if (polygonsToRemove == nil) {
@@ -514,9 +534,10 @@
 - (void)removeAllPolygons:(id)args
 {
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeAllPolygons];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeAllPolygons];
+        },
         NO);
   }
 }
@@ -534,10 +555,11 @@
   BOOL attached = [self viewAttached];
 
   if (attached) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addPolygons:polygonsToAdd];
-      [initialPolygons release];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addPolygons:polygonsToAdd];
+          [initialPolygons release];
+        },
         NO);
   } else {
     RELEASE_TO_NIL(polygonsToAdd);
@@ -552,9 +574,10 @@
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addCircles:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addCircles:arg];
+        },
         NO);
   } else {
     for (id circle in arg) {
@@ -568,9 +591,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapCircleProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addCircle:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addCircle:arg];
+        },
         NO);
   } else {
     if (circlesToAdd == nil) {
@@ -589,9 +613,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapCircleProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeCircle:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeCircle:arg];
+        },
         NO);
   } else {
     if (circlesToRemove == nil) {
@@ -608,9 +633,10 @@
 - (void)removeAllCircles:(id)args
 {
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeAllCircles];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeAllCircles];
+        },
         NO);
   }
 }
@@ -628,10 +654,11 @@
   BOOL attached = [self viewAttached];
 
   if (attached) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addCircles:circlesToAdd];
-      [initialCircles release];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addCircles:circlesToAdd];
+          [initialCircles release];
+        },
         NO);
   } else {
     RELEASE_TO_NIL(circlesToAdd);
@@ -645,9 +672,10 @@
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addPolylines:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addPolylines:arg];
+        },
         NO);
   } else {
     for (id poly in arg) {
@@ -661,9 +689,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapPolylineProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addPolyline:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addPolyline:arg];
+        },
         NO);
   } else {
     if (polylinesToAdd == nil) {
@@ -682,9 +711,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapPolylineProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removePolyline:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removePolyline:arg];
+        },
         NO);
   } else {
     if (polylinesToRemove == nil) {
@@ -701,9 +731,10 @@
 - (void)removeAllPolylines:(id)args
 {
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeAllPolylines];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeAllPolylines];
+        },
         NO);
   }
 }
@@ -721,10 +752,11 @@
   BOOL attached = [self viewAttached];
 
   if (attached) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addPolylines:polylinesToAdd];
-      [initialPolylines release];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addPolylines:polylinesToAdd];
+          [initialPolylines release];
+        },
         NO);
   } else {
     RELEASE_TO_NIL(polylinesToAdd);
@@ -739,9 +771,10 @@
   ENSURE_SINGLE_ARG(arg, NSArray);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addImageOverlays:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addImageOverlays:arg];
+        },
         NO);
   } else {
     for (id circle in arg) {
@@ -755,9 +788,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapImageOverlayProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addImageOverlay:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addImageOverlay:arg];
+        },
         NO);
   } else {
     if (imageOvelaysToAdd == nil) {
@@ -776,9 +810,10 @@
   ENSURE_SINGLE_ARG(arg, TiMapImageOverlayProxy);
 
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeImageOverlay:arg];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeImageOverlay:arg];
+        },
         NO);
   } else {
     if (imageOvelaysToRemove == nil) {
@@ -795,9 +830,10 @@
 - (void)removeAllImageOverlays:(id)args
 {
   if ([self viewAttached]) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] removeAllImageOverlays];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] removeAllImageOverlays];
+        },
         NO);
   }
 }
@@ -815,10 +851,11 @@
   BOOL attached = [self viewAttached];
 
   if (attached) {
-    TiThreadPerformOnMainThread(^{
-      [(TiMapView *)[self view] addImageOverlays:imageOvelaysToAdd];
-      [initialImageOverlays release];
-    },
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] addImageOverlays:imageOvelaysToAdd];
+          [initialImageOverlays release];
+        },
         NO);
   } else {
     RELEASE_TO_NIL(imageOvelaysToAdd);
@@ -853,25 +890,28 @@
 
 - (void)animateCamera:(id)args
 {
-  TiThreadPerformOnMainThread(^{
-    [(TiMapView *)[self view] animateCamera:args];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [(TiMapView *)[self view] animateCamera:args];
+      },
       NO);
 }
 
 - (void)showAllAnnotations:(id)unused
 {
-  TiThreadPerformOnMainThread(^{
-    [(TiMapView *)[self view] showAllAnnotations:unused];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [(TiMapView *)[self view] showAllAnnotations:unused];
+      },
       NO);
 }
 
 - (void)showAnnotations:(id)args
 {
-  TiThreadPerformOnMainThread(^{
-    [(TiMapView *)[self view] showAnnotations:args];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [(TiMapView *)[self view] showAnnotations:args];
+      },
       NO);
 }
 

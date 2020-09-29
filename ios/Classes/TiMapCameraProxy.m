@@ -65,17 +65,19 @@
 - (void)setAltitude:(id)value
 {
   ENSURE_SINGLE_ARG(value, NSNumber);
-  TiThreadPerformOnMainThread(^{
-    [self camera].altitude = [TiUtils doubleValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self camera].altitude = [TiUtils doubleValue:value];
+      },
       NO);
 }
 - (NSNumber *)altitude
 {
   __block NSNumber *result;
-  TiThreadPerformOnMainThread(^{
-    result = [[NSNumber numberWithDouble:[self camera].altitude] retain];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        result = [[NSNumber numberWithDouble:[self camera].altitude] retain];
+      },
       YES);
   return [result autorelease];
 }
@@ -83,21 +85,23 @@
 - (void)setCenterCoordinate:(id)args
 {
   ENSURE_SINGLE_ARG(args, NSDictionary);
-  TiThreadPerformOnMainThread(^{
-    [self camera].centerCoordinate = [self locationCoordinatesFromDict:args];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self camera].centerCoordinate = [self locationCoordinatesFromDict:args];
+      },
       NO);
 }
 - (NSDictionary *)centerCoordinate
 {
   __block NSDictionary *result;
-  TiThreadPerformOnMainThread(^{
-    CLLocationCoordinate2D centerCord = [self camera].centerCoordinate;
-    result = [[NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithDouble:centerCord.latitude], @"latitude",
-                            [NSNumber numberWithDouble:centerCord.longitude], @"longitude",
-                            nil] retain];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        CLLocationCoordinate2D centerCord = [self camera].centerCoordinate;
+        result = [[NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithDouble:centerCord.latitude], @"latitude",
+                                [NSNumber numberWithDouble:centerCord.longitude], @"longitude",
+                                nil] retain];
+      },
       YES);
   return [result autorelease];
 }
@@ -105,17 +109,19 @@
 - (void)setHeading:(id)value
 {
   ENSURE_SINGLE_ARG(value, NSNumber);
-  TiThreadPerformOnMainThread(^{
-    [self camera].heading = [TiUtils doubleValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self camera].heading = [TiUtils doubleValue:value];
+      },
       NO);
 }
 - (NSNumber *)heading
 {
   __block NSNumber *result;
-  TiThreadPerformOnMainThread(^{
-    result = [[NSNumber numberWithDouble:[self camera].heading] retain];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        result = [[NSNumber numberWithDouble:[self camera].heading] retain];
+      },
       YES);
   return [result autorelease];
 }
@@ -123,17 +129,19 @@
 - (void)setPitch:(id)value
 {
   ENSURE_SINGLE_ARG(value, NSNumber);
-  TiThreadPerformOnMainThread(^{
-    [self camera].pitch = [TiUtils doubleValue:value];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        [self camera].pitch = [TiUtils doubleValue:value];
+      },
       NO);
 }
 - (NSNumber *)pitch
 {
   __block NSNumber *result;
-  TiThreadPerformOnMainThread(^{
-    result = [[NSNumber numberWithDouble:[self camera].pitch] retain];
-  },
+  TiThreadPerformOnMainThread(
+      ^{
+        result = [[NSNumber numberWithDouble:[self camera].pitch] retain];
+      },
       YES);
   return [result autorelease];
 }
