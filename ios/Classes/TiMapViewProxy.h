@@ -5,6 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import "TiViewProxy.h"
+#import <MapKit/MapKit.h>
 
 @class TiMapAnnotationProxy;
 @class TiMapCameraProxy;
@@ -32,6 +33,7 @@
 
 - (TiMapAnnotationProxy *)annotationFromArg:(id)arg;
 - (TiMapCameraProxy *)camera;
+- (MKAnnotationView *)viewForAnnotationProxy:(TiMapAnnotationProxy *)annotationProxy;
 
 - (void)addAnnotation:(id)args;
 - (void)addAnnotations:(id)args;

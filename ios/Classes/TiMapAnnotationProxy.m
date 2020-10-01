@@ -569,4 +569,8 @@
   [(TiMapView *)[delegate view] animateAnnotation:newAnnotation withLocation:newLocation];
 }
 
+- (UIView *)view
+{
+  return [delegate viewForAnnotationProxy:self];
+}
 @end
