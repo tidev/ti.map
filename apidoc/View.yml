@@ -600,6 +600,18 @@ properties:
         references to all of the annotations in a separate array.
     type: Array<Modules.Map.Annotation>
 
+  - name: liteMode
+    summary: Create a liteMode map version
+    description: |
+        When the `liteMode` is switched on the map will be displayed as a bitmap with limited interaction.
+        Please refer to [Google developers documentation](https://developers.google.com/maps/documentation/android-sdk/lite)
+        for more details.
+    type: Boolean
+    default: false
+    since: "5.0.3"
+    platforms: [android]
+    availability: creation
+
   - name: mapType
     summary: |
         Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
