@@ -1,4 +1,6 @@
 const Map = require('ti.map');
+
+const ANDROID = (Ti.Platform.osname === 'android');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
 describe('ti.map', () => {
@@ -63,4 +65,11 @@ describe('ti.map.Polyline', () => {
 		expect(polyline.zIndex).toEqual(10);
 	});
 
+	if (ANDROID) {
+		describe('.jointType', () => {
+			it('defaults to POLYLINE_JOINT_DEFAULT', () => {
+				expect(polyline.jointType).toEqual(Map.POLYLINE_JOINT_DEFAULT);
+			});
+		});
+	}
 });
