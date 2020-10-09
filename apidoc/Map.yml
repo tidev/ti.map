@@ -275,19 +275,19 @@ properties:
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: REASON_DEVELOPER_ANIMATION
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The camera moved in response to a request from the application.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: REASON_GESTURE
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The camera moved in response to the user gestures on the map.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: SUCCESS
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is available, and the connection is successful.
     type: Number
@@ -334,6 +334,30 @@ properties:
     since: "3.2.0"
     exclude-platforms: [android]
 
+  - name: POLYLINE_JOINT_BEVEL
+    summary: |
+        Flat bevel on the outside of the joint.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    since: "5.1.0"
+
+  - name: POLYLINE_JOINT_DEFAULT
+    summary: |
+        Default: Mitered joint, with fixed pointed extrusion equal to half the stroke width on the outside of the joint.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    since: "5.1.0"
+
+  - name: POLYLINE_JOINT_ROUND
+    summary: |
+        Rounded on the outside of the joint by an arc of radius equal to half the stroke width, centered at the vertex.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    since: "5.1.0"
+
   - name: POLYLINE_PATTERN_DASHED
     summary: |
         Polyline type constant used to display a dashed polyline via <Modules.Map.Polyline.pattern> property.
@@ -351,7 +375,7 @@ properties:
   - name: FEATURE_VISIBILITY_ADAPTIVE
     summary: Constant indicating that title text adapts to the current map state.
     description: |
-        For markers in the normal state, title text is displayed and subtitle text is hidden. When a marker 
+        For markers in the normal state, title text is displayed and subtitle text is hidden. When a marker
         is selected, the title and subtitle text are hidden when the marker requires a callout.
     type: Number
     permission: read-only
@@ -389,8 +413,8 @@ properties:
     summary: Constant indicating that the item's display priority is high.
     description: |
         An annotation view with this priority is removed from the map when its bounds
-        collide with the bounds of another view with a higher priority. If the priorities 
-        of the two views are equal, the view furthest from the center of the map's visible 
+        collide with the bounds of another view with a higher priority. If the priorities
+        of the two views are equal, the view furthest from the center of the map's visible
         region is hidden first.
     type: Number
     permission: read-only
@@ -402,8 +426,8 @@ properties:
     summary: Constant indicating that the item's display priority is low.
     description: |
         An annotation view with this priority is removed from the map when its bounds
-        collide with the bounds of another view with a higher priority. If the priorities 
-        of the two views are equal, the view furthest from the center of the map's visible 
+        collide with the bounds of another view with a higher priority. If the priorities
+        of the two views are equal, the view furthest from the center of the map's visible
         region is hidden first.
     type: Number
     permission: read-only
@@ -413,7 +437,7 @@ properties:
 
   - name: ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE
     summary: |
-        Constant indicating that the full collision frame rectangle should be used for 
+        Constant indicating that the full collision frame rectangle should be used for
         detecting collisions.
     type: Number
     permission: read-only
@@ -423,7 +447,7 @@ properties:
 
   - name: ANNOTATION_VIEW_COLLISION_MODE_CIRCLE
     summary: |
-        Constant indicating that a circle inscribed in the collision frame rectangle should 
+        Constant indicating that a circle inscribed in the collision frame rectangle should
         be used to determine collisions.
     type: Number
     permission: read-only
@@ -564,7 +588,7 @@ examples:
     example: |
         This is a map-example which creates marker annotation and clustering of annotations.
 
-        The `clusterIdentifier` property and the `clusterstart` event are required in order to enable 
+        The `clusterIdentifier` property and the `clusterstart` event are required in order to enable
         clustering. You can control the clustering by defining the `collisionMode` property and
         setting special cluster annotations using the `setClusterAnnotation` method on your map
         view instance.
