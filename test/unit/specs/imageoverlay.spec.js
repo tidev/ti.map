@@ -21,7 +21,7 @@ describe('ti.map.ImageOverlay', () => {
 					longitude: 151.20689
 				},
 				bottomRight: {
-					latitude: -33.77365,
+					latitude: -33.97365,
 					longitude: 151.10689
 				}
 			}
@@ -33,9 +33,18 @@ describe('ti.map.ImageOverlay', () => {
 		expect(overlay).not.toEqual(undefined);
 	});
 
-	it('.boundsCoordinate', () => {
+	it('.boundsCoordinate should match given Object', () => {
 		// TODO: What should we validate here?
-		expect(overlay).not.toEqual(undefined);
+		expect(overlay.boundsCoordinate).toEqual({
+			topLeft: {
+				latitude: -33.87365,
+				longitude: 151.20689
+			},
+			bottomRight: {
+				latitude: -33.97365,
+				longitude: 151.10689
+			}
+		});
 	});
 
 	// TODO: Actually add overlay to a Map.View!
