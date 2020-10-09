@@ -267,6 +267,7 @@ methods:
 
   - name: addCircles
     summary: Adds one or more new circles to the map.
+    exclude-platforms: [android]
     parameters:
       - name: circles
         summary: |

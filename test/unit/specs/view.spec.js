@@ -75,7 +75,7 @@ describe('ti.map.View', () => {
 		});
 
 		if (!ANDROID) {
-			// FIXME: Docs don't show this as ios-only!
+			// FIXME: add to android for parity
 			it('#addCircles() is a Function', () => {
 				expect(mapview.addCircles).toEqual(jasmine.any(Function));
 			});
@@ -106,7 +106,7 @@ describe('ti.map.View', () => {
 		});
 
 		if (!ANDROID) {
-			// FIXME: docs don't state this is iOS-only
+			// TODO: Add to Android for parity
 			it('#animateCamera() is a Function', () => {
 				expect(mapview.animateCamera).toEqual(jasmine.any(Function));
 			});
@@ -294,7 +294,8 @@ describe('ti.map.View', () => {
 		});
 
 		// FIXME: there's a name clash between the property and method!
-		it('should be zoom', () => {
+		// Should probably add method to each, rename property to zoomLevel?
+		it('.zoom is a Number', () => {
 			if (ANDROID) {
 				expect(mapview.zoom).toEqual(2);
 			} else {

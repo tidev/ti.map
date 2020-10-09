@@ -1013,7 +1013,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void addCircle(CircleProxy circle)
 	{
-
 		if (TiApplication.isUIThread()) {
 			handleAddCircle(circle);
 		} else {
