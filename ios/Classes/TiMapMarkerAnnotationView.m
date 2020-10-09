@@ -6,6 +6,7 @@
  */
 #if IS_IOS_11
 #import "TiMapMarkerAnnotationView.h"
+#import "TiMapAnnotationProxy.h"
 #import "TiMapView.h"
 
 @implementation TiMapMarkerAnnotationView
