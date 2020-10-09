@@ -7,8 +7,8 @@ description: |
 
     Use the <Modules.Map.createCircle> method to create a circle.
 extends: Titanium.Proxy
-since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
-platforms: [android, iphone, ipad]
+since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 properties:
   - name: center
     summary: An object with longitude and latitude values. Can also be an array with longitude (index 0), latitude (index 1) touples.
@@ -53,7 +53,6 @@ properties:
     summary: Opacity of this map circle, from 0.0 (transparent) to 1.0 (opaque).
     type: Number
     default: 1.0 (opaque)
-    since: { android: "4.1.0", iphone: "6.1.0", ipad: "6.1.0" }
 
   - name: zIndex
     summary: |

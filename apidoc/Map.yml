@@ -113,8 +113,8 @@ description: |
 
     -   The `addRoute` method no longer accepts a dictionary as a parameter. Pass a <Modules.Map.Route> object instead.
 extends: Titanium.Module
-since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
-platforms: [android, iphone, ipad]
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 excludes:
     methods: [addEventListener, fireEvent, removeEventListener]
     properties: [bubbleParent]
@@ -150,7 +150,6 @@ properties:
     permission: read-only
     since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_AZURE
     summary: |
@@ -158,7 +157,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
 
   - name: ANNOTATION_CYAN
@@ -167,9 +166,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_MAGENTA
     summary: |
@@ -177,9 +175,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_ORANGE
     summary: |
@@ -187,9 +184,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_PURPLE
     summary: |
@@ -197,8 +193,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "3.2.0", ipad: "3.2.0", android: "6.1.0"}
-    platforms: [iphone, ipad, android]
+    since: {iphone: "3.2.0", ipad: "3.2.0", android: "6.1.0", macos: "9.2.0"}
 
   - name: ANNOTATION_ROSE
     summary: |
@@ -206,9 +201,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_YELLOW
     summary: |
@@ -216,9 +210,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_VIOLET
     summary: |
@@ -226,9 +219,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_RED
     summary: |
@@ -246,7 +238,7 @@ properties:
     summary: Used with [mapType](Modules.Map.View.mapType) to display satellite flyover imagery of the area. Available in iOS 9.0 and later.
     type: Number
     permission: read-only
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: NORMAL_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display a street map that shows the position of all roads and some road names.
@@ -268,7 +260,7 @@ properties:
     summary: Used with [mapType](Modules.Map.View.mapType) to display a satellite flyover image of the area with road and road name information layered on top. Available in iOS 9.0 and later.
     type: Number
     permission: read-only
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: MUTED_STANDARD_TYPE
     summary: |
@@ -277,7 +269,6 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [android, iphone, ipad]
 
   - name: REASON_API_ANIMATION
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The animation was initiated in response to the user actions.
@@ -332,7 +323,7 @@ properties:
     type: Number
     permission: read-only
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: OVERLAY_LEVEL_ABOVE_ROADS
     summary: |
@@ -341,14 +332,13 @@ properties:
     type: Number
     permission: read-only
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: POLYLINE_PATTERN_DASHED
     summary: |
         Polyline type constant used to display a dashed polyline via <Modules.Map.Polyline.pattern> property.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
     since: "6.2.0"
 
   - name: POLYLINE_PATTERN_DOTTED
@@ -356,7 +346,6 @@ properties:
         Polyline type constant used to display a dotted polyline via <Modules.Map.Polyline.pattern> property.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
     since: "6.2.0"
 
   - name: FEATURE_VISIBILITY_ADAPTIVE
@@ -367,7 +356,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_VISIBILITY_HIDDEN
@@ -375,7 +364,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_VISIBILITY_VISIBLE
@@ -383,7 +372,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_DISPLAY_PRIORITY_REQUIRED
@@ -393,7 +382,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH
@@ -406,7 +395,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW
@@ -419,7 +408,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE
@@ -439,7 +428,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
 methods:

@@ -15,8 +15,8 @@ description: |
     If `altitude`, `eyeCoordinate`, and `centerCoordinate` are passed in on creation, a camera will be
     returned using the specified viewing angle information.
 extends: Titanium.Proxy
-since: "3.2.0"
-platforms: [iphone, ipad]
+platforms: [iphone, ipad, macos]
+since: { iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 properties:
   - name: altitude
     summary: The altitude above the ground, measured in meters.

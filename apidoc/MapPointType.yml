@@ -1,0 +1,11 @@
+---
+name: MapPointType
+summary: An object representing a point on the map.
+properties:
+  - name: longitude
+    summary: Longitude value of the map point, in decimal degrees.
+    type: Number
+
+  - name: latitude
+    summary: Latitude value of the map point, in decimal degrees.
+    type: Number

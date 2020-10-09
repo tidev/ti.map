@@ -3,8 +3,8 @@ name: Modules.Map.Snapshotter
 summary: Snapshotter is used to allow screen shots to be taken of a specified region or a mapview.
 
 extends: Titanium.Proxy
-since: {iphone: "6.0.0", ipad: "6.0.0" }
-platforms: [iphone, ipad]
+since: {iphone: "6.0.0", ipad: "6.0.0", macos: "9.2.0" }
+platforms: [iphone, ipad, macos]
 methods:
   - name: takeSnapshot
     summary: |
@@ -54,6 +54,7 @@ properties:
         to <Modules.Map.STANDARD_TYPE> for extruded buildings to be displayed.
     type: Boolean
     default: true
+
 examples:
   - title: Taking a simple snapshot
     example: |
@@ -100,7 +101,6 @@ name: SnapshotSize
 summary: |
     Simple dictionary used as an argument to [setSize](Modules.Map.Snapshotter.setSize).
 properties:
-
   - name: height
     summary: The height the be used for the snapshot.
     type: Number
