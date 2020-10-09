@@ -24,45 +24,41 @@ describe('ti.map', () => {
 				expect(Map.ANNOTATION_RED).toEqual(jasmine.any(Number));
 			});
 
-			// FIXME get working on iOS, says value is undefined, not a Number
 			it('ANNOTATION_YELLOW', () => {
 				expect(Map.ANNOTATION_YELLOW).toEqual(jasmine.any(Number));
 			});
 
-			// Android specific colors...
-			if (ANDROID) {
-				it('ANNOTATION_AZURE', () => {
-					expect(Map.ANNOTATION_AZURE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_AZURE', () => {
+				expect(Map.ANNOTATION_AZURE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_BLUE', () => {
-					expect(Map.ANNOTATION_BLUE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_BLUE', () => {
+				expect(Map.ANNOTATION_BLUE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_CYAN', () => {
-					expect(Map.ANNOTATION_CYAN).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_CYAN', () => {
+				expect(Map.ANNOTATION_CYAN).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_MAGENTA', () => {
-					expect(Map.ANNOTATION_MAGENTA).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_MAGENTA', () => {
+				expect(Map.ANNOTATION_MAGENTA).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_ORANGE', () => {
-					expect(Map.ANNOTATION_ORANGE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_ORANGE', () => {
+				expect(Map.ANNOTATION_ORANGE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_PURPLE', () => {
-					expect(Map.ANNOTATION_PURPLE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_PURPLE', () => {
+				expect(Map.ANNOTATION_PURPLE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_ROSE', () => {
-					expect(Map.ANNOTATION_ROSE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_ROSE', () => {
+				expect(Map.ANNOTATION_ROSE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_VIOLET', () => {
-					expect(Map.ANNOTATION_VIOLET).toEqual(jasmine.any(Number));
-				});
-			}
+			it('ANNOTATION_VIOLET', () => {
+				expect(Map.ANNOTATION_VIOLET).toEqual(jasmine.any(Number));
+			});
 		});
 
 		describe('ANNOTATION_DRAG_STATE_*', () => {
