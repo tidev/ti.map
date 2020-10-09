@@ -15,11 +15,13 @@ properties:
     summary: An object representing diagonal coordinates (`topLeft` and `bottomRight`) on the map.
     availability: creation
     type: MapBoundsCoordinateType
+    optional: false
 
   - name: image
     summary: The image that is shown as an overlay on the map.
     availability: creation
     type: [String, Titanium.Blob]
+    optional: false
 
 ---
 name: MapBoundsCoordinateType
