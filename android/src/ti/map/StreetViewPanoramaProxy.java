@@ -6,11 +6,10 @@
  */
 package ti.map;
 
+import android.app.Activity;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.view.TiUIView;
-
-import android.app.Activity;
 
 @Kroll.proxy(creatableInModule = MapModule.class,
 			 propertyAccessors = { TiC.PROPERTY_POSITION, MapModule.PROPERTY_PANNING, MapModule.PROPERTY_ZOOM,

@@ -6,10 +6,11 @@
  */
 package ti.map;
 
+import android.app.Activity;
+import android.os.Message;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
@@ -20,10 +21,7 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
-
 import ti.map.AnnotationProxy.AnnotationDelegate;
-import android.app.Activity;
-import android.os.Message;
 
 @Kroll.
 proxy(creatableInModule = MapModule.class,
@@ -194,7 +192,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_ZOOM: {
 				result = (AsyncResult) msg.obj;
-				result.setResult(handleGetZoom());
+				result.setResult(handleGetZoomLevel());
 				return true;
 			}
 
@@ -1138,17 +1136,17 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	// clang-format off
 	@Kroll.method
 	@Kroll.getProperty
-	public float getZoom()
+	public float getZoomLevel()
 	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
-			return handleGetZoom();
+			return handleGetZoomLevel();
 		} else {
 			return (Float) TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ZOOM));
 		}
 	}
 
-	private float handleGetZoom()
+	private float handleGetZoomLevel()
 	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {

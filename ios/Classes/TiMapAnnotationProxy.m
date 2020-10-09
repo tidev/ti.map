@@ -96,11 +96,21 @@
     needsRefreshingWithSelection |= shouldReselect;
 
     if (invokeMethod) {
-      TiThreadPerformOnMainThread(^{
-        [self refreshAfterDelay];
-      },
+      TiThreadPerformOnMainThread(
+          ^{
+            [self refreshAfterDelay];
+          },
           NO);
     }
+  }
+}
+
+- (void)refreshCoordinateChanges:(void (^)())updateValueCallBack
+{
+  if (delegate != nil && [delegate viewAttached]) {
+    [(TiMapView *)[delegate view] refreshCoordinateChanges:self afterRemove:updateValueCallBack];
+  } else {
+    updateValueCallBack();
   }
 }
 
@@ -138,9 +148,10 @@
 {
   double curValue = [TiUtils doubleValue:[self valueForUndefinedKey:@"latitude"]];
   double newValue = [TiUtils doubleValue:latitude];
-  [self replaceValue:latitude forKey:@"latitude" notification:NO];
   if (newValue != curValue) {
-    [self setNeedsRefreshingWithSelection:YES];
+    [self refreshCoordinateChanges:^{
+      [self replaceValue:latitude forKey:@"latitude" notification:NO];
+    }];
   }
 }
 
@@ -148,9 +159,10 @@
 {
   double curValue = [TiUtils doubleValue:[self valueForUndefinedKey:@"longitude"]];
   double newValue = [TiUtils doubleValue:longitude];
-  [self replaceValue:longitude forKey:@"longitude" notification:NO];
   if (newValue != curValue) {
-    [self setNeedsRefreshingWithSelection:YES];
+    [self refreshCoordinateChanges:^{
+      [self replaceValue:longitude forKey:@"longitude" notification:NO];
+    }];
   }
 }
 
@@ -537,5 +549,28 @@
 {
   return tag;
 }
+- (void)rotate:(id)arg
+{
+  CGFloat getAngle = [[arg objectAtIndex:0] floatValue];
+  [UIView animateWithDuration:1
+                   animations:^{
+                     MKAnnotationView *annotationView = [[(TiMapView *)[delegate view] map] viewForAnnotation:self];
+                     annotationView.transform = CGAffineTransformMakeRotation(getAngle);
+                   }];
+}
 
+- (void)animate:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, NSArray);
+  TiMapAnnotationProxy *newAnnotation = self;
+  CLLocationCoordinate2D newLocation;
+  newLocation.latitude = [[arg objectAtIndex:0] floatValue];
+  newLocation.longitude = [[arg objectAtIndex:1] floatValue];
+  [(TiMapView *)[delegate view] animateAnnotation:newAnnotation withLocation:newLocation];
+}
+
+- (UIView *)view
+{
+  return [delegate viewForAnnotationProxy:self];
+}
 @end

@@ -6,13 +6,10 @@ description: |
     [map view](Modules.Map.View). A polygon must have its `points` property set to appear on a map.
 
     Use the <Modules.Map.createPolygon> method to create a polygon.
-
 extends: Titanium.Proxy
 since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
 platforms: [android, iphone, ipad]
-
 properties:
-
   - name: points
     summary: Array of map points making up the polygon. Can also be an array of longitude (index 0), latitude (index 1) touples.
     availability: creation

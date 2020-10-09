@@ -98,6 +98,7 @@
 #if IS_IOS_11
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members;
 #endif
+- (void)animateAnnotation:(TiMapAnnotationProxy *)newAnnotation withLocation:(CLLocationCoordinate2D)newLocation;
 
 #pragma mark Utils
 - (void)addOverlay:(MKPolyline *)polyline level:(MKOverlayLevel)level;
@@ -105,5 +106,6 @@
 #pragma mark Framework
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn;
 - (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source deselected:(BOOL)deselected;
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack;
 
 @end
