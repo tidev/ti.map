@@ -1,4 +1,5 @@
 const Map = require('ti.map');
+const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
 describe('ti.map', () => {
 	describe('#createPolyline()', () => {
@@ -32,7 +33,7 @@ describe('ti.map.Polyline', () => {
 		expect(polyline.apiName).toEqual('Ti.Map.Polyline');
 	});
 
-	it('should have valid points', () => {
+	it('.points should match given Points', () => {
 		expect(polyline.points).toEqual([ {
 			latitude: -33.884717,
 			longitude: 151.187993
@@ -45,15 +46,20 @@ describe('ti.map.Polyline', () => {
 		]);
 	});
 
-	it('should have valid strokeWidth', () => {
+	it('.strokeWidth should match given Number', () => {
 		expect(polyline.strokeWidth).toEqual(2);
 	});
 
-	it('should have valid strokeColor', () => {
-		expect(polyline.strokeColor).toEqual(Map.D2BE1F);
+	it('.strokeColor should match given String', () => {
+		if (IOS) {
+			// FIXME: iOS should return the string if that's what was set!
+			expect(polyline.strokeColor.toHex()).toEqual('#60FF0000');
+		} else {
+			expect(polyline.strokeColor).toEqual('#60FF0000');
+		}
 	});
 
-	it('should have valid zIndex', () => {
+	it('.zIndex should match given Number', () => {
 		expect(polyline.zIndex).toEqual(10);
 	});
 

@@ -9,19 +9,12 @@ describe('ti.map', () => {
 });
 
 describe('ti.map.ImageOverlay', () => {
-	it('.image as Ti.Blob', () => {
+	let overlay;
+	beforeAll(() => {
 		const flowerJPGFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'images', 'flower.jpg');
-		const blob = flowerJPGFile.read();
-		const overlay = Map.createImageOverlay({
-			image: blob
-		});
-
-		// TODO: What should we validate here?
-		expect(overlay).not.toEqual(undefined);
-	});
-
-	it('.boundsCoordinate', () => {
-		const overlay = Map.createImageOverlay({
+		const image = flowerJPGFile.read();
+		overlay = Map.createImageOverlay({
+			image,
 			boundsCoordinate: {
 				topLeft: {
 					latitude: -33.87365,
@@ -33,6 +26,14 @@ describe('ti.map.ImageOverlay', () => {
 				}
 			}
 		});
+	});
+
+	it('.image as Ti.Blob', () => {
+		// TODO: What should we validate here?
+		expect(overlay).not.toEqual(undefined);
+	});
+
+	it('.boundsCoordinate', () => {
 		// TODO: What should we validate here?
 		expect(overlay).not.toEqual(undefined);
 	});

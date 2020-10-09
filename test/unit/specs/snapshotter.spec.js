@@ -1,4 +1,4 @@
-var Map = require('ti.map');
+const Map = require('ti.map');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
 if (IOS) {

@@ -1,4 +1,5 @@
 const Map = require('ti.map');
+const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
 describe('ti.map', () => {
 	describe('#createCircle()', () => {
@@ -27,20 +28,30 @@ describe('ti.map.Circle', function () {
 		expect(circle.apiName).toEqual('Ti.Map.Circle');
 	});
 
-	it('should have valid radius', () => {
+	it('.radius should match given Number', () => {
 		expect(circle.radius).toEqual(1000);
 	});
 
-	it('should have valid strokeWidth', () => {
+	it('.strokeWidth should match given Number', () => {
 		expect(circle.strokeWidth).toEqual(2);
 	});
 
-	it('should have valid strokeColor', () => {
-		expect(circle.strokeColor).toEqual(Map.D2BE1F);
+	it('.strokeColor should match given String', () => {
+		if (IOS) {
+			// FIXME: iOS should return the string if that's what was set!
+			expect(circle.strokeColor.toHex()).toEqual('#D2BE1F');
+		} else {
+			expect(circle.strokeColor).toEqual('#D2BE1F');
+		}
 	});
 
-	it('should have valid fillColor', () => {
-		expect(circle.fillColor).toEqual(Map.BFFFE725);
+	it('.fillColor should match given String', () => {
+		if (IOS) {
+			// FIXME: iOS should return the string if that's what was set!
+			expect(circle.fillColor.toHex()).toEqual('#BFFFE725');
+		} else {
+			expect(circle.fillColor).toEqual('#BFFFE725');
+		}
 	});
 
 });
