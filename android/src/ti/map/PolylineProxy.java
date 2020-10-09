@@ -49,10 +49,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 503;
 	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 504;
 	private static final int MSG_SET_STROKE_PATTERN = MSG_FIRST_ID + 505;
+	private static final int MSG_SET_STROKE_JOINT = MSG_FIRST_ID + 506;
 
 	public static final String PROPERTY_STROKE_COLOR2 = "color";
 	public static final String PROPERTY_STROKE_WIDTH2 = "width";
 	public static final String PROPERTY_STROKE_PATTERN2 = "pattern";
+	public static final String PROPERTY_JOINT_TYPE = "jointType";
 
 	public static final String PROPERTY_ZINDEX = "zIndex";
 
@@ -68,6 +70,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	{
 		super();
 		clickable = true;
+		defaultValues.put(PROPERTY_JOINT_TYPE, MapModule.POLYLINE_JOINT_DEFAULT);
 	}
 
 	@Override
@@ -98,6 +101,13 @@ public class PolylineProxy extends KrollProxy implements IShape
 				result = (AsyncResult) msg.obj;
 				int type = (Integer) result.getArg();
 				polyline.setPattern(processPatternDefinition(type));
+				result.setResult(null);
+				return true;
+			}
+			case MSG_SET_STROKE_JOINT: {
+				result = (AsyncResult) msg.obj;
+				int type = (Integer) result.getArg();
+				polyline.setJointType(type);
 				result.setResult(null);
 				return true;
 			}
@@ -165,6 +175,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 				options.pattern(
 					processPatternDefinition(TiConvert.toInt(getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2))));
 			}
+		}
+
+		if (hasProperty(PolylineProxy.PROPERTY_JOINT_TYPE)) {
+			options.jointType(TiConvert.toInt(getProperty(PolylineProxy.PROPERTY_JOINT_TYPE), 0));
 		}
 	}
 
