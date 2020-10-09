@@ -21,7 +21,7 @@
   MKPolylineRenderer *polylineRenderer;
 
   float strokeWidth;
-  UIColor *strokeColor;
+  TiColor *strokeColor;
   TiMapOverlayPattern *pattern;
 }
 
