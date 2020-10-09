@@ -131,6 +131,12 @@ public class MapModule extends KrollModule
 	public static final int POLYLINE_PATTERN_DASHED = 0;
 	@Kroll.constant
 	public static final int POLYLINE_PATTERN_DOTTED = 1;
+	@Kroll.constant
+	public static final int POLYLINE_JOINT_DEFAULT = 0;
+	@Kroll.constant
+	public static final int POLYLINE_JOINT_BEVEL = 1;
+	@Kroll.constant
+	public static final int POLYLINE_JOINT_ROUND = 2;
 
 	public MapModule()
 	{
