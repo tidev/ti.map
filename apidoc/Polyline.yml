@@ -10,6 +10,17 @@ extends: Titanium.Proxy
 since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0", macos: "9.2.0" }
 platforms: [android, iphone, ipad, macos]
 properties:
+  - name: jointType
+    summary: Defines the shape of corner points.
+    description: |
+        Defines the shape of corner points. Can be one of the following shapes: <Modules.Map.POLYLINE_JOINT_DEFAULT>,
+        <Modules.Map.POLYLINE_JOINT_ROUND> or <Modules.Map.POLYLINE_JOINT_BEVEL>
+    availability: creation
+    type: Number
+    platforms: [android]
+    default: Modules.Map.POLYLINE_JOINT_DEFAULT
+    since: "5.1.0"
+
   - name: points
     summary: Array of map points making up the polyline. Can also be an array of longitude (index 0), latitude (index 1) touples.
     availability: creation
@@ -28,7 +39,7 @@ properties:
     summary: Line width in pixels to use when drawing the polyline.
     type: Number
     default: 10
-    
+
   - name: touchEnabled
     summary: Determines whether view should receive touch events.
     type: Boolean
@@ -47,11 +58,11 @@ properties:
   - name: pattern
     summary: Pattern used to draw the polylines.
     description: |
-        As per default polylines are drawn with a solid line. You can specify to 
-        draw them with a dashed line using <Modules.Map.POLYLINE_PATTERN_DASHED> 
+        As per default polylines are drawn with a solid line. You can specify to
+        draw them with a dashed line using <Modules.Map.POLYLINE_PATTERN_DASHED>
         or with a dotted line using <Modules.Map.POLYLINE_PATTERN_DOTTED>.
 
-        You can also specify the dimensions to use when you create a dashed or 
+        You can also specify the dimensions to use when you create a dashed or
         dotted polyline.
 
         For a dashed polyline, you can do something like this:
