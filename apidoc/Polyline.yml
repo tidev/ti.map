@@ -6,13 +6,10 @@ description: |
     [map view](Modules.Map.View). A polyline must have its `points` property set to appear on a map.
 
     Use the <Modules.Map.createPolyline> method to create a polyline.
-
 extends: Titanium.Proxy
 since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
 platforms: [android, iphone, ipad]
-
 properties:
-
   - name: points
     summary: Array of map points making up the polyline. Can also be an array of longitude (index 0), latitude (index 1) touples.
     availability: creation
@@ -59,19 +56,22 @@ properties:
 
         For a dashed polyline, you can do something like this:
 
-            polyline.setPattern({
-                type: TiMap.POLYLINE_PATTERN_DASHED,
-                gapLength: 25,
-                dashLength: 50
-            });
+        ``` javascript
+        polyline.setPattern({
+            type: TiMap.POLYLINE_PATTERN_DASHED,
+            gapLength: 25,
+            dashLength: 50
+        });
+        ```
 
         or for a dotted polyline, you can do:
 
-            polyline.setPattern({
-                type: TiMap.POLYLINE_PATTERN_DOTTED,
-                gapLength: 25
-            });
-
+        ``` javascript
+        polyline.setPattern({
+            type: TiMap.POLYLINE_PATTERN_DOTTED,
+            gapLength: 25
+        });
+        ```
     type: Object
     platforms: [android, iphone, ipad]
     since: "6.2.0"

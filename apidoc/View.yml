@@ -11,7 +11,9 @@ description: |
     In Alloy, use the **`<Module>`** element with the `module` attribute set to `ti.map`
     and `method` attribute set to `createView` to create a map view in XML markup:
 
-        <Module module="ti.map" method="createView" />
+    ``` xml
+    <Module module="ti.map" method="createView" />
+    ```
 
     All latitude and longitude values are specified in decimal degrees. Values in degrees,
     minutes and seconds (DMS) must be converted to decimal degrees before being passed to
@@ -31,30 +33,29 @@ description: |
     [`NSLocationAlwaysUsageDescription`](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18)
     key to the iOS plist section of the project's `tiapp.xml` file.
 
-        <ti:app>
-            <ios>
-                <plist>
-                    <dict>
-                        <key>NSLocationAlwaysUsageDescription</key>
-                        <string>
-                            Specify the reason for accessing the user's location information.
-                            This appears in the alert dialog when asking the user for permission to
-                            access their location.
-                        </string>
-                    </dict>
-                </plist>
-            </ios>
-        </ti:app>
-
+    ``` xml
+    <ti:app>
+        <ios>
+            <plist>
+                <dict>
+                    <key>NSLocationAlwaysUsageDescription</key>
+                    <string>
+                        Specify the reason for accessing the user's location information.
+                        This appears in the alert dialog when asking the user for permission to
+                        access their location.
+                    </string>
+                </dict>
+            </plist>
+        </ios>
+    </ti:app>
+    ```
 extends: Titanium.UI.View
 excludes:
     events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
               'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
-
 since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
 platforms: [android, iphone, ipad]
 methods:
-
   - name: addAnnotation
     summary: Adds a new annotation to the map.
     parameters:
@@ -139,9 +140,15 @@ methods:
         completes loading. Before that, use [region](Modules.Map.View.region) to set the map location.
         For example:
 
-             myMapView.setLocation({
-                latitude:37.337681, longitude:-122.038193, animate:true,
-                latitudeDelta:0.04, longitudeDelta:0.04});
+        ``` javascript
+        myMapView.setLocation({
+          latitude: 37.337681,
+          longitude: -122.038193,
+          animate: true,
+          latitudeDelta: 0.04,
+          longitudeDelta: 0.04
+        });
+        ```
     parameters:
       - name: location
         summary: |
@@ -329,7 +336,6 @@ events:
   - name: clusterstart
     summary: Fired when a collision between annotations occures.
     properties:
-
       - name: memberAnnotations
         summary: Array of annotations participating in clustering.
         type: Array<Modules.Map.Annotation>
@@ -343,7 +349,6 @@ events:
   - name: onsnapshotready
     summary: Fired when the snapshot is ready after [snapshot](Modules.Map.View.snapshot) is invoked.
     properties:
-
       - name: snapshot
         summary: snapshot of the current map
         type: Titanium.Blob
@@ -353,7 +358,6 @@ events:
   - name: pinchangedragstate
     summary: Fired when the user interacts with a draggable annotation.
     properties:
-
       - name: annotation
         summary: Annotation being dragged.
         type: Modules.Map.Annotation
@@ -410,9 +414,7 @@ events:
         `clicksource` is a string describing the shape type. `map` is the map view instance.
         `latitude` and `longtitude` is the corresponding coordinates on the map where the user
         clicked in the shape.
-
     properties:
-
       - name: title
         summary: Title of the annotation.
         type: String
@@ -561,7 +563,6 @@ events:
         The `longclick` event returns longitude and latitude of the point on the ground that was pressed.
     since: "3.2.0"
     properties:
-
       - name: latitude
         summary: latitude of the point on the ground that was pressed.
         type: Number
@@ -581,7 +582,6 @@ events:
         When the user location is available or changes at the map it will fire the event.
     since: { android: "7.3.0" }
     properties:
-
       - name: latitude
         summary: latitude of the point on the ground that was pressed.
         type: Number
@@ -591,7 +591,6 @@ events:
         type: Number
 
 properties:
-
   - name: animate
     summary: Indicates if changes to the mapping region should be animated.
     description: |
@@ -862,6 +861,7 @@ properties:
     default: true
     since: "7.5.0"
     platforms: [android]
+
 ---
 name: MapViewPadding
 summary: The padding applied to the map view using <Modules.Map.View.padding>.

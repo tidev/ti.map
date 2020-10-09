@@ -69,10 +69,27 @@ describe('ti.map', function () {
 			// win.add(view);
 			// win.open();
 		});
-
-		// TDOO: Test actually adding an annotation to a view
-
 		if (!ANDROID) {
+		// TiMapImageOverlayProxy
+			describe('setImage', () => {
+				it('to set image on Map',  () => {
+					var fileSystem = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'images', 'flower.jpg.keep');
+					var newBlob = fileSystem.read();
+
+					expect(Map.setImage(newBlob)).toEqual(jasmine.any(Function));
+				});
+			});
+
+			describe('setBoundsCoordinate', () => {
+				it('to set bound coordinates',  () => {
+					var fileSystem = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'images', 'flower.jpg.keep');
+					var newBlob = fileSystem.read();
+
+					expect(Map.setBoundsCoordinate(newBlob)).toEqual(jasmine.any(Function));
+				});
+			});
+			// TDOO: Test actually adding an annotation to a view
+
 			it('#createCamera()', () => {
 				expect(Map.createCamera).toEqual(jasmine.any(Function));
 			});
