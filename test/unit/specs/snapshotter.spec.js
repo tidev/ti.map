@@ -1,21 +1,33 @@
 var Map = require('ti.map');
 const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
+
 if (IOS) {
-	var snapshotter = Map.createSnapshotter({
-		mapType: Map.HYBRID_TYPE,
-		region: {
-			latitude: 37.3382,
-			longitude: -121.8863,
-			latitudeDelta: 0.4,
-			longitudeDelta: 0.4
-		},
-		size: {
-			width: 300,
-			height: 200
-		}
+	describe('ti.map', () => {
+		describe('#createSnapshotter()', () => {
+			it('is a Function', () => {
+				expect(Map.createSnapshotter).toEqual(jasmine.any(Function));
+			});
+		});
 	});
 
-	describe('Methods', function () {
+	describe('ti.map.Snapshotter', () => {
+		let snapshotter;
+		beforeAll(() => {
+			snapshotter = Map.createSnapshotter({
+				mapType: Map.HYBRID_TYPE,
+				region: {
+					latitude: 37.3382,
+					longitude: -121.8863,
+					latitudeDelta: 0.4,
+					longitudeDelta: 0.4
+				},
+				size: {
+					width: 300,
+					height: 200
+				}
+			});
+		});
+
 		it('should have deifined', () => {
 			expect(snapshotter).not.toEqual(undefined);
 		});

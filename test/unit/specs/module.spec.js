@@ -1,10 +1,8 @@
-let Map;
-
-const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 const ANDROID = (Ti.Platform.osname === 'android');
+const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
-describe('ti.map', function () {
-
+describe('ti.map', () => {
+	let Map;
 	it('can be required', () => {
 		Map = require('ti.map');
 
@@ -134,4 +132,23 @@ describe('ti.map', function () {
 		});
 	});
 
+	describe('methods', () => {
+		if (ANDROID) {
+			describe('#isGooglePlayServicesAvailable()', () => {
+				it('is a Function', () => {
+					expect(Map.isGooglePlayServicesAvailable).toEqual(jasmine.any(Function));
+				});
+
+				it('returns one of expected constant values', () => {
+					const value = Map.isGooglePlayServicesAvailable();
+
+					expect(value).toEqual(jasmine.any(Number));
+
+					const possibleValues = [ Map.SERVICE_DISABLED, Map.SERVICE_INVALID, Map.SERVICE_MISSING, Map.SERVICE_VERSION_UPDATE_REQUIRED, Map.SUCCESS ];
+
+					expect(possibleValues).toContain(value);
+				});
+			});
+		}
+	});
 });

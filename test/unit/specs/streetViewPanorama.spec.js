@@ -2,19 +2,30 @@ const Map = require('ti.map');
 
 const ANDROID = (Ti.Platform.osname === 'android');
 if (ANDROID) {
-
-	let streetView = Map.createStreetViewPanorama({
-		panning: true,
-		position: {
-			latitude: 22.0,
-			longitude: 10.0
-		},
-		streetNames: true,
-		userNavigation: true,
-		zoom: true
+	describe('ti.map', () => {
+		describe('#createStreetViewPanorama()', () => {
+			it('is a Function', () => {
+				expect(Map.createStreetViewPanorama).toEqual(jasmine.any(Function));
+			});
+		});
 	});
 
-	describe('Map.StreetViewPanorama', function () {
+	describe('ti.map.StreetViewPanorama', () => {
+		let streetView;
+
+		beforeAll(() => {
+			streetView = Map.createStreetViewPanorama({
+				panning: true,
+				position: {
+					latitude: 22.0,
+					longitude: 10.0
+				},
+				streetNames: true,
+				userNavigation: true,
+				zoom: true
+			});
+		});
+
 		it('should have valid panning value', () => {
 			expect(streetView.panning).toEqual(true);
 		});

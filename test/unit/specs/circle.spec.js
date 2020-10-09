@@ -1,17 +1,28 @@
 const Map = require('ti.map');
 
-var circle = Map.createCircle({
-	center: {
-		latitude: -33.87365,
-		longitude: 151.20689
-	},
-	radius: 1000,
-	strokeWidth: 2,
-	strokeColor: Map.D2BE1F,
-	fillColor: Map.BFFFE725
+describe('ti.map', () => {
+	describe('#createCircle()', () => {
+		it('is a Function', () => {
+			expect(Map.createCircle).toEqual(jasmine.any(Function));
+		});
+	});
 });
 
 describe('ti.map.Circle', function () {
+	let circle;
+	beforeAll(() => {
+		circle = Map.createCircle({
+			center: {
+				latitude: -33.87365,
+				longitude: 151.20689
+			},
+			radius: 1000,
+			strokeWidth: 2,
+			strokeColor: Map.D2BE1F,
+			fillColor: Map.BFFFE725
+		});
+	});
+
 	it('should have valid radius', () => {
 		expect(circle.radius).toEqual(1000);
 	});

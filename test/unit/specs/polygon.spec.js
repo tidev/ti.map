@@ -1,26 +1,37 @@
 const Map = require('ti.map');
 
-var polygon = Map.createPolygon({
-	points: [ {
-		latitude: -33.854429,
-		longitude: 151.214429
-	},
-	{
-		latitude: -33.854928,
-		longitude: 151.236101
-	},
-	{
-		latitude: -33.866189,
-		longitude: 151.232668
-	}
-	],
-	strokeColor: Map.D2BE1F,
-	fillColor: Map.BFFFE725,
-	strokeWidth: 5,
-	zIndex: 2
+describe('ti.map', () => {
+	describe('#createPolygon()', () => {
+		it('is a Function', () => {
+			expect(Map.createPolygon).toEqual(jasmine.any(Function));
+		});
+	});
 });
 
-describe('ti.map.Polygon', function () {
+describe('ti.map.Polygon', () => {
+	let polygon;
+	beforeAll(() => {
+		polygon = Map.createPolygon({
+			points: [ {
+				latitude: -33.854429,
+				longitude: 151.214429
+			},
+			{
+				latitude: -33.854928,
+				longitude: 151.236101
+			},
+			{
+				latitude: -33.866189,
+				longitude: 151.232668
+			}
+			],
+			strokeColor: Map.D2BE1F,
+			fillColor: Map.BFFFE725,
+			strokeWidth: 5,
+			zIndex: 2
+		});
+	});
+
 	it('should have valid center', () => {
 		expect(polygon.points).toEqual([ {
 			latitude: -33.854429,
