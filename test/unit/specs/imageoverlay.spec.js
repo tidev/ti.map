@@ -1,5 +1,4 @@
 const Map = require('ti.map');
-const ANDROID = (Ti.Platform.osname === 'android');
 
 describe('ti.map', () => {
 	describe('#createImageOverlay()', () => {

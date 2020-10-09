@@ -20,7 +20,7 @@ describe('ti.map.View', () => {
 			pincolor: Map.ANNOTATION_RED,
 			myid: 1, // Custom property to uniquely identify this annotation.
 		});
-		
+
 		mapview = Map.createView({
 			mapType: Map.NORMAL_TYPE,
 			region: {
@@ -65,117 +65,117 @@ describe('ti.map.View', () => {
 		it('#addAnnotation() is a Function', () => {
 			expect(mapview.addAnnotation).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addAnnotations() is a Function', () => {
 			expect(mapview.addAnnotations).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addCircle() is a Function', () => {
 			expect(mapview.addCircle).toEqual(jasmine.any(Function));
 		});
-	
+
 		if (!ANDROID) {
 			// FIXME: Docs don't show this as ios-only!
 			it('#addCircles() is a Function', () => {
 				expect(mapview.addCircles).toEqual(jasmine.any(Function));
 			});
 		}
-	
+
 		it('#addImageOverlay() is a Function', () => {
 			expect(mapview.addImageOverlay).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addImageOverlays() is a Function', () => {
 			expect(mapview.addImageOverlays).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addPolygon() is a Function', () => {
 			expect(mapview.addPolygon).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addPolyline() is a Function', () => {
 			expect(mapview.addPolyline).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addPolylines() is a Function', () => {
 			expect(mapview.addPolylines).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#addRoute() is a Function', () => {
 			expect(mapview.addRoute).toEqual(jasmine.any(Function));
 		});
-	
+
 		if (!ANDROID) {
 			// FIXME: docs don't state this is iOS-only
 			it('#animateCamera() is a Function', () => {
 				expect(mapview.animateCamera).toEqual(jasmine.any(Function));
 			});
 		}
-	
+
 		it('#deselectAnnotation() is a Function', () => {
 			expect(mapview.deselectAnnotation).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAllAnnotations() is a Function', () => {
 			expect(mapview.removeAllAnnotations).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAllCircles() is a Function', () => {
 			expect(mapview.removeAllCircles).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAllImageOverlays() is a Function', () => {
 			expect(mapview.removeAllImageOverlays).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAllPolygons() is a Function', () => {
 			expect(mapview.removeAllPolygons).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAllPolylines() is a Function', () => {
 			expect(mapview.removeAllPolylines).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAnnotation() is a Function', () => {
 			expect(mapview.removeAnnotation).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeAnnotations() is a Function', () => {
 			expect(mapview.removeAnnotations).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeCircle() is a Function', () => {
 			expect(mapview.removeCircle).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeImageOverlay() is a Function', () => {
 			expect(mapview.removeImageOverlay).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removePolygon() is a Function', () => {
 			expect(mapview.removePolygon).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removePolyline() is a Function', () => {
 			expect(mapview.removePolyline).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#removeRoute() is a Function', () => {
 			expect(mapview.removeRoute).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#selectAnnotation() is a Function', () => {
 			expect(mapview.selectAnnotation).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#setClusterAnnotation() is a Function', () => {
 			expect(mapview.setClusterAnnotation).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#setLocation() is a Function', () => {
 			expect(mapview.setLocation).toEqual(jasmine.any(Function));
 		});
-	
+
 		it('#showAnnotations() is a Function', () => {
 			expect(mapview.showAnnotations).toEqual(jasmine.any(Function));
 		});
@@ -209,7 +209,7 @@ describe('ti.map.View', () => {
 			expect(mapview.animate).toEqual(true);
 			// FIXME: Is this a method on iOS?!
 			// } else {
-				// expect(mapview.animate).toEqual(jasmine.any(Function));
+			// expect(mapview.animate).toEqual(jasmine.any(Function));
 			// }
 		});
 
@@ -306,7 +306,6 @@ describe('ti.map.View', () => {
 			expect(mapview.zoomEnabled).toEqual(true);
 		});
 	});
-
 
 	// TODO: Test actually adding a view to a map
 });
