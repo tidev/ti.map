@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,6 +85,7 @@ public class TiUIMapView extends TiUIFragment
 	private ArrayList<PolylineProxy> currentPolylines;
 	private ArrayList<ImageOverlayProxy> currentImageOverlays;
 	private ClusterManager<TiMarker> mClusterManager;
+	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
@@ -205,8 +207,10 @@ public class TiUIMapView extends TiUIFragment
 
 		mClusterManager =
 			new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
-		mClusterManager.setRenderer(
-			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager));
+
+		clusterRender =
+			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager);
+		mClusterManager.setRenderer(clusterRender);
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
 		processPreloadPolygons();
@@ -307,6 +311,10 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(MapModule.PROPERTY_INDOOR_ENABLED)) {
 			setIndoorEnabled(d.getBoolean(MapModule.PROPERTY_INDOOR_ENABLED));
 		}
+		if (d.containsKey(MapModule.PROPERTY_MIN_CLUSTER_SIZE)) {
+			if (clusterRender != null)
+				clusterRender.setMinClusterSize(d.getInt(MapModule.PROPERTY_MIN_CLUSTER_SIZE));
+		}
 	}
 
 	@Override
@@ -345,6 +353,9 @@ public class TiUIMapView extends TiUIFragment
 			setStyle(TiConvert.toString(newValue, ""));
 		} else if (key.equals(MapModule.PROPERTY_INDOOR_ENABLED)) {
 			setIndoorEnabled(TiConvert.toBoolean(newValue, true));
+		} else if (key.equals(MapModule.PROPERTY_MIN_CLUSTER_SIZE)) {
+			if (clusterRender != null)
+				clusterRender.setMinClusterSize(TiConvert.toInt(newValue, 4));
 		} else {
 			super.propertyChanged(key, oldValue, newValue, proxy);
 		}

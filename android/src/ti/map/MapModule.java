@@ -69,6 +69,7 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_INDOOR_ENABLED = "indoorEnabled";
 	public static final String PROPERTY_DESELECTED = "deselected";
 	public static final String PROPERTY_LITE_MODE = "liteMode";
+	public static final String PROPERTY_MIN_CLUSTER_SIZE = "minClusterSize";
 
 	@Kroll.constant
 	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;

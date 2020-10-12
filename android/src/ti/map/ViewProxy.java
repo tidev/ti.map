@@ -84,6 +84,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_SCROLL_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_ZOOM_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_MIN_CLUSTER_SIZE, 4); // matches DefaultClusterRenderer's default:
+		// https://github.com/googlemaps/android-maps-utils/blob/master/library/src/main/java/com/google/maps/android/clustering/view/DefaultClusterRenderer.java#L108
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();
