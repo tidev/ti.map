@@ -3,6 +3,7 @@ package ti.map.Shape;
 import android.graphics.Point;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
+import java.util.List;
 import ti.map.PolygonProxy;
 
 public class Boundary
@@ -14,9 +15,9 @@ public class Boundary
 	private Point point;
 	private Point[] points;
 
-	public ArrayList<PolygonProxy> contains(ArrayList<PolygonProxy> p, LatLng ll)
+	public List<PolygonProxy> contains(List<PolygonProxy> p, LatLng ll)
 	{
-		ArrayList<PolygonProxy> list = new ArrayList<PolygonProxy>();
+		List<PolygonProxy> list = new ArrayList<PolygonProxy>(p.size());
 		cast(ll);
 		for (int i = 0; i < p.size(); i++) {
 			if (contains(p.get(i))) {

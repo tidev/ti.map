@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -77,16 +78,20 @@ public class TiUIMapView extends TiUIFragment
 	protected boolean preLayout = true;
 	protected boolean liteMode = false;
 	protected LatLngBounds preLayoutUpdateBounds;
-	protected ArrayList<TiMarker> timarkers;
+	protected List<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
 
-	private ArrayList<CircleProxy> currentCircles;
-	private ArrayList<PolygonProxy> currentPolygons;
-	private ArrayList<PolylineProxy> currentPolylines;
-	private ArrayList<ImageOverlayProxy> currentImageOverlays;
+	private List<CircleProxy> currentCircles;
+	private List<PolygonProxy> currentPolygons;
+	private List<PolylineProxy> currentPolylines;
+	private List<ImageOverlayProxy> currentImageOverlays;
+	private List<TileOverlayProxy> currentTileoverlays;
+	private List<HeatmapOverlayProxy> currentHeatmapoverlays;
+
 	private ClusterManager<TiMarker> mClusterManager;
 	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
+	public static final String LCAT = MapModule.LCAT;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -96,15 +101,17 @@ public class TiUIMapView extends TiUIFragment
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
 		currentImageOverlays = new ArrayList<ImageOverlayProxy>();
+		currentTileoverlays = new ArrayList<TileOverlayProxy>();
+		currentHeatmapoverlays = new ArrayList<HeatmapOverlayProxy>();
+
 		proxy.setProperty(MapModule.PROPERTY_INDOOR_ENABLED, true);
 	}
 
 	/**
-	 * Traverses through the view hierarchy to locate the SurfaceView and set
-	 * the background to transparent.
+	 * Traverses through the view hierarchy to locate the SurfaceView and set the
+	 * background to transparent.
 	 *
-	 * @param v
-	 *            the root view
+	 * @param v the root view
 	 */
 	private void setBackgroundTransparent(View v)
 	{
@@ -147,16 +154,15 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void processPreloadRoutes()
 	{
-		ArrayList<RouteProxy> routes = ((ViewProxy) proxy).getPreloadRoutes();
+		List<RouteProxy> routes = ((ViewProxy) proxy).getPreloadRoutes();
 		for (int i = 0; i < routes.size(); i++) {
 			addRoute(routes.get(i));
 		}
 	}
 
 	protected void processPreloadCircles()
-
 	{
-		ArrayList<CircleProxy> circles = ((ViewProxy) proxy).getPreloadCircles();
+		List<CircleProxy> circles = ((ViewProxy) proxy).getPreloadCircles();
 		for (int i = 0; i < circles.size(); i++) {
 			addCircle(circles.get(i));
 		}
@@ -164,7 +170,7 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void processPreloadPolygons()
 	{
-		ArrayList<PolygonProxy> polygons = ((ViewProxy) proxy).getPreloadPolygons();
+		List<PolygonProxy> polygons = ((ViewProxy) proxy).getPreloadPolygons();
 		for (int i = 0; i < polygons.size(); i++) {
 			addPolygon(polygons.get(i));
 		}
@@ -172,9 +178,17 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void processPreloadPolylines()
 	{
-		ArrayList<PolylineProxy> polylines = ((ViewProxy) proxy).getPreloadPolylines();
+		List<PolylineProxy> polylines = ((ViewProxy) proxy).getPreloadPolylines();
 		for (int i = 0; i < polylines.size(); i++) {
 			addPolyline(polylines.get(i));
+		}
+	}
+
+	protected void processPreloadTileOverlays()
+	{
+		List<TileOverlayProxy> overlays = ((ViewProxy) proxy).getPreloadTileOverlay();
+		for (int i = 0; i < overlays.size(); i++) {
+			addTileOverlay(overlays.get(i));
 		}
 	}
 
@@ -194,8 +208,10 @@ public class TiUIMapView extends TiUIFragment
 			return;
 		}
 
-		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
-		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
+		// A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre
+		// Jelly Bean.
+		// This problem doesn't exist on 4.1+ since the map base view changes to
+		// TextureView from SurfaceView.
 		if (Build.VERSION.SDK_INT < 16) {
 			View rootView = proxy.getActivity().findViewById(android.R.id.content);
 			setBackgroundTransparent(rootView);
@@ -216,6 +232,8 @@ public class TiUIMapView extends TiUIFragment
 		processPreloadPolygons();
 		processPreloadCircles();
 		processPreloadPolylines();
+		processPreloadTileOverlays();
+
 		processOverlaysList();
 		map.setOnMarkerClickListener(mMarkerManager);
 		map.setOnMapClickListener(this);
@@ -478,9 +496,10 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void showAnnotations(Object[] annotations)
 	{
-		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
+		List<TiMarker> markers = new ArrayList<TiMarker>();
 
-		// Use supplied annotations first. If none available, select all (parity with iOS)
+		// Use supplied annotations first. If none available, select all (parity with
+		// iOS)
 		if (annotations != null) {
 			for (int i = 0; i < annotations.length; i++) {
 				Object annotation = annotations[i];
@@ -553,7 +572,8 @@ public class TiUIMapView extends TiUIFragment
 		if (dict.containsKey(MapModule.PROPERTY_ZOOM)) {
 			zoom = TiConvert.toFloat(dict, MapModule.PROPERTY_ZOOM, 0);
 		}
-		// Workaround for toDouble since there is no method that allows you to set defaults
+		// Workaround for toDouble since there is no method that allows you to set
+		// defaults
 		if (dict.containsKey(TiC.PROPERTY_LATITUDE) && dict.get(TiC.PROPERTY_LATITUDE) != null) {
 			latitude = TiConvert.toDouble(dict, TiC.PROPERTY_LATITUDE);
 		}
@@ -768,6 +788,51 @@ public class TiUIMapView extends TiUIFragment
 		return null;
 	}
 
+	/* heatmap, added by schleera */
+	protected void addHeatmapOverlays(Object[] o)
+	{
+		for (int i = 0; i < o.length; i++) {
+			Object obj = o[i];
+			if (obj instanceof HeatmapOverlayProxy) {
+				addHeatmapOverlay((HeatmapOverlayProxy) obj);
+			}
+		}
+	}
+
+	protected void addHeatmapOverlay(HeatmapOverlayProxy p)
+	{
+		Log.d(LCAT, "TiUIMapView.addHeatmapOverlay");
+		if (currentHeatmapoverlays == null) {
+			Log.d(LCAT, "TiUIMapView.currentHeatmapoverlays are null");
+			return;
+		}
+		if (currentHeatmapoverlays.contains(p)) {
+			Log.d(LCAT, "TiUIMapView.addHeatmapOverlay always added");
+			return;
+		}
+		map.addTileOverlay(p.getTileOverlayOptions());
+		currentHeatmapoverlays.add(p);
+	}
+
+	public void removeHeatmapOverlay(HeatmapOverlayProxy c)
+	{
+		if (!currentHeatmapoverlays.contains(c)) {
+			return;
+		}
+		// c.getHeatmapOverlay().remove();
+		// c.setHeatmapOverlay(null);
+		// currentHeatmapoverlays.remove(c);
+	}
+
+	public void removeAllHeatmapOverlays()
+	{
+		for (HeatmapOverlayProxy tileOverlayProxy : currentHeatmapoverlays) {
+			// tileOverlayProxy.getHeatmapOverlay().remove();
+			// tileOverlayProxy.setHeatmapOverlay(null);
+		}
+		currentHeatmapoverlays.clear();
+	}
+
 	public void addRoute(RouteProxy r)
 	{
 		// check if route already added.
@@ -953,6 +1018,46 @@ public class TiUIMapView extends TiUIFragment
 		currentImageOverlays.clear();
 	}
 
+	/*
+	 * TileOverlay (Rainer Schleevoigt)
+	 */
+	protected void addTileOverlays(Object[] o)
+	{
+		for (int i = 0; i < o.length; i++) {
+			Object obj = o[i];
+			if (obj instanceof TileOverlayProxy) {
+				addTileOverlay((TileOverlayProxy) obj);
+			}
+		}
+	}
+
+	public void addTileOverlay(TileOverlayProxy p)
+	{
+		if (currentTileoverlays.contains(p)) {
+			return;
+		}
+		p.add(map);
+		// save in list for add/removing:
+		currentTileoverlays.add(p);
+	}
+
+	public void removeTileOverlay(TileOverlayProxy c)
+	{
+		if (!currentTileoverlays.contains(c)) {
+			return;
+		}
+		c.remove();
+		currentTileoverlays.remove(c);
+	}
+
+	public void removeAllTileOverlays()
+	{
+		for (TileOverlayProxy tileOverlayProxy : currentTileoverlays) {
+			tileOverlayProxy.remove();
+		}
+		currentTileoverlays.clear();
+	}
+
 	public void changeZoomLevel(int delta)
 	{
 		CameraUpdate camUpdate = CameraUpdateFactory.zoomBy(delta);
@@ -1113,7 +1218,7 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		// currentCircles
-		ArrayList<CircleProxy> clickableCircles = new ArrayList<CircleProxy>();
+		List<CircleProxy> clickableCircles = new ArrayList<CircleProxy>(currentCircles.size());
 		for (CircleProxy circleProxy : currentCircles) {
 			if (circleProxy.getClickable()) {
 				clickableCircles.add(circleProxy);
@@ -1136,17 +1241,16 @@ public class TiUIMapView extends TiUIFragment
 			clickableCircles.clear();
 		}
 
-		//	currentPolygons
-		ArrayList<PolygonProxy> clickablePolygones = new ArrayList<PolygonProxy>();
+		// currentPolygons
+		List<PolygonProxy> clickablePolygones = new ArrayList<PolygonProxy>(currentPolygons.size());
 		for (PolygonProxy polygonProxy : currentPolygons) {
 			if (polygonProxy.getClickable()) {
 				clickablePolygones.add(polygonProxy);
 			}
 		}
 		if (clickablePolygones.size() > 0) {
-
 			Boundary boundary = new Boundary();
-			ArrayList<PolygonProxy> clickedPolygon = boundary.contains(clickablePolygones, point);
+			List<PolygonProxy> clickedPolygon = boundary.contains(clickablePolygones, point);
 			boundary = null;
 
 			if (clickedPolygon.size() > 0) {
@@ -1158,7 +1262,7 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		// currentPolylines
-		ArrayList<PolylineProxy> clickablePolylines = new ArrayList<PolylineProxy>();
+		List<PolylineProxy> clickablePolylines = new ArrayList<PolylineProxy>(currentPolylines.size());
 		for (PolylineProxy polylineProxy : currentPolylines) {
 			if (polylineProxy.getClickable()) {
 				clickablePolylines.add(polylineProxy);
@@ -1177,7 +1281,7 @@ public class TiUIMapView extends TiUIFragment
 			double diagonal = Math.sqrt((side1 * side1) + (side2 * side2));
 			double val = diagonal / map.getCameraPosition().zoom;
 
-			ArrayList<PolylineProxy> clickedPolylines = boundary.contains(clickablePolylines, point, val);
+			List<PolylineProxy> clickedPolylines = boundary.contains(clickablePolylines, point, val);
 
 			boundary = null;
 			if (clickedPolylines.size() > 0) {

@@ -139,6 +139,64 @@ public class MapModule extends KrollModule
 	@Kroll.constant
 	public static final int POLYLINE_JOINT_ROUND = 2;
 
+	@Kroll.constant
+	public static final int TILE_OVERLAY_TYPE_WMS = 2;
+	@Kroll.constant
+	public static final int TILE_OVERLAY_TYPE_WMTS = 3;
+	@Kroll.constant
+	public static final int TILE_OVERLAY_TYPE_BING = 4;
+	@Kroll.constant
+	public static final int TILE_OVERLAY_TYPE_CARTODB = 5;
+	@Kroll.constant
+	public static final int TILE_OVERLAY_TYPE_XYZ = 6;
+	@Kroll.constant
+	public static final int TILE_OVERLAY_TYPE_OSM = 6;
+
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_AERIAL = "Aerial"; // Aerial imagery
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_AERIALWITHLABELSONDEMAND = "AerialWithLabelsOnDemand"; // Aerial imagery
+																									   // with a road
+																									   // overlay,
+																									   // using the
+																									   // dynamic tile
+																									   // service.
+
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_BIRDSEYE = "Birdseye"; // Bird’s eye (oblique-angle) imagery.
+
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_BIRDSEYEWITHLABELS = "BirdseyeWithLabels"; // Bird’s eye imagery with a
+																						   // road overlay.
+
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_BIRDSEYEV2 = "BirdseyeV2"; // The second generation Bird’s eye
+																		   // (oblique-angle) imagery.
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_BIRDSEYEV2WITHLABELS = "BirdseyeV2WithLabels"; // The second generation
+																							   // Bird’s eye
+																							   // (oblique-angle)
+																							   // imagery with a road
+																							   // overlay.
+
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_CANVASDARK = "CanvasDark"; // A dark version of the road maps.
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_CANVASLIGHT = "CanvasLight"; // A lighter version of the road maps which
+	// also has some of the details such as hill
+	// shading disabled.
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_CANVASGRAY = "CanvasGray"; // A grayscale version of the road maps.
+
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_ROADSONDEMAND = "RoadOnDemand"; // Roads without additional imagery,
+																				// using
+																				// the dynamic tile service.
+	@Kroll.constant
+	public static final String BING_IMAGERY_SET_STREETSIDE = "Streetside"; // Street-level Imagery.
+
+	public static final String LCAT = "TiMap";
+
 	public MapModule()
 	{
 		super();
