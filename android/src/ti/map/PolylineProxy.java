@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -128,14 +129,15 @@ public class PolylineProxy extends KrollProxy implements IShape
 			}
 		}
 	}
+
 	public void processOptions()
 	{
 
 		options = new PolylineOptions();
-		// (int) 	  strokeColor
-		// (float)	strokeWidth
-		// (int) 	  fillColor
-		// (float)	zIndex
+		// (int) strokeColor
+		// (float) strokeWidth
+		// (int) fillColor
+		// (float) zIndex
 
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
 			processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
@@ -196,7 +198,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 	{
 
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
-		//multiple points
+		// encoded (result from routing API)
+		if (points instanceof String) {
+			List<LatLng> locationList = PolyUtil.decode((String) points);
+			return new ArrayList<LatLng>(locationList);
+		}
+		// multiple points
 		if (points instanceof Object[]) {
 			Object[] pointsArray = (Object[]) points;
 			for (int i = 0; i < pointsArray.length; i++) {
@@ -206,7 +213,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 			return locationArray;
 		}
 
-		//single point
+		// single point
 		addLocation(points, locationArray, list);
 		return locationArray;
 	}
