@@ -22,9 +22,9 @@ properties:
     since: "5.1.0"
 
   - name: points
-    summary: Array of map points making up the polyline. Can also be an array of longitude (index 0), latitude (index 1) touples.
+    summary: Array of map points making up the polyline. Can also be an array of longitude (index 0), latitude (index 1) touples. On Android platform you can use an encoded polyline as string.
     availability: creation
-    type: Array<MapPointType>
+    type: [Array<MapPointType>, String]
     optional: false
 
   - name: strokeColor
