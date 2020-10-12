@@ -205,6 +205,24 @@ methods:
         type: Array<Modules.Map.Annotation>
         optional: true
     since: { android: "8.0.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+  
+  - name: addTileOverlay
+    summary: Adds a new tile overlay to the map.
+    platforms: [android]
+    since: "5.3.0"
+    parameters:
+      - name: tileoverlay
+        summary: a <Modules.Map.TileOverlay> instance.
+        type: Modules.Map.TileOverlay
+
+  - name: removeTileOverlay
+    summary: Remove tile overlay from the map.
+    platforms: [android]
+    since: "5.3.0"
+    parameters:
+      - name: tileoverlay
+        summary: a <Modules.Map.TileOverlay> instance.
+        type: Modules.Map.TileOverlay
 
   - name: addPolygon
     summary: Adds a new polygon to the map.
