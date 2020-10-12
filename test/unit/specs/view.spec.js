@@ -307,6 +307,18 @@ describe('ti.map.View', () => {
 		it('.zoomEnabled is a Boolean', () => {
 			expect(mapview.zoomEnabled).toEqual(true);
 		});
+
+		if (ANDROID) {
+			describe('.minClusterSize', () => {
+				it('is a Number', () => {
+					expect(mapview.minClusterSize).toEqual(jasmine.any(Number));
+				});
+
+				it('defaults to 4', () => {
+					expect(mapview.minClusterSize).toEqual(4);
+				});
+			});
+		}
 	});
 
 	// TODO: Test actually adding a view to a map
