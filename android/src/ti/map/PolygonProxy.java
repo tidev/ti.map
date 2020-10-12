@@ -10,6 +10,7 @@ import android.os.Message;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.PolyUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,9 @@ import org.appcelerator.titanium.util.TiConvert;
 import ti.map.Shape.IShape;
 
 @Kroll.proxy(name = "Polygon", creatableInModule = MapModule.class,
-			 propertyAccessors =
-				 {
-
-					 MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
-					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS, TiC.PROPERTY_TOUCH_ENABLED
-
-				 })
+			 propertyAccessors = { MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR,
+								   MapModule.PROPERTY_STROKE_WIDTH, MapModule.PROPERTY_ZINDEX,
+								   MapModule.PROPERTY_POINTS, TiC.PROPERTY_TOUCH_ENABLED })
 public class PolygonProxy extends KrollProxy implements IShape
 {
 
@@ -155,6 +152,11 @@ public class PolygonProxy extends KrollProxy implements IShape
 	{
 
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
+		// encoded (result from routing API)
+		if (points instanceof String) {
+			List<LatLng> locationList = PolyUtil.decode((String) points);
+			return new ArrayList<LatLng>(locationList);
+		}
 		// multiple points
 		if (points instanceof Object[]) {
 			Object[] pointsArray = (Object[]) points;
@@ -255,10 +257,9 @@ public class PolygonProxy extends KrollProxy implements IShape
 		return clickable;
 	}
 
-	/*public List<? extends List<LatLng>> getHoles()
-	{
-		return polygon.getHoles();
-	}*/
+	/*
+	 * public List<? extends List<LatLng>> getHoles() { return polygon.getHoles(); }
+	 */
 
 	@Override
 	public void onPropertyChanged(String name, Object value)

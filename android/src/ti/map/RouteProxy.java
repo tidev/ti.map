@@ -10,8 +10,10 @@ import android.os.Message;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
@@ -69,6 +71,7 @@ public class RouteProxy extends KrollProxy
 			}
 		}
 	}
+
 	public void processOptions()
 	{
 
@@ -108,7 +111,13 @@ public class RouteProxy extends KrollProxy
 	{
 
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
-		//multiple points
+		// encoded (result from routing API)
+		if (points instanceof String) {
+			List<LatLng> locationList = PolyUtil.decode((String) points);
+			return new ArrayList<LatLng>(locationList);
+		}
+
+		// multiple points
 		if (points instanceof Object[]) {
 			Object[] pointsArray = (Object[]) points;
 			for (int i = 0; i < pointsArray.length; i++) {
@@ -118,7 +127,7 @@ public class RouteProxy extends KrollProxy
 			return locationArray;
 		}
 
-		//single point
+		// single point
 		addLocation(points, locationArray, list);
 		return locationArray;
 	}
