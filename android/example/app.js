@@ -11,13 +11,16 @@ var rows = [
     require('tests/annotations'),
     require('tests/routes'),
     require('tests/3d'),
-    require('tests/drawing'),
-    require('tests/lite')
+    require('tests/drawing'),    
 ];
 
 if (IOS) {
     rows.push(require('tests/camera'));
     rows.push(require('tests/properties'));
+}
+if (ANDROID) {
+    rows.push(require('tests/lite'));
+    rows.push(require('tests/tileoverlay'));
 }
 
 if (ANDROID && Map.isGooglePlayServicesAvailable() != Map.SUCCESS) {
