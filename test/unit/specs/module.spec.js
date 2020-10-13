@@ -84,25 +84,39 @@ describe('ti.map', () => {
 		}
 
 		if (ANDROID) {
-			describe('SERVICE_*', () => {
-				it('SERVICE_DISABLED', () => {
-					expect(Map.SERVICE_DISABLED).toEqual(jasmine.any(Number));
+			describe('TILE_OVERLAY_TYPE_*', () => {
+				it('TILE_OVERLAY_TYPE_WMS', () => {
+					expect(Map.TILE_OVERLAY_TYPE_WMS).toEqual(jasmine.any(Number));
 				});
 
-				it('SERVICE_INVALID', () => {
-					expect(Map.SERVICE_INVALID).toEqual(jasmine.any(Number));
+				it('TILE_OVERLAY_TYPE_WMTS', () => {
+					expect(Map.TILE_OVERLAY_TYPE_WMTS).toEqual(jasmine.any(Number));
 				});
 
-				it('SERVICE_MISSING', () => {
-					expect(Map.SERVICE_MISSING).toEqual(jasmine.any(Number));
+				it('TILE_OVERLAY_TYPE_BING', () => {
+					expect(Map.TILE_OVERLAY_TYPE_BING).toEqual(jasmine.any(Number));
 				});
 
-				it('SERVICE_VERSION_UPDATE_REQUIRED', () => {
-					expect(Map.SERVICE_VERSION_UPDATE_REQUIRED).toEqual(jasmine.any(Number));
+				it('TILE_OVERLAY_TYPE_CARTODB', () => {
+					expect(Map.TILE_OVERLAY_TYPE_CARTODB).toEqual(jasmine.any(Number));
 				});
 
-				it('SUCCESS', () => {
-					expect(Map.SUCCESS).toEqual(jasmine.any(Number));
+				it('TILE_OVERLAY_TYPE_XYZ', () => {
+					expect(Map.TILE_OVERLAY_TYPE_XYZ).toEqual(jasmine.any(Number));
+				});
+
+				it('TILE_OVERLAY_TYPE_OSM', () => {
+					expect(Map.TILE_OVERLAY_TYPE_OSM).toEqual(jasmine.any(Number));
+				});
+			});
+
+			describe('ANNOTATION_DRAG_STATE_*', () => {
+				it('ANNOTATION_DRAG_STATE_END', () => {
+					expect(Map.ANNOTATION_DRAG_STATE_END).toEqual(jasmine.any(Number));
+				});
+
+				it('ANNOTATION_DRAG_STATE_START', () => {
+					expect(Map.ANNOTATION_DRAG_STATE_START).toEqual(jasmine.any(Number));
 				});
 			});
 		}

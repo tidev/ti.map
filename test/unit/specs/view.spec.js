@@ -112,6 +112,17 @@ describe('ti.map.View', () => {
 			});
 		}
 
+		if (ANDROID) {
+			// TODO: Add to iOS for parity
+			it('#addTileOverlay() is a Function', () => {
+				expect(mapview.addTileOverlay).toEqual(jasmine.any(Function));
+			});
+
+			it('#removeTileOverlay() is a Function', () => {
+				expect(mapview.removeTileOverlay).toEqual(jasmine.any(Function));
+			});
+		}
+
 		it('#deselectAnnotation() is a Function', () => {
 			expect(mapview.deselectAnnotation).toEqual(jasmine.any(Function));
 		});
