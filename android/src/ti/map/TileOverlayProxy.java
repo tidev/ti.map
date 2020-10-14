@@ -361,4 +361,9 @@ public class TileOverlayProxy extends KrollProxy
 
 		return quadKey.toString();
 	}
+
+	public String getApiName()
+	{
+		return "Ti.Map.TileOverlay";
+	}
 }
