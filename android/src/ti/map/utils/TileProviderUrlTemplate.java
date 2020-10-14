@@ -57,6 +57,10 @@ public class TileProviderUrlTemplate
 		}
 
 		String rawUrlTemplate = null;
+		if (opts.containsKeyAndNotNull("url")) {
+			rawUrlTemplate = opts.getString("url");
+		}
+
 		switch (type) {
 			case MapModule.TILE_OVERLAY_TYPE_CARTODB:
 				if (!this.options.containsKeyAndNotNull("username")) {
@@ -66,17 +70,25 @@ public class TileProviderUrlTemplate
 				rawUrlTemplate = "https://{username}.carto.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png";
 				break;
 			case MapModule.TILE_OVERLAY_TYPE_XYZ:
-				LeafletProvidersProxy providerDB = new LeafletProvidersProxy();
-				KrollDict tileProviderParams = providerDB.getTileProvider(name);
-				rawUrlTemplate = tileProviderParams.getString("url");
-				KrollDict bakedOptions = tileProviderParams.getKrollDict("options");
-				if (bakedOptions != null) {
-					// merge user supplied options over top the ones from baked in json
-					bakedOptions.putAll(this.options);
-					this.options = bakedOptions;
+				if (name != null) {
+					LeafletProvidersProxy providerDB = new LeafletProvidersProxy();
+					KrollDict tileProviderParams = providerDB.getTileProvider(name);
+					if (rawUrlTemplate == null) { // let user url win
+						rawUrlTemplate = tileProviderParams.getString("url");
+					}
+					KrollDict bakedOptions = tileProviderParams.getKrollDict("options");
+					if (bakedOptions != null) {
+						// merge user supplied options over top the ones from baked in json
+						bakedOptions.putAll(this.options);
+						this.options = bakedOptions;
+					}
 				}
 				break;
 			case MapModule.TILE_OVERLAY_TYPE_WMS:
+				if (rawUrlTemplate == null) {
+					Log.e(LCAT, "WMS needs `url` set.");
+					return;
+				}
 				if (!this.options.containsKeyAndNotNull("version")) {
 					Log.e(LCAT, "WMS needs `options.version` set.");
 					return;
@@ -89,12 +101,12 @@ public class TileProviderUrlTemplate
 					Log.e(LCAT, "WMS needs `options.layer` set.");
 					return;
 				}
-				rawUrlTemplate = "?service=WMS&version={version}"
-								 + "&request=GetMap"
-								 + "&format={format}"
-								 + "&layers={layer}"
-								 + "&width=" + TILE_WIDTH + "&height=" + TILE_HEIGHT
-								 + "&srs={crs}&bbox={bbox}&crs={crs}";
+				rawUrlTemplate += "?service=WMS&version={version}"
+								  + "&request=GetMap"
+								  + "&format={format}"
+								  + "&layers={layer}"
+								  + "&width=" + TILE_WIDTH + "&height=" + TILE_HEIGHT
+								  + "&srs={crs}&bbox={bbox}&crs={crs}";
 				if (this.options.containsKeyAndNotNull("style")) {
 					rawUrlTemplate += "&styles={style}";
 				}
@@ -107,6 +119,10 @@ public class TileProviderUrlTemplate
 				Log.d(LCAT, "WMS = " + rawUrlTemplate + "  built!");
 				break;
 			case MapModule.TILE_OVERLAY_TYPE_WMTS:
+				if (rawUrlTemplate == null) {
+					Log.e(LCAT, "WMTS needs `url` set.");
+					return;
+				}
 				if (!this.options.containsKeyAndNotNull("version")) {
 					this.options.put("version", "1.0.0");
 				}
