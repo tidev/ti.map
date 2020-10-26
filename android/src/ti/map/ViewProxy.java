@@ -9,6 +9,7 @@ package ti.map;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -23,10 +24,19 @@ import org.appcelerator.titanium.view.TiUIView;
 
 import ti.map.AnnotationProxy.AnnotationDelegate;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Message;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
 
 @Kroll.
 proxy(creatableInModule = MapModule.class,
@@ -1016,6 +1026,72 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		} else {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_POLYLINES));
 		}
+	}
+
+
+	@Kroll.method
+	public KrollDict drawRoundedPolylineBetweenCoordinates(KrollDict args)
+	{
+		// Algorithm credits https://stackoverflow.com/a/43665433/5537752
+
+		KrollDict[] jsCoordinates = args.getKrollDictArray("coordinates");
+		KrollDict jsOptions = args.getKrollDict("options");
+
+		LatLng p1 = new LatLng(jsCoordinates[0].getDouble("latitude").doubleValue(), jsCoordinates[0].getDouble("longitude").doubleValue());
+		LatLng p2 = new LatLng(jsCoordinates[1].getDouble("latitude").doubleValue(), jsCoordinates[1].getDouble("longitude").doubleValue());
+
+		double k = 0.25;
+
+		// Calculate distance and heading between two points
+		double d = SphericalUtil.computeDistanceBetween(p1,p2);
+		double h = SphericalUtil.computeHeading(p1, p2);
+
+		// Midpoint position
+		LatLng p = SphericalUtil.computeOffset(p1, d * 0.5, h);
+
+		// Apply some mathematics to calculate position of the circle center
+		double x = (1 - k * k) * d * 0.5 / (2 * k);
+		double r = (1 + k * k) * d * 0.5 / (2 * k);
+
+		LatLng c = SphericalUtil.computeOffset(p, x, h + 90.0);
+
+		// Polyline options
+		PolylineOptions options = new PolylineOptions();
+
+		// Calculate heading between circle center and two points
+		double h1 = SphericalUtil.computeHeading(c, p1);
+		double h2 = SphericalUtil.computeHeading(c, p2);
+
+		// Calculate positions of points on circle border and add them to polyline options
+		int numPoints = 100;
+		double step = (h2 - h1) / numPoints;
+
+		for (int i = 0; i < numPoints; i++) {
+			LatLng pi = SphericalUtil.computeOffset(c, r, h1 + i * step);
+			options.add(pi);
+		}
+
+		int strokeWidth = 3;
+		if (jsOptions != null && jsOptions.containsKey("strokeWidth")) {
+			strokeWidth = jsOptions.getInt("strokeWidth");
+		}
+
+		// Draw polyline
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		mapView.getMap().addPolyline(options.width(strokeWidth).color(Color.BLACK).geodesic(false));
+
+		// Bound to coordinates
+		LatLngBounds bounds = new LatLngBounds.Builder().include(p1).include(p2).build();
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 20);
+		mapView.getMap().moveCamera(cameraUpdate);
+
+		// Return center coordinate
+		LatLng centerCoordinate = options.getPoints().get(49);
+		KrollDict centerCoordinateDict = new KrollDict();
+		centerCoordinateDict.put("latitude", centerCoordinate.latitude);
+		centerCoordinateDict.put("longitude", centerCoordinate.longitude);
+
+		return centerCoordinateDict;
 	}
 
 	/**
