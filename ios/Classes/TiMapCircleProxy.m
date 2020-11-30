@@ -81,6 +81,11 @@
   [self replaceValue:value forKey:@"center" notification:NO];
 }
 
+- (id)center
+{
+  return [self valueForUndefinedKey:@"center"];
+}
+
 - (void)setFillColor:(id)value
 {
   if (fillColor != nil) {
