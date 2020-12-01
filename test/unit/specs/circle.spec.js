@@ -56,7 +56,7 @@ describe('ti.map.Circle', function () {
 
 	it('.center.latitude and .center.longitude should match given Number', () => {
 		expect(circle.center.latitude).toEqual(-33.87365);
-	    expect(circle.center.longitude).toEqual(151.20689);
+		expect(circle.center.longitude).toEqual(151.20689);
 	});
 
 });
