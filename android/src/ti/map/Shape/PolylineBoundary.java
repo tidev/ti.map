@@ -4,6 +4,7 @@ import android.graphics.PointF;
 import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
+import java.util.List;
 import ti.map.PolylineProxy;
 
 public class PolylineBoundary
@@ -15,9 +16,9 @@ public class PolylineBoundary
 	private PointF point;
 	private PointF[] points;
 
-	public ArrayList<PolylineProxy> contains(ArrayList<PolylineProxy> p, LatLng ll, double distance)
+	public List<PolylineProxy> contains(List<PolylineProxy> p, LatLng ll, double distance)
 	{
-		ArrayList<PolylineProxy> list = new ArrayList<PolylineProxy>();
+		List<PolylineProxy> list = new ArrayList<PolylineProxy>(p.size());
 		cast(ll);
 		this.distance = distance;
 		for (int i = 0; i < p.size(); i++) {

@@ -47,5 +47,5 @@ exports.run = function(UI, Map) {
     win.add(map1);
     win.add(map2);
     win.add(map3);
-    win.add(map4);    
+    win.add(map4);
 };

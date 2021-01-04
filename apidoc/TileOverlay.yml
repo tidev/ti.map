@@ -1,0 +1,381 @@
+---
+name: Modules.Map.TileOverlay
+summary: Realize the usage of different tile overlays.
+description: |
+    The module supports for methods and providers:
+
+    ### XYZ tiles with symbolic names
+
+    This module supports all overlays listed in this [leaflet page](https://leaflet-extras.github.io/leaflet-providers/preview/)
+
+    Inside the module, in folder `assets` is a large collection of ready to use layers. You can inspect by:
+
+    ``` javascript
+    const providers = Map.createLeafletProviders();
+    providers.getAllProviderNames();
+    ```
+
+    You will get: `["OpenStreetMap","OpenSeaMap","OpenTopoMap","Thunderforest","OpenMapSurfer","Hydda","MapBox","Stamen","Esri","OpenWeatherMap","FreeMapSK","MtbMap","CartoDB","HikeBike","BasemapAT","NASAGIBS","NLS"]`
+
+    ``` javascript
+    providers.getAllVariantNamesByProvider("Stamen");
+    ```
+
+    You will get all variants of Stamen: `["Toner","TonerBackground","TonerHybrid","TonerLines","TonerLabels","TonerLite","Watercolor","Terrain","TerrainBackground","TopOSMRelief","TopOSMFeatures"]`
+
+    ``` javascript
+    providers.getAllNames();
+    ```
+
+    You will get all variant/provider combination names.
+
+    #### Code examples:
+
+    The same examples above with symbolic names, note that use of `name` implies `type` is `TILE_OVERLAY_TYPE_XYZ`:
+
+    ``` javascript
+    const overlay = Map.createTileOverlay({
+      name: 'OpenStreetMap'
+    });
+
+    const overlay = Map.createTileOverlay({
+      name: 'Thunderforest/OpenCycleMap',
+      options: {
+        apikey: 'ABCDE123456'
+      }
+    });
+
+    const overlay = Map.createTileOverlay({
+      name: 'Stamen/Watercolor'
+    });
+    ```
+
+    The benefit of names is the usage of load balancing by subdomains which will be randomly called.
+
+    ### XYZ tiles with manual URLs/options
+
+    If a provider is not pre-defined you can attempt to build one via passing in `url` and `options` properties.
+    XYZ overlay types will fill in the templated `{x}`, `{y}`, and `{z}` values based on the map tiles needed under the hood.
+    `{s}` will be filled in by randomly selecting from `options.subdomains` (whose value can be a string of 1-character subdomain names, or an array of Strings)
+
+    #### URL examples:
+
+    - http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+    - http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey={apikey}
+    - http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png
+
+    #### Code examples:
+
+    ``` javascript
+    const Map = require('ti.map');
+    const overlay = Map.createTileOverlay({
+      service: Map.TILE_OVERLAY_TYPE_XYZ,
+      url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      options: {
+        subdomains: 'abcd'
+      }
+    });
+
+    const overlay = Map.createTileOverlay({
+      service: Map.TILE_OVERLAY_TYPE_XYZ,
+      url: 'http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey={apikey}',
+      options: {
+        subdomains: 'abcd',
+        apikey: 'your key goes here'
+      }
+    });
+
+    const overlay = Map.createTileOverlay({
+      service: Map.TILE_OVERLAY_TYPE_XYZ,
+      url: 'http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
+      options: {
+        subdomains: [ 'a', 'b', 'c', 'd' ]
+      }
+    });
+    ```
+
+    ### Web Map Tile Service
+
+    A Web Map Tile Service (WMTS) is a standard protocol for serving pre-rendered or run-time computed georeferenced map tiles over the Internet.
+    The specification was developed and first published by the Open Geospatial Consortium in 2010.
+
+    Note that `options.layer`, `options.format`, `url` and `type` properties are required for WMTS.
+
+    #### Code examples
+
+    ``` javascript
+    const parcels = Map.createTileOverlay({
+      service: Map.TILE_OVERLAY_TYPE_WMTS,
+      url: 'http://wxs.ign.fr/choisirgeoportail/geoportail/wmts',
+      options: {
+        layer: 'CADASTRALPARCELS.PARCELS',
+        style: 'normal',
+        format: 'image/png',
+        tilematrixset: 'PM'
+      }
+    });
+
+    const geogrid = Map.createTileOverlay({
+      service: Map.TILE_OVERLAY_TYPE_WMTS,
+      url: 'http://wxs.ign.fr/choisirgeoportail/geoportail/wmts',
+      options: {
+        layer: 'GEOGRAPHICALGRIDSYSTEMS.MAPS',
+        style: 'normal',
+        format: 'image/jpeg',
+        tilematrixset: 'PM'
+      }
+    });
+    ```
+
+    ### Web Map Service
+
+    A Web Map Service (WMS) is a standard protocol developed by the Open Geospatial Consortium in 1999 for serving georeferenced map images over the Internet.
+
+    WMS is flexible, but slow. Maybe the usage of tile proxy make sense.
+
+    Note that `options.version`, `options.layer`, `options.format`, `url` and `type` properties are required for WMS.
+
+    #### Get capabilities
+
+    With the Web Feature Service (WFS) the capabilities can inspect. [Example](https://geodienste.hamburg.de/HH_WFS_Strassenbaumkataster?REQUEST=GetCapabilities&SERVICE=WFS)
+
+    #### Code examples
+
+    ``` javascript
+    const streettrees = Map.createTileOverlay({
+      type: Map.TILE_OVERLAY_TYPE_WMS,
+      url: 'https://geodienste.hamburg.de/HH_WFS_Strassenbaumkataster',
+      options: {
+        crs: 'epsg:4326',
+        version: '1.3.0',
+        layer: 'strassenbaum',
+        format: 'image/png'
+      }
+    });
+
+    const bglayer = Map.createTileOverlay({
+      type: Map.TILE_OVERLAY_TYPE_WMS,
+      url: 'https://geodienste.hamburg.de/HH_WMS_Kombi_DISK_GB',
+      options: {
+        crs: 'epsg:4326',
+        layer: '6,10,18,26,2,14,22',
+        version: '1.3.0',
+        format: 'image/jpeg'
+      }
+    });
+    ```
+
+    ### CartoDB
+
+    CartoDB is a provider for customizable raster tile maps.
+
+    Note that `options.username`, `options.mapconfig` and `type` properties are required for CartoDB.
+
+    #### Code examples "Anonymous Maps"
+
+    ``` javascript
+    const mapconfig = {
+      "version": "1.3.1",
+      "layers": [{
+        "type": "cartodb",
+        "options": {
+          "cartocss_version": "2.1.1",
+          "cartocss": "#layer { polygon-fill: #FFF; }",
+          "sql": "select * from european_countries_e"
+        }
+      }]
+    };
+    const layer = Map.createTileOverlay({
+      type: Map.TILE_OVERLAY_TYPE_CARTODB,
+      options: {
+        username: "USER_NAME",
+        mapconfig: JSON.stringify(mapconfig)
+      }
+    });
+    ```
+
+    `options.mapconfig` must be valid JSON. More details about [mapconfig](https://carto.com/developers/maps-api/guides/MapConfig-file-format/)
+extends: Titanium.Proxy
+since: { android: "5.3.0" }
+platforms: [android]
+properties:
+  - name: type
+    availability: creation
+    summary: constant for service type to be used
+    optional: true
+    type: Number
+    constants: Modules.Map.TILE_OVERLAY_TYPE_*
+
+  - name: debuglevel
+    availability: creation
+    summary: Setting debug level
+    optional: true
+    description: |
+        0: nothing
+        1: only tile provider schema during creation
+        2: log at every render event
+    type: Number
+    default: 0
+
+  - name: url
+    summary: |
+        The endpoint of tile provider - without query string. In case of symbolic name (variant) not needed.
+    availability: creation
+    type: String
+    optional: true
+
+  - name: opacity
+    summary: Opacity of this tile overlay, from 0.0 (transparent) to 1.0 (opaque).
+    type: Number
+    default: 1.0 (opaque)
+    optional: true
+
+  - name: name
+    summary: Symbolic name of XYZ-layer.
+    description: |
+        XYZ layer can used by:
+        * Usage of url, like "http://stamen-tiles-a.a.ssl.fastly.net/Watercolor/{z}/{x}/{y}.png"
+        * Usage of name, like "Stamen/Watercolor"
+        You can inspect all available names by:
+
+        ``` javascript
+        const DB = createXYZTilesDatabase();
+        DB.getAllProviderNames();
+        ```
+
+        You will get: `["OpenStreetMap","OpenSeaMap","OpenTopoMap","Thunderforest","OpenMapSurfer","Hydda","MapBox","Stamen","Esri","OpenWeatherMap","FreeMapSK","MtbMap","CartoDB","HikeBike","BasemapAT","NASAGIBS","NLS"]`
+
+        ``` javascript
+        DB.getAllVariantNamesByProvider("Stamen");
+        ```
+
+        You will get all variants of Stamen: `["Toner","TonerBackground","TonerHybrid","TonerLines","TonerLabels","TonerLite","Watercolor","Terrain","TerrainBackground","TopOSMRelief","TopOSMFeatures"]`
+    type: String
+
+  - name: zIndex
+    summary: The order (depth) in which to display the tiles.
+    availability: creation
+    type: Number
+    default: 999
+    optional: true
+    
+---
+name: TileOverlayOptions
+summary: Options for various tile providers
+properties:
+  - name: accessToken
+    summary: access token for the service
+    optional: true
+    type: String
+    description: This is used by only some of the providers such as Jawg, MapBox.
+    
+  - name: apikey
+    summary: api key used by some services
+    optional: true
+    type: String
+    description: This is used by only some of the providers such as Thunderforest, TomTom, Stadia, and OpenWeatherMap.
+
+  - name: app_id
+    summary: app_id
+    optional: true
+    type: String
+    description: This is used by HERE. 
+
+  - name: app_code
+    summary: app_code
+    optional: true
+    type: String
+    description: This is used by HERE.
+
+  - name: password
+    availability: creation
+    summary: Password for Basic Authorization
+    optional: true
+    type: String
+
+  - name: username
+    availability: creation
+    summary: Username for Basic Authorization. Required for CartoDB.
+    optional: true
+    type: String
+
+  - name: mapconfig
+    summary: Additonal configuration for CartoDB maps
+    description: |
+        `mapconfig` must be valid JSON. More details about [mapconfig](https://carto.com/developers/maps-api/guides/MapConfig-file-format/)
+    type: String
+    optional: true
+
+  - name: tilematrixset
+    summary: Used by WTMS type
+    type: String
+    optional: true
+
+  - name: culture
+    summary: Used by Bing type.
+    type: String
+    optional: true
+    default: "en"
+
+  - name: imagerySet
+    summary: Required by Bing type. See https://docs.microsoft.com/en-us/bingmaps/rest-services/imagery/get-imagery-metadata#template-parameters
+    type: String
+    constants: Modules.Map.BING_IMAGERY_SET_*
+
+  - name: crs
+    summary: CRS of requested layer
+    description: |
+        Coordinate Reference System of layer. Module only works with spherical mercator (WGS84).
+        The get all available CRS use Web Feature Service of endpoint.
+
+        Used by WMS type.
+    type: String
+    optional: true
+    default: "epsg:4326"
+
+  - name: format
+    summary: Format of requested layer
+    description: Format for layer, mostly png, jpeg, image/png or image/jpeg. USed by WMS and WMTS type.
+    type: String
+    optional: false
+    default: "png"
+
+  - name: bgColor
+    summary: BackgroundColor of tile
+    description: |
+        Background color for the map image. Value is in the form RRGGBB.
+        Only relevant for WMS
+    type: String
+    optional: true
+    default: "FFFFFF"
+  
+  - name: transparent
+    summary: Transparency
+    description: |
+       Whether the map background should be transparent. Values are true or false. Default is false
+       Only relevant for WMS
+    type: Boolean
+    optional: true
+    default: false
+
+  - name: version
+    summary: Version of service. Required for WMS type.
+    availability: creation
+    type: String
+    default: |
+        "1.0.0" for WMTS, "1.3.0" for WMS
+
+  - name: style
+    summary: Style of layer
+    description: |
+        Styles in which layers are to be rendered. Value is a comma-separated list of style names, or empty if default styling is required. Style names may be empty in the list, to use default layer styling.
+    availability: creation
+    type: String
+    optional: true
+
+  - name: layer
+    summary: Layers to display on map
+    description: |
+        Layers to display on map. Value is a comma-separated list of layer names. Required for WMS and WMTS.
+    type: String
+    default: "default"

@@ -34,3 +34,4 @@ properties:
   - name: bottomRight
     summary: An object with longitude and latitude values.
     type: MapPointType
+ 

@@ -119,6 +119,152 @@ excludes:
     methods: [addEventListener, fireEvent, removeEventListener]
     properties: [bubbleParent]
 properties:
+  - name: TILE_OVERLAY_TYPE_WMS
+    summary: |
+        Used in the [createTileOverlay](Modules.Map.TileOverlay) method to select WMS (Web Map Service). 
+        WMS is a standard protocol developed by the Open Geospatial Consortium 
+        in 1999 for serving georeferenced map images over the Internet. 
+        These images are typically produced by a map server from data provided by a GIS database. 
+    permission: read-only
+    since: "5.3.0"
+    type: Number
+    platforms: [android]
+    
+  - name: TILE_OVERLAY_TYPE_WMTS
+    summary: |
+        Used in the [createTileOverlay](Modules.Map.TileOverlay) method 
+        to select WMTS (Web Map Tile Service). WMTS is a standard protocol 
+        for serving pre-rendered or run-time computed georeferenced map tiles over the Internet. 
+        The specification was developed and first published by the Open Geospatial Consortium in 2010. 
+    type: Number
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+
+  - name: TILE_OVERLAY_TYPE_XYZ
+    summary: |
+        Used in the [createTileOverlay](Modules.Map.TileOverlay) method
+        to select a XYZ service. This in common format used by OSM, MapQuest or MapBox
+    type: Number
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+
+  - name: TILE_OVERLAY_TYPE_BING
+    summary: |
+        Used in the [createTileOverlay](Modules.Map.TileOverlay) method
+        to select Microsoft Bing Maps.
+    type: Number
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+
+  - name: TILE_OVERLAY_TYPE_OSM
+    summary: |
+        Used in the [createTileOverlay](Modules.Map.TileOverlay) method
+        to select OpenStreetMap.
+    type: Number
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+  
+  - name: TILE_OVERLAY_TYPE_CARTODB
+    summary: |
+        Used in the [createTileOverlay](Modules.Map.TileOverlay) method
+        to select CartoDB service.
+    type: Number
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+
+  - name: BING_IMAGERY_SET_AERIAL
+    summary: Aerial imagery
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "Aerial"
+
+  - name: BING_IMAGERY_SET_AERIALWITHLABELSONDEMAND
+    summary: Aerial imagery with a road overlay, using the dynamic tile service.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "AerialWithLabelsOnDemand"
+
+  - name: BING_IMAGERY_SET_BIRDSEYE
+    summary: Bird’s eye (oblique-angle) imagery.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "Birdseye"
+
+  - name: BING_IMAGERY_SET_BIRDSEYEWITHLABELS
+    summary: Bird’s eye imagery with a road overlay.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "BirdseyeWithLabels"
+
+  - name: BING_IMAGERY_SET_BIRDSEYEV2
+    summary: The second generation Bird’s eye (oblique-angle) imagery.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "BirdseyeV2"
+
+  - name: BING_IMAGERY_SET_BIRDSEYEV2WITHLABELS
+    summary: The second generation Bird’s eye (oblique-angle) with a road overlay.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "BirdseyeV2WithLabels"
+
+  - name: BING_IMAGERY_SET_CANVASDARK
+    summary: A dark version of the road maps.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "CanvasDark"
+
+  - name: BING_IMAGERY_SET_CANVASDARK
+    summary: A lighter version of the road maps which also has some of the details such as hill shading disabled.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "CanvasLight"
+
+  - name: BING_IMAGERY_SET_CANVASGRAY
+    summary: A grayscale version of the road maps.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "CanvasGray"
+
+  - name: BING_IMAGERY_SET_ROADSONDEMAND
+    summary: Roads without additional imagery, using the dynamic tile service.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "RoadOnDemand"
+
+  - name: BING_IMAGERY_SET_STREETSIDE
+    summary: Street-level Imagery.
+    type: String
+    permission: read-only
+    since: "5.3.0"
+    platforms: [android]
+    value: "Streetside"
+
   - name: ANNOTATION_DRAG_STATE_START
     summary: |
         Used in the [pinchangedragstate](Modules.Map.View.pinchangedragstate) event
@@ -454,7 +600,7 @@ properties:
     osver: {ios: {min: "11.0"} }
     exclude-platforms: [android]
     since: "6.3.0"
-
+   
 methods:
   - name: isGooglePlayServicesAvailable
     returns:
@@ -469,7 +615,6 @@ methods:
     platforms: [android]
 
 examples:
-
   - title: Basic Map Example
     example: |
         This is a basic map example that places a custom annotation on the map, and
