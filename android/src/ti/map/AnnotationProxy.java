@@ -39,7 +39,7 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 								   MapModule.PROPERTY_CUSTOM_VIEW, TiC.PROPERTY_LEFT_BUTTON, TiC.PROPERTY_LEFT_VIEW,
 								   TiC.PROPERTY_RIGHT_BUTTON, TiC.PROPERTY_RIGHT_VIEW,
 								   MapModule.PROPERTY_SHOW_INFO_WINDOW, MapModule.PROPERTY_CENTER_OFFSET,
-								   MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
+									 MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
 public class AnnotationProxy extends KrollProxy
 {
 	public interface AnnotationDelegate {
@@ -60,7 +60,7 @@ public class AnnotationProxy extends KrollProxy
 	private String subTitle;
 	private String annoTitle;
 	private AnnotationDelegate delegate = null;
-
+	
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
 	private static final int MSG_SET_LON = MSG_FIRST_ID + 300;
@@ -68,6 +68,7 @@ public class AnnotationProxy extends KrollProxy
 	private static final int MSG_SET_DRAGGABLE = MSG_FIRST_ID + 302;
 	private static final int MSG_UPDATE_INFO_WINDOW = MSG_FIRST_ID + 303;
 	private static final int MSG_SET_HIDDEN = MSG_FIRST_ID + 304;
+	private static final int MSG_SET_IMAGE = MSG_FIRST_ID + 305;
 
 	public AnnotationProxy()
 	{
@@ -178,6 +179,15 @@ public class AnnotationProxy extends KrollProxy
 				updateInfoWindow();
 				return true;
 			}
+
+			case MSG_SET_IMAGE:
+				result = (AsyncResult) msg.obj;
+				Marker m = marker.getMarker();
+				if (m != null) {
+					updateImage(m, result.getArg());
+				}
+				result.setResult(null);
+				return true;
 
 			default: {
 				return super.handleMessage(msg);
@@ -336,6 +346,57 @@ public class AnnotationProxy extends KrollProxy
 		return markerOptions;
 	}
 
+	public void updateImage(Marker m, Object value)
+	{
+		if(hasProperty(MapModule.PROPERTY_CUSTOM_VIEW))
+		{
+			// Custom view used. Update image not allowed
+			return;
+		}
+
+		if(value == null)
+		{
+			m.setIcon(
+				BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
+			setIconImageDimensions(-1, -1);
+			return;
+		}
+		
+		// image not null has only effect if customView is null. Any other case, customView has more priority
+		if(value != null)
+		{
+			// Image path
+			if (value instanceof String) {
+				TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) value);
+				Bitmap bitmap = imageref.getBitmap();
+				if (bitmap != null) {
+					try {
+						if(m != null)
+						{
+							m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+							setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+						}
+					} catch (Exception e) {
+					}
+					return;
+				}
+			}
+
+			// Image blob
+			if (value instanceof TiBlob) {
+				Bitmap bitmap = ((TiBlob) value).getImage();
+				if (bitmap != null) {
+					if(m != null)
+					{
+						m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+						setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+					}
+					return;
+				}
+			}
+		}
+	}
+
 	public void setTiMarker(TiMarker m)
 	{
 		marker = m;
@@ -441,6 +502,9 @@ public class AnnotationProxy extends KrollProxy
 		} else if (name.equals(MapModule.PROPERTY_HIDDEN)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HIDDEN),
 												TiConvert.toBoolean(value));
+		} else if (name.equals(TiC.PROPERTY_IMAGE)) {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_IMAGE),
+												value);
 		}
 	}
 
