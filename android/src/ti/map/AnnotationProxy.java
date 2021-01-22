@@ -354,15 +354,13 @@ public class AnnotationProxy extends KrollProxy
 		}
 
 		if (value == null) {
-			m.setIcon(
-				BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
+			m.setIcon(BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
 			setIconImageDimensions(-1, -1);
 			return;
 		}
 
 		// image not null has only effect if customView is null. Any other case, customView has more priority
-		if (value != null)
-		{
+		if (value != null){
 			// Image path
 			if (value instanceof String) {
 				TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) value);
@@ -499,8 +497,7 @@ public class AnnotationProxy extends KrollProxy
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_HIDDEN),
 												TiConvert.toBoolean(value));
 		} else if (name.equals(TiC.PROPERTY_IMAGE)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_IMAGE),
-												value);
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_IMAGE), value);
 		}
 	}
 
