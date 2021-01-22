@@ -348,20 +348,18 @@ public class AnnotationProxy extends KrollProxy
 
 	public void updateImage(Marker m, Object value)
 	{
-		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW))
-		{
+		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
 			// Custom view used. Update image not allowed
 			return;
 		}
 
-		if (value == null)
-		{
+		if (value == null) {
 			m.setIcon(
 				BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
 			setIconImageDimensions(-1, -1);
 			return;
 		}
-		
+
 		// image not null has only effect if customView is null. Any other case, customView has more priority
 		if (value != null)
 		{
@@ -371,8 +369,7 @@ public class AnnotationProxy extends KrollProxy
 				Bitmap bitmap = imageref.getBitmap();
 				if (bitmap != null) {
 					try {
-						if (m != null)
-						{
+						if (m != null) {
 							m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
 							setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 						}
@@ -386,8 +383,7 @@ public class AnnotationProxy extends KrollProxy
 			if (value instanceof TiBlob) {
 				Bitmap bitmap = ((TiBlob) value).getImage();
 				if (bitmap != null) {
-					if (m != null)
-					{
+					if (m != null) {
 						m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
 						setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 					}
