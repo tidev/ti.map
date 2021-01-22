@@ -39,7 +39,7 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 								   MapModule.PROPERTY_CUSTOM_VIEW, TiC.PROPERTY_LEFT_BUTTON, TiC.PROPERTY_LEFT_VIEW,
 								   TiC.PROPERTY_RIGHT_BUTTON, TiC.PROPERTY_RIGHT_VIEW,
 								   MapModule.PROPERTY_SHOW_INFO_WINDOW, MapModule.PROPERTY_CENTER_OFFSET,
-									 MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
+								   MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
 public class AnnotationProxy extends KrollProxy
 {
 	public interface AnnotationDelegate {
@@ -60,7 +60,7 @@ public class AnnotationProxy extends KrollProxy
 	private String subTitle;
 	private String annoTitle;
 	private AnnotationDelegate delegate = null;
-	
+
 	private static final int MSG_FIRST_ID = KrollProxy.MSG_LAST_ID + 1;
 
 	private static final int MSG_SET_LON = MSG_FIRST_ID + 300;
@@ -348,13 +348,13 @@ public class AnnotationProxy extends KrollProxy
 
 	public void updateImage(Marker m, Object value)
 	{
-		if(hasProperty(MapModule.PROPERTY_CUSTOM_VIEW))
+		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW))
 		{
 			// Custom view used. Update image not allowed
 			return;
 		}
 
-		if(value == null)
+		if (value == null)
 		{
 			m.setIcon(
 				BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
@@ -363,7 +363,7 @@ public class AnnotationProxy extends KrollProxy
 		}
 		
 		// image not null has only effect if customView is null. Any other case, customView has more priority
-		if(value != null)
+		if (value != null)
 		{
 			// Image path
 			if (value instanceof String) {
@@ -371,7 +371,7 @@ public class AnnotationProxy extends KrollProxy
 				Bitmap bitmap = imageref.getBitmap();
 				if (bitmap != null) {
 					try {
-						if(m != null)
+						if (m != null)
 						{
 							m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
 							setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
@@ -386,7 +386,7 @@ public class AnnotationProxy extends KrollProxy
 			if (value instanceof TiBlob) {
 				Bitmap bitmap = ((TiBlob) value).getImage();
 				if (bitmap != null) {
-					if(m != null)
+					if (m != null)
 					{
 						m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
 						setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
