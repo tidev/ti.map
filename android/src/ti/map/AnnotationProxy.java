@@ -360,7 +360,7 @@ public class AnnotationProxy extends KrollProxy
 		}
 
 		// image not null has only effect if customView is null. Any other case, customView has more priority
-		if (value != null){
+		if (value != null) {
 			// Image path
 			if (value instanceof String) {
 				TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) value);
