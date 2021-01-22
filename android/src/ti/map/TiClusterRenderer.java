@@ -89,6 +89,39 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		clusterItem.setMarker(marker);
 	}
 
+	protected void onClusterItemUpdated(TiMarker item, Marker marker)
+	{
+		boolean changed = false;
+		// Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
+		if (item.getTitle() != null && item.getSnippet() != null) {
+			if (!item.getTitle().equals(marker.getTitle())) {
+				marker.setTitle(item.getTitle());
+				changed = true;
+			}
+			if (!item.getSnippet().equals(marker.getSnippet())) {
+				marker.setSnippet(item.getSnippet());
+				changed = true;
+			}
+		} else if (item.getSnippet() != null && !item.getSnippet().equals(marker.getTitle())) {
+			marker.setTitle(item.getSnippet());
+			changed = true;
+		} else if (item.getTitle() != null && !item.getTitle().equals(marker.getTitle())) {
+			marker.setTitle(item.getTitle());
+			changed = true;
+		}
+		// Update marker position if the item changed position
+		if (!marker.getPosition().equals(item.getPosition())) {
+			if (item.getPosition() != null) {
+				marker.setPosition(item.getPosition());
+			}
+			changed = true;
+		}
+		if (changed && marker.isInfoWindowShown()) {
+			// Force a refresh of marker info window contents
+			marker.showInfoWindow();
+		}
+	}
+
 	public void setIconImageDimensions(int w, int h)
 	{
 		if (w >= 0 && h >= 0) {
