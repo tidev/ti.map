@@ -17,13 +17,9 @@
 @property (nonatomic, readonly) NSNumber *NORMAL_TYPE; // For parity with Android
 @property (nonatomic, readonly) NSNumber *SATELLITE_TYPE;
 @property (nonatomic, readonly) NSNumber *HYBRID_TYPE;
-#ifdef __IPHONE_9_0
 @property (nonatomic, readonly) NSNumber *HYBRID_FLYOVER_TYPE;
 @property (nonatomic, readonly) NSNumber *SATELLITE_FLYOVER_TYPE;
-#endif
-#if IS_IOS_11
 @property (nonatomic, readonly) NSNumber *MUTED_STANDARD_TYPE;
-#endif
 
 @property (nonatomic, readonly) NSNumber *ANNOTATION_RED;
 @property (nonatomic, readonly) NSNumber *ANNOTATION_GREEN;
