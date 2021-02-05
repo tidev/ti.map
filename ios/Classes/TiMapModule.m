@@ -48,10 +48,6 @@
 
 - (TiMapCameraProxy *)createCamera:(id)args
 {
-  if (![TiUtils isIOS7OrGreater]) {
-    [TiMapModule logAddedIniOS7Warning:@"createCamera()"];
-    return nil;
-  }
   return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
 
@@ -59,17 +55,12 @@ MAKE_SYSTEM_PROP(STANDARD_TYPE, MKMapTypeStandard);
 MAKE_SYSTEM_PROP(NORMAL_TYPE, MKMapTypeStandard); // For parity with Android
 MAKE_SYSTEM_PROP(SATELLITE_TYPE, MKMapTypeSatellite);
 MAKE_SYSTEM_PROP(HYBRID_TYPE, MKMapTypeHybrid);
-#ifdef __IPHONE_9_0
 MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
 MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
-#endif
-#if IS_IOS_11
 MAKE_SYSTEM_PROP(MUTED_STANDARD_TYPE, MKMapTypeMutedStandard);
-#endif
 MAKE_SYSTEM_PROP(ANNOTATION_RED, TiMapAnnotationPinColorRed);
 MAKE_SYSTEM_PROP(ANNOTATION_GREEN, TiMapAnnotationPinColorGreen);
 MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, TiMapAnnotationPinColorPurple);
-#ifdef __IPHONE_9_0
 MAKE_SYSTEM_PROP(ANNOTATION_AZURE, TiMapAnnotationPinColorAzure);
 MAKE_SYSTEM_PROP(ANNOTATION_BLUE, TiMapAnnotationPinColorBlue);
 MAKE_SYSTEM_PROP(ANNOTATION_CYAN, TiMapAnnotationPinColorCyan);
@@ -78,7 +69,6 @@ MAKE_SYSTEM_PROP(ANNOTATION_ORANGE, TiMapAnnotationPinColorOrange);
 MAKE_SYSTEM_PROP(ANNOTATION_ROSE, TiMapAnnotationPinColorRose);
 MAKE_SYSTEM_PROP(ANNOTATION_VIOLET, TiMapAnnotationPinColorViolet);
 MAKE_SYSTEM_PROP(ANNOTATION_YELLOW, TiMapAnnotationPinColorYellow);
-#endif
 
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_NONE, MKAnnotationViewDragStateNone);
 MAKE_SYSTEM_PROP(ANNOTATION_DRAG_STATE_START, MKAnnotationViewDragStateStarting);
@@ -92,7 +82,6 @@ MAKE_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_ROADS, MKOverlayLevelAboveRoads);
 MAKE_SYSTEM_PROP(POLYLINE_PATTERN_DASHED, TiMapOverlyPatternTypeDashed);
 MAKE_SYSTEM_PROP(POLYLINE_PATTERN_DOTTED, TiMapOverlyPatternTypeDotted);
 
-#if IS_IOS_11
 MAKE_SYSTEM_PROP(FEATURE_VISIBILITY_ADAPTIVE, MKFeatureVisibilityAdaptive);
 MAKE_SYSTEM_PROP(FEATURE_VISIBILITY_HIDDEN, MKFeatureVisibilityHidden);
 MAKE_SYSTEM_PROP(FEATURE_VISIBILITY_VISIBLE, MKFeatureVisibilityVisible);
@@ -103,6 +92,5 @@ MAKE_SYSTEM_PROP(ANNOTATION_VIEW_COLLISION_MODE_CIRCLE, MKAnnotationViewCollisio
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_REQUIRED, MKFeatureDisplayPriorityRequired);
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH, MKFeatureDisplayPriorityDefaultHigh);
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW, MKFeatureDisplayPriorityDefaultLow);
-#endif
 
 @end
