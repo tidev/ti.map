@@ -8,6 +8,7 @@ package ti.map;
 
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
 import android.util.Property;
@@ -447,7 +448,11 @@ public class AnnotationProxy extends KrollProxy
 	private TiMapInfoWindow getOrCreateMapInfoWindow()
 	{
 		if (infoWindow == null) {
-			infoWindow = new TiMapInfoWindow(TiApplication.getInstance().getApplicationContext(), this);
+			Context context = TiApplication.getAppCurrentActivity();
+			if (context == null) {
+				context = TiApplication.getInstance();
+			}
+			infoWindow = new TiMapInfoWindow(context, this);
 		}
 		return infoWindow;
 	}
