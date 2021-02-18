@@ -1,6 +1,6 @@
 {
   "name": "@titanium-sdk/ti.map",
-  "version": "6.3.1",
+  "version": "6.3.2",
   "description": "Provides Map UI elements for Titanium applications",
   "scripts": {
     "commit": "git-cz",
@@ -49,7 +49,6 @@
     "lint-staged": "^10.0.7",
     "titanium-docgen": "^4.2.0"
   },
-  "dependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
