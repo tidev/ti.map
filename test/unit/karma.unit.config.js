@@ -35,7 +35,7 @@ module.exports = config => {
 			}
 		],
 		titanium: {
-			sdkVersion: config.sdkVersion || '9.2.1.GA'
+			sdkVersion: config.sdkVersion || '9.3.2.GA'
 		},
 		customLaunchers: {
 			android: {
