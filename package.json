@@ -16,7 +16,10 @@
     "test": "npm run lint && npm run test:unit",
     "test:unit": "karma start test/unit/karma.unit.config.js",
     "test:android": "npm run test:unit -- --browsers android",
-    "test:ios": "npm run test:unit -- --browsers ios"
+    "test:ios": "npm run test:unit -- --browsers ios",
+    "postinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "repository": {
     "type": "git",
@@ -39,7 +42,7 @@
     "eslint": "^7.9.0",
     "eslint-config-axway": "^5.0.0",
     "eslint-plugin-jasmine": "^4.1.0",
-    "husky": "^4.2.1",
+    "husky": "^5.0.9",
     "jasmine-core": "^3.3.0",
     "karma": "^5.2.2",
     "karma-jasmine": "^4.0.1",
@@ -47,13 +50,8 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-titanium-launcher": "^0.8.1",
     "lint-staged": "^10.0.7",
+    "pinst": "^2.1.4",
     "titanium-docgen": "^4.2.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "lint-staged": {
     "ios/**/*.{m,h}": [
