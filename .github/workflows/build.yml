@@ -1,13 +1,9 @@
 name: Build
 on: 
   push:
-    branches:
-    - master
     paths-ignore:
     - 'apidoc/**'
   pull_request:
-    branches:
-    - master
     paths-ignore:
     - 'apidoc/**'
   workflow_dispatch:
