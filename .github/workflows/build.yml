@@ -125,8 +125,8 @@ jobs:
     - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 9.3.2.GA/' ios/titanium.xcconfig
       name: Set to Build with 9.3.2.GA SDK
 
-    - run: cd ios && ti build -p ios -l trace --build-only
-      name: Build
+    - run: npm run test:ios -- --sdkVersion 9.3.2.GA
+      name: Build and Test
 
     - name: Archive iOS artifact
       uses: actions/upload-artifact@v2
