@@ -54,6 +54,6 @@ jobs:
     - name: Archive iOS artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ti.map-ios.zip
+        name: ti.map-ios
         path: |
           ios/dist/ti.map-iphone-*.zip
