@@ -10,8 +10,7 @@ on:
 
 jobs:
   android:
-  # TODO: Use macos-latest so we can use the emulator for testing
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     name: Android
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -59,7 +58,7 @@ jobs:
       name: Install SDK 9.3.2.GA
 
     - name: Install ccache
-      run: sudo apt-get install ccache
+      run: brew install ccache
 
     - name: Retrieve ccache
       uses: actions/cache@v2
@@ -69,9 +68,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-ccache-
 
-    - run: ti build -p android -l trace --build-only
-      name: Build
-      working-directory: ./android
+    - name: Build and Test
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        target: playstore
+        script: npm run test:android -- --sdkVersion 9.3.2.GA
 
     - name: Show summary of ccache configuration and statistics counters
       run: ccache --show-stats
@@ -81,7 +83,7 @@ jobs:
     - name: Archive Android zip
       uses: actions/upload-artifact@v2
       with:
-        name: ti.map-android.zip
+        name: ti.map-android
         path: |
           android/dist/ti.map-android-*.zip
 
