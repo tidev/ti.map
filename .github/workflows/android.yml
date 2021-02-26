@@ -58,7 +58,7 @@ jobs:
       name: Install SDK 9.3.2.GA
 
     - name: Install ccache
-      run: sudo apt-get install ccache
+      run: brew install ccache
 
     - name: Retrieve ccache
       uses: actions/cache@v2
