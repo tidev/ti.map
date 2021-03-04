@@ -1,11 +1,13 @@
 name: Android Build
 on: 
   push:
-    paths:
-    - 'android/**'
+    paths-ignore:
+    - 'ios/**'
+    - 'apidoc/**'
   pull_request:
-    paths:
-    - 'android/**'
+    paths-ignore:
+    - 'ios/**'
+    - 'apidoc/**'
   workflow_dispatch:
 
 jobs:
