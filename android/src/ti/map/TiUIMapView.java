@@ -392,10 +392,12 @@ public class TiUIMapView extends TiUIFragment
 		if (map != null
 			&& (Build.VERSION.SDK_INT < 23
 				|| currentActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+					   == PackageManager.PERMISSION_GRANTED)
+				|| currentActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
 					   == PackageManager.PERMISSION_GRANTED)) {
 			map.setMyLocationEnabled(enabled);
 		} else {
-			Log.e(TAG, "Enable ACCESS_FINE_LOCATION permission to use userLocation");
+			Log.e(TAG, "Enable ACCESS_FINE_LOCATION or ACCESS_COARSE_LOCATION permission to use userLocation");
 		}
 	}
 
