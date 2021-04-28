@@ -1,0 +1,47 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+    - 7.22.0
+    - 7.23.0
+  - dependency-name: karma
+    versions:
+    - 6.0.3
+    - 6.0.4
+    - 6.1.0
+    - 6.1.1
+    - 6.1.2
+    - 6.2.0
+    - 6.3.0
+    - 6.3.1
+  - dependency-name: husky
+    versions:
+    - 4.3.8
+    - 5.0.9
+    - 5.1.0
+    - 5.1.1
+    - 5.1.2
+    - 5.2.0
+  - dependency-name: jasmine-core
+    versions:
+    - 3.7.0
+  - dependency-name: "@commitlint/config-conventional"
+    versions:
+    - 12.0.0
+    - 12.0.1
+  - dependency-name: eslint-plugin-jasmine
+    versions:
+    - 4.1.2
+  - dependency-name: danger
+    versions:
+    - 10.6.1
+    - 10.6.2
