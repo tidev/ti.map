@@ -1257,10 +1257,12 @@ public class TiUIMapView extends TiUIFragment
 	@Override
 	public void onMyLocationChange(Location arg0)
 	{
-		KrollDict d = new KrollDict();
-		d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
-		d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
-		proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+		if (proxy != null) {
+			KrollDict d = new KrollDict();
+			d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
+			d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
+			proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+		}
 	}
 
 	@Override
