@@ -739,8 +739,10 @@ public class TiUIMapView extends TiUIFragment
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
 			if (marker != null) {
-				marker.getMarker().showInfoWindow();
-				selectedAnnotation = marker.getProxy();
+				if (marker.getMarker() != null) {
+					marker.getMarker().showInfoWindow();
+					selectedAnnotation = marker.getProxy();
+				}
 			}
 		}
 	}
