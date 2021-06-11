@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -1170,6 +1170,18 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 				handleSetLocation(dict);
 			} else {
 				getMainHandler().obtainMessage(MSG_SET_LOCATION, location).sendToTarget();
+			}
+		}
+	}
+
+	@Kroll.method
+	public void setCamera(CameraProxy camera)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null && camera.getCamera() != null) {
+				mapView.getMap().animateCamera(camera.getCamera());
 			}
 		}
 	}
