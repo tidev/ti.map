@@ -754,9 +754,7 @@ public class TiUIMapView extends TiUIFragment
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
 			if (marker != null) {
-				if (marker.getMarker() != null) {
-					marker.getMarker().hideInfoWindow();
-				}
+				marker.getMarker().hideInfoWindow();
 			}
 		}
 		selectedAnnotation = null;
