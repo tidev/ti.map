@@ -629,9 +629,7 @@ public class TiUIMapView extends TiUIFragment
 		TiMarker tiMarker = annotation.getTiMarker();
 		if (tiMarker != null) {
 			timarkers.remove(tiMarker);
-			if (tiMarker.getMarker() != null) {
-				tiMarker.getMarker().remove();
-			}
+			tiMarker.getMarker().remove();
 		}
 
 		if (map != null) {
@@ -739,10 +737,8 @@ public class TiUIMapView extends TiUIFragment
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
 			if (marker != null) {
-				if (marker.getMarker() != null) {
-					marker.getMarker().showInfoWindow();
-					selectedAnnotation = marker.getProxy();
-				}
+				marker.getMarker().showInfoWindow();
+				selectedAnnotation = marker.getProxy();
 			}
 		}
 	}
