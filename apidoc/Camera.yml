@@ -30,7 +30,7 @@ description: |
     ```
 extends: Titanium.Proxy
 platforms: [android, iphone, ipad, macos]
-since: { android:"5.4.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+since: { android: "5.4.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 properties:
   - name: altitude
     summary: |

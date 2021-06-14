@@ -10,21 +10,16 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-
+import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
 
-import java.util.HashMap;
-
-@Kroll.
-proxy(name = "Camera", creatableInModule = MapModule.class)
+@Kroll.proxy(name = "Camera", creatableInModule = MapModule.class)
 public class CameraProxy extends KrollProxy
 {
-
 	private CameraPosition cameraPosition = null;
 	private LatLng position;
 	private Float zoom = 1.0f;
@@ -45,7 +40,7 @@ public class CameraProxy extends KrollProxy
 			if (loc instanceof HashMap) {
 				HashMap<String, String> point = (HashMap<String, String>) loc;
 				position = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)),
-						TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
+									  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 			}
 		}
 		if (dict.containsKeyAndNotNull(MapModule.PROPERTY_ALTITIDE)) {
@@ -67,12 +62,10 @@ public class CameraProxy extends KrollProxy
 		super.onPropertyChanged(name, value);
 
 		if (name.equals(MapModule.PROPERTY_CENTER_COORDINATES)) {
-			Object loc = value;
-
-			if (loc instanceof HashMap) {
-				HashMap<String, String> point = (HashMap<String, String>) loc;
+			if (value instanceof HashMap) {
+				HashMap<String, String> point = (HashMap<String, String>) value;
 				position = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)),
-						TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
+									  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 			}
 		}
 		if (name.equals(MapModule.PROPERTY_ALTITIDE)) {
@@ -88,20 +81,17 @@ public class CameraProxy extends KrollProxy
 		updateCamera();
 	}
 
-	private void updateCamera(){
-		cameraPosition = new CameraPosition.Builder().target(position)
-				.zoom(zoom)
-				.bearing(heading)
-				.tilt(pitch)
-				.build();
+	private void updateCamera()
+	{
+		cameraPosition = new CameraPosition.Builder().target(position).zoom(zoom).bearing(heading).tilt(pitch).build();
 	}
 
-	public CameraUpdate getCamera(){
+	public CameraUpdate getCamera()
+	{
 		if (cameraPosition != null) {
 			return CameraUpdateFactory.newCameraPosition(cameraPosition);
 		} else {
 			return null;
 		}
 	}
-
 }
