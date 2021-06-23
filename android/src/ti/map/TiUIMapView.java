@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
@@ -87,6 +86,7 @@ public class TiUIMapView extends TiUIFragment
 	private ClusterManager<TiMarker> mClusterManager;
 	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
+	private MarkerManager.Collection collection;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -202,6 +202,7 @@ public class TiUIMapView extends TiUIFragment
 		mMarkerManager = new MarkerManager(map);
 		mMarkerManager.newCollection(DEFAULT_COLLECTION_ID);
 		mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).setOnMarkerClickListener(this);
+		collection = mMarkerManager.newCollection();
 
 		mClusterManager = new ClusterManager<TiMarker>(activity, map, mMarkerManager);
 
@@ -220,14 +221,19 @@ public class TiUIMapView extends TiUIFragment
 			map.setOnCameraMoveStartedListener(this);
 			map.setOnCameraMoveListener(this);
 		}
-		map.setOnMarkerDragListener(this);
-		map.setOnInfoWindowClickListener(this);
-		map.setInfoWindowAdapter(this);
+		collection.setOnMarkerDragListener(this);
 		map.setOnMapLongClickListener(this);
 		map.setOnMapLoadedCallback(this);
 		map.setOnMyLocationChangeListener(this);
+		collection.setInfoWindowAdapter(this);
+		collection.setOnInfoWindowClickListener(this);
+
 		mClusterManager.setOnClusterClickListener(this);
 		mClusterManager.setOnClusterItemClickListener(this);
+		MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
+		markerCollection.setInfoWindowAdapter(this);
+		markerCollection.setOnInfoWindowClickListener(this);
+		markerCollection.setOnMarkerDragListener(this);
 
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
@@ -373,7 +379,7 @@ public class TiUIMapView extends TiUIFragment
 					if (json instanceof JSONObject) {
 						style = ((JSONObject) json).toString();
 					} else if (json instanceof JSONArray) {
-						style = ((JSONArray) json).toString();
+						style = json.toString();
 					} else {
 						Log.e(TAG, "Invalid JSON style.");
 					}
@@ -625,8 +631,7 @@ public class TiUIMapView extends TiUIFragment
 		if (map != null) {
 			annotation.processOptions();
 			if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
-				Marker marker =
-					mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).addMarker(annotation.getMarkerOptions());
+				Marker marker = collection.addMarker(annotation.getMarkerOptions());
 				tiMarker = new TiMarker(marker, annotation);
 			} else {
 				// TiClusterRenderer is responsible for creating the Marker in this case.

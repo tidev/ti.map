@@ -1,0 +1,61 @@
+name: iOS Build
+on: 
+  push:
+    paths-ignore:
+    - 'android/**'
+    - 'apidoc/**'
+  pull_request:
+    paths-ignore:
+    - 'android/**'
+    - 'apidoc/**'
+  workflow_dispatch:
+  
+jobs:
+  ios:
+    runs-on: macos-latest
+    name: iOS
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Cache Node.js modules
+      id: node-cache
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-modules-
+          ${{ runner.OS }}-
+
+    - run: npm ci
+      name: Install dependencies
+      if: steps.node-cache.outputs.cache-hit != 'true'
+
+    - run: npm run lint:ios
+      name: Lint
+
+    - run: npm i -g titanium
+      name: Install Titanium CLI
+
+# TODO cache SDK install
+
+    - run: ti sdk install 9.3.2.GA --force
+      name: Install SDK 9.3.2.GA
+
+    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 9.3.2.GA/' ios/titanium.xcconfig
+      name: Set to Build with 9.3.2.GA SDK
+
+    - run: npm run test:ios -- --sdkVersion 9.3.2.GA
+      name: Build and Test
+
+    - name: Archive iOS artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ti.map-ios
+        path: |
+          ios/dist/ti.map-iphone-*.zip
