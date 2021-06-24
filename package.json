@@ -1,6 +1,6 @@
 {
   "name": "@titanium-sdk/ti.map",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Provides Map UI elements for Titanium applications",
   "scripts": {
     "commit": "git-cz",
