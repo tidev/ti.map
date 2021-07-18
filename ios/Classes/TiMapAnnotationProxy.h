@@ -33,7 +33,6 @@
 - (NSString *)subtitle;
 
 - (id)pincolor;
-- (id)nativePinColor;
 - (BOOL)animatesDrop;
 - (void)setHidden:(id)value;
 
