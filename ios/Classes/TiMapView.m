@@ -46,7 +46,9 @@ CLLocationCoordinate2D userNewLocation;
   RELEASE_TO_NIL(polylineProxies);
   RELEASE_TO_NIL(circleProxies);
   RELEASE_TO_NIL(imageOverlayProxies);
+#if IS_IOS_11
   RELEASE_TO_NIL(clusterAnnotations);
+#endif
   [super dealloc];
 }
 
@@ -917,6 +919,7 @@ CLLocationCoordinate2D userNewLocation;
       NO);
 }
 
+#if IS_IOS_11
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members
 {
   if (!clusterAnnotations) {
@@ -935,6 +938,7 @@ CLLocationCoordinate2D userNewLocation;
 {
   return [clusterAnnotations objectForKey:members];
 }
+#endif
 
 #pragma mark Utils
 
@@ -1128,7 +1132,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)aview calloutAccessoryControlTapped:(UIControl *)control
 {
   if ([aview conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    MKMarkerAnnotationView *pinview = (MKMarkerAnnotationView *)aview;
+    MKPinAnnotationView *pinview = (MKPinAnnotationView *)aview;
     NSString *clickSource = @"unknown";
     if (aview.leftCalloutAccessoryView == control) {
       clickSource = @"leftButton";
@@ -1153,9 +1157,11 @@ CLLocationCoordinate2D userNewLocation;
   if (customView == nil && !marker) {
     id imagePath = [ann valueForUndefinedKey:@"image"];
     image = [TiUtils image:imagePath proxy:ann];
-    identifier = (image != nil) ? @"timap-image" : @"timap-marker";
+    identifier = (image != nil) ? @"timap-image" : @"timap-pin";
   } else if (customView) {
     identifier = @"timap-customView";
+  } else {
+    identifier = @"timap-marker";
   }
   MKAnnotationView *annView = nil;
   annView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
@@ -1163,17 +1169,22 @@ CLLocationCoordinate2D userNewLocation;
   if (annView == nil) {
     if ([identifier isEqualToString:@"timap-customView"]) {
       annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+#if IS_IOS_11
+    } else if ([TiMapView isiOS11OrGreater] && [identifier isEqualToString:@"timap-marker"]) {
+      annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+#endif
     } else if ([identifier isEqualToString:@"timap-image"]) {
       annView = [[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
     } else {
-      annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+      annView = [[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
     }
   }
   if ([identifier isEqualToString:@"timap-customView"]) {
     [((TiMapCustomAnnotationView *)annView) setProxy:customView];
   } else if ([identifier isEqualToString:@"timap-image"]) {
     annView.image = image;
-  } else {
+#if IS_IOS_11
+  } else if ([TiMapView isiOS11OrGreater] && [identifier isEqualToString:@"timap-marker"]) {
     MKMarkerAnnotationView *markerView = (MKMarkerAnnotationView *)annView;
     markerView.markerTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerColor"]] color];
     markerView.glyphText = [ann valueForUndefinedKey:@"markerGlyphText"];
@@ -1183,14 +1194,24 @@ CLLocationCoordinate2D userNewLocation;
     markerView.selectedGlyphImage = [TiUtils image:[ann valueForUndefinedKey:@"markerSelectedGlyphImage"] proxy:ann];
     markerView.titleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerTitleVisibility"]];
     markerView.subtitleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerSubtitleVisibility"]];
-  }
+#endif
+  } else {
+    MKPinAnnotationView *pinview = (MKPinAnnotationView *)annView;
 
+    pinview.pinTintColor = [ann nativePinColor];
+    pinview.animatesDrop = [ann animatesDrop] && ![ann placed];
+    annView.calloutOffset = CGPointMake(-8, 0);
+  }
   annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
   annView.enabled = YES;
   annView.centerOffset = ann.offset;
-  annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
-  annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
-  annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
+#if IS_IOS_11
+  if ([TiMapView isiOS11OrGreater]) {
+    annView.clusteringIdentifier = [ann valueForUndefinedKey:@"clusterIdentifier"];
+    annView.collisionMode = [TiUtils intValue:[ann valueForUndefinedKey:@"collisionMode"]];
+    annView.displayPriority = [TiUtils floatValue:[ann valueForUndefinedKey:@"annotationDisplayPriority"] def:1000];
+  }
+#endif
 
   UIView *left = [ann leftViewAccessory];
   UIView *right = [ann rightViewAccessory];
@@ -1248,7 +1269,8 @@ CLLocationCoordinate2D userNewLocation;
   if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
     TiMapAnnotationProxy *annotationProxy = (TiMapAnnotationProxy *)annotation;
     return [self mapView:mapView viewForAnnotationProxy:annotationProxy];
-  } else if ([annotation isKindOfClass:[MKClusterAnnotation class]]) {
+#if IS_IOS_11
+  } else if ([TiMapView isiOS11OrGreater] && [annotation isKindOfClass:[MKClusterAnnotation class]]) {
     TiMapAnnotationProxy *annotationProxy = [self clusterAnnotationProxyForMembers:((MKClusterAnnotation *)annotation).memberAnnotations];
     if (!annotationProxy) {
       return nil;
@@ -1257,10 +1279,12 @@ CLLocationCoordinate2D userNewLocation;
     clusterAnnotation.title = [annotationProxy valueForUndefinedKey:@"title"];
     clusterAnnotation.subtitle = [annotationProxy valueForUndefinedKey:@"subtitle"];
     return [self mapView:mapView viewForAnnotationProxy:annotationProxy];
+#endif
   }
   return nil;
 }
 
+#if IS_IOS_11
 - (MKClusterAnnotation *)mapView:(MKMapView *)mapView clusterAnnotationForMemberAnnotations:(NSArray<id<MKAnnotation>> *)memberAnnotations
 {
   MKClusterAnnotation *annotation = [[MKClusterAnnotation alloc] initWithMemberAnnotations:memberAnnotations];
@@ -1273,6 +1297,7 @@ CLLocationCoordinate2D userNewLocation;
   }
   return annotation;
 }
+#endif
 
 // mapView:didAddAnnotationViews: is called after the annotation views have been added and positioned in the map.
 // The delegate can implement this method to animate the adding of the annotations views.

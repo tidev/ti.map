@@ -32,13 +32,6 @@
   return @"Ti.Map";
 }
 
-#pragma mark Utils
-
-+ (void)logAddedIniOS7Warning:(NSString *)name
-{
-  NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
-}
-
 #pragma mark Public APIs
 
 - (TiMapViewProxy *)createView:(id)args
@@ -57,7 +50,9 @@ MAKE_SYSTEM_PROP(SATELLITE_TYPE, MKMapTypeSatellite);
 MAKE_SYSTEM_PROP(HYBRID_TYPE, MKMapTypeHybrid);
 MAKE_SYSTEM_PROP(HYBRID_FLYOVER_TYPE, MKMapTypeHybridFlyover);
 MAKE_SYSTEM_PROP(SATELLITE_FLYOVER_TYPE, MKMapTypeSatelliteFlyover);
+#if IS_IOS_11
 MAKE_SYSTEM_PROP(MUTED_STANDARD_TYPE, MKMapTypeMutedStandard);
+#endif
 MAKE_SYSTEM_PROP(ANNOTATION_RED, TiMapAnnotationPinColorRed);
 MAKE_SYSTEM_PROP(ANNOTATION_GREEN, TiMapAnnotationPinColorGreen);
 MAKE_SYSTEM_PROP(ANNOTATION_PURPLE, TiMapAnnotationPinColorPurple);
@@ -82,6 +77,7 @@ MAKE_SYSTEM_PROP(OVERLAY_LEVEL_ABOVE_ROADS, MKOverlayLevelAboveRoads);
 MAKE_SYSTEM_PROP(POLYLINE_PATTERN_DASHED, TiMapOverlyPatternTypeDashed);
 MAKE_SYSTEM_PROP(POLYLINE_PATTERN_DOTTED, TiMapOverlyPatternTypeDotted);
 
+#if IS_IOS_11
 MAKE_SYSTEM_PROP(FEATURE_VISIBILITY_ADAPTIVE, MKFeatureVisibilityAdaptive);
 MAKE_SYSTEM_PROP(FEATURE_VISIBILITY_HIDDEN, MKFeatureVisibilityHidden);
 MAKE_SYSTEM_PROP(FEATURE_VISIBILITY_VISIBLE, MKFeatureVisibilityVisible);
@@ -92,5 +88,6 @@ MAKE_SYSTEM_PROP(ANNOTATION_VIEW_COLLISION_MODE_CIRCLE, MKAnnotationViewCollisio
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_REQUIRED, MKFeatureDisplayPriorityRequired);
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH, MKFeatureDisplayPriorityDefaultHigh);
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW, MKFeatureDisplayPriorityDefaultLow);
+#endif
 
 @end

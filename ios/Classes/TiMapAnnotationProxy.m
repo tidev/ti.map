@@ -236,6 +236,49 @@
   }
 }
 
+// Mapping both string-colors, color constant and native colors to a pin color
+// This is overcomplicated to maintain iOS < 9 compatibility. Remove this when
+// we have a minimum iOS verion of 9.0+
+- (id)nativePinColor
+{
+  id current = [self valueForUndefinedKey:@"pincolor"];
+
+  if ([current isKindOfClass:[NSString class]]) {
+    return [[TiUtils colorValue:current] color];
+  }
+
+  switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
+  case TiMapAnnotationPinColorGreen: {
+    return [MKPinAnnotationView greenPinColor];
+  }
+  case TiMapAnnotationPinColorPurple: {
+    return [MKPinAnnotationView purplePinColor];
+  }
+  case TiMapAnnotationPinColorBlue:
+    return [UIColor blueColor];
+  case TiMapAnnotationPinColorCyan:
+    return [UIColor cyanColor];
+  case TiMapAnnotationPinColorMagenta:
+    return [UIColor magentaColor];
+  case TiMapAnnotationPinColorOrange:
+    return [UIColor orangeColor];
+  case TiMapAnnotationPinColorYellow:
+    return [UIColor yellowColor];
+
+  // UIColor extensions
+  case TiMapAnnotationPinColorAzure:
+    return [UIColor azureColor];
+  case TiMapAnnotationPinColorRose:
+    return [UIColor roseColor];
+  case TiMapAnnotationPinColorViolet:
+    return [UIColor violetColor];
+  case TiMapAnnotationPinColorRed:
+  default: {
+    return [MKPinAnnotationView redPinColor];
+  }
+  }
+}
+
 - (BOOL)animatesDrop
 {
   return [TiUtils boolValue:[self valueForUndefinedKey:@"animate"]];
@@ -442,6 +485,7 @@
   }
 }
 
+#if IS_IOS_11
 - (void)setClusterIdentifier:(id)clusterIdentifier
 {
   id current = [self valueForUndefinedKey:@"clusterIdentifier"];
@@ -450,6 +494,7 @@
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
+#endif
 
 - (void)setCustomView:(id)customView
 {

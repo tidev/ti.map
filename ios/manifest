@@ -3,9 +3,9 @@
 # during compilation, packaging, distribution, etc.
 #
 
-version: 5.1.0
+version: 5.1.1
 apiversion: 2
-architectures: arm64 x86_64
+architectures: armv7 arm64 i386 x86_64
 description: External version of Map module
 author: Jeff Haynie, Jon Alter, Pedro Enrique, Hans Knöchel, Vijay Singh
 license: Apache Public License v2

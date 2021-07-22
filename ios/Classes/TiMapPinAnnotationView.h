@@ -9,7 +9,7 @@
 #import "TiMapView.h"
 #import <MapKit/MapKit.h>
 
-@interface TiMapPinAnnotationView : MKMarkerAnnotationView <TiMapAnnotation> {
+@interface TiMapPinAnnotationView : MKPinAnnotationView <TiMapAnnotation> {
   @private
 
   NSString *lastHitName;
