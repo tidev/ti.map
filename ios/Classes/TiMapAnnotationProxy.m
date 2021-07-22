@@ -249,11 +249,7 @@
 
   switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
   case TiMapAnnotationPinColorGreen: {
-#ifdef __IPHONE_9_0
     return [MKPinAnnotationView greenPinColor];
-#else
-    return MKPinAnnotationColorGreen;
-#endif
   }
   case TiMapAnnotationPinColorPurple: {
     return [MKPinAnnotationView purplePinColor];
@@ -489,6 +485,7 @@
   }
 }
 
+#if IS_IOS_11
 - (void)setClusterIdentifier:(id)clusterIdentifier
 {
   id current = [self valueForUndefinedKey:@"clusterIdentifier"];
@@ -497,6 +494,7 @@
     [self setNeedsRefreshingWithSelection:YES];
   }
 }
+#endif
 
 - (void)setCustomView:(id)customView
 {

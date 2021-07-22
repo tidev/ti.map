@@ -864,6 +864,7 @@
   }
 }
 
+#if IS_IOS_11
 - (void)setClusterAnnotation:(id)args
 {
   ENSURE_DICT(args);
@@ -876,6 +877,7 @@
     [(TiMapView *)[self view] setClusterAnnotation:annotationProxy forMembers:memberAnnotations];
   }
 }
+#endif
 
 #pragma mark Public APIs iOS 7
 

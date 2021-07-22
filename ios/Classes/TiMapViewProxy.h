@@ -64,5 +64,7 @@
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays:(id)args;
 
+#if IS_IOS_11
 - (void)setClusterAnnotation:(id)args;
+#endif
 @end
