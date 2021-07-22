@@ -1128,7 +1128,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)aview calloutAccessoryControlTapped:(UIControl *)control
 {
   if ([aview conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    MKMarkerAnnotationView *pinview = (MKMarkerAnnotationView *)aview;
+    MKPinAnnotationView *pinview = (MKPinAnnotationView *)aview;
     NSString *clickSource = @"unknown";
     if (aview.leftCalloutAccessoryView == control) {
       clickSource = @"leftButton";
@@ -1153,9 +1153,11 @@ CLLocationCoordinate2D userNewLocation;
   if (customView == nil && !marker) {
     id imagePath = [ann valueForUndefinedKey:@"image"];
     image = [TiUtils image:imagePath proxy:ann];
-    identifier = (image != nil) ? @"timap-image" : @"timap-marker";
+    identifier = (image != nil) ? @"timap-image" : @"timap-pin";
   } else if (customView) {
     identifier = @"timap-customView";
+  } else {
+    identifier = @"timap-marker";
   }
   MKAnnotationView *annView = nil;
   annView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
@@ -1163,17 +1165,19 @@ CLLocationCoordinate2D userNewLocation;
   if (annView == nil) {
     if ([identifier isEqualToString:@"timap-customView"]) {
       annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+    } else if ([identifier isEqualToString:@"timap-marker"]) {
+      annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
     } else if ([identifier isEqualToString:@"timap-image"]) {
       annView = [[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
     } else {
-      annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+      annView = [[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
     }
   }
   if ([identifier isEqualToString:@"timap-customView"]) {
     [((TiMapCustomAnnotationView *)annView) setProxy:customView];
   } else if ([identifier isEqualToString:@"timap-image"]) {
     annView.image = image;
-  } else {
+  } else if ([identifier isEqualToString:@"timap-marker"]) {
     MKMarkerAnnotationView *markerView = (MKMarkerAnnotationView *)annView;
     markerView.markerTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerColor"]] color];
     markerView.glyphText = [ann valueForUndefinedKey:@"markerGlyphText"];
@@ -1183,8 +1187,13 @@ CLLocationCoordinate2D userNewLocation;
     markerView.selectedGlyphImage = [TiUtils image:[ann valueForUndefinedKey:@"markerSelectedGlyphImage"] proxy:ann];
     markerView.titleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerTitleVisibility"]];
     markerView.subtitleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerSubtitleVisibility"]];
-  }
+  } else {
+    MKPinAnnotationView *pinview = (MKPinAnnotationView *)annView;
 
+    pinview.pinTintColor = [ann nativePinColor];
+    pinview.animatesDrop = [ann animatesDrop] && ![ann placed];
+    annView.calloutOffset = CGPointMake(-8, 0);
+  }
   annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
   annView.enabled = YES;
   annView.centerOffset = ann.offset;
