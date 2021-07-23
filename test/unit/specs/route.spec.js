@@ -1,3 +1,5 @@
+/* globals OS_IOS */
+
 const Map = require('ti.map');
 const ANDROID = (Ti.Platform.osname === 'android');
 
@@ -44,15 +46,17 @@ describe('ti.map.Route', () => {
 		});
 	}
 
-	describe('.level', () => {
-		it('defaults to OVERLAY_LEVEL_ABOVE_ROADS', () => {
-			expect(route1.level).toEqual(Map.OVERLAY_LEVEL_ABOVE_ROADS);
-		});
+	if (OS_IOS) {
+		describe('.level', () => {
+			it('defaults to OVERLAY_LEVEL_ABOVE_ROADS', () => {
+				expect(route1.level).toEqual(Map.OVERLAY_LEVEL_ABOVE_ROADS);
+			});
 
-		it('matches value from factory method', () => {
-			expect(route2.level).toEqual(Map.OVERLAY_LEVEL_ABOVE_LABELS);
+			it('matches value from factory method', () => {
+				expect(route2.level).toEqual(Map.OVERLAY_LEVEL_ABOVE_LABELS);
+			});
 		});
-	});
+	}
 
 	it('.color matches value from factory method', () => {
 		if (ANDROID) {

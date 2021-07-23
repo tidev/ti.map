@@ -1,3 +1,5 @@
+/* globals OS_IOS */
+
 const Map = require('ti.map');
 
 describe('ti.map', () => {
@@ -65,9 +67,11 @@ describe('ti.map.Annotation', () => {
 		expect(annotation.clusterIdentifier).toEqual('clusterIdentifier');
 	});
 
-	it('should have valid collisionMode', () => {
-		expect(annotation.collisionMode).toEqual(Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE);
-	});
+	if (OS_IOS) {
+		it('should have valid collisionMode', () => {
+			expect(annotation.collisionMode).toEqual(Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE);
+		});
+	}
 
 	it('should have valid customView', () => {
 		expect(annotation.customView).toEqual(jasmine.any(Object));
