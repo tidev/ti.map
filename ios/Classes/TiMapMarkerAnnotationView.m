@@ -4,7 +4,7 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#if IS_IOS_11
+
 #import "TiMapMarkerAnnotationView.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapView.h"
@@ -64,4 +64,3 @@
   return result;
 }
 @end
-#endif

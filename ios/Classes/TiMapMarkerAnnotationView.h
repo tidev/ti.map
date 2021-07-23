@@ -4,7 +4,7 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#if IS_IOS_11
+
 #import "TiBase.h"
 #import "TiMapView.h"
 #import <MapKit/MapKit.h>
@@ -18,4 +18,3 @@
 - (NSString *)lastHitName;
 
 @end
-#endif
