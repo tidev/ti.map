@@ -56,8 +56,8 @@ jobs:
       name: Install Titanium CLI
 
 # TODO: Cache sdk install
-    - run: ti sdk install 10.0.0.GA --force
-      name: Install SDK 10.0.0.GA
+    - run: ti sdk install 10.0.1.GA --force
+      name: Install SDK 10.0.1.GA
 
     - name: Install ccache
       run: brew install ccache
@@ -75,7 +75,7 @@ jobs:
       with:
         api-level: 29
         target: playstore
-        script: npm run test:android -- --sdkVersion 10.0.0.GA
+        script: npm run test:android -- --sdkVersion 10.0.1.GA
         disable-animations: false # defaulting to true, the commands sent to emulator to do this sometimes run too quickly after boot and cause "adb: device offline" failures
 
     - name: Show summary of ccache configuration and statistics counters
