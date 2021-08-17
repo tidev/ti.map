@@ -103,7 +103,7 @@
     coord = CLLocationCoordinate2DMake(lat, lon);
   }
 
-  return coord;
+  return kCLLocationCoordinate2DInvalid;
 }
 
 - (void)applyFillColor

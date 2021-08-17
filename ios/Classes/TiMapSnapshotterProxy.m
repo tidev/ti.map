@@ -92,8 +92,7 @@
       return;
     }
 
-    TiBlob *blob = [[[TiBlob alloc] _initWithPageContext:[self pageContext]] autorelease];
-    [blob setImage:[snapshot image]];
+    TiBlob *blob = [[TiBlob alloc] initWithImage:snapshot.image];
     [blob setMimeType:@"image/png" type:TiBlobTypeImage];
 
     NSDictionary *event = [NSDictionary dictionaryWithObject:blob forKey:@"image"];

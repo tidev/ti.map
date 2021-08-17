@@ -194,7 +194,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   if (yn == NO) {
     [map deselectAnnotation:proxy animated:NO];
@@ -209,10 +209,10 @@ CLLocationCoordinate2D userNewLocation;
   ignoreClicks = NO;
 }
 
-- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)(void))callBack
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   [map removeAnnotation:proxy];
   callBack();
@@ -1055,8 +1055,8 @@ CLLocationCoordinate2D userNewLocation;
                                       ourProxy, @"map",
                                       title, @"title",
                                       [NSNumber numberWithInteger:[pinview tag]], @"index",
-                                      NUMINT(newState), @"newState",
-                                      NUMINT(oldState), @"oldState",
+                                      @(newState), @"newState",
+                                      @(oldState), @"oldState",
                                       nil];
 
   if (parentWants)
@@ -1086,7 +1086,7 @@ CLLocationCoordinate2D userNewLocation;
 
     selectedAnnotation = [ann retain];
 
-    // If canShowCallout == true we will try to find calloutView to hadleTap on callout
+    // If canShowCallout == YES we will try to find calloutView to hadleTap on callout
     if ([ann canShowCallout]) {
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
         [self findCalloutView:ann];
@@ -1113,7 +1113,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
+    BOOL isSelected = [view isSelected];
     MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 
     if (selectedAnnotation == ann) {
@@ -1221,9 +1221,12 @@ CLLocationCoordinate2D userNewLocation;
     }
 
 #ifndef __clang_analyzer__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     // We can ignore this, as it's guarded above
     id previewingDelegate = [[TiPreviewingDelegate alloc] performSelector:@selector(initWithPreviewContext:) withObject:previewContext];
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
+#pragma clang diagnostic pop
 #endif
   }
   return annView;
@@ -1292,7 +1295,7 @@ CLLocationCoordinate2D userNewLocation;
         thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
         [UIView animateWithDuration:0.4
                               delay:0.0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                            thisView.frame = viewFrame;
                          }
@@ -1476,10 +1479,13 @@ CLLocationCoordinate2D userNewLocation;
 {
   BOOL parentWants = [mapProxy _hasListeners:@"click"];
   BOOL viewWants;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
   if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
+#pragma clang diagnostic pop
     viewWants = [viewProxy _hasListeners:@"click"];
   } else {
-    viewWants = FALSE;
+    viewWants = NO;
   }
 
   if (parentWants) {

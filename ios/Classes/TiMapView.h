@@ -102,6 +102,6 @@
 #pragma mark Framework
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn;
 - (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source deselected:(BOOL)deselected;
-- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack;
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)(void))callBack;
 
 @end

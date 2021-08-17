@@ -77,7 +77,7 @@
     lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
     coord = CLLocationCoordinate2DMake(lat, lon);
   }
-  return coord;
+  return kCLLocationCoordinate2DInvalid;
 }
 
 - (void)applyStrokeColor
