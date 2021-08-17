@@ -63,6 +63,6 @@
 - (void)addImageOverlays:(id)args;
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays:(id)args;
-
 - (void)setClusterAnnotation:(id)args;
+
 @end

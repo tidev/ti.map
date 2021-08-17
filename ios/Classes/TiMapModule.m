@@ -32,13 +32,6 @@
   return @"Ti.Map";
 }
 
-#pragma mark Utils
-
-+ (void)logAddedIniOS7Warning:(NSString *)name
-{
-  NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
-}
-
 #pragma mark Public APIs
 
 - (TiMapViewProxy *)createView:(id)args
