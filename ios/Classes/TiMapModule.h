@@ -11,8 +11,6 @@
   UIColor *colorRed;
 }
 
-+ (void)logAddedIniOS7Warning:(NSString *)name;
-
 @property (nonatomic, readonly) NSNumber *STANDARD_TYPE;
 @property (nonatomic, readonly) NSNumber *NORMAL_TYPE; // For parity with Android
 @property (nonatomic, readonly) NSNumber *SATELLITE_TYPE;
