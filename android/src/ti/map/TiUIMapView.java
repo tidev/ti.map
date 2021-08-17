@@ -194,11 +194,9 @@ public class TiUIMapView extends TiUIFragment
 			return;
 		}
 
-		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
-		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
-		if (Build.VERSION.SDK_INT < 16) {
-			View rootView = proxy.getActivity().findViewById(android.R.id.content);
-			setBackgroundTransparent(rootView);
+		Activity activity = proxy.getActivity();
+		if (activity == null) {
+			return;
 		}
 
 		mMarkerManager = new MarkerManager(map);
@@ -206,11 +204,9 @@ public class TiUIMapView extends TiUIFragment
 		mMarkerManager.getCollection(DEFAULT_COLLECTION_ID).setOnMarkerClickListener(this);
 		collection = mMarkerManager.newCollection();
 
-		mClusterManager =
-			new ClusterManager<TiMarker>(TiApplication.getInstance().getApplicationContext(), map, mMarkerManager);
+		mClusterManager = new ClusterManager<TiMarker>(activity, map, mMarkerManager);
 
-		clusterRender =
-			new TiClusterRenderer(TiApplication.getInstance().getApplicationContext(), map, mClusterManager);
+		clusterRender = new TiClusterRenderer(activity, map, mClusterManager);
 		mClusterManager.setRenderer(clusterRender);
 		processMapProperties(proxy.getProperties());
 		processPreloadRoutes();
