@@ -315,6 +315,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 				return true;
 			}
 
+			case MSG_CONTAINS_COORDINATE: {
+				result = ((AsyncResult) msg.obj);
+				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict)result.getArg())));
+				return true;
+			}
+
 			default: {
 				return super.handleMessage(msg);
 			}
@@ -1325,6 +1331,22 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		} else {
 			preloadOverlaysList.clear();
 		}
+	}
+
+	@Kroll.method
+	public boolean containsCoordinate(KrollDict coordinate)
+	{
+		return handleContainsCoordinate(coordinate);
+	}
+
+	private boolean handleContainsCoordinate(KrollDict coordinate) {
+		TiUIView view = peekView();
+
+		if ((view instanceof TiUIMapView)) {
+			return ((TiUIMapView)view).containsCoordinate(coordinate);
+		}
+
+		return false;
 	}
 
 	public void handleSetPadding(KrollDict args)

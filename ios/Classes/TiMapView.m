@@ -1497,4 +1497,20 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
+- (NSNumber *)containsCoordinate:(id)args
+{
+  ENSURE_SINGLE_ARG(args, NSDictionary);
+  
+  CLLocationDegrees latitude = [TiUtils doubleValue:args[@"latitude"]];
+  CLLocationDegrees longitude = [TiUtils doubleValue:args[@"longitude"]];
+
+  MKMapPoint point = MKMapPointMake(latitude, longitude);
+
+  if (!self.map) {
+    return @(NO);
+  }
+
+  return @(MKMapRectContainsPoint(self.map.visibleMapRect, point));
+}
+
 @end

@@ -918,4 +918,9 @@
       NO);
 }
 
+- (NSNumber *)containsCoordinate:(id)args
+{
+    return [(TiMapView *)[self view] containsCoordinate:args];
+}
+
 @end

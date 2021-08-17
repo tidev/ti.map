@@ -78,6 +78,18 @@ methods:
         summary: Modules.Map.Route
         type: Modules.Map.Route
 
+  - name: containsCoordinate
+    summary: |
+        Validated whether or not a given coordinate is currently visible
+        in the map rect.
+    parameters:
+      - name: coordinate
+        summary: The `latitude` and `longitude` pair represented by an Object.
+        type: MapPointType
+    return:
+        type: Number
+    since: 10.1.0
+
   - name: deselectAnnotation
     summary: |
         Deselects the specified annotation, so the main annotation is hidden and only

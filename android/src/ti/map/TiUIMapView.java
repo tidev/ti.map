@@ -960,6 +960,17 @@ public class TiUIMapView extends TiUIFragment
 		moveCamera(camUpdate, animate);
 	}
 
+	protected boolean containsCoordinate(KrollDict coordinate) {
+		if (map == null) {
+			return false;
+		}
+
+		LatLngBounds mapBounds = map.getProjection().getVisibleRegion().latLngBounds;
+		LatLng nativeCoordinate = new LatLng(coordinate.getDouble("latitude").doubleValue(), coordinate.getDouble("longitude").doubleValue());
+
+		return mapBounds.contains(nativeCoordinate);
+	}
+
 	public void fireShapeClickEvent(LatLng clickPosition, IShape shapeProxy, String clickSource)
 	{
 
