@@ -89,18 +89,16 @@
 // [ {longitude: 123.33, latitude, 34.44}, {longitude: 100.39, latitude: 78.23}, etc. ]
 - (CLLocationCoordinate2D)processLocation:(id)locObj
 {
-  CLLocationDegrees lat;
-  CLLocationDegrees lon;
-  CLLocationCoordinate2D coord;
-
   if ([locObj isKindOfClass:[NSDictionary class]]) {
-    lat = [TiUtils doubleValue:[locObj objectForKey:@"latitude"]];
-    lon = [TiUtils doubleValue:[locObj objectForKey:@"longitude"]];
-    coord = CLLocationCoordinate2DMake(lat, lon);
+    CLLocationDegrees lat = [TiUtils doubleValue:[locObj objectForKey:@"latitude"]];
+    CLLocationDegrees lon = [TiUtils doubleValue:[locObj objectForKey:@"longitude"]];
+
+    return CLLocationCoordinate2DMake(lat, lon);
   } else if ([locObj isKindOfClass:[NSArray class]]) {
-    lat = [TiUtils doubleValue:[locObj objectAtIndex:1]];
-    lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
-    coord = CLLocationCoordinate2DMake(lat, lon);
+    CLLocationDegrees lat = [TiUtils doubleValue:[locObj objectAtIndex:1]];
+    CLLocationDegrees lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
+
+    return CLLocationCoordinate2DMake(lat, lon);
   }
 
   return kCLLocationCoordinate2DInvalid;
