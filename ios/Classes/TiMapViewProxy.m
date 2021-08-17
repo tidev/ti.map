@@ -864,6 +864,11 @@
   }
 }
 
+- (void)setLocation:(id)location
+{
+    [(TiMapView *)[self view] setLocation:location];
+}
+
 - (void)setClusterAnnotation:(id)args
 {
   ENSURE_DICT(args);

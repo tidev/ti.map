@@ -493,7 +493,7 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
-- (void)setLocation_:(id)location
+- (void)setLocation:(id)location
 {
   ENSURE_SINGLE_ARG(location, NSDictionary);
   //comes in like region: {latitude:100, longitude:100, latitudeDelta:0.5, longitudeDelta:0.5}

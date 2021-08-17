@@ -95,6 +95,7 @@
 - (void)firePinChangeDragState:(MKAnnotationView *)pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members;
 - (void)animateAnnotation:(TiMapAnnotationProxy *)newAnnotation withLocation:(CLLocationCoordinate2D)newLocation;
+- (void)setLocation:(id)location;
 
 #pragma mark Utils
 - (void)addOverlay:(MKPolyline *)polyline level:(MKOverlayLevel)level;
