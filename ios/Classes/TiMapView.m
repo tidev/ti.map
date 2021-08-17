@@ -102,9 +102,16 @@ CLLocationCoordinate2D userNewLocation;
 {
   UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
 
+  // This gesture recognizer allows us to handle native double taps without blocking single taps
+  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:nil];
+  doubleTap.numberOfTapsRequired = 2;
+  doubleTap.numberOfTouchesRequired = 1;
+  
   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOverlayTap:)];
+  [tap requireGestureRecognizerToFail:doubleTap];
   tap.cancelsTouchesInView = NO;
 
+  [map addGestureRecognizer:doubleTap];
   [map addGestureRecognizer:tap];
   [map addGestureRecognizer:longPressInterceptor];
 
@@ -114,6 +121,10 @@ CLLocationCoordinate2D userNewLocation;
 
 - (void)handleOverlayTap:(UIGestureRecognizer *)tap
 {
+  if (tap.state != UIGestureRecognizerStateEnded) {
+    return;
+  }
+
   CGPoint tapPoint = [tap locationInView:self.map];
 
   CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
