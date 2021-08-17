@@ -738,11 +738,9 @@ public class TiUIMapView extends TiUIFragment
 		} else if (annotation instanceof String) {
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
-			if (marker != null) {
-				if (marker.getMarker() != null) {
-					marker.getMarker().showInfoWindow();
-					selectedAnnotation = marker.getProxy();
-				}
+			if (marker != null && marker.getMarker() != null) {
+				marker.getMarker().showInfoWindow();
+				selectedAnnotation = marker.getProxy();
 			}
 		}
 	}
@@ -757,10 +755,8 @@ public class TiUIMapView extends TiUIFragment
 		} else if (annotation instanceof String) {
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
-			if (marker != null) {
-				if (marker.getMarker() != null) {
-					marker.getMarker().hideInfoWindow();
-				}
+			if (marker != null && marker.getMarker() != null) {
+				marker.getMarker().hideInfoWindow();
 			}
 		}
 		selectedAnnotation = null;
