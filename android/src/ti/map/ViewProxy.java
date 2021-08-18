@@ -8,9 +8,19 @@ package ti.map;
 
 import android.app.Activity;
 import android.os.Message;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
@@ -70,6 +80,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_ADD_IMAGE_OVERLAY = MSG_FIRST_ID + 931;
 	private static final int MSG_REMOVE_IMAGE_OVERLAY = MSG_FIRST_ID + 932;
 	private static final int MSG_REMOVE_ALL_IMAGE_OVERLAYS = MSG_FIRST_ID + 933;
+
+	private static final int MSG_ADD_HEAT_MAP = MSG_FIRST_ID + 941;
 
 	private final ArrayList<RouteProxy> preloadRoutes;
 	private final ArrayList<PolygonProxy> preloadPolygons;
@@ -310,7 +322,14 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_SHOW_ANNOTATIONS: {
 				result = ((AsyncResult) msg.obj);
-				handleShowAnnotations((Object[]) result.getArg());
+				handleShowAnnotations(result.getArg());
+				result.setResult(null);
+				return true;
+			}
+
+			case MSG_ADD_HEAT_MAP: {
+				result = ((AsyncResult) msg.obj);
+				handleAddHeatMap((Object[]) result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -626,11 +645,34 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void addRoute(RouteProxy route)
 	{
-
 		if (TiApplication.isUIThread()) {
 			handleAddRoute(route);
 		} else {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ROUTE), route);
+		}
+	}
+
+	@Kroll.method
+	public void addHeatMap(Object[] coordinates) {
+		if (TiApplication.isUIThread()) {
+			handleAddHeatMap(coordinates);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_HEAT_MAP), coordinates);
+		}
+	}
+
+	public void handleAddHeatMap(Object[] coordinates) {
+		TiUIView view = peekView();
+
+		if (view instanceof TiUIMapView) {
+			GoogleMap map = ((TiUIMapView) view).getMap();
+			List<LatLng> data = TiMapUtils.processPoints(coordinates);
+
+			HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+					.data(data)
+					.build();
+
+			map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
 		}
 	}
 
