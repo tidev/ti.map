@@ -44,13 +44,13 @@ jobs:
 
 # TODO cache SDK install
 
-    - run: ti sdk install 9.3.2.GA --force
-      name: Install SDK 9.3.2.GA
+    - run: ti sdk install 10.0.1.GA --force
+      name: Install SDK 10.0.1.GA
 
-    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 9.3.2.GA/' ios/titanium.xcconfig
-      name: Set to Build with 9.3.2.GA SDK
+    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 10.0.1.GA/' ios/titanium.xcconfig
+      name: Set to Build with 10.0.1.GA SDK
 
-    - run: npm run test:ios -- --sdkVersion 9.3.2.GA
+    - run: npm run test:ios -- --sdkVersion 10.0.1.GA
       name: Build and Test
 
     - name: Archive iOS artifact
