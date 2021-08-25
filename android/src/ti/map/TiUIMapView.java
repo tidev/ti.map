@@ -960,13 +960,15 @@ public class TiUIMapView extends TiUIFragment
 		moveCamera(camUpdate, animate);
 	}
 
-	protected boolean containsCoordinate(KrollDict coordinate) {
+	protected boolean containsCoordinate(KrollDict coordinate)
+	{
 		if (map == null) {
 			return false;
 		}
 
 		LatLngBounds mapBounds = map.getProjection().getVisibleRegion().latLngBounds;
-		LatLng nativeCoordinate = new LatLng(coordinate.getDouble("latitude").doubleValue(), coordinate.getDouble("longitude").doubleValue());
+		LatLng nativeCoordinate =
+			new LatLng(coordinate.getDouble("latitude").doubleValue(), coordinate.getDouble("longitude").doubleValue());
 
 		return mapBounds.contains(nativeCoordinate);
 	}
@@ -1264,10 +1266,12 @@ public class TiUIMapView extends TiUIFragment
 	@Override
 	public void onMyLocationChange(Location arg0)
 	{
-		KrollDict d = new KrollDict();
-		d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
-		d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
-		proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+		if (proxy != null) {
+			KrollDict d = new KrollDict();
+			d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
+			d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
+			proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+		}
 	}
 
 	@Override

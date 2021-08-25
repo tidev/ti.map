@@ -233,6 +233,17 @@
   }
 }
 
+- (void)setLocation:(id)args
+{
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] setLocation_:args];
+        },
+        NO);
+  }
+}
+
 - (void)addAnnotation:(id)arg
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
@@ -866,7 +877,7 @@
 
 - (void)setLocation:(id)location
 {
-    [(TiMapView *)[self view] setLocation:location];
+  [(TiMapView *)[self view] setLocation:location];
 }
 
 - (void)setClusterAnnotation:(id)args
@@ -920,7 +931,7 @@
 
 - (NSNumber *)containsCoordinate:(id)args
 {
-    return [(TiMapView *)[self view] containsCoordinate:args];
+  return [(TiMapView *)[self view] containsCoordinate:args];
 }
 
 @end
