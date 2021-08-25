@@ -3,7 +3,7 @@
 # during compilation, packaging, distribution, etc.
 #
 
-version: 5.0.0
+version: 6.0.0
 apiversion: 2
 architectures: arm64 x86_64
 description: External version of Map module
@@ -16,4 +16,4 @@ name: map
 moduleid: ti.map
 guid: f0d8fd44-86d2-4730-b67d-bd454577aeee
 platform: iphone
-minsdk: 9.2.0.GA
+minsdk: 10.0.0.GA

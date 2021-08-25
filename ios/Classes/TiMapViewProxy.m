@@ -233,6 +233,17 @@
   }
 }
 
+- (void)setLocation:(id)args
+{
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] setLocation_:args];
+        },
+        NO);
+  }
+}
+
 - (void)addAnnotation:(id)arg
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
