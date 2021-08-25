@@ -57,7 +57,7 @@
   [[self options] setMapType:[TiUtils intValue:value]];
 }
 
-- (void)setShowBuilding:(id)value
+- (void)setShowsBuildings:(id)value
 {
   ENSURE_TYPE(value, NSNumber);
   [[self options] setShowsBuildings:[TiUtils boolValue:value]];
