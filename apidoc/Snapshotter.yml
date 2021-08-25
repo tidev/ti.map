@@ -27,6 +27,7 @@ properties:
   - name: region
     summary: A dictionary specifying the location and zoom level of the map.
     type: MapRegionTypev2
+    availability: creation
 
   - name: showsPointsOfInterest
     summary: |
@@ -34,19 +35,21 @@ properties:
         restaurants, schools, and other relevant points of interest.
     type: Boolean
     default: true
+    availability: creation
 
   - name: size
     summary: |
         A dictionary specifying the width and height of the snapshot.
     type: SnapshotSize
+    availability: creation
 
   - name: mapType
     summary: |
         Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
-        <Modules.Map.TERRAIN_TYPE>, <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or 
-        <Modules.Map.SATELLITE_FLYOVER_TYPE>.
+        <Modules.Map.HYBRID_TYPE>, <Modules.Map.HYBRID_FLYOVER_TYPE> or <Modules.Map.SATELLITE_FLYOVER_TYPE>.
     type: Number
     default: NORMAL_TYPE
+    availability: creation
 
   - name: showsBuildings
     summary: |
@@ -54,6 +57,7 @@ properties:
         to <Modules.Map.STANDARD_TYPE> for extruded buildings to be displayed.
     type: Boolean
     default: true
+    availability: creation
 
 examples:
   - title: Taking a simple snapshot
