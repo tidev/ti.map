@@ -3,7 +3,7 @@
 # during compilation, packaging, distribution, etc.
 #
 
-version: 6.1.0
+version: 6.0.0
 apiversion: 2
 architectures: arm64 x86_64
 description: External version of Map module
