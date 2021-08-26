@@ -86,8 +86,9 @@ methods:
       - name: coordinate
         summary: The `latitude` and `longitude` pair represented by an Object.
         type: MapPointType
-    return:
-        type: Number
+    returns:
+        type: Boolean
+        summary: Returns `true` if given coordinate is within the displayed map view.
     since: 10.1.0
 
   - name: deselectAnnotation
