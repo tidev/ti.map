@@ -6,15 +6,15 @@
  */
 
 #import "TiMapAnnotationProxy.h"
-#import "ImageLoader.h"
 #import "TiButtonUtil.h"
 #import "TiMapConstants.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
 #import "TiUIiOSPreviewContextProxy.h"
-#import "TiUtils.h"
-#import "TiViewProxy.h"
 #import "UIColor+AndroidHueParity.h"
+#import <TitaniumKit/ImageLoader.h>
+#import <TitaniumKit/TiUtils.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @implementation TiMapAnnotationProxy
 
@@ -105,7 +105,7 @@
   }
 }
 
-- (void)refreshCoordinateChanges:(void (^)())updateValueCallBack
+- (void)refreshCoordinateChanges:(void (^)(void))updateValueCallBack
 {
   if (delegate != nil && [delegate viewAttached]) {
     [(TiMapView *)[delegate view] refreshCoordinateChanges:self afterRemove:updateValueCallBack];
@@ -224,7 +224,7 @@
 
 - (id)pincolor
 {
-  return NUMINT([self valueForUndefinedKey:@"pincolor"]);
+  return [self valueForUndefinedKey:@"pincolor"];
 }
 
 - (void)setPincolor:(id)color

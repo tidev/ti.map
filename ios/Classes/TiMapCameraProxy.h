@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiProxy.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiProxy.h>
 
 @interface TiMapCameraProxy : TiProxy {
 
