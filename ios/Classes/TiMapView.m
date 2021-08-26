@@ -1512,16 +1512,15 @@ CLLocationCoordinate2D userNewLocation;
 {
   ENSURE_SINGLE_ARG(args, NSDictionary);
 
-  CLLocationDegrees latitude = [TiUtils doubleValue:args[@"latitude"]];
-  CLLocationDegrees longitude = [TiUtils doubleValue:args[@"longitude"]];
-
-  MKMapPoint point = MKMapPointMake(latitude, longitude);
-
   if (!self.map) {
     return @(NO);
   }
 
-  return @(MKMapRectContainsPoint(self.map.visibleMapRect, point));
+  CLLocationCoordinate2D coordinate;
+  coordinate.latitude = [TiUtils doubleValue:args[@"latitude"]];
+  coordinate.longitude = [TiUtils doubleValue:args[@"longitude"]];
+
+  return @(MKMapRectContainsPoint(self.map.visibleMapRect, MKMapPointForCoordinate(coordinate)));
 }
 
 @end
