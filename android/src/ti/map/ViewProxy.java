@@ -53,6 +53,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_SET_PADDING = MSG_FIRST_ID + 514;
 	private static final int MSG_ZOOM = MSG_FIRST_ID + 515;
 	private static final int MSG_SHOW_ANNOTATIONS = MSG_FIRST_ID + 516;
+	private static final int MSG_CONTAINS_COORDINATE = MSG_FIRST_ID + 517;
 
 	private static final int MSG_ADD_POLYGON = MSG_FIRST_ID + 901;
 	private static final int MSG_REMOVE_POLYGON = MSG_FIRST_ID + 902;
@@ -317,7 +318,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_CONTAINS_COORDINATE: {
 				result = ((AsyncResult) msg.obj);
-				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict)result.getArg())));
+				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict) result.getArg())));
 				return true;
 			}
 
@@ -1339,11 +1340,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		return handleContainsCoordinate(coordinate);
 	}
 
-	private boolean handleContainsCoordinate(KrollDict coordinate) {
+	private boolean handleContainsCoordinate(KrollDict coordinate)
+	{
 		TiUIView view = peekView();
 
 		if ((view instanceof TiUIMapView)) {
-			return ((TiUIMapView)view).containsCoordinate(coordinate);
+			return ((TiUIMapView) view).containsCoordinate(coordinate);
 		}
 
 		return false;

@@ -6,8 +6,6 @@
  */
 
 #import "TiMapView.h"
-#import "TiApp.h"
-#import "TiBase.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
@@ -20,8 +18,10 @@
 #import "TiMapPolylineProxy.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
-#import "TiUtils.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiApp.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiUtils.h>
 
 @implementation TiMapView
 
@@ -106,7 +106,7 @@ CLLocationCoordinate2D userNewLocation;
   UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:nil];
   doubleTap.numberOfTapsRequired = 2;
   doubleTap.numberOfTouchesRequired = 1;
-  
+
   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOverlayTap:)];
   [tap requireGestureRecognizerToFail:doubleTap];
   tap.cancelsTouchesInView = NO;
@@ -1511,7 +1511,7 @@ CLLocationCoordinate2D userNewLocation;
 - (NSNumber *)containsCoordinate:(id)args
 {
   ENSURE_SINGLE_ARG(args, NSDictionary);
-  
+
   CLLocationDegrees latitude = [TiUtils doubleValue:args[@"latitude"]];
   CLLocationDegrees longitude = [TiUtils doubleValue:args[@"longitude"]];
 

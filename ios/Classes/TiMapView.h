@@ -5,12 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiBase.h"
 #import "TiMKOverlayPathUniversal.h"
 #import "TiMapCameraProxy.h"
-#import "TiUIView.h"
 #import "WildcardGestureRecognizer.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiUIView.h>
 
 @class TiMapAnnotationProxy;
 

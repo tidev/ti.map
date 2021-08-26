@@ -6,9 +6,9 @@
  */
 
 #import "TiMapSnapshotterProxy.h"
-#import "TiBlob.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
+#import <TitaniumKit/TiBlob.h>
 
 @implementation TiMapSnapshotterProxy
 

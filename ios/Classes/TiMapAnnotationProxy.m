@@ -6,15 +6,15 @@
  */
 
 #import "TiMapAnnotationProxy.h"
-#import "ImageLoader.h"
 #import "TiButtonUtil.h"
 #import "TiMapConstants.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
 #import "TiUIiOSPreviewContextProxy.h"
-#import "TiUtils.h"
-#import "TiViewProxy.h"
 #import "UIColor+AndroidHueParity.h"
+#import <TitaniumKit/ImageLoader.h>
+#import <TitaniumKit/TiUtils.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @implementation TiMapAnnotationProxy
 

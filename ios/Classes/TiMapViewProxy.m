@@ -238,7 +238,7 @@
   if ([self viewAttached]) {
     TiThreadPerformOnMainThread(
         ^{
-          [(TiMapView *)[self view] setLocation_:args];
+          [(TiMapView *)[self view] setLocation:args];
         },
         NO);
   }
@@ -873,11 +873,6 @@
     RELEASE_TO_NIL(imageOvelaysToRemove);
     imageOvelaysToAdd = [[NSMutableArray alloc] initWithArray:initialImageOverlays];
   }
-}
-
-- (void)setLocation:(id)location
-{
-  [(TiMapView *)[self view] setLocation:location];
 }
 
 - (void)setClusterAnnotation:(id)args

@@ -967,9 +967,9 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		LatLngBounds mapBounds = map.getProjection().getVisibleRegion().latLngBounds;
-		LatLng nativeCoordinate =
-			new LatLng(coordinate.getDouble("latitude").doubleValue(), coordinate.getDouble("longitude").doubleValue());
-
+		double latitude = TiConvert.toDouble(coordinate, "latitude");
+		double longitude = TiConvert.toDouble(coordinate, "longitude");
+		LatLng nativeCoordinate = new LatLng(latitude, longitude);
 		return mapBounds.contains(nativeCoordinate);
 	}
 
