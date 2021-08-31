@@ -89,6 +89,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private final ArrayList<PolylineProxy> preloadPolylines;
 	private final ArrayList<CircleProxy> preloadCircles;
 	private final ArrayList<ImageOverlayProxy> preloadOverlaysList;
+	private final ArrayList<TileOverlayOptions> preloadTileOverlayOptionsList;
 
 	public ViewProxy()
 	{
@@ -103,6 +104,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();
 		preloadOverlaysList = new ArrayList<ImageOverlayProxy>();
+		preloadTileOverlayOptionsList = new ArrayList<TileOverlayOptions>();
 	}
 
 	@Override
@@ -117,6 +119,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolygons.clear();
 		preloadPolylines.clear();
 		preloadCircles.clear();
+		preloadTileOverlayOptionsList.clear();
 	}
 
 	@Override
@@ -330,7 +333,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_ADD_HEAT_MAP: {
 				result = ((AsyncResult) msg.obj);
-				handleAddHeatMap((Object[]) result.getArg());
+				handleAddHeatMap(result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -660,7 +663,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void addHeatMap(Object[] coordinates)
+	public void addHeatMap(Object coordinates)
 	{
 		if (TiApplication.isUIThread()) {
 			handleAddHeatMap(coordinates);
@@ -669,17 +672,25 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	public void handleAddHeatMap(Object[] coordinates)
+	public void handleAddHeatMap(Object coordinates)
 	{
+		// Validate.
+		if (coordinates == null) {
+			return;
+		}
+
+		// Create a heatmap overlay using given coordinates.
+		List<LatLng> data = TiMapUtils.processPoints(coordinates);
+		HeatmapTileProvider provider = new HeatmapTileProvider.Builder().data(data).build();
+		TileOverlayOptions tileOverlayOptions = new TileOverlayOptions().tileProvider(provider);
+
+		// Add heatmap overlay to map.
 		TiUIView view = peekView();
-
-		if (view instanceof TiUIMapView) {
-			GoogleMap map = ((TiUIMapView) view).getMap();
-			List<LatLng> data = TiMapUtils.processPoints(coordinates);
-
-			HeatmapTileProvider provider = new HeatmapTileProvider.Builder().data(data).build();
-
-			map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+		GoogleMap map = (view instanceof TiUIMapView) ? ((TiUIMapView) view).getMap() : null;
+		if (map != null) {
+			map.addTileOverlay(tileOverlayOptions);
+		} else {
+			this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
 		}
 	}
 
@@ -797,6 +808,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	public ArrayList<ImageOverlayProxy> getOverlaysList()
 	{
 		return preloadOverlaysList;
+	}
+
+	public ArrayList<TileOverlayOptions> getTileOverlayOptionsList()
+	{
+		return this.preloadTileOverlayOptionsList;
 	}
 
 	/**

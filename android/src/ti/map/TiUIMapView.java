@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -180,6 +181,9 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void processOverlaysList()
 	{
+		for (TileOverlayOptions options : ((ViewProxy) proxy).getTileOverlayOptionsList()) {
+			this.map.addTileOverlay(options);
+		}
 		for (ImageOverlayProxy imageOverlayProxy : ((ViewProxy) proxy).getOverlaysList()) {
 			addImageOverlay(imageOverlayProxy);
 		}
