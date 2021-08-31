@@ -8,9 +8,9 @@
 #ifndef map_TiMapPolylineProxy_h
 #define map_TiMapPolylineProxy_h
 
-#import "TiBase.h"
 #import "TiMapOverlayPattern.h"
-#import "TiViewProxy.h"
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 #import <MapKit/MapKit.h>
 

@@ -6,8 +6,6 @@
  */
 
 #import "TiMapView.h"
-#import "TiApp.h"
-#import "TiBase.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
@@ -20,8 +18,10 @@
 #import "TiMapPolylineProxy.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
-#import "TiUtils.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiApp.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiUtils.h>
 
 @implementation TiMapView
 
@@ -102,9 +102,16 @@ CLLocationCoordinate2D userNewLocation;
 {
   UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
 
+  // This gesture recognizer allows us to handle native double taps without blocking single taps
+  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:nil];
+  doubleTap.numberOfTapsRequired = 2;
+  doubleTap.numberOfTouchesRequired = 1;
+
   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOverlayTap:)];
+  [tap requireGestureRecognizerToFail:doubleTap];
   tap.cancelsTouchesInView = NO;
 
+  [map addGestureRecognizer:doubleTap];
   [map addGestureRecognizer:tap];
   [map addGestureRecognizer:longPressInterceptor];
 
@@ -114,13 +121,17 @@ CLLocationCoordinate2D userNewLocation;
 
 - (void)handleOverlayTap:(UIGestureRecognizer *)tap
 {
+  if (tap.state != UIGestureRecognizerStateEnded) {
+    return;
+  }
+
   CGPoint tapPoint = [tap locationInView:self.map];
 
   CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
   MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
 
   [self handlePolygonClick:mapPoint];
-  [self handlePolylineClick:mapPoint];
+  [self handlePolylineClick:tapPoint];
   [self handleCircleClick:mapPoint];
   [self handleMapClick:mapPoint];
 }
@@ -194,7 +205,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   if (yn == NO) {
     [map deselectAnnotation:proxy animated:NO];
@@ -209,10 +220,10 @@ CLLocationCoordinate2D userNewLocation;
   ignoreClicks = NO;
 }
 
-- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)(void))callBack
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   [map removeAnnotation:proxy];
   callBack();
@@ -493,7 +504,7 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
-- (void)setLocation_:(id)location
+- (void)setLocation:(id)location
 {
   ENSURE_SINGLE_ARG(location, NSDictionary);
   //comes in like region: {latitude:100, longitude:100, latitudeDelta:0.5, longitudeDelta:0.5}
@@ -1055,8 +1066,8 @@ CLLocationCoordinate2D userNewLocation;
                                       ourProxy, @"map",
                                       title, @"title",
                                       [NSNumber numberWithInteger:[pinview tag]], @"index",
-                                      NUMINT(newState), @"newState",
-                                      NUMINT(oldState), @"oldState",
+                                      @(newState), @"newState",
+                                      @(oldState), @"oldState",
                                       nil];
 
   if (parentWants)
@@ -1086,7 +1097,7 @@ CLLocationCoordinate2D userNewLocation;
 
     selectedAnnotation = [ann retain];
 
-    // If canShowCallout == true we will try to find calloutView to hadleTap on callout
+    // If canShowCallout == YES we will try to find calloutView to hadleTap on callout
     if ([ann canShowCallout]) {
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
         [self findCalloutView:ann];
@@ -1113,7 +1124,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
+    BOOL isSelected = [view isSelected];
     MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 
     if (selectedAnnotation == ann) {
@@ -1221,9 +1232,12 @@ CLLocationCoordinate2D userNewLocation;
     }
 
 #ifndef __clang_analyzer__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     // We can ignore this, as it's guarded above
     id previewingDelegate = [[TiPreviewingDelegate alloc] performSelector:@selector(initWithPreviewContext:) withObject:previewContext];
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
+#pragma clang diagnostic pop
 #endif
   }
   return annView;
@@ -1292,7 +1306,7 @@ CLLocationCoordinate2D userNewLocation;
         thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
         [UIView animateWithDuration:0.4
                               delay:0.0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                            thisView.frame = viewFrame;
                          }
@@ -1395,17 +1409,67 @@ CLLocationCoordinate2D userNewLocation;
     }
   }
 }
-- (void)handlePolylineClick:(MKMapPoint)point
+
+- (void)handlePolylineClick:(CGPoint)touchPoint
 {
+  // Convert view touch point to its equivalent map coordinate.
+  MKMapPoint mapTouchPoint = MKMapPointForCoordinate([self.map convertPoint:touchPoint toCoordinateFromView:self.map]);
+
+  // Traverse all polyline proxies added to map view.
   for (int i = 0; i < [polylineProxies count]; i++) {
+    // Fetch next polyline.
     TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
-
     MKPolylineRenderer *polylineRenderer = proxy.polylineRenderer;
+    NSUInteger pointCount = polylineRenderer.polyline.pointCount;
 
-    CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
-    BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
-    if (onPolyline && [TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES]) {
-      [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
+    // Skip polyline if it doesn't have 2 or more points.
+    if (pointCount < 2) {
+      continue;
+    }
+
+    // Skip polyline if touch is disabled.
+    if ([TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES] == NO) {
+      continue;
+    }
+
+    // Determine min touch radius. Must at least have 44pt diameter according to Apple guidelines.
+    double touchRadius = MAX(polylineRenderer.lineWidth / 2.0, 22.0);
+
+    // Traverse each segment in polyline.
+    for (NSUInteger index = 0; index < (pointCount - 1); index++) {
+      // Convert polyline segment's map coordinates to view/screen points.
+      CGPoint polyPoint1 = [self.map convertCoordinate:MKCoordinateForMapPoint(polylineRenderer.polyline.points[index]) toPointToView:self.map];
+      CGPoint polyPoint2 = [self.map convertCoordinate:MKCoordinateForMapPoint(polylineRenderer.polyline.points[index + 1]) toPointToView:self.map];
+
+      // Pretend we have a triangle formed by the 2 polyline points and the touch point.
+      // Calculate the length of all sides of this triangle.
+      double lengthA = hypot(fabs(polyPoint1.x - touchPoint.x), fabs(polyPoint1.y - touchPoint.y));
+      double lengthB = hypot(fabs(polyPoint2.x - touchPoint.x), fabs(polyPoint2.y - touchPoint.y));
+      double lengthC = hypot(fabs(polyPoint1.x - polyPoint2.x), fabs(polyPoint1.y - polyPoint2.y));
+
+      // Calculate distance of touch point from the polyline.
+      double distanceFromLine;
+      if (lengthA > lengthC) {
+        // Touch is not between polyline points. Use distance from closest poly point.
+        distanceFromLine = lengthB;
+      } else if (lengthB > lengthC) {
+        // Touch is not between polyline points. Use distance from closest poly point.
+        distanceFromLine = lengthA;
+      } else if (lengthC < DBL_EPSILON) {
+        // Polyline points are equal, which means line length is zero. Use distance from one of the poly points.
+        distanceFromLine = lengthA;
+      } else {
+        // Touch point is between polyline's points. Calculte distance with Heron's formula.
+        double value = (lengthA + lengthB + lengthC) / 2.0;
+        double area = sqrt((value - lengthA) * (value - lengthB) * (value - lengthC) * value);
+        distanceFromLine = (area * 2.0) / lengthC;
+      }
+
+      // Fire an event if touch point is close enough to the polyline segment.
+      if (distanceFromLine <= touchRadius) {
+        [self fireShapeClickEvent:proxy point:mapTouchPoint sourceType:@"polyline"];
+        break;
+      }
     }
   }
 }
@@ -1476,10 +1540,13 @@ CLLocationCoordinate2D userNewLocation;
 {
   BOOL parentWants = [mapProxy _hasListeners:@"click"];
   BOOL viewWants;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
   if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
+#pragma clang diagnostic pop
     viewWants = [viewProxy _hasListeners:@"click"];
   } else {
-    viewWants = FALSE;
+    viewWants = NO;
   }
 
   if (parentWants) {
@@ -1489,6 +1556,21 @@ CLLocationCoordinate2D userNewLocation;
   if (viewWants) {
     [viewProxy fireEvent:@"click" withObject:event];
   }
+}
+
+- (NSNumber *)containsCoordinate:(id)args
+{
+  ENSURE_SINGLE_ARG(args, NSDictionary);
+
+  if (!self.map) {
+    return @(NO);
+  }
+
+  CLLocationCoordinate2D coordinate;
+  coordinate.latitude = [TiUtils doubleValue:args[@"latitude"]];
+  coordinate.longitude = [TiUtils doubleValue:args[@"longitude"]];
+
+  return @(MKMapRectContainsPoint(self.map.visibleMapRect, MKMapPointForCoordinate(coordinate)));
 }
 
 @end

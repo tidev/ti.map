@@ -88,6 +88,19 @@ methods:
     platforms: [android]
     since: "10.1.0"
 
+  - name: containsCoordinate
+    summary: |
+        Validated whether or not a given coordinate is currently visible
+        in the map rect.
+    parameters:
+      - name: coordinate
+        summary: The `latitude` and `longitude` pair represented by an Object.
+        type: MapPointType
+    returns:
+        type: Boolean
+        summary: Returns `true` if given coordinate is within the displayed map view.
+    since: 10.1.0
+
   - name: deselectAnnotation
     summary: |
         Deselects the specified annotation, so the main annotation is hidden and only
@@ -200,8 +213,7 @@ methods:
             of camera animations can be captured by listening for a `regionchanged` event with `animated`
             set to true.
         type: Callback<Object>
-    since: "3.2.0"
-    exclude-platforms: [android]
+    since: { android: "9.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 
   - name: showAnnotations
     summary: |
@@ -763,8 +775,7 @@ properties:
         You must not set this property to null. To restore the map to a flat appearance, apply a camera with a pitch angle of 0,
         which yields a camera looking straight down onto the map surface.
     type: Modules.Map.Camera
-    since: "3.2.0"
-    exclude-platforms: [android]
+    since: { android: "9.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 
   - name: pitchEnabled
     summary: A Boolean value indicating whether the map camera's pitch information is used.

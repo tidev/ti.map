@@ -6,9 +6,9 @@
  */
 
 #import "TiMKOverlayPathUniversal.h"
-#import "TiProxy.h"
-#import "TiUtils.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiProxy.h>
+#import <TitaniumKit/TiUtils.h>
 
 @interface TiMapRouteProxy : TiProxy {
   TiColor *color;

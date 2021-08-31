@@ -4,8 +4,8 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#import "TiViewProxy.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @class TiMapAnnotationProxy;
 @class TiMapCameraProxy;
@@ -65,5 +65,7 @@
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays:(id)args;
 - (void)setClusterAnnotation:(id)args;
+- (void)setLocation:(id)location;
+- (NSNumber *)containsCoordinate:(id)args;
 
 @end
