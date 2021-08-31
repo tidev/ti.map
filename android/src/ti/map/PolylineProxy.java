@@ -186,7 +186,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list)
 	{
-		LatLng location = parseLocation(loc);
+		LatLng location = TiMapUtils.parseLocation(loc);
 		if (list) {
 			locationArray.add(location);
 		} else {
@@ -281,23 +281,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED),
 												TiConvert.toBoolean(value));
 		}
-	}
-
-	// A location can either be a an array of longitude, latitude pairings or
-	// an array of longitude, latitude objects.
-	// e.g. [123.33, 34.44], OR {longitude: 123.33, latitude, 34.44}
-	private LatLng parseLocation(Object loc)
-	{
-		LatLng location = null;
-		if (loc instanceof HashMap) {
-			HashMap<String, String> point = (HashMap<String, String>) loc;
-			location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)),
-								  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
-		} else if (loc instanceof Object[]) {
-			Object[] temp = (Object[]) loc;
-			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
-		}
-		return location;
 	}
 
 	private List<PatternItem> processPatternDefinition(HashMap definition)

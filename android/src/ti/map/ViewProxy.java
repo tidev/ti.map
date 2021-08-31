@@ -10,9 +10,15 @@ import android.app.Activity;
 import android.os.Message;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollObject;
@@ -76,11 +82,14 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_REMOVE_IMAGE_OVERLAY = MSG_FIRST_ID + 932;
 	private static final int MSG_REMOVE_ALL_IMAGE_OVERLAYS = MSG_FIRST_ID + 933;
 
+	private static final int MSG_ADD_HEAT_MAP = MSG_FIRST_ID + 941;
+
 	private final ArrayList<RouteProxy> preloadRoutes;
 	private final ArrayList<PolygonProxy> preloadPolygons;
 	private final ArrayList<PolylineProxy> preloadPolylines;
 	private final ArrayList<CircleProxy> preloadCircles;
 	private final ArrayList<ImageOverlayProxy> preloadOverlaysList;
+	private final ArrayList<TileOverlayOptions> preloadTileOverlayOptionsList;
 
 	public ViewProxy()
 	{
@@ -95,6 +104,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();
 		preloadOverlaysList = new ArrayList<ImageOverlayProxy>();
+		preloadTileOverlayOptionsList = new ArrayList<TileOverlayOptions>();
 	}
 
 	@Override
@@ -109,6 +119,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolygons.clear();
 		preloadPolylines.clear();
 		preloadCircles.clear();
+		preloadTileOverlayOptionsList.clear();
 	}
 
 	@Override
@@ -315,7 +326,14 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_SHOW_ANNOTATIONS: {
 				result = ((AsyncResult) msg.obj);
-				handleShowAnnotations((Object[]) result.getArg());
+				handleShowAnnotations(result.getArg());
+				result.setResult(null);
+				return true;
+			}
+
+			case MSG_ADD_HEAT_MAP: {
+				result = ((AsyncResult) msg.obj);
+				handleAddHeatMap(result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -637,11 +655,42 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void addRoute(RouteProxy route)
 	{
-
 		if (TiApplication.isUIThread()) {
 			handleAddRoute(route);
 		} else {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ROUTE), route);
+		}
+	}
+
+	@Kroll.method
+	public void addHeatMap(Object coordinates)
+	{
+		if (TiApplication.isUIThread()) {
+			handleAddHeatMap(coordinates);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_HEAT_MAP), coordinates);
+		}
+	}
+
+	public void handleAddHeatMap(Object coordinates)
+	{
+		// Validate.
+		if (coordinates == null) {
+			return;
+		}
+
+		// Create a heatmap overlay using given coordinates.
+		List<LatLng> data = TiMapUtils.processPoints(coordinates);
+		HeatmapTileProvider provider = new HeatmapTileProvider.Builder().data(data).build();
+		TileOverlayOptions tileOverlayOptions = new TileOverlayOptions().tileProvider(provider);
+
+		// Add heatmap overlay to map.
+		TiUIView view = peekView();
+		GoogleMap map = (view instanceof TiUIMapView) ? ((TiUIMapView) view).getMap() : null;
+		if (map != null) {
+			map.addTileOverlay(tileOverlayOptions);
+		} else {
+			this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
 		}
 	}
 
@@ -759,6 +808,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	public ArrayList<ImageOverlayProxy> getOverlaysList()
 	{
 		return preloadOverlaysList;
+	}
+
+	public ArrayList<TileOverlayOptions> getTileOverlayOptionsList()
+	{
+		return this.preloadTileOverlayOptionsList;
 	}
 
 	/**

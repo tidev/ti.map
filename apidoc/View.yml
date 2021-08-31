@@ -78,6 +78,16 @@ methods:
         summary: Modules.Map.Route
         type: Modules.Map.Route
 
+  - name: addHeatmap
+    summary: Adds a heatmap to the map.
+    description: A heatmap is defined by an array of coordinates.
+    parameters:
+      - name: coordinates
+        summary: An array of coordinates
+        type: MapPointType
+    platforms: [android]
+    since: "10.1.0"
+
   - name: containsCoordinate
     summary: |
         Validated whether or not a given coordinate is currently visible
