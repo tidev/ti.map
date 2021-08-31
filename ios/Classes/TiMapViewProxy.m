@@ -233,6 +233,17 @@
   }
 }
 
+- (void)setLocation:(id)args
+{
+  if ([self viewAttached]) {
+    TiThreadPerformOnMainThread(
+        ^{
+          [(TiMapView *)[self view] setLocation:args];
+        },
+        NO);
+  }
+}
+
 - (void)addAnnotation:(id)arg
 {
   ENSURE_SINGLE_ARG(arg, NSObject);
@@ -911,6 +922,11 @@
         [(TiMapView *)[self view] showAnnotations:args];
       },
       NO);
+}
+
+- (NSNumber *)containsCoordinate:(id)args
+{
+  return [(TiMapView *)[self view] containsCoordinate:args];
 }
 
 @end

@@ -6,15 +6,15 @@
  */
 
 #import "TiMapAnnotationProxy.h"
-#import "ImageLoader.h"
 #import "TiButtonUtil.h"
 #import "TiMapConstants.h"
 #import "TiMapView.h"
 #import "TiMapViewProxy.h"
 #import "TiUIiOSPreviewContextProxy.h"
-#import "TiUtils.h"
-#import "TiViewProxy.h"
 #import "UIColor+AndroidHueParity.h"
+#import <TitaniumKit/ImageLoader.h>
+#import <TitaniumKit/TiUtils.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @implementation TiMapAnnotationProxy
 
@@ -105,7 +105,7 @@
   }
 }
 
-- (void)refreshCoordinateChanges:(void (^)())updateValueCallBack
+- (void)refreshCoordinateChanges:(void (^)(void))updateValueCallBack
 {
   if (delegate != nil && [delegate viewAttached]) {
     [(TiMapView *)[delegate view] refreshCoordinateChanges:self afterRemove:updateValueCallBack];
@@ -224,7 +224,7 @@
 
 - (id)pincolor
 {
-  return NUMINT([self valueForUndefinedKey:@"pincolor"]);
+  return [self valueForUndefinedKey:@"pincolor"];
 }
 
 - (void)setPincolor:(id)color
@@ -233,53 +233,6 @@
   [self replaceValue:color forKey:@"pincolor" notification:NO];
   if (current != color) {
     [self setNeedsRefreshingWithSelection:YES];
-  }
-}
-
-// Mapping both string-colors, color constant and native colors to a pin color
-// This is overcomplicated to maintain iOS < 9 compatibility. Remove this when
-// we have a minimum iOS verion of 9.0+
-- (id)nativePinColor
-{
-  id current = [self valueForUndefinedKey:@"pincolor"];
-
-  if ([current isKindOfClass:[NSString class]]) {
-    return [[TiUtils colorValue:current] color];
-  }
-
-  switch ([TiUtils intValue:current def:TiMapAnnotationPinColorRed]) {
-  case TiMapAnnotationPinColorGreen: {
-#ifdef __IPHONE_9_0
-    return [MKPinAnnotationView greenPinColor];
-#else
-    return MKPinAnnotationColorGreen;
-#endif
-  }
-  case TiMapAnnotationPinColorPurple: {
-    return [MKPinAnnotationView purplePinColor];
-  }
-  case TiMapAnnotationPinColorBlue:
-    return [UIColor blueColor];
-  case TiMapAnnotationPinColorCyan:
-    return [UIColor cyanColor];
-  case TiMapAnnotationPinColorMagenta:
-    return [UIColor magentaColor];
-  case TiMapAnnotationPinColorOrange:
-    return [UIColor orangeColor];
-  case TiMapAnnotationPinColorYellow:
-    return [UIColor yellowColor];
-
-  // UIColor extensions
-  case TiMapAnnotationPinColorAzure:
-    return [UIColor azureColor];
-  case TiMapAnnotationPinColorRose:
-    return [UIColor roseColor];
-  case TiMapAnnotationPinColorViolet:
-    return [UIColor violetColor];
-  case TiMapAnnotationPinColorRed:
-  default: {
-    return [MKPinAnnotationView redPinColor];
-  }
   }
 }
 

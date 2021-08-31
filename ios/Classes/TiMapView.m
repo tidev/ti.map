@@ -6,8 +6,6 @@
  */
 
 #import "TiMapView.h"
-#import "TiApp.h"
-#import "TiBase.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
@@ -20,8 +18,10 @@
 #import "TiMapPolylineProxy.h"
 #import "TiMapRouteProxy.h"
 #import "TiMapUtils.h"
-#import "TiUtils.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiApp.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiUtils.h>
 
 @implementation TiMapView
 
@@ -102,9 +102,16 @@ CLLocationCoordinate2D userNewLocation;
 {
   UILongPressGestureRecognizer *longPressInterceptor = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnMap:)];
 
+  // This gesture recognizer allows us to handle native double taps without blocking single taps
+  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:nil];
+  doubleTap.numberOfTapsRequired = 2;
+  doubleTap.numberOfTouchesRequired = 1;
+
   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOverlayTap:)];
+  [tap requireGestureRecognizerToFail:doubleTap];
   tap.cancelsTouchesInView = NO;
 
+  [map addGestureRecognizer:doubleTap];
   [map addGestureRecognizer:tap];
   [map addGestureRecognizer:longPressInterceptor];
 
@@ -114,6 +121,10 @@ CLLocationCoordinate2D userNewLocation;
 
 - (void)handleOverlayTap:(UIGestureRecognizer *)tap
 {
+  if (tap.state != UIGestureRecognizerStateEnded) {
+    return;
+  }
+
   CGPoint tapPoint = [tap locationInView:self.map];
 
   CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
@@ -194,7 +205,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   if (yn == NO) {
     [map deselectAnnotation:proxy animated:NO];
@@ -209,10 +220,10 @@ CLLocationCoordinate2D userNewLocation;
   ignoreClicks = NO;
 }
 
-- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)(void))callBack
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns FALSE.
+  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
   ignoreClicks = YES;
   [map removeAnnotation:proxy];
   callBack();
@@ -493,7 +504,7 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
-- (void)setLocation_:(id)location
+- (void)setLocation:(id)location
 {
   ENSURE_SINGLE_ARG(location, NSDictionary);
   //comes in like region: {latitude:100, longitude:100, latitudeDelta:0.5, longitudeDelta:0.5}
@@ -1055,8 +1066,8 @@ CLLocationCoordinate2D userNewLocation;
                                       ourProxy, @"map",
                                       title, @"title",
                                       [NSNumber numberWithInteger:[pinview tag]], @"index",
-                                      NUMINT(newState), @"newState",
-                                      NUMINT(oldState), @"oldState",
+                                      @(newState), @"newState",
+                                      @(oldState), @"oldState",
                                       nil];
 
   if (parentWants)
@@ -1086,7 +1097,7 @@ CLLocationCoordinate2D userNewLocation;
 
     selectedAnnotation = [ann retain];
 
-    // If canShowCallout == true we will try to find calloutView to hadleTap on callout
+    // If canShowCallout == YES we will try to find calloutView to hadleTap on callout
     if ([ann canShowCallout]) {
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
         [self findCalloutView:ann];
@@ -1113,7 +1124,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    BOOL isSelected = [TiUtils boolValue:[view isSelected] def:NO];
+    BOOL isSelected = [view isSelected];
     MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
 
     if (selectedAnnotation == ann) {
@@ -1128,7 +1139,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)aview calloutAccessoryControlTapped:(UIControl *)control
 {
   if ([aview conformsToProtocol:@protocol(TiMapAnnotation)]) {
-    MKPinAnnotationView *pinview = (MKPinAnnotationView *)aview;
+    MKMarkerAnnotationView *pinview = (MKMarkerAnnotationView *)aview;
     NSString *clickSource = @"unknown";
     if (aview.leftCalloutAccessoryView == control) {
       clickSource = @"leftButton";
@@ -1153,11 +1164,9 @@ CLLocationCoordinate2D userNewLocation;
   if (customView == nil && !marker) {
     id imagePath = [ann valueForUndefinedKey:@"image"];
     image = [TiUtils image:imagePath proxy:ann];
-    identifier = (image != nil) ? @"timap-image" : @"timap-pin";
+    identifier = (image != nil) ? @"timap-image" : @"timap-marker";
   } else if (customView) {
     identifier = @"timap-customView";
-  } else {
-    identifier = @"timap-marker";
   }
   MKAnnotationView *annView = nil;
   annView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
@@ -1165,19 +1174,17 @@ CLLocationCoordinate2D userNewLocation;
   if (annView == nil) {
     if ([identifier isEqualToString:@"timap-customView"]) {
       annView = [[[TiMapCustomAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
-    } else if ([identifier isEqualToString:@"timap-marker"]) {
-      annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
     } else if ([identifier isEqualToString:@"timap-image"]) {
       annView = [[[TiMapImageAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self image:image] autorelease];
     } else {
-      annView = [[[TiMapPinAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
+      annView = [[[TiMapMarkerAnnotationView alloc] initWithAnnotation:ann reuseIdentifier:identifier map:self] autorelease];
     }
   }
   if ([identifier isEqualToString:@"timap-customView"]) {
     [((TiMapCustomAnnotationView *)annView) setProxy:customView];
   } else if ([identifier isEqualToString:@"timap-image"]) {
     annView.image = image;
-  } else if ([identifier isEqualToString:@"timap-marker"]) {
+  } else {
     MKMarkerAnnotationView *markerView = (MKMarkerAnnotationView *)annView;
     markerView.markerTintColor = [[TiUtils colorValue:[ann valueForUndefinedKey:@"markerColor"]] color];
     markerView.glyphText = [ann valueForUndefinedKey:@"markerGlyphText"];
@@ -1187,12 +1194,6 @@ CLLocationCoordinate2D userNewLocation;
     markerView.selectedGlyphImage = [TiUtils image:[ann valueForUndefinedKey:@"markerSelectedGlyphImage"] proxy:ann];
     markerView.titleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerTitleVisibility"]];
     markerView.subtitleVisibility = [TiUtils intValue:[ann valueForUndefinedKey:@"markerSubtitleVisibility"]];
-  } else {
-    MKPinAnnotationView *pinview = (MKPinAnnotationView *)annView;
-
-    pinview.pinTintColor = [ann nativePinColor];
-    pinview.animatesDrop = [ann animatesDrop] && ![ann placed];
-    annView.calloutOffset = CGPointMake(-8, 0);
   }
   annView.canShowCallout = [TiUtils boolValue:[ann valueForUndefinedKey:@"canShowCallout"] def:YES];
   annView.enabled = YES;
@@ -1231,9 +1232,12 @@ CLLocationCoordinate2D userNewLocation;
     }
 
 #ifndef __clang_analyzer__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     // We can ignore this, as it's guarded above
     id previewingDelegate = [[TiPreviewingDelegate alloc] performSelector:@selector(initWithPreviewContext:) withObject:previewContext];
     ann.controllerPreviewing = [controller registerForPreviewingWithDelegate:previewingDelegate sourceView:annView];
+#pragma clang diagnostic pop
 #endif
   }
   return annView;
@@ -1302,7 +1306,7 @@ CLLocationCoordinate2D userNewLocation;
         thisView.frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y - self.frame.size.height, viewFrame.size.width, viewFrame.size.height);
         [UIView animateWithDuration:0.4
                               delay:0.0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                            thisView.frame = viewFrame;
                          }
@@ -1486,10 +1490,13 @@ CLLocationCoordinate2D userNewLocation;
 {
   BOOL parentWants = [mapProxy _hasListeners:@"click"];
   BOOL viewWants;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
   if ([viewProxy respondsToSelector:@selector(_hasListeners)]) {
+#pragma clang diagnostic pop
     viewWants = [viewProxy _hasListeners:@"click"];
   } else {
-    viewWants = FALSE;
+    viewWants = NO;
   }
 
   if (parentWants) {
@@ -1501,9 +1508,19 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
-+ (BOOL)isiOS11OrGreater
+- (NSNumber *)containsCoordinate:(id)args
 {
-  return [TiUtils isIOSVersionOrGreater:@"11.0"];
+  ENSURE_SINGLE_ARG(args, NSDictionary);
+
+  if (!self.map) {
+    return @(NO);
+  }
+
+  CLLocationCoordinate2D coordinate;
+  coordinate.latitude = [TiUtils doubleValue:args[@"latitude"]];
+  coordinate.longitude = [TiUtils doubleValue:args[@"longitude"]];
+
+  return @(MKMapRectContainsPoint(self.map.visibleMapRect, MKMapPointForCoordinate(coordinate)));
 }
 
 @end

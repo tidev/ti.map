@@ -4,9 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#import "TiBase.h"
+
 #import "TiMapView.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiBase.h>
 
 @interface TiMapMarkerAnnotationView : MKMarkerAnnotationView <TiMapAnnotation> {
   @private

@@ -5,13 +5,11 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiModule.h"
+#import <TitaniumKit/TiModule.h>
 
 @interface TiMapModule : TiModule {
   UIColor *colorRed;
 }
-
-+ (void)logAddedIniOS7Warning:(NSString *)name;
 
 @property (nonatomic, readonly) NSNumber *STANDARD_TYPE;
 @property (nonatomic, readonly) NSNumber *NORMAL_TYPE; // For parity with Android

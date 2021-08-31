@@ -5,9 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiBase.h"
-#import "TiViewProxy.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @class TiMapViewProxy;
 
@@ -33,7 +33,6 @@
 - (NSString *)title;
 - (NSString *)subtitle;
 - (id)pincolor;
-- (id)nativePinColor;
 - (BOOL)animatesDrop;
 - (void)setHidden:(id)value;
 - (UIView *)leftViewAccessory;

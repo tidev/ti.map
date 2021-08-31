@@ -625,7 +625,9 @@ public class TiUIMapView extends TiUIFragment
 		TiMarker tiMarker = annotation.getTiMarker();
 		if (tiMarker != null) {
 			timarkers.remove(tiMarker);
-			tiMarker.getMarker().remove();
+			if (tiMarker.getMarker() != null) {
+				tiMarker.getMarker().remove();
+			}
 		}
 
 		if (map != null) {
@@ -732,7 +734,7 @@ public class TiUIMapView extends TiUIFragment
 		} else if (annotation instanceof String) {
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
-			if (marker != null) {
+			if ((marker != null) && (marker.getMarker() != null)) {
 				marker.getMarker().showInfoWindow();
 				selectedAnnotation = marker.getProxy();
 			}
@@ -749,7 +751,7 @@ public class TiUIMapView extends TiUIFragment
 		} else if (annotation instanceof String) {
 			String title = (String) annotation;
 			TiMarker marker = findMarkerByTitle(title);
-			if (marker != null) {
+			if ((marker != null) && (marker.getMarker() != null)) {
 				marker.getMarker().hideInfoWindow();
 			}
 		}
@@ -958,6 +960,19 @@ public class TiUIMapView extends TiUIFragment
 	{
 		CameraUpdate camUpdate = CameraUpdateFactory.zoomBy(delta);
 		moveCamera(camUpdate, animate);
+	}
+
+	protected boolean containsCoordinate(KrollDict coordinate)
+	{
+		if (map == null) {
+			return false;
+		}
+
+		LatLngBounds mapBounds = map.getProjection().getVisibleRegion().latLngBounds;
+		double latitude = TiConvert.toDouble(coordinate, "latitude");
+		double longitude = TiConvert.toDouble(coordinate, "longitude");
+		LatLng nativeCoordinate = new LatLng(latitude, longitude);
+		return mapBounds.contains(nativeCoordinate);
 	}
 
 	public void fireShapeClickEvent(LatLng clickPosition, IShape shapeProxy, String clickSource)
@@ -1253,10 +1268,12 @@ public class TiUIMapView extends TiUIFragment
 	@Override
 	public void onMyLocationChange(Location arg0)
 	{
-		KrollDict d = new KrollDict();
-		d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
-		d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
-		proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+		if (proxy != null) {
+			KrollDict d = new KrollDict();
+			d.put(TiC.PROPERTY_LATITUDE, arg0.getLatitude());
+			d.put(TiC.PROPERTY_LONGITUDE, arg0.getLongitude());
+			proxy.fireEvent(MapModule.EVENT_USER_LOCATION, d);
+		}
 	}
 
 	@Override

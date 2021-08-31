@@ -5,12 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiBase.h"
 #import "TiMKOverlayPathUniversal.h"
 #import "TiMapCameraProxy.h"
-#import "TiUIView.h"
 #import "WildcardGestureRecognizer.h"
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiUIView.h>
 
 @class TiMapAnnotationProxy;
 
@@ -95,6 +95,8 @@
 - (void)firePinChangeDragState:(MKAnnotationView *)pinview newState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState;
 - (void)setClusterAnnotation:(TiMapAnnotationProxy *)annotation forMembers:(NSArray<TiMapAnnotationProxy *> *)members;
 - (void)animateAnnotation:(TiMapAnnotationProxy *)newAnnotation withLocation:(CLLocationCoordinate2D)newLocation;
+- (void)setLocation:(id)location;
+- (NSNumber *)containsCoordinate:(id)args;
 
 #pragma mark Utils
 - (void)addOverlay:(MKPolyline *)polyline level:(MKOverlayLevel)level;
@@ -102,6 +104,6 @@
 #pragma mark Framework
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn;
 - (void)fireClickEvent:(MKAnnotationView *)pinview source:(NSString *)source deselected:(BOOL)deselected;
-- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)())callBack;
+- (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)(void))callBack;
 
 @end
