@@ -131,7 +131,7 @@ CLLocationCoordinate2D userNewLocation;
   MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
 
   [self handlePolygonClick:mapPoint];
-  [self handlePolylineClick:mapPoint];
+  [self handlePolylineClick:tapPoint];
   [self handleCircleClick:mapPoint];
   [self handleMapClick:mapPoint];
 }
@@ -1409,17 +1409,67 @@ CLLocationCoordinate2D userNewLocation;
     }
   }
 }
-- (void)handlePolylineClick:(MKMapPoint)point
+
+- (void)handlePolylineClick:(CGPoint)touchPoint
 {
+  // Convert view touch point to its equivalent map coordinate.
+  MKMapPoint mapTouchPoint = MKMapPointForCoordinate([self.map convertPoint:touchPoint toCoordinateFromView:self.map]);
+
+  // Traverse all polyline proxies added to map view.
   for (int i = 0; i < [polylineProxies count]; i++) {
+    // Fetch next polyline.
     TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
-
     MKPolylineRenderer *polylineRenderer = proxy.polylineRenderer;
+    NSUInteger pointCount = polylineRenderer.polyline.pointCount;
 
-    CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
-    BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
-    if (onPolyline && [TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES]) {
-      [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
+    // Skip polyline if it doesn't have 2 or more points.
+    if (pointCount < 2) {
+      continue;
+    }
+
+    // Skip polyline if touch is disabled.
+    if ([TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES] == NO) {
+      continue;
+    }
+
+    // Determine min touch radius. Must at least have 44pt diameter according to Apple guidelines.
+    double touchRadius = MAX(polylineRenderer.lineWidth / 2.0, 22.0);
+
+    // Traverse each segment in polyline.
+    for (NSUInteger index = 0; index < (pointCount - 1); index++) {
+      // Convert polyline segment's map coordinates to view/screen points.
+      CGPoint polyPoint1 = [self.map convertCoordinate:MKCoordinateForMapPoint(polylineRenderer.polyline.points[index]) toPointToView:self.map];
+      CGPoint polyPoint2 = [self.map convertCoordinate:MKCoordinateForMapPoint(polylineRenderer.polyline.points[index + 1]) toPointToView:self.map];
+
+      // Pretend we have a triangle formed by the 2 polyline points and the touch point.
+      // Calculate the length of all sides of this triangle.
+      double lengthA = hypot(fabs(polyPoint1.x - touchPoint.x), fabs(polyPoint1.y - touchPoint.y));
+      double lengthB = hypot(fabs(polyPoint2.x - touchPoint.x), fabs(polyPoint2.y - touchPoint.y));
+      double lengthC = hypot(fabs(polyPoint1.x - polyPoint2.x), fabs(polyPoint1.y - polyPoint2.y));
+
+      // Calculate distance of touch point from the polyline.
+      double distanceFromLine;
+      if (lengthA > lengthC) {
+        // Touch is not between polyline points. Use distance from closest poly point.
+        distanceFromLine = lengthB;
+      } else if (lengthB > lengthC) {
+        // Touch is not between polyline points. Use distance from closest poly point.
+        distanceFromLine = lengthA;
+      } else if (lengthC < DBL_EPSILON) {
+        // Polyline points are equal, which means line length is zero. Use distance from one of the poly points.
+        distanceFromLine = lengthA;
+      } else {
+        // Touch point is between polyline's points. Calculte distance with Heron's formula.
+        double value = (lengthA + lengthB + lengthC) / 2.0;
+        double area = sqrt((value - lengthA) * (value - lengthB) * (value - lengthC) * value);
+        distanceFromLine = (area * 2.0) / lengthC;
+      }
+
+      // Fire an event if touch point is close enough to the polyline segment.
+      if (distanceFromLine <= touchRadius) {
+        [self fireShapeClickEvent:proxy point:mapTouchPoint sourceType:@"polyline"];
+        break;
+      }
     }
   }
 }
