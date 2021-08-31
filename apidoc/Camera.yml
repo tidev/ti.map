@@ -7,19 +7,41 @@ description: |
     heading or to apply a pitch angle to tilt the plane of the map.
 
     If the app is run on pre iOS 7, camera functionality will not be available.
-    After creating a `Camera` object, it can be applied to the map by setting the `camera` property of the 
+    After creating a `Camera` object, it can be applied to the map by setting the `camera` property of the
     [map view](Modules.Map.View).
 
     Use the <Modules.Map.createCamera> method to create a camera.
 
     If `altitude`, `eyeCoordinate`, and `centerCoordinate` are passed in on creation, a camera will be
     returned using the specified viewing angle information.
+
+    ### Example:
+    ``` javascript
+    var camera = Map.createCamera({
+        altitude: 15.5,
+        centerCoordinates: {
+            longitude: 151.276417,
+            latitude: -33.891614
+        },
+        heading: 45,
+        pitch: 75
+    });
+    mapview.camera = camera;
+    ```
 extends: Titanium.Proxy
-platforms: [iphone, ipad, macos]
-since: { iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
+since: { android: "9.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 properties:
   - name: altitude
-    summary: The altitude above the ground, measured in meters.
+    summary: |
+        The altitude above the ground, measured in meters.
+        On Android these zoom values are:
+            1: World
+            5: Landmass/continent
+            10: City
+            15: Streets
+            20: Buildings
+
     type: Number
 
   - name: centerCoordinate
@@ -31,8 +53,8 @@ properties:
     summary: |
         The heading of the camera (measured in degrees) relative to true north.
     description: |
-        The value 0 means that the top edge of the map view corresponds to true north. 
-        The value 90 means the top of the map is pointing due east. The value 180 means 
+        The value 0 means that the top edge of the map view corresponds to true north.
+        The value 90 means the top of the map is pointing due east. The value 180 means
         the top of the map points due south, and so on.
     type: Number
 
@@ -40,7 +62,7 @@ properties:
     summary: |
         The viewing angle of the camera, measured in degrees.
     description: |
-        A value of 0 results in a camera pointed straight down at the map. Angles greater than 
+        A value of 0 results in a camera pointed straight down at the map. Angles greater than
         0 result in a camera that is pitched toward the horizon by the specified number of degrees.
         The value in this property may be clamped to a maximum value to maintain map readability.
         There is no fixed maximum value, though, because the actual maximum value is dependent on
@@ -49,11 +71,12 @@ properties:
 
   - name: eyeCoordinate
     summary: |
-        The coordinate point at which to place the camera. Only used on creation when `altitude` 
+        The coordinate point at which to place the camera. Only used on creation when `altitude`
         and `centerCoordinate` are also provided. Setting this property at anytime other time will
         have no effect.
     description: |
-        If the value for this parameter is equal to the value in the `centerCoordinate` parameter, 
-        the map is displayed as if the camera is looking straight down. If this point is offset 
+        If the value for this parameter is equal to the value in the `centerCoordinate` parameter,
+        the map is displayed as if the camera is looking straight down. If this point is offset
         from the `centerCoordinate` value, the map is displayed with an appropriate heading and pitch angle.
+        Not used on Android.
     type: MapPointType
