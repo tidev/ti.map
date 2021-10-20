@@ -487,20 +487,23 @@ public class TiUIMapView extends TiUIFragment
 			markers = timarkers;
 		}
 
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		for (TiMarker marker : markers) {
-			if (marker != null) {
-				builder.include(marker.getPosition());
+		// Make sure to have markers to prevent uncaught exceptions
+		if (markers.size() > 0) {
+			LatLngBounds.Builder builder = new LatLngBounds.Builder();
+			for (TiMarker marker : markers) {
+				if (marker != null) {
+					builder.include(marker.getPosition());
+				}
 			}
-		}
-		LatLngBounds bounds = builder.build();
+			LatLngBounds bounds = builder.build();
 
-		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-		if (animated) {
-			map.animateCamera(cameraUpdate);
-		} else {
-			map.moveCamera(cameraUpdate);
+			if (animated) {
+				map.animateCamera(cameraUpdate);
+			} else {
+				map.moveCamera(cameraUpdate);
+			}
 		}
 	}
 
