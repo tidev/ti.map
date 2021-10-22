@@ -454,7 +454,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		Object[] annos = (Object[]) annotations;
 
 		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
+		if (mapView != null && mapView.getMap() != null) {
 			mapView.showAnnotations(annos, padding, animated);
 		}
 	}
