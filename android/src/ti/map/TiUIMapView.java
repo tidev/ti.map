@@ -231,6 +231,7 @@ public class TiUIMapView extends TiUIFragment
 		map.setOnMyLocationChangeListener(this);
 		collection.setInfoWindowAdapter(this);
 		collection.setOnInfoWindowClickListener(this);
+		collection.setOnMarkerClickListener(this);
 
 		mClusterManager.setOnClusterClickListener(this);
 		mClusterManager.setOnClusterItemClickListener(this);
