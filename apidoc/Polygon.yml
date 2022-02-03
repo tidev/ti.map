@@ -7,8 +7,8 @@ description: |
 
     Use the <Modules.Map.createPolygon> method to create a polygon.
 extends: Titanium.Proxy
-since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0" }
-platforms: [android, iphone, ipad]
+since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 properties:
   - name: points
     summary: Array of map points making up the polygon. Can also be an array of longitude (index 0), latitude (index 1) touples.

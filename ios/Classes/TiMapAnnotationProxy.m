@@ -12,6 +12,9 @@
 #import "TiMapViewProxy.h"
 #import "TiUIiOSPreviewContextProxy.h"
 #import "UIColor+AndroidHueParity.h"
+#import <TitaniumKit/ImageLoader.h>
+#import <TitaniumKit/TiUtils.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @implementation TiMapAnnotationProxy
 
@@ -93,15 +96,16 @@
     needsRefreshingWithSelection |= shouldReselect;
 
     if (invokeMethod) {
-      TiThreadPerformOnMainThread(^{
-        [self refreshAfterDelay];
-      },
+      TiThreadPerformOnMainThread(
+          ^{
+            [self refreshAfterDelay];
+          },
           NO);
     }
   }
 }
 
-- (void)refreshCoordinateChanges:(void (^)())updateValueCallBack
+- (void)refreshCoordinateChanges:(void (^)(void))updateValueCallBack
 {
   if (delegate != nil && [delegate viewAttached]) {
     [(TiMapView *)[delegate view] refreshCoordinateChanges:self afterRemove:updateValueCallBack];
@@ -220,7 +224,7 @@
 
 - (id)pincolor
 {
-  return NUMINT((int)[self valueForUndefinedKey:@"pincolor"]);
+  return [self valueForUndefinedKey:@"pincolor"];
 }
 
 - (void)setPincolor:(id)color
@@ -485,5 +489,28 @@
 {
   return tag;
 }
+- (void)rotate:(id)arg
+{
+  CGFloat getAngle = [[arg objectAtIndex:0] floatValue];
+  [UIView animateWithDuration:1
+                   animations:^{
+                     MKAnnotationView *annotationView = [[(TiMapView *)[delegate view] map] viewForAnnotation:self];
+                     annotationView.transform = CGAffineTransformMakeRotation(getAngle);
+                   }];
+}
 
+- (void)animate:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, NSArray);
+  TiMapAnnotationProxy *newAnnotation = self;
+  CLLocationCoordinate2D newLocation;
+  newLocation.latitude = [[arg objectAtIndex:0] floatValue];
+  newLocation.longitude = [[arg objectAtIndex:1] floatValue];
+  [(TiMapView *)[delegate view] animateAnnotation:newAnnotation withLocation:newLocation];
+}
+
+- (UIView *)view
+{
+  return [delegate viewForAnnotationProxy:self];
+}
 @end

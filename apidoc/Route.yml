@@ -10,14 +10,19 @@ description: |
     ### iOS Platform Notes
 
     The `addRoute` method no longer accepts a dictionary as a parameter. Pass a <Modules.Map.Route> object instead.
+    
+    ### Android Platform Notes
+    The parameter `points` accepts additional the route in format `encoded polyline`.  
+    https://developers.google.com/maps/documentation/utilities/polylinealgorithm 
+    
 extends: Titanium.Proxy
-since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
-platforms: [android, iphone, ipad]
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 properties:
   - name: points
     summary: Array of map points making up the route.
     availability: creation
-    type: Array<MapPointType>
+    type: [String, Array<MapPointType>]
     optional: false
 
   - name: color
@@ -48,4 +53,4 @@ properties:
     type: Number
     since: "3.2.0"
     default: <Modules.Map.OVERLAY_LEVEL_ABOVE_LABELS>
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]

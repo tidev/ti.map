@@ -41,8 +41,8 @@ description: |
     On Android, you must add the click event listener to the map view; the annotation
     itself does not generate these events.
 extends: Titanium.Proxy
-since: { android: "3.0.2", iphone: "3.2.0", ipad: "3.2.0" }
-platforms: [android, iphone, ipad]
+since: { android: "3.0.2", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 properties:
   - name: canShowCallout
     summary: Defines whether the annotation view is able to display extra information in a callout bubble.
@@ -53,7 +53,7 @@ properties:
 
         If this value is undefined, the value is treated as **explicit true**.
     type: Boolean
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: centerOffset
     summary: Defines a center offset point for the annotation.
@@ -63,7 +63,6 @@ properties:
         Positive offset values move the annotation view down and right, while negative values
         move it up and left.
     type: Point
-    platforms: [android, iphone, ipad]
 
   - name: customView
     summary: Defines a custom view to be used by the annotation.
@@ -82,7 +81,7 @@ properties:
         See the example "Map Example With Marker Annotation and Clustering".
     type: Boolean
     default: false
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -94,7 +93,7 @@ properties:
         The amount of space available for displaying your glyph text is limited. Specify no more than 
         two or three characters for any strings you assign to this property.
     type: String
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -104,7 +103,7 @@ properties:
         The default value of this property is undefined, which applies the standard tint color for the 
         current map style.
     type: String
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -114,7 +113,7 @@ properties:
         The default value of this property is undefined, which applies the standard color that is appropriate
         for the current map style.
     type: String
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -129,7 +128,7 @@ properties:
         property, make the size of this image 40 by 40 points on iOS. MapKit scales images that are larger or 
         smaller than those sizes.
     type: [String, Titanium.Blob]
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -142,7 +141,7 @@ properties:
         Create glyph images as template images so that the glyph tint color can be applied to it. Set the size of this image 
         to 40 by 40 points on iOS. MapKit scales images that are larger or smaller than those sizes.
     type: [String, Titanium.Blob]
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -150,7 +149,7 @@ properties:
     summary: Boolean indicating whether the marker animates into position onscreen.
     type: Boolean
     default: false
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -161,7 +160,7 @@ properties:
         <Modules.Map.FEATURE_VISIBILITY_VISIBLE> or <Modules.Map.FEATURE_VISIBILITY_HIDDEN>.
     type: Number
     constants: Modules.Map.FEATURE_VISIBILITY_*
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -172,7 +171,7 @@ properties:
         is selected. Use <Modules.Map.FEATURE_VISIBILITY_ADAPTIVE>, <Modules.Map.FEATURE_VISIBILITY_VISIBLE> or <Modules.Map.FEATURE_VISIBILITY_HIDDEN>.
     type: Number
     constants: Modules.Map.FEATURE_VISIBILITY_*
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -182,7 +181,7 @@ properties:
         Use <Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE> or <Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_CIRCLE>.
     type: Number
     constants: Modules.Map.ANNOTATION_VIEW_COLLISION_MODE_*
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -196,7 +195,7 @@ properties:
     type: Number
     constants: Modules.Map.FEATURE_DISPLAY_PRIORITY_*
     default: Modules.Map.FEATURE_DISPLAY_PRIORITY_REQUIRE
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     osver: {ios: {min: "11.0"} }
     since: "6.3.0"
 
@@ -211,9 +210,8 @@ properties:
         provides access to the other annotations.
     type: String
     default: null
-    platforms: [android, iphone, ipad]
     osver: { ios: { min: "11.0" } }
-    since: { android: "7.4.0", iphone: "6.3.0", ipad: "6.3.0" }
+    since: { android: "7.4.0", iphone: "6.3.0", ipad: "6.3.0", macos: "9.2.0" }
 
   - name: draggable
     summary: Determines whether the pin can be dragged by the user.
@@ -308,7 +306,6 @@ properties:
     type: Boolean
     default: false
     since: "6.1.0"
-    platforms: [android, iphone, ipad]
 
   - name: previewContext
     summary: The preview context used in the 3D-Touch feature "Peek and Pop".
@@ -318,7 +315,26 @@ properties:
 
         Note: This property can only be used on devices running iOS9 or later and supporting 3D-Touch.
         It is ignored on older devices and can manually be checked using <Titanium.UI.iOS.forceTouchSupported>.
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.2.0"
     type: Titanium.UI.iOS.PreviewContext
     osver: {ios: {min: "9.0"}}
+
+methods:
+  - name: animate
+    summary: Animate annotation to new location.
+    parameters:
+        - name: newLocation
+          summary: latitude and longitude where annotation will animate.
+          type: Array<Number>
+    exclude-platforms: [android]
+    since: "9.2.0"
+          
+  - name: rotate
+    summary: Rotate annotation on its location.
+    parameters:
+        - name: angle
+          summary: angle on which annotation will rotate.
+          type: Number
+    exclude-platforms: [android]
+    since: "9.2.0"

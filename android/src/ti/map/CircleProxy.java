@@ -1,13 +1,17 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 package ti.map;
 
-import java.util.HashMap;
-
+import android.graphics.Color;
+import android.os.Message;
+import android.view.ViewGroup;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
@@ -16,15 +20,7 @@ import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.util.TiConvert;
-
 import ti.map.Shape.IShape;
-import android.graphics.Color;
-import android.os.Message;
-import android.view.ViewGroup;
-
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
 
 @Kroll.
 proxy(name = "Circle", creatableInModule = MapModule.class,
@@ -80,7 +76,7 @@ public class CircleProxy extends KrollProxy implements IShape
 		switch (msg.what) {
 			case MSG_SET_CENTER: {
 				result = (AsyncResult) msg.obj;
-				LatLng location = parseLocation(result.getArg());
+				LatLng location = TiMapUtils.parseLocation(result.getArg());
 				circle.setCenter(location);
 				result.setResult(null);
 				return true;
@@ -152,7 +148,7 @@ public class CircleProxy extends KrollProxy implements IShape
 		options = new CircleOptions();
 
 		if (hasProperty(MapModule.PROPERTY_CENTER)) {
-			options.center(parseLocation(getProperty(MapModule.PROPERTY_CENTER)));
+			options.center(TiMapUtils.parseLocation(getProperty(MapModule.PROPERTY_CENTER)));
 		}
 
 		if (hasProperty(MapModule.PROPERTY_RADIUS)) {
@@ -253,24 +249,6 @@ public class CircleProxy extends KrollProxy implements IShape
 	public boolean getClickable()
 	{
 		return clickable;
-	}
-
-	// A location can either be a an array of longitude, latitude pairings or
-	// an array of longitude, latitude objects.
-	// e.g. [123.33, 34.44], OR {longitude: 123.33, latitude, 34.44}
-	private LatLng parseLocation(Object loc)
-	{
-		LatLng location = null;
-		if (loc instanceof HashMap) {
-			HashMap<String, String> point = (HashMap<String, String>) loc;
-			location = new LatLng(TiConvert.toDouble(point.get(TiC.PROPERTY_LATITUDE)),
-								  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
-		} else if (loc instanceof Object[]) {
-			Object[] temp = (Object[]) loc;
-			location = new LatLng(TiConvert.toDouble(temp[1]), TiConvert.toDouble(temp[0]));
-		}
-		//		Log.w("TiApp MAP", "center lat lng " + location.latitude + ", " + location.longitude);
-		return location;
 	}
 
 	public String getApiName()

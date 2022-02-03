@@ -8,31 +8,20 @@ description: |
 
     Use the <Modules.Map.createImageOverlay> method to create an image overlay.
 extends: Titanium.Proxy
-since: { iphone: "7.2.0", ipad: "7.2.0", android: "7.4.0" }
-platforms: [iphone, ipad, android]
+since: { iphone: "7.2.0", ipad: "7.2.0", android: "7.4.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 properties:
   - name: boundsCoordinate
     summary: An object representing diagonal coordinates (`topLeft` and `bottomRight`) on the map.
     availability: creation
     type: MapBoundsCoordinateType
-
+    optional: false
 
   - name: image
     summary: The image that is shown as an overlay on the map.
     availability: creation
     type: [String, Titanium.Blob]
-
----
-name: MapPointType
-summary: An object representing a point on the map.
-properties:
-  - name: longitude
-    summary: Longitude value of the map point, in decimal degrees.
-    type: Number
-
-  - name: latitude
-    summary: Latitude value of the map point, in decimal degrees.
-    type: Number
+    optional: false
 
 ---
 name: MapBoundsCoordinateType

@@ -1,10 +1,8 @@
-let Map;
-
-const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 const ANDROID = (Ti.Platform.osname === 'android');
+const IOS = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
-describe('ti.map', function () {
-
+describe('ti.map', () => {
+	let Map;
 	it('can be required', () => {
 		Map = require('ti.map');
 
@@ -26,45 +24,41 @@ describe('ti.map', function () {
 				expect(Map.ANNOTATION_RED).toEqual(jasmine.any(Number));
 			});
 
-			// FIXME get working on iOS, says value is undefined, not a Number
 			it('ANNOTATION_YELLOW', () => {
 				expect(Map.ANNOTATION_YELLOW).toEqual(jasmine.any(Number));
 			});
 
-			// Android specific colors...
-			if (ANDROID) {
-				it('ANNOTATION_AZURE', () => {
-					expect(Map.ANNOTATION_AZURE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_AZURE', () => {
+				expect(Map.ANNOTATION_AZURE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_BLUE', () => {
-					expect(Map.ANNOTATION_BLUE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_BLUE', () => {
+				expect(Map.ANNOTATION_BLUE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_CYAN', () => {
-					expect(Map.ANNOTATION_CYAN).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_CYAN', () => {
+				expect(Map.ANNOTATION_CYAN).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_MAGENTA', () => {
-					expect(Map.ANNOTATION_MAGENTA).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_MAGENTA', () => {
+				expect(Map.ANNOTATION_MAGENTA).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_ORANGE', () => {
-					expect(Map.ANNOTATION_ORANGE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_ORANGE', () => {
+				expect(Map.ANNOTATION_ORANGE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_PURPLE', () => {
-					expect(Map.ANNOTATION_PURPLE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_PURPLE', () => {
+				expect(Map.ANNOTATION_PURPLE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_ROSE', () => {
-					expect(Map.ANNOTATION_ROSE).toEqual(jasmine.any(Number));
-				});
+			it('ANNOTATION_ROSE', () => {
+				expect(Map.ANNOTATION_ROSE).toEqual(jasmine.any(Number));
+			});
 
-				it('ANNOTATION_VIOLET', () => {
-					expect(Map.ANNOTATION_VIOLET).toEqual(jasmine.any(Number));
-				});
-			}
+			it('ANNOTATION_VIOLET', () => {
+				expect(Map.ANNOTATION_VIOLET).toEqual(jasmine.any(Number));
+			});
 		});
 
 		describe('ANNOTATION_DRAG_STATE_*', () => {
@@ -134,4 +128,23 @@ describe('ti.map', function () {
 		});
 	});
 
+	describe('methods', () => {
+		if (ANDROID) {
+			describe('#isGooglePlayServicesAvailable()', () => {
+				it('is a Function', () => {
+					expect(Map.isGooglePlayServicesAvailable).toEqual(jasmine.any(Function));
+				});
+
+				it('returns one of expected constant values', () => {
+					const value = Map.isGooglePlayServicesAvailable();
+
+					expect(value).toEqual(jasmine.any(Number));
+
+					const possibleValues = [ Map.SERVICE_DISABLED, Map.SERVICE_INVALID, Map.SERVICE_MISSING, Map.SERVICE_VERSION_UPDATE_REQUIRED, Map.SUCCESS ];
+
+					expect(possibleValues).toContain(value);
+				});
+			});
+		}
+	});
 });

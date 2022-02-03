@@ -113,8 +113,8 @@ description: |
 
     -   The `addRoute` method no longer accepts a dictionary as a parameter. Pass a <Modules.Map.Route> object instead.
 extends: Titanium.Module
-since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
-platforms: [android, iphone, ipad]
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 excludes:
     methods: [addEventListener, fireEvent, removeEventListener]
     properties: [bubbleParent]
@@ -150,7 +150,6 @@ properties:
     permission: read-only
     since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_AZURE
     summary: |
@@ -158,7 +157,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
 
   - name: ANNOTATION_CYAN
@@ -167,9 +166,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_MAGENTA
     summary: |
@@ -177,9 +175,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_ORANGE
     summary: |
@@ -187,9 +184,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_PURPLE
     summary: |
@@ -197,8 +193,7 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "3.2.0", ipad: "3.2.0", android: "6.1.0"}
-    platforms: [iphone, ipad, android]
+    since: {iphone: "3.2.0", ipad: "3.2.0", android: "6.1.0", macos: "9.2.0"}
 
   - name: ANNOTATION_ROSE
     summary: |
@@ -206,9 +201,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_YELLOW
     summary: |
@@ -216,9 +210,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_VIOLET
     summary: |
@@ -226,9 +219,8 @@ properties:
         <Modules.Map.Annotation.pincolor> property.
     type: Number
     permission: read-only
-    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0"}
+    since: {iphone: "6.1.0", ipad: "6.1.0", android: "3.1.0", macos: "9.2.0"}
     osver: {ios: {min: "9.0"} }
-    platforms: [iphone, ipad, android]
 
   - name: ANNOTATION_RED
     summary: |
@@ -246,7 +238,7 @@ properties:
     summary: Used with [mapType](Modules.Map.View.mapType) to display satellite flyover imagery of the area. Available in iOS 9.0 and later.
     type: Number
     permission: read-only
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: NORMAL_TYPE
     summary: Used with [mapType](Modules.Map.View.mapType) to display a street map that shows the position of all roads and some road names.
@@ -268,7 +260,7 @@ properties:
     summary: Used with [mapType](Modules.Map.View.mapType) to display a satellite flyover image of the area with road and road name information layered on top. Available in iOS 9.0 and later.
     type: Number
     permission: read-only
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: MUTED_STANDARD_TYPE
     summary: |
@@ -277,26 +269,25 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [android, iphone, ipad]
 
   - name: REASON_API_ANIMATION
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The animation was initiated in response to the user actions.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: REASON_DEVELOPER_ANIMATION
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The camera moved in response to a request from the application.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: REASON_GESTURE
     summary: Used in the [regionwillchange](Modules.Map.View.regionwillchange) event. The camera moved in response to the user gestures on the map.
     type: Number
     permission: read-only
     platforms: [android]
-    
+
   - name: SUCCESS
     summary: Code returned from <Modules.Map.isGooglePlayServicesAvailable>. Google Play services is available, and the connection is successful.
     type: Number
@@ -332,7 +323,7 @@ properties:
     type: Number
     permission: read-only
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: OVERLAY_LEVEL_ABOVE_ROADS
     summary: |
@@ -341,14 +332,37 @@ properties:
     type: Number
     permission: read-only
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
+
+  - name: POLYLINE_JOINT_BEVEL
+    summary: |
+        Flat bevel on the outside of the joint.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    since: "5.1.0"
+
+  - name: POLYLINE_JOINT_DEFAULT
+    summary: |
+        Default: Mitered joint, with fixed pointed extrusion equal to half the stroke width on the outside of the joint.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    since: "5.1.0"
+
+  - name: POLYLINE_JOINT_ROUND
+    summary: |
+        Rounded on the outside of the joint by an arc of radius equal to half the stroke width, centered at the vertex.
+    type: Number
+    permission: read-only
+    platforms: [android]
+    since: "5.1.0"
 
   - name: POLYLINE_PATTERN_DASHED
     summary: |
         Polyline type constant used to display a dashed polyline via <Modules.Map.Polyline.pattern> property.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
     since: "6.2.0"
 
   - name: POLYLINE_PATTERN_DOTTED
@@ -356,18 +370,17 @@ properties:
         Polyline type constant used to display a dotted polyline via <Modules.Map.Polyline.pattern> property.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
     since: "6.2.0"
 
   - name: FEATURE_VISIBILITY_ADAPTIVE
     summary: Constant indicating that title text adapts to the current map state.
     description: |
-        For markers in the normal state, title text is displayed and subtitle text is hidden. When a marker 
+        For markers in the normal state, title text is displayed and subtitle text is hidden. When a marker
         is selected, the title and subtitle text are hidden when the marker requires a callout.
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_VISIBILITY_HIDDEN
@@ -375,7 +388,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_VISIBILITY_VISIBLE
@@ -383,7 +396,7 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_DISPLAY_PRIORITY_REQUIRED
@@ -393,38 +406,38 @@ properties:
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH
     summary: Constant indicating that the item's display priority is high.
     description: |
         An annotation view with this priority is removed from the map when its bounds
-        collide with the bounds of another view with a higher priority. If the priorities 
-        of the two views are equal, the view furthest from the center of the map's visible 
+        collide with the bounds of another view with a higher priority. If the priorities
+        of the two views are equal, the view furthest from the center of the map's visible
         region is hidden first.
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW
     summary: Constant indicating that the item's display priority is low.
     description: |
         An annotation view with this priority is removed from the map when its bounds
-        collide with the bounds of another view with a higher priority. If the priorities 
-        of the two views are equal, the view furthest from the center of the map's visible 
+        collide with the bounds of another view with a higher priority. If the priorities
+        of the two views are equal, the view furthest from the center of the map's visible
         region is hidden first.
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE
     summary: |
-        Constant indicating that the full collision frame rectangle should be used for 
+        Constant indicating that the full collision frame rectangle should be used for
         detecting collisions.
     type: Number
     permission: read-only
@@ -434,12 +447,12 @@ properties:
 
   - name: ANNOTATION_VIEW_COLLISION_MODE_CIRCLE
     summary: |
-        Constant indicating that a circle inscribed in the collision frame rectangle should 
+        Constant indicating that a circle inscribed in the collision frame rectangle should
         be used to determine collisions.
     type: Number
     permission: read-only
     osver: {ios: {min: "11.0"} }
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
 methods:
@@ -575,7 +588,7 @@ examples:
     example: |
         This is a map-example which creates marker annotation and clustering of annotations.
 
-        The `clusterIdentifier` property and the `clusterstart` event are required in order to enable 
+        The `clusterIdentifier` property and the `clusterstart` event are required in order to enable
         clustering. You can control the clustering by defining the `collisionMode` property and
         setting special cluster annotations using the `setClusterAnnotation` method on your map
         view instance.
@@ -631,3 +644,15 @@ examples:
         win.add(mapview);
         win.open();
         ```
+
+---
+name: MapPointType
+summary: An object representing a point on the map.
+properties:
+  - name: longitude
+    summary: Longitude value of the map point, in decimal degrees.
+    type: Number
+
+  - name: latitude
+    summary: Latitude value of the map point, in decimal degrees.
+    type: Number

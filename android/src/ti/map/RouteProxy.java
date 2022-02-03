@@ -1,26 +1,25 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 package ti.map;
 
+import android.os.Message;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
-
-import android.os.Message;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 @Kroll.proxy(creatableInModule = MapModule.class,
 			 propertyAccessors = { MapModule.PROPERTY_POINTS, TiC.PROPERTY_COLOR, TiC.PROPERTY_WIDTH })
@@ -72,6 +71,7 @@ public class RouteProxy extends KrollProxy
 			}
 		}
 	}
+
 	public void processOptions()
 	{
 
@@ -111,7 +111,13 @@ public class RouteProxy extends KrollProxy
 	{
 
 		ArrayList<LatLng> locationArray = new ArrayList<LatLng>();
-		//multiple points
+		// encoded (result from routing API)
+		if (points instanceof String) {
+			List<LatLng> locationList = PolyUtil.decode((String) points);
+			return new ArrayList<LatLng>(locationList);
+		}
+
+		// multiple points
 		if (points instanceof Object[]) {
 			Object[] pointsArray = (Object[]) points;
 			for (int i = 0; i < pointsArray.length; i++) {
@@ -121,7 +127,7 @@ public class RouteProxy extends KrollProxy
 			return locationArray;
 		}
 
-		//single point
+		// single point
 		addLocation(points, locationArray, list);
 		return locationArray;
 	}

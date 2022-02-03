@@ -4,13 +4,11 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+#import <MapKit/MapKit.h>
+#import <TitaniumKit/TiViewProxy.h>
 
-#import <TitaniumKit/TitaniumKit.h>
-#import "TiMapAnnotationProxy.h"
-#import "TiMapCameraProxy.h"
-#import "TiMapCircleProxy.h"
-#import "TiMapPolygonProxy.h"
-#import "TiMapPolylineProxy.h"
+@class TiMapAnnotationProxy;
+@class TiMapCameraProxy;
 
 @interface TiMapViewProxy : TiViewProxy {
   TiMapAnnotationProxy *selectedAnnotation; // Annotation to select on initial display
@@ -35,6 +33,7 @@
 
 - (TiMapAnnotationProxy *)annotationFromArg:(id)arg;
 - (TiMapCameraProxy *)camera;
+- (MKAnnotationView *)viewForAnnotationProxy:(TiMapAnnotationProxy *)annotationProxy;
 
 - (void)addAnnotation:(id)args;
 - (void)addAnnotations:(id)args;
@@ -45,6 +44,7 @@
 - (void)showAllAnnotations:(id)unused;
 - (void)selectAnnotation:(id)args;
 - (void)deselectAnnotation:(id)args;
+- (void)setLocation:(id)args;
 - (void)zoom:(id)args;
 - (void)addRoute:(id)args;
 - (void)removeRoute:(id)args;
@@ -65,6 +65,7 @@
 - (void)removeImageOverlay:(id)arg;
 - (void)removeAllImageOverlays:(id)args;
 - (void)setClusterAnnotation:(id)args;
+- (void)setLocation:(id)location;
 - (NSNumber *)containsCoordinate:(id)coordinate;
 
 @end

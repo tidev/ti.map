@@ -53,8 +53,8 @@ extends: Titanium.UI.View
 excludes:
     events: [ 'singletap', 'doubletap', 'dblclick', 'longpress', 'pinch',
               'swipe', 'touchstart', 'touchend', 'touchcancel', 'touchmove', 'twofingertap' ]
-since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0" }
-platforms: [android, iphone, ipad]
+since: { android: "3.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
+platforms: [android, iphone, ipad, macos]
 methods:
   - name: addAnnotation
     summary: Adds a new annotation to the map.
@@ -77,6 +77,29 @@ methods:
       - name: route
         summary: Modules.Map.Route
         type: Modules.Map.Route
+
+  - name: addHeatmap
+    summary: Adds a heatmap to the map.
+    description: A heatmap is defined by an array of coordinates.
+    parameters:
+      - name: coordinates
+        summary: An array of coordinates
+        type: MapPointType
+    platforms: [android]
+    since: "10.1.0"
+
+  - name: containsCoordinate
+    summary: |
+        Validated whether or not a given coordinate is currently visible
+        in the map rect.
+    parameters:
+      - name: coordinate
+        summary: The `latitude` and `longitude` pair represented by an Object.
+        type: MapPointType
+    returns:
+        type: Boolean
+        summary: Returns `true` if given coordinate is within the displayed map view.
+    since: 10.1.0
 
   - name: deselectAnnotation
     summary: |
@@ -190,8 +213,7 @@ methods:
             of camera animations can be captured by listening for a `regionchanged` event with `animated`
             set to true.
         type: Callback<Object>
-    since: "3.2.0"
-    platforms: [iphone, ipad]
+    since: { android: "9.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 
   - name: showAnnotations
     summary: |
@@ -204,8 +226,7 @@ methods:
             An array of <Modules.Map.Annotation> to display.
         type: Array<Modules.Map.Annotation>
         optional: true
-    since: { android: "8.0.0", iphone: "3.2.0", ipad: "3.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "8.0.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 
   - name: addPolygon
     summary: Adds a new polygon to the map.
@@ -268,6 +289,7 @@ methods:
 
   - name: addCircles
     summary: Adds one or more new circles to the map.
+    exclude-platforms: [android]
     parameters:
       - name: circles
         summary: |
@@ -287,8 +309,7 @@ methods:
 
   - name: addImageOverlay
     summary: Adds a new image overlay to the map.
-    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0", macos: "9.2.0" }
     parameters:
       - name: imageOverlay
         summary: A <Modules.Map.ImageOverlay> instance.
@@ -296,8 +317,7 @@ methods:
 
   - name: addImageOverlays
     summary: Adds one or more new image overlays to the map.
-    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0", macos: "9.2.0" }
     parameters:
       - name: imageOverlays
         summary: |
@@ -306,8 +326,7 @@ methods:
 
   - name: removeImageOverlay
     summary: Remove an image overlay from the map.
-    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0", macos: "9.2.0" }
     parameters:
       - name: imageOverlay
         summary: |
@@ -316,8 +335,7 @@ methods:
 
   - name: removeAllImageOverlays
     summary: Remove all image overlays from the map.
-    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "7.4.0", iphone: "7.2.0", ipad: "7.2.0", macos: "9.2.0" }
 
   - name: setClusterAnnotation
     summary: Set new cluster annotation for the clustered annotation.
@@ -329,8 +347,7 @@ methods:
         summary: Properties for creating cluster annotation.
         type: ClusterAnnotationParams
     osver: { ios: { min: "11.0" } }
-    platforms: [android, iphone, ipad]
-    since: { android: "7.4.0", iphone: "6.3.0", ipad: "6.3.0" }
+    since: { android: "7.4.0", iphone: "6.3.0", ipad: "6.3.0", macos: "9.2.0" }
 
 events:
   - name: clusterstart
@@ -343,7 +360,7 @@ events:
       - name: map
         summary: This map view.
         type: Modules.Map.View
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
     since: "6.3.0"
 
   - name: onsnapshotready
@@ -453,7 +470,6 @@ events:
             Will show if the annotation was selected (false) or deselected (true)
         type: Boolean
         since: "4.5.0"
-        platforms: [android, iphone, ipad]
 
   - name: complete
     summary: Fired when the map completes loading.
@@ -479,7 +495,6 @@ events:
             Longitude of the clicked position.
         type: Number
     since: "6.2.0"
-    platforms: [android, iphone, ipad]
 
   - name: poiclick
     summary: |
@@ -507,7 +522,7 @@ events:
     platforms: [android]
 
   - name: regionwillchange
-    since: { android: "6.2.0", iphone: "6.0.0", ipad: "6.0.0" }
+    since: { android: "6.2.0", iphone: "6.0.0", ipad: "6.0.0", macos: "9.2.0" }
     summary: |
         Fired when the mapping region will change.
     properties:
@@ -536,7 +551,6 @@ events:
             The regionwillchange event was caused by an `animation`, such as a animating the camera.
         since: "3.2.0"
         type: Boolean
-        platforms: [android, iphone, ipad]
 
       - name: reason
         summary: |
@@ -575,7 +589,7 @@ events:
             The regionchanged event was caused by an `animation`, such as a animating the camera.
         since: "3.2.0"
         type: Boolean
-        platforms: [iphone, ipad]
+        exclude-platforms: [android]
 
   - name: longclick
     summary: |
@@ -633,6 +647,18 @@ properties:
         references to all of the annotations in a separate array.
     type: Array<Modules.Map.Annotation>
 
+  - name: liteMode
+    summary: Create a liteMode map version
+    description: |
+        When the `liteMode` is switched on the map will be displayed as a bitmap with limited interaction.
+        Please refer to [Google developers documentation](https://developers.google.com/maps/documentation/android-sdk/lite)
+        for more details.
+    type: Boolean
+    default: false
+    since: "5.0.3"
+    platforms: [android]
+    availability: creation
+
   - name: mapType
     summary: |
         Map type constant, either <Modules.Map.NORMAL_TYPE>, <Modules.Map.SATELLITE_TYPE>,
@@ -687,9 +713,8 @@ properties:
     summary: Enable or disables the compass button.
     type: Boolean
     default: true
-    since: { android: "3.2.3", iphone: "6.1.0", ipad: "6.1.0" }
+    since: { android: "3.2.3", iphone: "6.1.0", ipad: "6.1.0", macos: "9.2.0" }
     osver: { ios: {min: "9.0"} }
-    platforms: [android, iphone, ipad]
 
   - name: mapToolbarEnabled
     summary: Enable or disables the map toolbar.
@@ -733,6 +758,16 @@ properties:
     platforms: [android]
     permission: read-only
 
+  - name: minClusterSize
+    summary: Sets the minium size of a cluster.
+    description: |
+        The minium cluster size is the smallest number of annotations that are merged together and
+        (minClusterSize + 1) is the smallest number that will appear on the cluster.
+    since: "5.2.0"
+    type: Number
+    default: 4
+    platforms: [android]
+
   - name: zoom
     summary: Returns the current zoom level from the current camera position.
     description: |
@@ -765,8 +800,7 @@ properties:
         You must not set this property to null. To restore the map to a flat appearance, apply a camera with a pitch angle of 0,
         which yields a camera looking straight down onto the map surface.
     type: Modules.Map.Camera
-    since: "3.2.0"
-    platforms: [iphone, ipad]
+    since: { android: "9.1.0", iphone: "3.2.0", ipad: "3.2.0", macos: "9.2.0" }
 
   - name: pitchEnabled
     summary: A Boolean value indicating whether the map camera's pitch information is used.
@@ -777,7 +811,7 @@ properties:
         as if the user is looking straight down onto it.
     type: Boolean
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: rotateEnabled
     summary: A Boolean value indicating whether the map camera's heading information is used.
@@ -788,7 +822,7 @@ properties:
         map is always oriented so that true north is situated at the top of the map view.
     type: Boolean
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: scrollEnabled
     summary: A Boolean value indicating whether the map can be scrolled by dragging gesture.
@@ -796,8 +830,7 @@ properties:
         When this property is set to `true` the a map view can be panned or scrolled by dragging the map view.
     type: Boolean
     default: true
-    since: { android: "8.0.0", iphone: "7.2.0", ipad: "7.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "8.0.0", iphone: "7.2.0", ipad: "7.2.0", macos: "9.2.0" }
 
   - name: showsBuildings
     summary: A Boolean indicating whether the map displays extruded building information.
@@ -808,7 +841,7 @@ properties:
     type: Boolean
     default: true
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: showsPointsOfInterest
     summary: A Boolean indicating whether the map displays point-of-interest information.
@@ -818,7 +851,7 @@ properties:
     type: Boolean
     default: true
     since: "3.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: showsCompass
     summary: A Boolean indicating whether the map displays a compass control.
@@ -832,7 +865,7 @@ properties:
         since: "6.1.0"
         notes: Please use [Modules.Map.View.compassEnabled](Modules.Map.View.compassEnabled) for parity instead.
     since: "5.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: showsScale
     summary: A Boolean indicating whether the map shows scale information.
@@ -841,7 +874,7 @@ properties:
     osver: { ios: {min: "9.0"} }
     default: false
     since: "5.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: showsTraffic
     summary: A Boolean value indicating whether the map displays traffic information.
@@ -852,7 +885,7 @@ properties:
     osver: { ios: {min: "9.0"} }
     default: false
     since: "5.2.0"
-    platforms: [iphone, ipad]
+    exclude-platforms: [android]
 
   - name: style
     summary: JSON String to style the Map.
@@ -872,8 +905,7 @@ properties:
         out can also be accomplished by two-finger tapping the map view.
     type: Boolean
     default: true
-    since: { android: "8.0.0", iphone: "7.2.0", ipad: "7.2.0" }
-    platforms: [iphone, ipad, android]
+    since: { android: "8.0.0", iphone: "7.2.0", ipad: "7.2.0", macos: "9.2.0" }
 
   - name: indoorEnabled
     summary: A Boolean value indicating whether the indoor mapping is enabled.
@@ -1010,8 +1042,9 @@ since: "3.2.0"
 name: ClusterAnnotationParams
 summary: |
     Simple object used to create cluster annotation view.
+exclude-platforms: [android]
+since: "6.3.0"
 properties:
-
   - name: memberAnnotations
     summary: |
       Array of Modules.Map.Annotation, which is recieved in event 'clusteringstarted' as
@@ -1023,6 +1056,3 @@ properties:
       <Modules.Map.Annotation> instance, which you want to show as clustered annotation. There is no
       need to provide latitude and longitude as clustered annotation decides its location itself.
     type: Modules.Map.Annotation
-
-platforms: [iphone, ipad]
-since: "6.3.0"

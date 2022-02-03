@@ -5,8 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import <TitaniumKit/TitaniumKit.h>
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiViewProxy.h>
 
 @class TiMapViewProxy;
 
@@ -31,14 +32,13 @@
 // Title and subtitle for use by selection UI.
 - (NSString *)title;
 - (NSString *)subtitle;
-
 - (id)pincolor;
 - (BOOL)animatesDrop;
 - (void)setHidden:(id)value;
-
 - (UIView *)leftViewAccessory;
 - (UIView *)rightViewAccessory;
-
 - (int)tag;
+- (void)animate:(id)arg;
+- (void)rotate:(id)arg;
 
 @end

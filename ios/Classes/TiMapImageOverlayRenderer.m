@@ -6,6 +6,7 @@
  */
 
 #import "TiMapImageOverlayRenderer.h"
+#import <TitaniumKit/TiBase.h>
 
 @interface TiMapImageOverlayRenderer ()
 

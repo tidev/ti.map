@@ -64,30 +64,27 @@
 // [ {longitude: 123.33, latitude, 34.44}, {longitude: 100.39, latitude: 78.23}, etc. ]
 - (CLLocationCoordinate2D)processLocation:(id)locObj
 {
-  CLLocationDegrees lat;
-  CLLocationDegrees lon;
-  CLLocationCoordinate2D coord;
-
   if ([locObj isKindOfClass:[NSDictionary class]]) {
-    lat = [TiUtils doubleValue:[locObj objectForKey:@"latitude"]];
-    lon = [TiUtils doubleValue:[locObj objectForKey:@"longitude"]];
-    coord = CLLocationCoordinate2DMake(lat, lon);
+    CLLocationDegrees lat = [TiUtils doubleValue:[locObj objectForKey:@"latitude"]];
+    CLLocationDegrees lon = [TiUtils doubleValue:[locObj objectForKey:@"longitude"]];
+
+    return CLLocationCoordinate2DMake(lat, lon);
   } else if ([locObj isKindOfClass:[NSArray class]]) {
-    lat = [TiUtils doubleValue:[locObj objectAtIndex:1]];
-    lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
-    coord = CLLocationCoordinate2DMake(lat, lon);
+    CLLocationDegrees lat = [TiUtils doubleValue:[locObj objectAtIndex:1]];
+    CLLocationDegrees lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
+
+    return CLLocationCoordinate2DMake(lat, lon);
   } else {
     [self throwException:@"Invalid coordinate tyoe" subreason:@"Use either a dictionary or array" location:CODELOCATION];
-    coord = CLLocationCoordinate2DMake(0.0, 0.0);
   }
 
-  return coord;
+  return kCLLocationCoordinate2DInvalid;
 }
 
 - (void)applyStrokeColor
 {
   if (polylineRenderer != nil) {
-    [polylineRenderer setStrokeColor:strokeColor];
+    [polylineRenderer setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
   }
 }
 
@@ -135,6 +132,7 @@
   }
   strokeColor = [[[TiUtils colorValue:value] _color] retain];
   [self applyStrokeColor];
+  [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }
 
 - (void)setStrokeWidth:(id)value

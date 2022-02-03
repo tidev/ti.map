@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import <TitaniumKit/TitaniumKit.h>
+#import <TitaniumKit/TiModule.h>
 
 @interface TiMapModule : TiModule {
   UIColor *colorRed;

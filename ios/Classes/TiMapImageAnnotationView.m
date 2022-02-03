@@ -6,6 +6,8 @@
  */
 
 #import "TiMapImageAnnotationView.h"
+#import "TiMapAnnotationProxy.h"
+#import <TitaniumKit/TiBase.h>
 
 @implementation TiMapImageAnnotationView
 

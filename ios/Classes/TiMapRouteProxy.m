@@ -7,6 +7,8 @@
 
 #import "TiMapRouteProxy.h"
 #import "TiMapModule.h"
+#import <TitaniumKit/TiBase.h>
+#import <TitaniumKit/TiUtils.h>
 
 @implementation TiMapRouteProxy
 

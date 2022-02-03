@@ -1,17 +1,28 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 package ti.map;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Message;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollFunction;
+import org.appcelerator.kroll.KrollObject;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
@@ -21,11 +32,7 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
-
 import ti.map.AnnotationProxy.AnnotationDelegate;
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.Message;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -87,11 +94,14 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_REMOVE_IMAGE_OVERLAY = MSG_FIRST_ID + 932;
 	private static final int MSG_REMOVE_ALL_IMAGE_OVERLAYS = MSG_FIRST_ID + 933;
 
+	private static final int MSG_ADD_HEAT_MAP = MSG_FIRST_ID + 941;
+
 	private final ArrayList<RouteProxy> preloadRoutes;
 	private final ArrayList<PolygonProxy> preloadPolygons;
 	private final ArrayList<PolylineProxy> preloadPolylines;
 	private final ArrayList<CircleProxy> preloadCircles;
 	private final ArrayList<ImageOverlayProxy> preloadOverlaysList;
+	private final ArrayList<TileOverlayOptions> preloadTileOverlayOptionsList;
 
 	public ViewProxy()
 	{
@@ -100,10 +110,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_SCROLL_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_ZOOM_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_MIN_CLUSTER_SIZE, 4); // matches DefaultClusterRenderer's default:
+		// https://github.com/googlemaps/android-maps-utils/blob/master/library/src/main/java/com/google/maps/android/clustering/view/DefaultClusterRenderer.java#L108
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();
 		preloadOverlaysList = new ArrayList<ImageOverlayProxy>();
+		preloadTileOverlayOptionsList = new ArrayList<TileOverlayOptions>();
 	}
 
 	@Override
@@ -118,6 +131,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolygons.clear();
 		preloadPolylines.clear();
 		preloadCircles.clear();
+		preloadTileOverlayOptionsList.clear();
 	}
 
 	@Override
@@ -324,14 +338,21 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 			case MSG_SHOW_ANNOTATIONS: {
 				result = ((AsyncResult) msg.obj);
-				handleShowAnnotations((Object[]) result.getArg(), 30, false);
+                handleShowAnnotations((Object[]) result.getArg(), 30, false);
+				result.setResult(null);
+				return true;
+			}
+
+			case MSG_ADD_HEAT_MAP: {
+				result = ((AsyncResult) msg.obj);
+				handleAddHeatMap(result.getArg());
 				result.setResult(null);
 				return true;
 			}
 
 			case MSG_CONTAINS_COORDINATE: {
 				result = ((AsyncResult) msg.obj);
-				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict)result.getArg())));
+				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict) result.getArg())));
 				return true;
 			}
 		  
@@ -646,11 +667,42 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void addRoute(RouteProxy route)
 	{
-
 		if (TiApplication.isUIThread()) {
 			handleAddRoute(route);
 		} else {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_ROUTE), route);
+		}
+	}
+
+	@Kroll.method
+	public void addHeatMap(Object coordinates)
+	{
+		if (TiApplication.isUIThread()) {
+			handleAddHeatMap(coordinates);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_HEAT_MAP), coordinates);
+		}
+	}
+
+	public void handleAddHeatMap(Object coordinates)
+	{
+		// Validate.
+		if (coordinates == null) {
+			return;
+		}
+
+		// Create a heatmap overlay using given coordinates.
+		List<LatLng> data = TiMapUtils.processPoints(coordinates);
+		HeatmapTileProvider provider = new HeatmapTileProvider.Builder().data(data).build();
+		TileOverlayOptions tileOverlayOptions = new TileOverlayOptions().tileProvider(provider);
+
+		// Add heatmap overlay to map.
+		TiUIView view = peekView();
+		GoogleMap map = (view instanceof TiUIMapView) ? ((TiUIMapView) view).getMap() : null;
+		if (map != null) {
+			map.addTileOverlay(tileOverlayOptions);
+		} else {
+			this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
 		}
 	}
 
@@ -768,6 +820,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	public ArrayList<ImageOverlayProxy> getOverlaysList()
 	{
 		return preloadOverlaysList;
+	}
+
+	public ArrayList<TileOverlayOptions> getTileOverlayOptionsList()
+	{
+		return this.preloadTileOverlayOptionsList;
 	}
 
 	/**
@@ -1101,7 +1158,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void addCircle(CircleProxy circle)
 	{
-
 		if (TiApplication.isUIThread()) {
 			handleAddCircle(circle);
 		} else {
@@ -1280,6 +1336,93 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
+	@Kroll.method
+	public void animateCamera(KrollDict options, @Kroll.argument(optional = true) final KrollFunction callback)
+	{
+		// Fetch the camera proxy from given options argument.
+		Object cameraObject = (options != null) ? options.get("camera") : null;
+		if (!(cameraObject instanceof CameraProxy)) {
+			return;
+		}
+		CameraProxy cameraProxy = (CameraProxy) cameraObject;
+
+		// Fetch the optional "duration" parameter.
+		int durationInMilliseconds = TiConvert.toInt(options.get("duration"), -1);
+
+		// Fetch map view.
+		TiUIView view = peekView();
+		if (!(view instanceof TiUIMapView)) {
+			return;
+		}
+		TiUIMapView mapView = (TiUIMapView) view;
+		if (mapView.getMap() == null) {
+			return;
+		}
+
+		// Fetch the camera updater.
+		CameraUpdate cameraUpdate = cameraProxy.getCamera();
+		if (cameraUpdate == null) {
+			return;
+		}
+
+		// Set up the camera animation callback.
+		final KrollObject krollObject = getKrollObject();
+		GoogleMap.CancelableCallback mapCallback = new GoogleMap.CancelableCallback() {
+			@Override
+			public void onFinish()
+			{
+				if (callback != null) {
+					callback.callAsync(krollObject, new Object[0]);
+				}
+			}
+			@Override
+			public void onCancel()
+			{
+				if (callback != null) {
+					callback.callAsync(krollObject, new Object[0]);
+				}
+			}
+		};
+
+		// Move the map's camera.
+		if (durationInMilliseconds > 0) {
+			// Animate using given duration.
+			mapView.getMap().animateCamera(cameraUpdate, durationInMilliseconds, mapCallback);
+		} else if (durationInMilliseconds < 0) {
+			// Animate using map's default duration.
+			mapView.getMap().animateCamera(cameraUpdate, mapCallback);
+		} else {
+			// Duration is zero. Move camera immediately without animation.
+			mapView.getMap().moveCamera(cameraUpdate);
+			if (callback != null) {
+				callback.callAsync(krollObject, new Object[0]);
+			}
+		}
+	}
+
+	@Kroll.method
+	@Kroll.getProperty
+	public CameraProxy getCamera()
+	{
+		return new CameraProxy();
+	}
+
+	@Kroll.method
+	@Kroll.setProperty
+	public void setCamera(CameraProxy camera)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null && camera != null) {
+				CameraUpdate cameraUpdate = camera.getCamera();
+				if (cameraUpdate != null) {
+					mapView.getMap().moveCamera(cameraUpdate);
+				}
+			}
+		}
+	}
+
 	public void handleSetLocation(HashMap<String, Object> location)
 	{
 		TiUIView view = peekView();
@@ -1418,6 +1561,23 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		} else {
 			preloadOverlaysList.clear();
 		}
+	}
+
+	@Kroll.method
+	public boolean containsCoordinate(KrollDict coordinate)
+	{
+		return handleContainsCoordinate(coordinate);
+	}
+
+	private boolean handleContainsCoordinate(KrollDict coordinate)
+	{
+		TiUIView view = peekView();
+
+		if ((view instanceof TiUIMapView)) {
+			return ((TiUIMapView) view).containsCoordinate(coordinate);
+		}
+
+		return false;
 	}
 
 	public void handleSetPadding(KrollDict args)
