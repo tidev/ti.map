@@ -5,9 +5,6 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef map_TiMapPolylineProxy_h
-#define map_TiMapPolylineProxy_h
-
 #import "TiMapOverlayPattern.h"
 #import <TitaniumKit/TiBase.h>
 #import <TitaniumKit/TiViewProxy.h>

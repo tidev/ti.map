@@ -8,10 +8,15 @@
  */
 package ti.map;
 
+import android.location.Location;
+
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
+
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.KrollDict;
@@ -19,6 +24,10 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.TiC;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule
