@@ -130,7 +130,7 @@
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
-  strokeColor = [[[TiUtils colorValue:value] _color] retain];
+  strokeColor = [[TiUtils colorValue:value] retain];
   [self applyStrokeColor];
   [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }
