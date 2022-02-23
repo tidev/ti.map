@@ -14,10 +14,10 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.TiC;
-
-import com.google.maps.android.PolyUtil;
+import org.appcelerator.kroll.common.Log;
 
 import android.location.Location;
+import androidx.annotation.NonNull;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -28,12 +28,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
-import org.appcelerator.kroll.KrollModule;
-import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.Log;
-import org.appcelerator.titanium.TiApplication;
-
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
 
 @Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule implements OnMapsSdkInitializedCallback
