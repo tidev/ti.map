@@ -50,7 +50,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-titanium-launcher": "^0.8.1",
     "lint-staged": "^11.1.2",
-    "pinst": "^2.1.4",
+    "pinst": "^3.0.0",
     "titanium-docgen": "^4.2.0"
   },
   "lint-staged": {
