@@ -171,11 +171,8 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public void onMapsSdkInitialized(@NonNull MapsInitializer.Renderer renderer)
 	{
 		switch (renderer) {
-			case LATEST:
-				Log.d("MapsDemo", "The latest version of the renderer is used.");
-				break;
 			case LEGACY:
-				Log.d("MapsDemo", "The legacy version of the renderer is used.");
+				Log.d("Ti.Map", "The legacy version of the renderer is used.");
 				break;
 		}
 	}
