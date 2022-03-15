@@ -21,7 +21,6 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 
-
 @Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule implements OnMapsSdkInitializedCallback
 {
