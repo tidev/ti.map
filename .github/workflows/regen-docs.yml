@@ -35,4 +35,4 @@ jobs:
       with:
         event-type: regen-docs
         repository: tidev/titanium-docs
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.REGEN_DOCS_GITHUB_TOKEN }}
