@@ -9,13 +9,11 @@
 package ti.map;
 
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
@@ -151,7 +149,8 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public MapModule()
 	{
 		super();
-		MapsInitializer.initialize(TiApplication.getInstance().getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
+		MapsInitializer.initialize(TiApplication.getInstance().getApplicationContext(), MapsInitializer.Renderer.LATEST,
+								   this);
 	}
 
 	@Kroll.method
