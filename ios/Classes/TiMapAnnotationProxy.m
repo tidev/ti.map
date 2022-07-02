@@ -88,7 +88,7 @@
 - (void)setNeedsRefreshingWithSelection:(BOOL)shouldReselect
 {
   if (delegate == nil) {
-    return; //Nobody to refresh!
+    return; // Nobody to refresh!
   }
   @synchronized(self) {
     BOOL invokeMethod = !needsRefreshing;
@@ -118,7 +118,7 @@
 {
   @synchronized(self) {
     if (!needsRefreshing) {
-      return; //Already done.
+      return; // Already done.
     }
     if (delegate != nil && [delegate viewAttached]) {
       [(TiMapView *)[delegate view] refreshAnnotation:self readd:needsRefreshingWithSelection];
@@ -177,7 +177,7 @@
   title = [TiUtils replaceString:[TiUtils stringValue:title]
                       characters:[NSCharacterSet newlineCharacterSet]
                       withString:@" "];
-  //The label will strip out these newlines anyways (Technically, replace them with spaces)
+  // The label will strip out these newlines anyways (Technically, replace them with spaces)
 
   id current = [self valueForUndefinedKey:@"title"];
   [self replaceValue:title forKey:@"title" notification:NO];
