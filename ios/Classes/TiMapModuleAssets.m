@@ -3,7 +3,7 @@
  */
 #import "TiMapModuleAssets.h"
 
-extern NSData* filterDataInRange(NSData* thedata, NSRange range);
+extern NSData *filterDataInRange(NSData *thedata, NSRange range);
 
 @implementation TiMapModuleAssets
 
