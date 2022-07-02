@@ -70,6 +70,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-ccache-
 
+    - uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
     - name: Build and Test
       uses: reactivecircus/android-emulator-runner@v2
       with:
