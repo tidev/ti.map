@@ -52,7 +52,7 @@
   if (placemark.postalAddress) {
     place[@"address"] = [CNPostalAddressFormatter stringFromPostalAddress:placemark.postalAddress style:CNPostalAddressFormatterStyleMailingAddress];
   }
-  
+
   return place;
 }
 

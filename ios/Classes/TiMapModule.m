@@ -6,11 +6,11 @@
  */
 
 #import "TiMapModule.h"
+#import "TiApp.h"
+#import "TiBlob.h"
 #import "TiMapCameraProxy.h"
 #import "TiMapConstants.h"
 #import "TiMapViewProxy.h"
-#import "TiApp.h"
-#import "TiBlob.h"
 
 @implementation TiMapModule
 
@@ -55,21 +55,27 @@
 
   MKLookAroundSceneRequest *request = [[MKLookAroundSceneRequest alloc] initWithCoordinate:coordinate];
 
-  [request getSceneWithCompletionHandler:^(MKLookAroundScene * _Nullable_result scene, NSError * _Nullable error) {
+  [request getSceneWithCompletionHandler:^(MKLookAroundScene *_Nullable_result scene, NSError *_Nullable error) {
     if (error != nil) {
-      [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription }] thisObject:self];
+      [callback call:@[ @{@"success" : @(NO),
+        @"error" : error.localizedDescription} ]
+          thisObject:self];
       return;
     }
-    
+
     MKLookAroundSnapshotter *snapshotter = [[MKLookAroundSnapshotter alloc] initWithScene:scene options:[MKLookAroundSnapshotOptions new]];
-    [snapshotter getSnapshotWithCompletionHandler:^(MKLookAroundSnapshot * _Nullable snapshot, NSError * _Nullable error) {
+    [snapshotter getSnapshotWithCompletionHandler:^(MKLookAroundSnapshot *_Nullable snapshot, NSError *_Nullable error) {
       if (error != nil) {
         MKLookAroundViewController *vc;
-        [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription }] thisObject:self];
+        [callback call:@[ @{@"success" : @(NO),
+          @"error" : error.localizedDescription} ]
+            thisObject:self];
         return;
       }
 
-      [callback call:@[@{ @"success": @(YES), @"image": [[TiBlob alloc] initWithImage:snapshot.image] }] thisObject:self];
+      [callback call:@[ @{@"success" : @(YES),
+        @"image" : [[TiBlob alloc] initWithImage:snapshot.image]} ]
+          thisObject:self];
     }];
   }];
 }
@@ -88,12 +94,14 @@
 
   MKLookAroundSceneRequest *request = [[MKLookAroundSceneRequest alloc] initWithCoordinate:coordinate];
 
-  [request getSceneWithCompletionHandler:^(MKLookAroundScene * _Nullable_result scene, NSError * _Nullable error) {
+  [request getSceneWithCompletionHandler:^(MKLookAroundScene *_Nullable_result scene, NSError *_Nullable error) {
     if (error != nil) {
-      [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription }] thisObject:self];
+      [callback call:@[ @{@"success" : @(NO),
+        @"error" : error.localizedDescription} ]
+          thisObject:self];
       return;
     }
-    
+
     MKLookAroundViewController *vc = [[MKLookAroundViewController alloc] initWithScene:scene];
     vc.delegate = self;
     [[TiApp app] showModalController:vc animated:YES];

@@ -5,13 +5,13 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import <TitaniumKit/TiModule.h>
 #import <MapKit/MapKit.h>
+#import <TitaniumKit/TiModule.h>
 
 #if IS_SDK_IOS_16
 @interface TiMapModule : TiModule <MKLookAroundViewControllerDelegate> {
 #else
-  @interface TiMapModule : TiModule {
+@interface TiMapModule : TiModule {
 #endif
   UIColor *colorRed;
 }
