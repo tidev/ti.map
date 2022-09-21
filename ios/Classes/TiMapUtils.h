@@ -6,9 +6,12 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface TiMapUtils : NSObject
 
 + (id)returnValueOnMainThread:(id (^)(void))block;
+
++ (NSDictionary<NSString *, id> *)dictionaryFromPlacemark:(CLPlacemark *)placemark;
 
 @end

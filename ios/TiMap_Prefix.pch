@@ -2,3 +2,9 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 #endif
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 160000
+#define IS_SDK_IOS_16 true
+#else
+#define IS_SDK_IOS_16 false
+#endif

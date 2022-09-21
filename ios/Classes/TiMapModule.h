@@ -6,8 +6,13 @@
  */
 
 #import <TitaniumKit/TiModule.h>
+#import <MapKit/MapKit.h>
 
-@interface TiMapModule : TiModule {
+#if IS_SDK_IOS_16
+@interface TiMapModule : TiModule <MKLookAroundViewControllerDelegate> {
+#else
+  @interface TiMapModule : TiModule {
+#endif
   UIColor *colorRed;
 }
 

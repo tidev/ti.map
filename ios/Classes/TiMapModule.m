@@ -9,7 +9,8 @@
 #import "TiMapCameraProxy.h"
 #import "TiMapConstants.h"
 #import "TiMapViewProxy.h"
-#import <MapKit/MapKit.h>
+#import "TiApp.h"
+#import "TiBlob.h"
 
 @implementation TiMapModule
 
@@ -43,6 +44,73 @@
 {
   return [[[TiMapCameraProxy alloc] _initWithPageContext:[self pageContext] args:args] autorelease];
 }
+
+#if IS_SDK_IOS_16
+- (void)getLookAroundImage:(id)args
+{
+  ENSURE_SINGLE_ARG(args, NSDictionary);
+
+  KrollCallback *callback = (KrollCallback *)args[@"callback"];
+  CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:args[@"latitude"]], [TiUtils doubleValue:args[@"longitude"]]);
+
+  MKLookAroundSceneRequest *request = [[MKLookAroundSceneRequest alloc] initWithCoordinate:coordinate];
+
+  [request getSceneWithCompletionHandler:^(MKLookAroundScene * _Nullable_result scene, NSError * _Nullable error) {
+    if (error != nil) {
+      [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription }] thisObject:self];
+      return;
+    }
+    
+    MKLookAroundSnapshotter *snapshotter = [[MKLookAroundSnapshotter alloc] initWithScene:scene options:[MKLookAroundSnapshotOptions new]];
+    [snapshotter getSnapshotWithCompletionHandler:^(MKLookAroundSnapshot * _Nullable snapshot, NSError * _Nullable error) {
+      if (error != nil) {
+        MKLookAroundViewController *vc;
+        [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription }] thisObject:self];
+        return;
+      }
+
+      [callback call:@[@{ @"success": @(YES), @"image": [[TiBlob alloc] initWithImage:snapshot.image] }] thisObject:self];
+    }];
+  }];
+}
+
+- (void)openLookAroundDialog:(id)args
+{
+  ENSURE_SINGLE_ARG(args, NSDictionary);
+
+  if (![TiUtils isIOSVersionOrGreater:@"16.0"]) {
+    NSLog(@"[ERROR] This method is only available on iOS 16+");
+    return;
+  }
+
+  KrollCallback *callback = (KrollCallback *)args[@"callback"];
+  CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:args[@"latitude"]], [TiUtils doubleValue:args[@"longitude"]]);
+
+  MKLookAroundSceneRequest *request = [[MKLookAroundSceneRequest alloc] initWithCoordinate:coordinate];
+
+  [request getSceneWithCompletionHandler:^(MKLookAroundScene * _Nullable_result scene, NSError * _Nullable error) {
+    if (error != nil) {
+      [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription }] thisObject:self];
+      return;
+    }
+    
+    MKLookAroundViewController *vc = [[MKLookAroundViewController alloc] initWithScene:scene];
+    vc.delegate = self;
+    [[TiApp app] showModalController:vc animated:YES];
+  }];
+}
+
+- (void)lookAroundViewControllerDidDismissFullScreen:(MKLookAroundViewController *)viewController
+{
+  [self fireEvent:@"lookAroundOpen"];
+}
+
+- (void)lookAroundViewControllerDidPresentFullScreen:(MKLookAroundViewController *)viewController
+{
+  [self fireEvent:@"lookAroundClose"];
+}
+
+#endif
 
 MAKE_SYSTEM_PROP(STANDARD_TYPE, MKMapTypeStandard);
 MAKE_SYSTEM_PROP(NORMAL_TYPE, MKMapTypeStandard); // For parity with Android
@@ -85,5 +153,11 @@ MAKE_SYSTEM_PROP(ANNOTATION_VIEW_COLLISION_MODE_CIRCLE, MKAnnotationViewCollisio
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_REQUIRED, MKFeatureDisplayPriorityRequired);
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_DEFAULT_HIGH, MKFeatureDisplayPriorityDefaultHigh);
 MAKE_SYSTEM_PROP_DBL(FEATURE_DISPLAY_PRIORITY_DEFAULT_LOW, MKFeatureDisplayPriorityDefaultLow);
+
+#if IS_SDK_IOS_16
+MAKE_SYSTEM_PROP(FEATURE_TERRITORIES, MKMapFeatureOptionTerritories);
+MAKE_SYSTEM_PROP(FEATURE_PHYSICAL_FEATURES, MKMapFeatureOptionPhysicalFeatures);
+MAKE_SYSTEM_PROP(FEATURE_TYPE_POINT_OF_INTEREST, MKMapFeatureTypePointOfInterest);
+#endif
 
 @end
