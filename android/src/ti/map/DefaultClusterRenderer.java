@@ -341,8 +341,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 			Projection projection = mMap.getProjection();
 
 			RenderTask renderTask;
-			synchronized (this)
-			{
+			synchronized (this) {
 				renderTask = mNextClusters;
 				mNextClusters = null;
 				mViewModificationInProgress = true;
@@ -362,8 +361,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
 		public void queue(Set<? extends Cluster<T>> clusters)
 		{
-			synchronized (this)
-			{
+			synchronized (this) {
 				// Overwrite any pending cluster tasks - we don't care about intermediate states.
 				mNextClusters = new RenderTask(clusters);
 			}
