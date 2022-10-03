@@ -43,7 +43,8 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 								   MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
 public class AnnotationProxy extends KrollProxy
 {
-	public interface AnnotationDelegate {
+	public interface AnnotationDelegate
+	{
 		public void refreshAnnotation(AnnotationProxy annotation);
 	}
 
