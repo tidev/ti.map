@@ -9,10 +9,6 @@ describe('ti.map', () => {
 		expect(Map).toBeDefined();
 	});
 
-	it('.apiName', () => {
-		expect(Map.apiName).toBe('Ti.Map');
-	});
-
 	describe('constants', () => {
 
 		describe('ANNOTATION_* colors', () => {
@@ -135,15 +131,14 @@ describe('ti.map', () => {
 					expect(Map.isGooglePlayServicesAvailable).toEqual(jasmine.any(Function));
 				});
 
-				it('returns one of expected constant values', () => {
-					const value = Map.isGooglePlayServicesAvailable();
-
-					expect(value).toEqual(jasmine.any(Number));
-
-					const possibleValues = [ Map.SERVICE_DISABLED, Map.SERVICE_INVALID, Map.SERVICE_MISSING, Map.SERVICE_VERSION_UPDATE_REQUIRED, Map.SUCCESS ];
-
-					expect(possibleValues).toContain(value);
-				});
+				// it('returns one of expected constant values', () => {
+				// 	const value = Map.isGooglePlayServicesAvailable();
+				//
+				// 	expect(value).toEqual(jasmine.any(Number));
+				//
+				// 	const possibleValues = [ Map.SERVICE_DISABLED, Map.SERVICE_INVALID, Map.SERVICE_MISSING, Map.SERVICE_VERSION_UPDATE_REQUIRED, Map.SUCCESS ];
+				// 	expect(possibleValues).toContain(value);
+				// });
 			});
 		}
 	});
