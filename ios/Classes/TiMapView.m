@@ -60,7 +60,7 @@ CLLocationCoordinate2D userNewLocation;
         NO);
     return;
   }
-  //TIMOB-10892 if any of below conditions is true , regionthatfits returns invalid.
+  // TIMOB-10892 if any of below conditions is true , regionthatfits returns invalid.
   if (map == nil || map.bounds.size.width == 0 || map.bounds.size.height == 0) {
     return;
   }
@@ -85,7 +85,7 @@ CLLocationCoordinate2D userNewLocation;
     [self addSubview:map];
     mapObjects2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     [self registerTouchEvents];
-    //Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
+    // Initialize loaded state to YES. This will automatically go to NO if the map needs to download new data
     loaded = YES;
   }
   return map;
@@ -178,7 +178,7 @@ CLLocationCoordinate2D userNewLocation;
   [[self map] setFrame:bounds];
   [super frameSizeChanged:frame bounds:bounds];
   if (forceRender) {
-    //Set this to NO so that region gets captured.
+    // Set this to NO so that region gets captured.
     ignoreRegionChanged = NO;
     [self render];
     forceRender = NO;
@@ -205,7 +205,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)refreshAnnotation:(TiMapAnnotationProxy *)proxy readd:(BOOL)yn
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
+  BOOL wasSelected = [selected containsObject:proxy]; // If selected == nil, this still returns NO.
   ignoreClicks = YES;
   if (yn == NO) {
     [map deselectAnnotation:proxy animated:NO];
@@ -223,7 +223,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)refreshCoordinateChanges:(TiMapAnnotationProxy *)proxy afterRemove:(void (^)(void))callBack
 {
   NSArray *selected = map.selectedAnnotations;
-  BOOL wasSelected = [selected containsObject:proxy]; //If selected == nil, this still returns NO.
+  BOOL wasSelected = [selected containsObject:proxy]; // If selected == nil, this still returns NO.
   ignoreClicks = YES;
   [map removeAnnotation:proxy];
   callBack();
@@ -315,7 +315,7 @@ CLLocationCoordinate2D userNewLocation;
 {
   ENSURE_TYPE_OR_NIL(value, NSArray);
   ENSURE_UI_THREAD(setAnnotations_, value)
-      [self.map removeAnnotations:self.customAnnotations];
+  [self.map removeAnnotations:self.customAnnotations];
   if (value != nil) {
     [[self map] addAnnotations:[self annotationsFromArgs:value]];
   }
@@ -507,7 +507,7 @@ CLLocationCoordinate2D userNewLocation;
 - (void)setLocation:(id)location
 {
   ENSURE_SINGLE_ARG(location, NSDictionary);
-  //comes in like region: {latitude:100, longitude:100, latitudeDelta:0.5, longitudeDelta:0.5}
+  // comes in like region: {latitude:100, longitude:100, latitudeDelta:0.5, longitudeDelta:0.5}
   id lat = [location objectForKey:@"latitude"];
   id lon = [location objectForKey:@"longitude"];
   id latdelta = [location objectForKey:@"latitudeDelta"];
@@ -1296,9 +1296,9 @@ CLLocationCoordinate2D userNewLocation;
     if (![thisView conformsToProtocol:@protocol(TiMapAnnotation)]) {
       return;
     }
-    /*Image Annotation don't have any animation of its own. 
-         *So in this case we do a custom animation, to place the 
-         *image annotation on top of the mapview.*/
+    /*Image Annotation don't have any animation of its own.
+     *So in this case we do a custom animation, to place the
+     *image annotation on top of the mapview.*/
     if ([thisView isKindOfClass:[TiMapImageAnnotationView class]] || [thisView isKindOfClass:[TiMapCustomAnnotationView class]]) {
       TiMapAnnotationProxy *anntProxy = [self proxyForAnnotation:thisView];
       if ([anntProxy animatesDrop] && ![anntProxy placed]) {
