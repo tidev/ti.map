@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,11 +28,15 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.TiFileProxy;
+import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
 import ti.map.AnnotationProxy.AnnotationDelegate;
+import ti.modules.titanium.filesystem.FileProxy;
 
 @Kroll.
 proxy(creatableInModule = MapModule.class,
@@ -83,6 +88,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_REMOVE_ALL_IMAGE_OVERLAYS = MSG_FIRST_ID + 933;
 
 	private static final int MSG_ADD_HEAT_MAP = MSG_FIRST_ID + 941;
+	private static final int MSG_ADD_MBILES_MAP = MSG_FIRST_ID + 942;
 
 	private final ArrayList<RouteProxy> preloadRoutes;
 	private final ArrayList<PolygonProxy> preloadPolygons;
@@ -334,6 +340,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			case MSG_ADD_HEAT_MAP: {
 				result = ((AsyncResult) msg.obj);
 				handleAddHeatMap(result.getArg());
+				result.setResult(null);
+				return true;
+			}
+			case MSG_ADD_MBILES_MAP: {
+				result = ((AsyncResult) msg.obj);
+				handleAddMbtileMap(result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -669,6 +681,33 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			handleAddHeatMap(coordinates);
 		} else {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_HEAT_MAP), coordinates);
+		}
+	}
+
+	@Kroll.method
+	public void addMbtileMap(Object data)
+	{
+		if (TiApplication.isUIThread()) {
+			handleAddMbtileMap(data);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_ADD_MBILES_MAP), data);
+		}
+	}
+
+	public void handleAddMbtileMap(Object data)
+	{
+		if (data instanceof TiFileProxy) {
+			TiBaseFile file = ((TiFileProxy) data).getBaseFile();
+			MapBoxOfflineTileProvider mbOfflineTileProvider = new MapBoxOfflineTileProvider(file.getNativeFile());
+			TileOverlayOptions tileOverlayOptions = new TileOverlayOptions().tileProvider(mbOfflineTileProvider);
+
+			TiUIView view = peekView();
+			GoogleMap map = (view instanceof TiUIMapView) ? ((TiUIMapView) view).getMap() : null;
+			if (map != null) {
+				map.addTileOverlay(tileOverlayOptions);
+			} else {
+				this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
+			}
 		}
 	}
 
