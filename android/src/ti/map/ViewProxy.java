@@ -696,13 +696,17 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	public void handleAddMbtileMap(Object data)
 	{
-		if (data instanceof TiFileProxy) {
-			TiBaseFile file = ((TiFileProxy) data).getBaseFile();
-			if (!file.exists()) {
+		HashMap hm = (HashMap) data;
+		Object file = hm.get("file");
+		int layerIndex = TiConvert.toInt(hm.get("zIndex"), -1);
+
+		if (file instanceof TiFileProxy) {
+			TiBaseFile baseFile = ((TiFileProxy) file).getBaseFile();
+			if (!baseFile.exists()) {
 				Log.e(TAG, "mbtiles not found");
 				return;
 			}
-			MapBoxOfflineTileProvider mbOfflineTileProvider = new MapBoxOfflineTileProvider(file.getNativeFile());
+			MapBoxOfflineTileProvider mbOfflineTileProvider = new MapBoxOfflineTileProvider(baseFile.getNativeFile());
 			TileOverlayOptions tileOverlayOptions = new TileOverlayOptions().tileProvider(mbOfflineTileProvider);
 
 			TiUIView view = peekView();
@@ -710,7 +714,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			if (map != null) {
 				map.addTileOverlay(tileOverlayOptions);
 			} else {
-				this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
+				if (layerIndex != -1) {
+					this.preloadTileOverlayOptionsList.add(layerIndex, tileOverlayOptions);
+				} else {
+					this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
+				}
 			}
 		}
 	}
