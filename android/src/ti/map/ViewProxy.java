@@ -791,11 +791,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	// clang-format off
-	@Kroll.method
 	@Kroll.getProperty
 	public float getMaxZoomLevel()
-	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
 			return getMaxZoom();
@@ -804,11 +801,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
-	// clang-format off
-	@Kroll.method
 	@Kroll.getProperty
 	public float getMinZoomLevel()
-	// clang-format on
 	{
 		if (TiApplication.isUIThread()) {
 			return getMinZoom();
