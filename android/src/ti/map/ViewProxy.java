@@ -664,6 +664,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 	}
 
+	@Kroll.getProperty
+	public int getTileOverlaySize()
+	{
+		return this.preloadTileOverlayOptionsList.size();
+	}
+
 	@Kroll.method
 	public void addRoute(RouteProxy route)
 	{
