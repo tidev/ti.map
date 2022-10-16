@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileProvider;
 import java.io.Closeable;
 import java.io.File;
+import org.appcelerator.kroll.common.Log;
 
 public class MapBoxOfflineTileProvider implements TileProvider, Closeable
 {
@@ -38,9 +39,13 @@ public class MapBoxOfflineTileProvider implements TileProvider, Closeable
 	public MapBoxOfflineTileProvider(String pathToFile)
 	{
 		int flags = SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS;
-		this.mDatabase = SQLiteDatabase.openDatabase(pathToFile, null, flags);
-		this.calculateZoomConstraints();
-		this.calculateBounds();
+		try {
+			this.mDatabase = SQLiteDatabase.openDatabase(pathToFile, null, flags);
+			this.calculateZoomConstraints();
+			this.calculateBounds();
+		} catch (Error e) {
+			Log.e("TiUIMapView", "Error loading mbtiles file");
+		}
 	}
 
 	// ------------------------------------------------------------------------

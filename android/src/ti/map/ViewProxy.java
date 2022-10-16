@@ -698,6 +698,10 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 		if (data instanceof TiFileProxy) {
 			TiBaseFile file = ((TiFileProxy) data).getBaseFile();
+			if (!file.exists()) {
+				Log.e(TAG, "mbtiles not found");
+				return;
+			}
 			MapBoxOfflineTileProvider mbOfflineTileProvider = new MapBoxOfflineTileProvider(file.getNativeFile());
 			TileOverlayOptions tileOverlayOptions = new TileOverlayOptions().tileProvider(mbOfflineTileProvider);
 
