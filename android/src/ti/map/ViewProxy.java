@@ -714,7 +714,10 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			if (map != null) {
 				map.addTileOverlay(tileOverlayOptions);
 			} else {
-				if (layerIndex != -1) {
+				if (layerIndex > -1) {
+					if (layerIndex >= this.preloadTileOverlayOptionsList.size()) {
+						layerIndex = this.preloadTileOverlayOptionsList.size();
+					}
 					this.preloadTileOverlayOptionsList.add(layerIndex, tileOverlayOptions);
 				} else {
 					this.preloadTileOverlayOptionsList.add(tileOverlayOptions);
