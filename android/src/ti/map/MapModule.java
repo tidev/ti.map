@@ -37,6 +37,7 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public static final String EVENT_MAP_CLICK = "mapclick";
 	public static final String EVENT_POI_CLICK = "poiclick";
 	public static final String EVENT_PIN_CHANGE_DRAG_STATE = "pinchangedragstate";
+	public static final String EVENT_READY = "ready";
 	public static final String EVENT_ON_SNAPSHOT_READY = "onsnapshotready";
 	public static final String EVENT_REGION_WILL_CHANGE = "regionwillchange";
 	public static final String EVENT_USER_LOCATION = "userLocation";

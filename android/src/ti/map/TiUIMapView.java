@@ -231,6 +231,8 @@ public class TiUIMapView extends TiUIFragment
 		mClusterManager.setOnClusterItemClickListener(this);
 		
 		((ViewProxy) proxy).clearPreloadObjects();
+
+		fireEvent(MapModule.EVENT_READY, new KrollDict());
 	}
 
 	@Override
