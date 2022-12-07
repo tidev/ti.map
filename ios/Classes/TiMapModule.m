@@ -89,16 +89,12 @@
     return;
   }
 
-  KrollCallback *callback = (KrollCallback *)args[@"callback"];
   CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:args[@"latitude"]], [TiUtils doubleValue:args[@"longitude"]]);
 
   MKLookAroundSceneRequest *request = [[MKLookAroundSceneRequest alloc] initWithCoordinate:coordinate];
 
   [request getSceneWithCompletionHandler:^(MKLookAroundScene *_Nullable_result scene, NSError *_Nullable error) {
     if (error != nil) {
-      [callback call:@[ @{@"success" : @(NO),
-        @"error" : error.localizedDescription} ]
-          thisObject:self];
       return;
     }
 
