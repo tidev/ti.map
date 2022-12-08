@@ -76,7 +76,7 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 30
-        target: playstore
+        target: google_apis
         script: npm run test:android -- --sdkVersion 11.1.1.GA
         disable-animations: false # defaulting to true, the commands sent to emulator to do this sometimes run too quickly after boot and cause "adb: device offline" failures
 
