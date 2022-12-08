@@ -608,9 +608,8 @@ events:
     summary: Fired when the user selects a Point of Interest (e.g. restaurant or hotel).
     description: | 
         Make sure to use the <Modules.Map.View.selectableMapFeatures> property to define
-        annotations tha should be selectable.
+        annotations tha should be selectable. Available in iOS 16+
     since: "12.0.0"
-    osver: { ios: "16.0.0" }
     platforms: [iphone, ipad, macos]
     properties:
       - name: name
