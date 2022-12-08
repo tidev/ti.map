@@ -59,9 +59,6 @@ jobs:
     - run: ti sdk install 11.1.1.GA --force
       name: Install SDK 11.1.1.GA
 
-    - name: Install ccache
-      run: brew install ccache
-
     - name: Retrieve ccache
       uses: actions/cache@v2
       with:
