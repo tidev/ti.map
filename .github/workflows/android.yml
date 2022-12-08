@@ -77,6 +77,7 @@ jobs:
       with:
         api-level: 30
         target: google_apis
+        force-avd-creation: true
         script: npm run test:android -- --sdkVersion 11.1.1.GA
         disable-animations: false # defaulting to true, the commands sent to emulator to do this sometimes run too quickly after boot and cause "adb: device offline" failures
 
