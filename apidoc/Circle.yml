@@ -24,9 +24,9 @@ properties:
 
   - name: blendMode
     summary: The blend mode to apply to the overlay.
+    description: Use one of the `Ti.UI.BLEND_MODE_*` constants!
     availability: creation
     type: Number
-    constants: Titanium.UI.BLEND_MODE_*
     platforms: [iphone, ipad, macos]
     osver: { ios: { min: "16.0" } }
     since: "12.0.0"
