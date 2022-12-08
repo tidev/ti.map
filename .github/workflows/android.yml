@@ -12,7 +12,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     name: Android
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -20,14 +20,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Use Node.js 14.x
+    - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '14.x'
+        node-version: '16.x'
 
     - name: Cache Node.js modules
       id: node-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: node_modules
         key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
@@ -40,7 +40,7 @@ jobs:
       if: steps.node-cache.outputs.cache-hit != 'true'
 
     - name: Cache Gradle packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           ~/.gradle/caches
@@ -56,8 +56,8 @@ jobs:
       name: Install Titanium CLI
 
 # TODO: Cache sdk install
-    - run: ti sdk install 11.0.0.GA --force
-      name: Install SDK 11.0.0.GA
+    - run: ti sdk install 11.1.1.GA --force
+      name: Install SDK 11.1.1.GA
 
     - name: Install ccache
       run: brew install ccache
@@ -78,9 +78,9 @@ jobs:
     - name: Build and Test
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 29
+        api-level: 30
         target: playstore
-        script: npm run test:android -- --sdkVersion 11.0.0.GA
+        script: npm run test:android -- --sdkVersion 11.1.1.GA
         disable-animations: false # defaulting to true, the commands sent to emulator to do this sometimes run too quickly after boot and cause "adb: device offline" failures
 
     - name: Show summary of ccache configuration and statistics counters
