@@ -312,6 +312,7 @@ public class AnnotationProxy extends KrollProxy
 					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
 				}
 				return;
 			}
@@ -321,8 +322,12 @@ public class AnnotationProxy extends KrollProxy
 		if (image instanceof TiBlob) {
 			Bitmap bitmap = ((TiBlob) image).getImage();
 			if (bitmap != null) {
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				try {
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
+				}
 				return;
 			}
 		}
