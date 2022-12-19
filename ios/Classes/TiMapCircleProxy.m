@@ -6,6 +6,7 @@
  */
 
 #import "TiMapCircleProxy.h"
+#import "TiUtils.h"
 
 @implementation TiMapCircleProxy
 
@@ -22,7 +23,7 @@
 
 - (NSArray *)keySequence
 {
-  return @[ @"center", @"radius" ];
+  return @[ @"center", @"radius", @"blendMode" ];
 }
 
 - (void)_initWithProperties:(NSDictionary *)properties
@@ -50,6 +51,12 @@
   if (circleRenderer == nil) {
     circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]] retain];
     [circleRenderer setFillColor:fillColor ? [fillColor color] : [UIColor blackColor]];
+
+#if IS_SDK_IOS_16
+    if ([TiUtils isIOSVersionOrGreater:@"16.0"] && blendMode > 0) {
+      circleRenderer.blendMode = blendMode;
+    }
+#endif
   }
 
   return circleRenderer;
@@ -118,6 +125,12 @@
   alpha = [TiUtils floatValue:value];
   [[self circleRenderer] setAlpha:alpha];
   [self replaceValue:value forKey:@"opacity" notification:NO];
+}
+
+- (void)setBlendMode:(id)value
+{
+  blendMode = [TiUtils intValue:value];
+  [self replaceValue:value forKey:@"blendMode" notification:NO];
 }
 
 @end

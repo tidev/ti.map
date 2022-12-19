@@ -435,6 +435,34 @@ properties:
     exclude-platforms: [android]
     since: "6.3.0"
 
+  - name: FEATURE_TERRITORIES
+    summary: | 
+        The option that represents territorial boundaries such as a national border,
+        a state boundary, or a neighborhood.
+    type: Number
+    permission: read-only
+    osver: { ios: { min: "16.0" } }
+    exclude-platforms: [iphone, ipad, macos]
+    since: "12.0.0"
+
+  - name: FEATURE_PHYSICAL_FEATURES
+    summary: | 
+        The option that represents physical map features such as mountain ranges, rivers,
+        and ocean basins.
+    type: Number
+    permission: read-only
+    osver: { ios: { min: "16.0" } }
+    exclude-platforms: [iphone, ipad, macos]
+    since: "12.0.0"
+
+  - name: FEATURE_TYPE_POINT_OF_INTEREST
+    summary: The option that represents points of interest such as museums, cafes, parks, or schools.
+    type: Number
+    permission: read-only
+    osver: { ios: { min: "16.0" } }
+    exclude-platforms: [iphone, ipad, macos]
+    since: "12.0.0"
+
   - name: ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE
     summary: |
         Constant indicating that the full collision frame rectangle should be used for
@@ -468,6 +496,35 @@ methods:
     since: "3.1.1"
     platforms: [android]
 
+  - name: getLookAroundImage
+    summary:  A utility function that you use to create a static image from a LookAround scene.
+    parameters:
+      - name: callback
+        summary: Function to be called upon completion (either success with an image or an error).
+        type: Callback<Object>
+        optional: false
+      - name: latitude
+        summary: Latitude of the preferred region.
+        type: Number
+      - name: longitude
+        summary: Longitude of the preferred region.
+        type: Number
+    osver: { ios: { min: "16.0"} }
+    since: "12.0.0"
+    platforms: [iphone, ipad, macos]
+
+  - name: openLookAroundDialog
+    summary:  Opens a LookAround window modally.
+    parameters:
+      - name: latitude
+        summary: Latitude of the preferred region.
+        type: Number
+      - name: longitude
+        summary: Longitude of the preferred region.
+        type: Number
+    osver: { ios: { min: "16.0"} }
+    since: "12.0.0"
+    platforms: [iphone, ipad, macos]
 examples:
 
   - title: Basic Map Example
