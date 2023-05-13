@@ -6,6 +6,7 @@
  */
 package ti.map;
 
+import android.app.Activity;
 import android.os.Message;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Dot;
@@ -24,6 +25,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
 import ti.map.Shape.IShape;
@@ -141,6 +143,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	{
 
 		options = new PolylineOptions();
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 		// (int) strokeColor
 		// (float) strokeWidth
 		// (int) fillColor
@@ -151,12 +154,13 @@ public class PolylineProxy extends KrollProxy implements IShape
 		}
 
 		if (hasProperty(MapModule.PROPERTY_STROKE_COLOR)) {
-			options.color(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR)));
+			options.color(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR), currentActivity));
 		}
 
 		// alternate API
 		if (hasProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)) {
-			options.color(TiConvert.toColor((String) getProperty(PolylineProxy.PROPERTY_STROKE_COLOR2)));
+			options.color(
+				TiConvert.toColor((String) getProperty(PolylineProxy.PROPERTY_STROKE_COLOR2), currentActivity));
 		}
 
 		if (hasProperty(MapModule.PROPERTY_STROKE_WIDTH)) {
@@ -262,7 +266,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	public void onPropertyChanged(String name, Object value)
 	{
 		super.onPropertyChanged(name, value);
-
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 		if (polyline == null) {
 			return;
 		}
@@ -283,12 +287,12 @@ public class PolylineProxy extends KrollProxy implements IShape
 
 		else if (name.equals(MapModule.PROPERTY_STROKE_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
-												TiConvert.toColor((String) value));
+												TiConvert.toColor((String) value, currentActivity));
 		}
 		// alternate API
 		else if (name.equals(PolylineProxy.PROPERTY_STROKE_COLOR2)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
-												TiConvert.toColor((String) value));
+												TiConvert.toColor((String) value, currentActivity));
 		}
 
 		else if (name.equals(PolylineProxy.PROPERTY_ZINDEX)) {

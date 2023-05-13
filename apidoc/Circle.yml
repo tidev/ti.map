@@ -22,6 +22,16 @@ properties:
     type: Number
     optional: true
 
+  - name: blendMode
+    summary: The blend mode to apply to the overlay.
+    description: Use one of the `Ti.UI.BLEND_MODE_*` constants!
+    availability: creation
+    type: Number
+    platforms: [iphone, ipad, macos]
+    osver: { ios: { min: "16.0" } }
+    since: "12.0.0"
+    optional: true
+
   - name: fillColor
     summary: |
         Color to use when shading the circle, as a color name or hex triplet.

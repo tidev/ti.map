@@ -34,7 +34,7 @@
   NSMutableArray *imageOverlayProxies;
   NSMutableDictionary *clusterAnnotations;
 
-  //selected annotation
+  // selected annotation
   MKAnnotationView<TiMapAnnotation> *selectedAnnotation;
 
   // dictionary for object tracking and association

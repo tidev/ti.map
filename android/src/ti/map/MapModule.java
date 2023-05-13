@@ -9,10 +9,11 @@
 package ti.map;
 
 import android.location.Location;
-
+import androidx.annotation.NonNull;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapsSdkInitializedCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -20,7 +21,7 @@ import com.google.maps.android.PolyUtil;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.KrollDict;
-
+import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.TiC;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Kroll.module(name = "Map", id = "ti.map")
-public class MapModule extends KrollModule
+public class MapModule extends KrollModule implements OnMapsSdkInitializedCallback
 {
 	public static final String EVENT_MAP_CLICK = "mapclick";
 	public static final String EVENT_POI_CLICK = "poiclick";
@@ -161,7 +162,8 @@ public class MapModule extends KrollModule
 	public MapModule()
 	{
 		super();
-		MapsInitializer.initialize(TiApplication.getInstance().getApplicationContext());
+		MapsInitializer.initialize(TiApplication.getInstance().getApplicationContext(), MapsInitializer.Renderer.LATEST,
+								   this);
 	}
 
 	@Kroll.method
@@ -203,5 +205,15 @@ public class MapModule extends KrollModule
 	public String getApiName()
 	{
 		return "Ti.Map";
+	}
+
+	@Override
+	public void onMapsSdkInitialized(@NonNull MapsInitializer.Renderer renderer)
+	{
+		switch (renderer) {
+			case LEGACY:
+				Log.d("Ti.Map", "The legacy version of the renderer is used.");
+				break;
+		}
 	}
 }

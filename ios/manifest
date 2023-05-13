@@ -3,7 +3,7 @@
 # during compilation, packaging, distribution, etc.
 #
 
-version: 6.0.1
+version: 7.1.0
 apiversion: 2
 architectures: arm64 x86_64
 description: External version of Map module
@@ -13,6 +13,7 @@ copyright: Copyright (c) 2013-present by Axway Appcelerator
 
 # these should not be edited
 name: map
+mac: true
 moduleid: ti.map
 guid: f0d8fd44-86d2-4730-b67d-bd454577aeee
 platform: iphone

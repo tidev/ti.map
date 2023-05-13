@@ -5,10 +5,13 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
 
 @interface TiMapUtils : NSObject
 
 + (id)returnValueOnMainThread:(id (^)(void))block;
+
++ (NSDictionary<NSString *, id> *)dictionaryFromPlacemark:(CLPlacemark *)placemark;
 
 @end

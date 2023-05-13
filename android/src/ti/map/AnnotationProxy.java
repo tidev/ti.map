@@ -43,7 +43,8 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 								   MapModule.PROPERTY_HIDDEN, MapModule.PROPERTY_CLUSTER_IDENTIFIER })
 public class AnnotationProxy extends KrollProxy
 {
-	public interface AnnotationDelegate {
+	public interface AnnotationDelegate
+	{
 		public void refreshAnnotation(AnnotationProxy annotation);
 	}
 
@@ -323,6 +324,7 @@ public class AnnotationProxy extends KrollProxy
 					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
 				}
 				return;
 			}
@@ -332,8 +334,12 @@ public class AnnotationProxy extends KrollProxy
 		if (image instanceof TiBlob) {
 			Bitmap bitmap = ((TiBlob) image).getImage();
 			if (bitmap != null) {
-				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				try {
+					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
+				}
 				return;
 			}
 		}

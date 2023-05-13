@@ -7,6 +7,8 @@
 
 #import "TiMapUtils.h"
 #import "TiMapView.h"
+#import <Contacts/CNPostalAddress.h>
+#import <Contacts/CNPostalAddressFormatter.h>
 
 @implementation TiMapUtils
 
@@ -23,6 +25,35 @@
       },
       YES);
   return [result autorelease];
+}
+
++ (NSDictionary<NSString *, id> *)dictionaryFromPlacemark:(CLPlacemark *)placemark
+{
+  NSMutableDictionary *place = [NSMutableDictionary dictionary];
+
+  if (placemark.thoroughfare) {
+    place[@"street"] = placemark.thoroughfare;
+  }
+  if (placemark.locality) {
+    place[@"city"] = placemark.locality;
+  }
+  if (placemark.administrativeArea) {
+    place[@"state"] = placemark.administrativeArea;
+  }
+  if (placemark.country) {
+    place[@"country"] = placemark.country;
+  }
+  if (placemark.postalCode) {
+    place[@"postalCode"] = placemark.postalCode;
+  }
+  if (placemark.ISOcountryCode) {
+    place[@"countryCode"] = placemark.ISOcountryCode;
+  }
+  if (placemark.postalAddress) {
+    place[@"address"] = [CNPostalAddressFormatter stringFromPostalAddress:placemark.postalAddress style:CNPostalAddressFormatterStyleMailingAddress];
+  }
+
+  return place;
 }
 
 @end
