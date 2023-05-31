@@ -86,6 +86,7 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public static final String PROPERTY_INDOOR_ENABLED = "indoorEnabled";
 	public static final String PROPERTY_PLACE_ID = "placeID";
 	public static final String PROPERTY_DESELECTED = "deselected";
+	public static final String PROPERTY_LITE_MODE = "liteMode";
 
 	@Kroll.constant
 	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;

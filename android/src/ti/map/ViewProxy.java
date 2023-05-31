@@ -17,6 +17,7 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -334,10 +335,27 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 				result.setResult(Boolean.valueOf(handleContainsCoordinate((KrollDict)result.getArg())));
 				return true;
 			}
-		  
+
 			default: {
 				return super.handleMessage(msg);
 			}
+		}
+	}
+
+	@Kroll.method
+	public void clear() {
+		var view = (TiUIMapView)peekView();
+		if (view.getMap() != null) {
+			view.getMap().clear();
+			view.getMap().setMapType(GoogleMap.MAP_TYPE_NONE);
+		}
+	}
+
+	@Kroll.method
+	public void initializeMap() {
+		var view = (TiUIMapView)peekView();
+		if (view != null) {
+			view.initializeMap();
 		}
 	}
 
@@ -1226,7 +1244,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 	  return handleContainsCoordinate(coordinate);
 	}
-	
+
 	private boolean handleContainsCoordinate(KrollDict coordinate) {
 	  TiUIView view = peekView();
 	  if ((view instanceof TiUIMapView)) {
