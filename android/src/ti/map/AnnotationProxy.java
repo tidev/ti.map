@@ -8,15 +8,30 @@ package ti.map;
 
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Message;
 import android.util.Property;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
+
 import java.util.HashMap;
+import java.util.Locale;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -268,6 +283,8 @@ public class AnnotationProxy extends KrollProxy
 			handleCustomView(getProperty(MapModule.PROPERTY_CUSTOM_VIEW));
 		} else if (hasProperty(TiC.PROPERTY_IMAGE)) {
 			handleImage(getProperty(TiC.PROPERTY_IMAGE));
+		} else if (hasProperty(MapModule.PROPERTY_CUSTOM_ICON)) {
+			handleCustomIcon((HashMap) getProperty(MapModule.PROPERTY_CUSTOM_ICON));
 		} else if (hasProperty(TiC.PROPERTY_PINCOLOR)) {
 			markerOptions.icon(
 				BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
@@ -299,6 +316,38 @@ public class AnnotationProxy extends KrollProxy
 		}
 		Log.w(TAG, "Unable to get the image from the custom view: " + obj);
 		setIconImageDimensions(-1, -1);
+	}
+
+	private void handleCustomIcon(HashMap customIcon) {
+		Context context = TiApplication.getInstance().getApplicationContext();
+
+		String title = (String) customIcon.get("title");
+		int tintColor = TiConvert.toColor(customIcon.get("tintColor"), context);
+		int textColor = TiConvert.toColor(customIcon.get("textColor"), context);
+
+		Drawable iconDrawable = ContextCompat.getDrawable(context, R.drawable.pin_waypoint);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			iconDrawable.setTint(tintColor);
+		}
+		IconGenerator mIconGenerator = new IconGenerator(context);
+		mIconGenerator.setBackground(iconDrawable);
+
+		if (title != null) {
+			int pinWidth = (int) context.getResources().getDimension(R.dimen.pin_width);
+			TextView label = new TextView(context);
+
+			label.setTextColor(textColor);
+			label.setGravity(Gravity.CENTER_HORIZONTAL);
+			label.setText(title);
+			label.setLayoutParams(new ViewGroup.LayoutParams(pinWidth, pinWidth));
+
+			mIconGenerator.setContentView(label);
+		}
+
+		Bitmap icon = mIconGenerator.makeIcon();
+
+		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+		setIconImageDimensions(icon.getWidth(), icon.getHeight());
 	}
 
 	private void handleImage(Object image)

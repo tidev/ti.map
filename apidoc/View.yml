@@ -485,7 +485,7 @@ events:
     summary: |
         Fired when the user clicks on a point of interest on the map.
     description: |
-        The `poiclick` event is fired when the user clicks on a point of interest of  the map and returns 
+        The `poiclick` event is fired when the user clicks on a point of interest of  the map and returns
         the longitude/latitude and name of that location.
     properties:
       - name: name
@@ -1009,7 +1009,7 @@ since: "3.2.0"
 ---
 name: ClusterAnnotationParams
 summary: |
-    Simple object used to create cluster annotation view.
+    Simple object used to create a cluster annotation view.
 properties:
 
   - name: memberAnnotations
@@ -1026,3 +1026,24 @@ properties:
 
 platforms: [iphone, ipad]
 since: "6.3.0"
+
+---
+name: CustomIconParams
+summary: |
+    Simple object used to create a custom marker ucon.
+properties:
+
+  - name: title
+    summary: The title of the marker
+    type: String
+
+  - name: textColor
+    summary: The text color of the marker
+    type: String
+
+  - name: tintColor
+    summary: The tint color of the marker
+    type: String
+
+platforms: [android]
+since: "5.1.0"

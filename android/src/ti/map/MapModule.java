@@ -63,6 +63,8 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public static final String PROPERTY_PADDING = "padding";
 	public static final String PROPERTY_TILT = "tilt";
 	public static final String PROPERTY_BEARING = "bearing";
+
+	public static final String PROPERTY_CUSTOM_ICON = "customIcon";
 	public static final String PROPERTY_ZOOM = "zoom";
 	public static final String PROPERTY_ZORDER_ON_TOP = "zOrderOnTop";
 	public static final String PROPERTY_CENTER_OFFSET = "centerOffset";
