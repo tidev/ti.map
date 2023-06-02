@@ -1030,7 +1030,7 @@ since: "6.3.0"
 ---
 name: CustomIconParams
 summary: |
-    Simple object used to create a custom marker ucon.
+    Simple object used to create a custom marker icon.
 properties:
 
   - name: title
