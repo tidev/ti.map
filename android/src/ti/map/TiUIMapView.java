@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -127,12 +128,9 @@ public class TiUIMapView extends TiUIView
 		}
 
 		if (rawMap) {
-			Log.d(TAG, "new TiUIMapView raw map");
 			mapView.onCreate(null);
 			mapView.getMapAsync(this);
 		} else {
-			Log.d(TAG, "new TiUIMapView fragment");
-
 			var sfm = ((AppCompatActivity)activity).getSupportFragmentManager();
 			mapFragment = (SupportMapFragment)sfm.findFragmentByTag(MAP_FRAGMENT_TAG);
 
@@ -235,6 +233,8 @@ public class TiUIMapView extends TiUIView
 		if (proxy == null) {
 			return;
 		}
+
+		MapsInitializer.initialize(proxy.getActivity().getApplicationContext());
 
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
 		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView.
@@ -556,10 +556,22 @@ public class TiUIMapView extends TiUIView
 
 				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-				if (animated) {
+				if (!this.liteMode && animated) {
 					map.animateCamera(cameraUpdate);
 				} else {
 					map.moveCamera(cameraUpdate);
+				}
+
+				if (this.liteMode) {
+					// Lite mode only supports full integer zoom levels and rounds down (7.4 -> 7)
+					// so we double check that all points are visible and zoom out if necessary
+					for (TiMarker marker : markers) {
+						var markerLocation = marker.getPosition();
+						var currentLatLngBounds = map.getProjection().getVisibleRegion().latLngBounds;
+						if (!currentLatLngBounds.contains(markerLocation)) {
+							map.moveCamera(CameraUpdateFactory.zoomOut());
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -625,46 +637,41 @@ public class TiUIMapView extends TiUIView
 			longitude = TiConvert.toDouble(dict, TiC.PROPERTY_LONGITUDE);
 		}
 
-		if (this.liteMode) {
-			LatLng l = new LatLng(latitude, longitude);
-			if (map != null) {
-				map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, zoom));
-			}
-		} else {
-
-			CameraPosition.Builder cameraBuilder = new CameraPosition.Builder();
-			LatLng location = new LatLng(latitude, longitude);
-			cameraBuilder.target(location);
+		CameraPosition.Builder cameraBuilder = new CameraPosition.Builder();
+		LatLng location = new LatLng(latitude, longitude);
+		cameraBuilder.target(location);
+		if (!this.liteMode) {
+			// Tilt or bearing are not supported in lite mode
 			cameraBuilder.bearing(bearing);
 			cameraBuilder.tilt(tilt);
-			cameraBuilder.zoom(zoom);
-
-			if (dict.containsKey(TiC.PROPERTY_LATITUDE_DELTA) && dict.get(TiC.PROPERTY_LATITUDE_DELTA) != null) {
-				latitudeDelta = TiConvert.toDouble(dict, TiC.PROPERTY_LATITUDE_DELTA);
-			}
-
-			if (dict.containsKey(TiC.PROPERTY_LONGITUDE_DELTA) && dict.get(TiC.PROPERTY_LONGITUDE_DELTA) != null) {
-				longitudeDelta = TiConvert.toDouble(dict, TiC.PROPERTY_LONGITUDE_DELTA);
-			}
-
-			if (latitudeDelta != 0 && longitudeDelta != 0) {
-				LatLng northeast = new LatLng(latitude + (latitudeDelta / 2.0), longitude + (longitudeDelta / 2.0));
-				LatLng southwest = new LatLng(latitude - (latitudeDelta / 2.0), longitude - (longitudeDelta / 2.0));
-
-				final LatLngBounds bounds = new LatLngBounds(southwest, northeast);
-				if (preLayout) {
-					preLayoutUpdateBounds = bounds;
-					return;
-				} else {
-					moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), anim);
-					return;
-				}
-			}
-
-			CameraPosition position = cameraBuilder.build();
-			CameraUpdate camUpdate = CameraUpdateFactory.newCameraPosition(position);
-			moveCamera(camUpdate, anim);
 		}
+		cameraBuilder.zoom(zoom);
+
+		if (dict.containsKey(TiC.PROPERTY_LATITUDE_DELTA) && dict.get(TiC.PROPERTY_LATITUDE_DELTA) != null) {
+			latitudeDelta = TiConvert.toDouble(dict, TiC.PROPERTY_LATITUDE_DELTA);
+		}
+
+		if (dict.containsKey(TiC.PROPERTY_LONGITUDE_DELTA) && dict.get(TiC.PROPERTY_LONGITUDE_DELTA) != null) {
+			longitudeDelta = TiConvert.toDouble(dict, TiC.PROPERTY_LONGITUDE_DELTA);
+		}
+
+		if (latitudeDelta != 0 && longitudeDelta != 0) {
+			LatLng northeast = new LatLng(latitude + (latitudeDelta / 2.0), longitude + (longitudeDelta / 2.0));
+			LatLng southwest = new LatLng(latitude - (latitudeDelta / 2.0), longitude - (longitudeDelta / 2.0));
+
+			final LatLngBounds bounds = new LatLngBounds(southwest, northeast);
+			if (!this.liteMode && preLayout) {
+				preLayoutUpdateBounds = bounds;
+				return;
+			} else {
+				moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), anim);
+				return;
+			}
+		}
+
+		CameraPosition position = cameraBuilder.build();
+		CameraUpdate camUpdate = CameraUpdateFactory.newCameraPosition(position);
+		moveCamera(camUpdate, anim);
 	}
 
 	protected void moveCamera(CameraUpdate camUpdate, boolean anim)
