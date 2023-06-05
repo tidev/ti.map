@@ -45,6 +45,7 @@ import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.TiPoint;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
+import org.appcelerator.titanium.util.TiUIHelper;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
 @Kroll.proxy(creatableInModule = MapModule.class,
@@ -318,10 +319,11 @@ public class AnnotationProxy extends KrollProxy
 		setIconImageDimensions(-1, -1);
 	}
 
-	private void handleCustomIcon(HashMap customIcon) {
+	private void handleCustomIcon(HashMap params) {
+		KrollDict customIcon = new KrollDict(params);
 		Context context = TiApplication.getInstance().getApplicationContext();
 
-		String title = (String) customIcon.get("title");
+		String title = customIcon.getString("title");
 		int tintColor = TiConvert.toColor(customIcon.get("tintColor"), context);
 		int textColor = TiConvert.toColor(customIcon.get("textColor"), context);
 
@@ -333,13 +335,14 @@ public class AnnotationProxy extends KrollProxy
 		mIconGenerator.setBackground(iconDrawable);
 
 		if (title != null) {
-			int pinWidth = (int) context.getResources().getDimension(R.dimen.pin_width);
+			int pinContentSize = (int) context.getResources().getDimension(R.dimen.pin_width);
 			TextView label = new TextView(context);
+			TiUIHelper.styleText(label, customIcon.getKrollDict(TiC.PROPERTY_FONT));
 
 			label.setTextColor(textColor);
-			label.setGravity(Gravity.CENTER_HORIZONTAL);
+			label.setGravity(Gravity.CENTER);
 			label.setText(title);
-			label.setLayoutParams(new ViewGroup.LayoutParams(pinWidth, pinWidth));
+			label.setLayoutParams(new ViewGroup.LayoutParams(pinContentSize, pinContentSize));
 
 			mIconGenerator.setContentView(label);
 		}
