@@ -1427,6 +1427,7 @@ public class TiUIMapView extends TiUIView
 			// bounds
 			proxy.setProperty(TiC.PROPERTY_REGION, d);
 			proxy.fireEvent(TiC.EVENT_REGION_CHANGED, d);
+			proxy.fireEvent(MapModule.EVENT_IDLE, d);
 		}
 		if (mClusterManager != null && !this.liteMode) {
 			mClusterManager.onCameraIdle();
