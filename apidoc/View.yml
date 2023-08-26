@@ -603,6 +603,11 @@ events:
       - name: longitude
         summary: Longitude of the point on the ground that was pressed.
         type: Number
+  
+  - name: poideselect
+    summary: Fired when the user deselects a Point of Interest (e.g. restaurant or hotel).
+    since: "12.2.0"
+    platforms: [iphone, ipad, macos]
 
   - name: poiclick
     summary: Fired when the user selects a Point of Interest (e.g. restaurant or hotel).

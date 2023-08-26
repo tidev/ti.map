@@ -1175,6 +1175,19 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
+#if IS_SDK_IOS_16
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotation:(id<MKAnnotation>)annotation
+{
+  if (![TiUtils isIOSVersionOrGreater:@"16.0"]) {
+    return;
+  }
+
+  if ([annotation isKindOfClass:MKMapFeatureAnnotation.class]) {
+    [self.proxy fireEvent:@"poideselect"];
+  }
+}
+#endif
+
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
