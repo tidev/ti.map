@@ -35,6 +35,8 @@
 		27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609E919F5927000CA150A /* WildcardGestureRecognizer.m */; };
 		27A609EC19F5B84000CA150A /* TiMapCircleProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609EB19F5B84000CA150A /* TiMapCircleProxy.m */; };
 		27A609F019F711B700CA150A /* TiMapPolylineProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609EF19F711B700CA150A /* TiMapPolylineProxy.m */; };
+		3A155BE82A9B35C000247646 /* TiMapFeatureAnnotationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A155BE62A9B35C000247646 /* TiMapFeatureAnnotationProxy.h */; };
+		3A155BE92A9B35C000247646 /* TiMapFeatureAnnotationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A155BE72A9B35C000247646 /* TiMapFeatureAnnotationProxy.m */; };
 		815136F31D355BF5009E3E2C /* TiMapSnapshotterProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 815136F11D355BF5009E3E2C /* TiMapSnapshotterProxy.h */; };
 		815136F41D355BF5009E3E2C /* TiMapSnapshotterProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 815136F21D355BF5009E3E2C /* TiMapSnapshotterProxy.m */; };
 		AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */; };
@@ -94,6 +96,8 @@
 		27A609ED19F5B85900CA150A /* TiMapCircleProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapCircleProxy.h; path = Classes/TiMapCircleProxy.h; sourceTree = "<group>"; };
 		27A609EE19F7112C00CA150A /* TiMapPolylineProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapPolylineProxy.h; path = Classes/TiMapPolylineProxy.h; sourceTree = "<group>"; };
 		27A609EF19F711B700CA150A /* TiMapPolylineProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapPolylineProxy.m; path = Classes/TiMapPolylineProxy.m; sourceTree = "<group>"; };
+		3A155BE62A9B35C000247646 /* TiMapFeatureAnnotationProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapFeatureAnnotationProxy.h; path = Classes/TiMapFeatureAnnotationProxy.h; sourceTree = "<group>"; };
+		3A155BE72A9B35C000247646 /* TiMapFeatureAnnotationProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TiMapFeatureAnnotationProxy.m; path = Classes/TiMapFeatureAnnotationProxy.m; sourceTree = "<group>"; };
 		815136F11D355BF5009E3E2C /* TiMapSnapshotterProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapSnapshotterProxy.h; path = Classes/TiMapSnapshotterProxy.h; sourceTree = "<group>"; };
 		815136F21D355BF5009E3E2C /* TiMapSnapshotterProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapSnapshotterProxy.m; path = Classes/TiMapSnapshotterProxy.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiMap_Prefix.pch; sourceTree = SOURCE_ROOT; };
@@ -236,6 +240,8 @@
 				CED651C117D7AA21007C2954 /* TiMapPinAnnotationView.m */,
 				DB0CC9FF2010840900597F24 /* TiMapMarkerAnnotationView.h */,
 				DB0CC9FE2010840900597F24 /* TiMapMarkerAnnotationView.m */,
+				3A155BE62A9B35C000247646 /* TiMapFeatureAnnotationProxy.h */,
+				3A155BE72A9B35C000247646 /* TiMapFeatureAnnotationProxy.m */,
 			);
 			name = Annotation;
 			sourceTree = "<group>";
@@ -349,6 +355,7 @@
 				CED651D017D7AA21007C2954 /* TiMapViewProxy.h in Headers */,
 				DB0CCA062010843000597F24 /* TiMapOverlayPattern.h in Headers */,
 				27A609E619F54FC300CA150A /* TiMapPolygonProxy.h in Headers */,
+				3A155BE82A9B35C000247646 /* TiMapFeatureAnnotationProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,6 +446,7 @@
 				27A609EA19F5927000CA150A /* WildcardGestureRecognizer.m in Sources */,
 				815136F41D355BF5009E3E2C /* TiMapSnapshotterProxy.m in Sources */,
 				CED651CB17D7AA21007C2954 /* TiMapImageAnnotationView.m in Sources */,
+				3A155BE92A9B35C000247646 /* TiMapFeatureAnnotationProxy.m in Sources */,
 				CED651CD17D7AA21007C2954 /* TiMapPinAnnotationView.m in Sources */,
 				27A609EC19F5B84000CA150A /* TiMapCircleProxy.m in Sources */,
 				CEE33CF419EC4C150005E745 /* TiMapUtils.m in Sources */,

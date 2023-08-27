@@ -10,6 +10,7 @@
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
+#import "TiMapFeatureAnnotationProxy.h"
 #import "TiMapImageOverlayProxy.h"
 #import "TiMapMarkerAnnotationView.h"
 #import "TiMapModule.h"
@@ -386,6 +387,8 @@ CLLocationCoordinate2D userNewLocation;
     }
   } else if ([args isKindOfClass:[TiMapAnnotationProxy class]]) {
     [[self map] deselectAnnotation:args animated:animate];
+  } else if ([args isKindOfClass:[TiMapFeatureAnnotationProxy class]]) {
+    [[self map] deselectAnnotation:[(TiMapFeatureAnnotationProxy *)args annotation] animated:animate];
   }
 }
 
@@ -1128,6 +1131,7 @@ CLLocationCoordinate2D userNewLocation;
     MKMapFeatureAnnotation *featureAnnotation = (MKMapFeatureAnnotation *)annotation;
 
     NSDictionary *event = @{
+      @"annotation": [[TiMapFeatureAnnotationProxy alloc] _initWithPageContext:[(TiMapViewProxy *)[self proxy] pageContext] andAnnotation:featureAnnotation],
       @"name" : NULL_IF_NIL(mapItem.name),
       @"featureType" : @(featureAnnotation.featureType),
       @"pointOfInterestCategory" : NULL_IF_NIL(featureAnnotation.pointOfInterestCategory),
