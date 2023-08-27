@@ -1131,7 +1131,7 @@ CLLocationCoordinate2D userNewLocation;
     MKMapFeatureAnnotation *featureAnnotation = (MKMapFeatureAnnotation *)annotation;
 
     NSDictionary *event = @{
-      @"annotation": [[TiMapFeatureAnnotationProxy alloc] _initWithPageContext:[(TiMapViewProxy *)[self proxy] pageContext] andAnnotation:featureAnnotation],
+      @"annotation" : [[TiMapFeatureAnnotationProxy alloc] _initWithPageContext:[(TiMapViewProxy *)[self proxy] pageContext] andAnnotation:featureAnnotation],
       @"name" : NULL_IF_NIL(mapItem.name),
       @"featureType" : @(featureAnnotation.featureType),
       @"pointOfInterestCategory" : NULL_IF_NIL(featureAnnotation.pointOfInterestCategory),

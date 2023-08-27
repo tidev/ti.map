@@ -16,7 +16,7 @@
   if (self = [super _initWithPageContext:pageContext]) {
     _annotation = annotation;
   }
-  
+
   return self;
 }
 
