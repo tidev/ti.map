@@ -52,7 +52,7 @@
     circleRenderer = [[[MKCircleRenderer alloc] initWithCircle:[MKCircle circleWithCenterCoordinate:center radius:radius]] retain];
     [circleRenderer setFillColor:fillColor ? [fillColor color] : [UIColor blackColor]];
 
-#if IS_SDK_IOS_16
+#if IS_SDK_IOS_16 && !TARGET_OS_MACCATALYST
     if ([TiUtils isIOSVersionOrGreater:@"16.0"] && blendMode > 0) {
       circleRenderer.blendMode = blendMode;
     }
