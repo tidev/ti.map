@@ -9,6 +9,7 @@
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapFeatureAnnotationProxy.h"
 #import "TiMapImageAnnotationView.h"
 #import "TiMapImageOverlayProxy.h"
 #import "TiMapMarkerAnnotationView.h"
@@ -386,6 +387,8 @@ CLLocationCoordinate2D userNewLocation;
     }
   } else if ([args isKindOfClass:[TiMapAnnotationProxy class]]) {
     [[self map] deselectAnnotation:args animated:animate];
+  } else if ([args isKindOfClass:[TiMapFeatureAnnotationProxy class]]) {
+    [[self map] deselectAnnotation:[(TiMapFeatureAnnotationProxy *)args annotation] animated:animate];
   }
 }
 
@@ -1128,6 +1131,7 @@ CLLocationCoordinate2D userNewLocation;
     MKMapFeatureAnnotation *featureAnnotation = (MKMapFeatureAnnotation *)annotation;
 
     NSDictionary *event = @{
+      @"annotation" : [[TiMapFeatureAnnotationProxy alloc] _initWithPageContext:[(TiMapViewProxy *)[self proxy] pageContext] andAnnotation:featureAnnotation],
       @"name" : NULL_IF_NIL(mapItem.name),
       @"featureType" : @(featureAnnotation.featureType),
       @"pointOfInterestCategory" : NULL_IF_NIL(featureAnnotation.pointOfInterestCategory),
@@ -1174,6 +1178,19 @@ CLLocationCoordinate2D userNewLocation;
     }
   }
 }
+
+#if IS_SDK_IOS_16
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotation:(id<MKAnnotation>)annotation
+{
+  if (![TiUtils isIOSVersionOrGreater:@"16.0"]) {
+    return;
+  }
+
+  if ([annotation isKindOfClass:MKMapFeatureAnnotation.class]) {
+    [self.proxy fireEvent:@"poideselect"];
+  }
+}
+#endif
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
