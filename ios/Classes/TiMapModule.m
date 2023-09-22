@@ -116,6 +116,123 @@
 
 #endif
 
+- (MKLocalSearchCompleter *)searchCompleter
+{
+  if (_searchCompleter == nil) {
+    _searchCompleter = [[MKLocalSearchCompleter alloc] init];
+    _searchCompleter.delegate = self;
+
+    // Do not show queries like "show my location" or "show nearby items"
+    if ([TiUtils isIOSVersionOrGreater:@"13.0"]) {
+      if (@available(iOS 13.0, *)) {
+        _searchCompleter.resultTypes = MKLocalSearchCompleterResultTypeAddress | MKLocalSearchCompleterResultTypePointOfInterest;
+      } else {}
+    } else {
+      _searchCompleter.filterType = MKSearchCompletionFilterTypeLocationsOnly;
+    }
+  }
+  
+  return _searchCompleter;
+}
+
+- (void)search:(id)args
+{
+  ENSURE_UI_THREAD(search, args);
+
+  NSString *value = [TiUtils stringValue:args[0]];
+  NSDictionary *options = (NSDictionary *)args[1];
+
+  // Require a search value
+  if (!value) {
+    [self throwException:@"Missing required search value" subreason:@"Please provide the value as a String" location:CODELOCATION];
+    return;
+  }
+
+  // Pass additional options like search region
+  if (options != nil) {
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:options[@"latitude"]], [TiUtils doubleValue:options[@"longitude"]]);
+    MKCoordinateSpan span = MKCoordinateSpanMake([TiUtils doubleValue:options[@"latitudeDelta"]], [TiUtils doubleValue:options[@"longitudeDelta"]]);
+    
+    if (CLLocationCoordinate2DIsValid(coordinate)) {
+      [[self searchCompleter] setRegion:MKCoordinateRegionMake(coordinate, span)];
+    }
+  }
+
+  [[self searchCompleter] setQueryFragment:value];
+}
+
+- (void)geocodeAddress:(id)args
+{
+  NSString *address = (NSString *)args[0];
+  KrollCallback *callback = (KrollCallback *)args[1];
+
+  CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+  [geocoder geocodeAddressString:address completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+    if (placemarks.count == 0 || error != nil) {
+      [callback call:@[@{ @"success": @(NO), @"error": error.localizedDescription ?: @"Unknown error" }] thisObject:self];
+      return;
+    }
+
+    CLPlacemark *place = placemarks[0];
+
+    NSDictionary<NSString *, id> *proxyPlace = @{
+      @"name": NULL_IF_NIL(place.name),
+      @"street": NULL_IF_NIL([self formattedStreetNameFromPlace:place]),
+      @"postalCode": NULL_IF_NIL(place.postalCode),
+      @"city": NULL_IF_NIL(place.locality),
+      @"country": NULL_IF_NIL(place.country),
+      @"state": NULL_IF_NIL(place.administrativeArea),
+      @"latitude": @(place.location.coordinate.latitude),
+      @"longitude": @(place.location.coordinate.longitude),
+    };
+    
+    [callback call:@[@{ @"success": @(YES), @"place": proxyPlace }] thisObject:self];
+  }];
+}
+
+- (NSString *)formattedStreetNameFromPlace:(CLPlacemark *)place
+{
+  if (place.thoroughfare == nil) {
+    return nil;
+  } else if (place.subThoroughfare == nil) {
+    return place.thoroughfare;
+  }
+
+  return [NSString stringWithFormat:@"%@ %@", place.thoroughfare, place.subThoroughfare];
+}
+
+- (void)completer:(MKLocalSearchCompleter *)completer didFailWithError:(NSError *)error
+{
+  [self fireEvent:@"didUpdateResults" withObject:@{ @"results": @[], @"error": error.localizedDescription }];
+}
+
+- (void)completerDidUpdateResults:(MKLocalSearchCompleter *)completer
+{
+  NSMutableArray<NSDictionary<NSString *, id> *> *proxyResults = [NSMutableArray arrayWithCapacity:completer.results.count];
+  
+  [completer.results enumerateObjectsUsingBlock:^(MKLocalSearchCompletion * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSMutableArray<NSDictionary<NSString *, NSNumber *> *> *titleHighlightRanges = [NSMutableArray arrayWithCapacity:obj.titleHighlightRanges.count];
+    NSMutableArray<NSDictionary<NSString *, NSNumber *> *> *subtitleHighlightRanges = [NSMutableArray arrayWithCapacity:obj.subtitleHighlightRanges.count];
+    
+    [obj.titleHighlightRanges enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      [titleHighlightRanges addObject:@{ @"offset": @(obj.rangeValue.location), @"length": @(obj.rangeValue.length) }];
+    }];
+
+    [obj.subtitleHighlightRanges enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      [subtitleHighlightRanges addObject:@{ @"offset": @(obj.rangeValue.location), @"length": @(obj.rangeValue.length) }];
+    }];
+
+    [proxyResults addObject:@{
+      @"title": obj.title,
+      @"subtitle": obj.subtitle,
+      @"titleHighlightRanges": titleHighlightRanges,
+      @"subtitleHighlightRanges": subtitleHighlightRanges
+    }];
+  }];
+
+  [self fireEvent:@"didUpdateResults" withObject:@{ @"results": proxyResults }];
+}
+
 MAKE_SYSTEM_PROP(STANDARD_TYPE, MKMapTypeStandard);
 MAKE_SYSTEM_PROP(NORMAL_TYPE, MKMapTypeStandard); // For parity with Android
 MAKE_SYSTEM_PROP(SATELLITE_TYPE, MKMapTypeSatellite);

@@ -9,11 +9,12 @@
 #import <TitaniumKit/TiModule.h>
 
 #if IS_SDK_IOS_16
-@interface TiMapModule : TiModule <MKLookAroundViewControllerDelegate> {
+@interface TiMapModule : TiModule <MKLookAroundViewControllerDelegate, MKLocalSearchCompleterDelegate> {
 #else
 @interface TiMapModule : TiModule {
 #endif
   UIColor *colorRed;
+  MKLocalSearchCompleter *_searchCompleter;
 }
 
 @property (nonatomic, readonly) NSNumber *STANDARD_TYPE;
