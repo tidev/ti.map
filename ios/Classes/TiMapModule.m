@@ -147,9 +147,10 @@
     }
 
     // Handle search region
-    if (options[@"latitude"] && options[@"longitude"] && options[@"latitudeDelta"] && options[@"longitudeDelta"]) {
-      CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:options[@"latitude"]], [TiUtils doubleValue:options[@"longitude"]]);
-      MKCoordinateSpan span = MKCoordinateSpanMake([TiUtils doubleValue:options[@"latitudeDelta"]], [TiUtils doubleValue:options[@"longitudeDelta"]]);
+    if (options[@"region"]) {
+      NSDictionary<NSString *, NSNumber *> *region = options[@"region"];
+      CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:region[@"latitude"]], [TiUtils doubleValue:region[@"longitude"]]);
+      MKCoordinateSpan span = MKCoordinateSpanMake([TiUtils doubleValue:region[@"latitudeDelta"]], [TiUtils doubleValue:region[@"longitudeDelta"]]);
 
       if (CLLocationCoordinate2DIsValid(coordinate)) {
         [[self searchCompleter] setRegion:MKCoordinateRegionMake(coordinate, span)];

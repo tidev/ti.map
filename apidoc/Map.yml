@@ -766,7 +766,9 @@ examples:
         ```
   - title: Search Request (iOS only)
     example: |
-        The following example shows the MapKit based search request:
+        The following example shows the MapKit based search request.
+        The options in `search` (2nd parameter) are optional, but improve
+        the accuracy of the results.
         
         ```javascript
         import Map from 'ti.map';
@@ -776,7 +778,15 @@ examples:
             console.warn(event)
         });
 
-        Map.search('Colloseum Rome');
+        Map.search('Colosseum', {
+          region: {
+            latitude: 41.890560,
+            longitude: 12.494270,
+            latitudeDelta: 1,
+            longitudeDelta: 1,
+          },
+          resultTypes: [Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST, Map.SEARCH_RESULT_TYPE_ADDRESS]
+        });
         ```
 
 ---
@@ -795,21 +805,11 @@ name: SearchCompletionOptions
 summary: Additional options to fine-tune the search request.
 description: The latitute and longitude describe the location, the delta values the distance to include.
 properties:
-  - name: latitude
-    summary: Latitude value of the search request, in decimal degrees.
-    type: Number
-  - name: longitude
-    summary: Longitude value of the search request, in decimal degrees.
-    type: Number
-  - name: latitude
-    summary: Latitude value of the search request, in decimal degrees.
-    type: Number
-  - name: latitudeDelta
-    summary: The amount of north-to-south distance displayed on the map, measured in decimal degrees.
-    type: Number
-  - name: longitudeDelta
-    summary: The amount of east-to-west distance displayed on the map, measured in decimal degrees.
-    type: Number
+  - name: region
+    summary: |
+        The region to look for results. Note that only `latitude`, `longitude`, `latitudeDelta` and `longitudeDelta`
+        are currently handled to define the region.
+    type: MapRegionTypev2
   - name: resultTypes
     summary: These options configure the types of search results you want to receive, including points of interest and addresses.
     description: |
