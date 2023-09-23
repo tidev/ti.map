@@ -484,6 +484,27 @@ properties:
     osver: {ios: {min: "11.0"} }
     exclude-platforms: [android]
     since: "6.3.0"
+  
+  - name: SEARCH_RESULT_TYPE_ADDRESS
+    summary: A value that indicates that search results include addresses.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "13.0"} }
+    since: "12.3.0"
+ 
+  - name: SEARCH_RESULT_TYPE_POINT_OF_INTEREST
+    summary: A value that indicates that search results include points of interest.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "13.0"} }
+    since: "12.3.0"
+
+  - name: SEARCH_RESULT_TYPE_QUERY
+    summary: A value that indicates that the search completer includes query completions in results.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "13.0"} }
+    since: "12.3.0"
 
 methods:
   - name: isGooglePlayServicesAvailable
@@ -789,3 +810,11 @@ properties:
   - name: longitudeDelta
     summary: The amount of east-to-west distance displayed on the map, measured in decimal degrees.
     type: Number
+  - name: resultTypes
+    summary: These options configure the types of search results you want to receive, including points of interest and addresses.
+    description: |
+        Use one or more of the following constants:
+          - <Modules.Map.SEARCH_RESULT_TYPE_ADDRESS>
+          - <Modules.Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST>
+          - <Modules.Map.SEARCH_RESULT_TYPE_QUERY>
+    type: Array<Number>
