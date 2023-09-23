@@ -57,3 +57,9 @@ properties:
     availability: creation
     type: Number
     platforms: [android]
+
+  - name: bounds
+    summary: Returns the bounding box of the polygon. Useful to center the region.
+    type: MapRegionTypev2
+    platforms: [android]
+    since: "12.3.0"
