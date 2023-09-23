@@ -56,4 +56,16 @@
   return place;
 }
 
++ (MKLocalSearchCompleterResultType)mappedResultTypes:(NSArray<NSNumber *> *)inputResultTypes
+{
+  MKLocalSearchCompleterResultType resultTypes = 0;
+
+  for (NSNumber *number in inputResultTypes) {
+    MKLocalSearchCompleterResultType typeValue = [number unsignedIntegerValue];
+    resultTypes |= typeValue;
+  }
+
+  return resultTypes;
+}
+
 @end

@@ -10,6 +10,7 @@
 #import "TiBlob.h"
 #import "TiMapCameraProxy.h"
 #import "TiMapConstants.h"
+#import "TiMapUtils.h"
 #import "TiMapViewProxy.h"
 
 @implementation TiMapModule
@@ -121,15 +122,6 @@
   if (_searchCompleter == nil) {
     _searchCompleter = [[MKLocalSearchCompleter alloc] init];
     _searchCompleter.delegate = self;
-
-    // Do not show queries like "show my location" or "show nearby items"
-    if ([TiUtils isIOSVersionOrGreater:@"13.0"]) {
-      if (@available(iOS 13.0, *)) {
-        _searchCompleter.resultTypes = MKLocalSearchCompleterResultTypeAddress | MKLocalSearchCompleterResultTypePointOfInterest;
-      }
-    } else {
-      _searchCompleter.filterType = MKSearchCompletionFilterTypeLocationsOnly;
-    }
   }
 
   return _searchCompleter;
@@ -140,7 +132,6 @@
   ENSURE_UI_THREAD(search, args);
 
   NSString *value = [TiUtils stringValue:args[0]];
-  NSDictionary *options = (NSDictionary *)args[1];
 
   // Require a search value
   if (!value) {
@@ -149,12 +140,29 @@
   }
 
   // Pass additional options like search region
-  if (options != nil) {
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:options[@"latitude"]], [TiUtils doubleValue:options[@"longitude"]]);
-    MKCoordinateSpan span = MKCoordinateSpanMake([TiUtils doubleValue:options[@"latitudeDelta"]], [TiUtils doubleValue:options[@"longitudeDelta"]]);
+  if ([args count] > 1) {
+    NSDictionary *options = (NSDictionary *)args[1];
+    if (options == nil) {
+      [self throwException:@"Options have to be called within an Object" subreason:@"Please provide the value as an Object" location:CODELOCATION];
+    }
 
-    if (CLLocationCoordinate2DIsValid(coordinate)) {
-      [[self searchCompleter] setRegion:MKCoordinateRegionMake(coordinate, span)];
+    // Handle search region
+    if (options[@"latitude"] && options[@"longitude"] && options[@"latitudeDelta"] && options[@"longitudeDelta"]) {
+      CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([TiUtils doubleValue:options[@"latitude"]], [TiUtils doubleValue:options[@"longitude"]]);
+      MKCoordinateSpan span = MKCoordinateSpanMake([TiUtils doubleValue:options[@"latitudeDelta"]], [TiUtils doubleValue:options[@"longitudeDelta"]]);
+
+      if (CLLocationCoordinate2DIsValid(coordinate)) {
+        [[self searchCompleter] setRegion:MKCoordinateRegionMake(coordinate, span)];
+      }
+    }
+
+    // Handle filter types
+    if ([TiUtils isIOSVersionOrGreater:@"13.0"] && options[@"resultTypes"]) {
+      if (@available(iOS 13.0, *)) {
+        _searchCompleter.resultTypes = [TiMapUtils mappedResultTypes:options[@"resultTypes"]];
+      } else {
+        NSLog(@"[ERROR] The \"resultTypes\" options are only available on iOS 13+");
+      }
     }
   }
 
@@ -287,5 +295,9 @@ MAKE_SYSTEM_PROP(FEATURE_TERRITORIES, MKMapFeatureOptionTerritories);
 MAKE_SYSTEM_PROP(FEATURE_PHYSICAL_FEATURES, MKMapFeatureOptionPhysicalFeatures);
 MAKE_SYSTEM_PROP(FEATURE_TYPE_POINT_OF_INTEREST, MKMapFeatureOptionPointsOfInterest);
 #endif
+
+MAKE_SYSTEM_PROP(SEARCH_RESULT_TYPE_ADDRESS, MKLocalSearchCompleterResultTypeAddress);
+MAKE_SYSTEM_PROP(SEARCH_RESULT_TYPE_POINT_OF_INTEREST, MKLocalSearchCompleterResultTypePointOfInterest);
+MAKE_SYSTEM_PROP(SEARCH_RESULT_TYPE_QUERY, MKLocalSearchCompleterResultTypeQuery);
 
 @end

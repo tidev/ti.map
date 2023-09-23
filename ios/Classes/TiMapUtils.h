@@ -7,11 +7,14 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
+#import <MapKit/MapKit.h>
 
 @interface TiMapUtils : NSObject
 
 + (id)returnValueOnMainThread:(id (^)(void))block;
 
 + (NSDictionary<NSString *, id> *)dictionaryFromPlacemark:(CLPlacemark *)placemark;
+
++ (MKLocalSearchCompleterResultType)mappedResultTypes:(NSArray<NSNumber *> *)inputResultTypes;
 
 @end
