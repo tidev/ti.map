@@ -597,11 +597,60 @@ events:
     since: { android: "7.3.0" }
     properties:
       - name: latitude
-        summary: latitude of the point on the ground that was pressed.
+        summary: Latitude of the point on the ground that was pressed.
         type: Number
 
       - name: longitude
-        summary: longitude of the point on the ground that was pressed.
+        summary: Longitude of the point on the ground that was pressed.
+        type: Number
+  
+  - name: poideselect
+    summary: Fired when the user deselects a Point of Interest (e.g. restaurant or hotel).
+    since: "12.2.0"
+    platforms: [iphone, ipad, macos]
+
+  - name: poiclick
+    summary: Fired when the user selects a Point of Interest (e.g. restaurant or hotel).
+    description: | 
+        Make sure to use the <Modules.Map.View.selectableMapFeatures> property to define
+        annotations tha should be selectable. Available in iOS 16+
+    since: "12.0.0"
+    platforms: [iphone, ipad, macos]
+    properties:
+      - name: name
+        summary: The descriptive name associated with the map item.
+        type: String
+
+      - name: featureType
+        summary: |
+            The type of map feature this annotation represents. See the [Apple docs](https://developer.apple.com/documentation/mapkit/mkmapfeaturetype)
+            for all possible enum values.
+        type: Number
+
+      - name: pointOfInterestCategory
+        summary: |
+            The point-of-interest category for the map item. See the [Apple docs](https://developer.apple.com/documentation/mapkit/mkpointofinterestcategory)
+            for all possible enum values.
+        type: Number
+
+      - name: phoneNumber
+        summary: The phone number associated with a business at the specified location.
+        type: String
+
+      - name: url
+        summary: The URL associated with the specified location.
+        type: String
+
+      - name: place
+        summary: The placemark object containing the location information.
+        type: Object
+
+      - name: latitude
+        summary: Latitude of the annotation that was selected.
+        type: Number
+
+      - name: longitude
+        summary: Longitude of the annotation that was selected.
         type: Number
 
 properties:
@@ -957,6 +1006,16 @@ properties:
     type: Number
     since: "5.0.2"
     platforms: [android]
+
+  - name: selectableMapFeatures
+    summary: The property that describes which selectable features the map responds to.
+    description: |
+      Pass one or more of <Modules.Map.FEATURE_TERRITORIES>, <Modules.Map.FEATURE_PHYSICAL_FEATURES>
+      or <Modules.Map.FEATURE_TYPE_POINT_OF_INTEREST> as an array to make these features selectable.
+    type: Array<Number>
+    osver: { ios: { min: "16.0" } }
+    platforms: [iphone, ipad, macos]
+    since: "12.0.0"
 
 ---
 name: MapLocationTypeV2

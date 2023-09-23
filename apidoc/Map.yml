@@ -42,13 +42,14 @@ description: |
         </ti:app>
         ```
 
-    -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
+    -   Instantiate the module with the `import Map from 'ti.map'` API, then make subsequent API calls with
         the new map object.
 
         ``` javascript
-        var Map = require('ti.map');
-        var mapview = Map.createView({ 
-          mapType: Map.NORMAL_TYPE 
+        import Map from 'ti.map';
+
+        const mapView = Map.createView({
+          mapType: Map.NORMAL_TYPE
         });
         ```
 
@@ -99,12 +100,13 @@ description: |
         </ti:app>
         ```
 
-    -   Instantiate the module with the `require('ti.map')` method, then make subsequent API calls with
+    -   Instantiate the module with the `import Map from 'ti.map'` API, then make subsequent API calls with
         the new map object.
 
         ``` javascript
-        var Map = require('ti.map');
-        var mapview = Map.createView({
+        import Map from 'ti.map';
+
+        const mapView = Map.createView({
           mapType: Map.NORMAL_TYPE
         });
         ```
@@ -435,6 +437,34 @@ properties:
     exclude-platforms: [android]
     since: "6.3.0"
 
+  - name: FEATURE_TERRITORIES
+    summary: | 
+        The option that represents territorial boundaries such as a national border,
+        a state boundary, or a neighborhood.
+    type: Number
+    permission: read-only
+    osver: { ios: { min: "16.0" } }
+    exclude-platforms: [iphone, ipad, macos]
+    since: "12.0.0"
+
+  - name: FEATURE_PHYSICAL_FEATURES
+    summary: | 
+        The option that represents physical map features such as mountain ranges, rivers,
+        and ocean basins.
+    type: Number
+    permission: read-only
+    osver: { ios: { min: "16.0" } }
+    exclude-platforms: [iphone, ipad, macos]
+    since: "12.0.0"
+
+  - name: FEATURE_TYPE_POINT_OF_INTEREST
+    summary: The option that represents points of interest such as museums, cafes, parks, or schools.
+    type: Number
+    permission: read-only
+    osver: { ios: { min: "16.0" } }
+    exclude-platforms: [iphone, ipad, macos]
+    since: "12.0.0"
+
   - name: ANNOTATION_VIEW_COLLISION_MODE_RECTANGLE
     summary: |
         Constant indicating that the full collision frame rectangle should be used for
@@ -454,6 +484,27 @@ properties:
     osver: {ios: {min: "11.0"} }
     exclude-platforms: [android]
     since: "6.3.0"
+  
+  - name: SEARCH_RESULT_TYPE_ADDRESS
+    summary: A value that indicates that search results include addresses.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "13.0"} }
+    since: "12.3.0"
+ 
+  - name: SEARCH_RESULT_TYPE_POINT_OF_INTEREST
+    summary: A value that indicates that search results include points of interest.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "13.0"} }
+    since: "12.3.0"
+
+  - name: SEARCH_RESULT_TYPE_QUERY
+    summary: A value that indicates that the search completer includes query completions in results.
+    type: Number
+    permission: read-only
+    osver: {ios: {min: "13.0"} }
+    since: "12.3.0"
 
 methods:
   - name: isGooglePlayServicesAvailable
@@ -467,7 +518,73 @@ methods:
     summary: Returns a code to indicate whether Google Play Services is available on the device.
     since: "3.1.1"
     platforms: [android]
+  
+  - name: search
+    summary: |
+        Uses the native `MKLocalSearchCompleter` class to search places for
+        a given input value.
+    description: |
+        Please use the `didUpdateResults` event to get updates for a search
+        completion request via the `results` field. If the search failed, the
+        `results` field is empty and an `error` is provided.
+    parameters:
+      - name: value
+        summary: The value to search with.
+        type: String
+      - name: options
+        summary: Additional options to fine-tune the search request.
+        type: SearchCompletionOptions
+    platforms: [iphone, ipad, macos]
+    since: "12.3.0"
 
+  - name: geocodeAddress
+    summary: |
+        Resolve address details using the `CLGeocoder` to get information (e.g.
+        latitude, longitude, postal code and city) about a given input address.
+    description: |
+        The result is provided via the callback (second function argument).
+    parameters:
+      - name: address
+        summary: The address to resolve.
+        type: String
+      - name: callback
+        summary: |
+            Function to be called upon completion (either success with a place
+            or an error).
+        type: Callback<Object>
+        optional: false
+    platforms: [iphone, ipad, macos]
+    since: "12.3.0"
+
+  - name: getLookAroundImage
+    summary:  A utility function that you use to create a static image from a LookAround scene.
+    parameters:
+      - name: callback
+        summary: Function to be called upon completion (either success with an image or an error).
+        type: Callback<Object>
+        optional: false
+      - name: latitude
+        summary: Latitude of the preferred region.
+        type: Number
+      - name: longitude
+        summary: Longitude of the preferred region.
+        type: Number
+    osver: { ios: { min: "16.0"} }
+    since: "12.0.0"
+    platforms: [iphone, ipad, macos]
+
+  - name: openLookAroundDialog
+    summary:  Opens a LookAround window modally.
+    parameters:
+      - name: latitude
+        summary: Latitude of the preferred region.
+        type: Number
+      - name: longitude
+        summary: Longitude of the preferred region.
+        type: Number
+    osver: { ios: { min: "16.0"} }
+    since: "12.0.0"
+    platforms: [iphone, ipad, macos]
 examples:
 
   - title: Basic Map Example
@@ -482,10 +599,11 @@ examples:
         and it is not practical to identify them by title.
 
         ``` javascript
-        var Map = require('ti.map');
-        var win = Titanium.UI.createWindow();
+        import Map from 'ti.map';
 
-        var mountainView = Map.createAnnotation({
+        const window = Ti.UI.createWindow();
+
+        const mountainView = Map.createAnnotation({
             latitude: 37.390749,
             longitude: -122.081651,
             title: 'Appcelerator Headquarters',
@@ -494,7 +612,7 @@ examples:
             myid: 1 // Custom property to uniquely identify this annotation.
         });
 
-        var mapview = Map.createView({
+        const mapView = Map.createView({
             mapType: Map.NORMAL_TYPE,
             region: { 
                 latitude: 33.74511,
@@ -508,7 +626,7 @@ examples:
             annotations: [ mountainView ]
         });
 
-        var circle = Map.createCircle({
+        const circle = Map.createCircle({
             center: {
                 latitude: 33.74511,
                 longitude: -84.38993
@@ -516,14 +634,15 @@ examples:
             radius: 1000, // = 1.0 km
             fillColor: '#20FF0000'
         });
-        mapview.addCircle(circle);
 
-        win.add(mapview);
+        mapView.addCircle(circle);
+        window.add(mapView);
 
-        mapview.addEventListener('click', function(event) {
+        mapView.addEventListener('click', event => {
             Ti.API.info('Clicked ' + event.clicksource + ' on ' + event.latitude + ', ' + event.longitude);
         });
-        win.open();
+
+        windown.open();
         ```
   - title: Alloy XML Markup
     example: |
@@ -548,7 +667,7 @@ examples:
         ``` xml
         <Alloy>
             <Window>
-                <Module id="mapview" module="ti.map" onClick="report" method="createView">
+                <Module id="mapView" module="ti.map" onClick="report" method="createView">
                     <Annotation id="appcHQ" myId="1337" />
                 </Module>
             </Window>
@@ -558,7 +677,7 @@ examples:
         `app/styles/index.tss`:
 
         ``` javascript
-        "#mapview": {
+        "#mapView": {
             region: {
                 latitude: 33.74511,
                 longitude: -84.38993,
@@ -594,11 +713,12 @@ examples:
         view instance.
 
         ``` javascript
-        var Map = require('ti.map');
-        var win = Titanium.UI.createWindow();
-        var annotations = [];
+        import Map from 'ti.map';
 
-        for (var i = 0; i < 10; i++) {
+        const window = Ti.UI.createWindow();
+        const annotations = [];
+
+        for (let i = 0; i < 10; i++) {
             annotations.push(Map.createAnnotation({
                 title: 'Appcelerator Inc.',
                 subtitle: 'TiRocks!',
@@ -618,7 +738,7 @@ examples:
             }));
         }
 
-        var mapview = Map.createView({
+        const mapView = Map.createView({
             annotations: annotations,
             rotateEnabled: true,
             mapType: Map.MUTED_STANDARD_TYPE,
@@ -626,23 +746,47 @@ examples:
             userLocation: true
         });
 
-        mapview.addEventListener('clusterstart', function(e) {
+        mapView.addEventListener('clusterstart', event => {
             Ti.API.info('clustering started!');
 
-            var clusterAnnotation = Map.createAnnotation({
+            const clusterAnnotation = Map.createAnnotation({
                 showAsMarker: true,
-                markerText: e.memberAnnotations.length.toString(),
+                markerText: event.memberAnnotations.length.toString(),
                 title: 'Cluster Title',
                 subtitle: 'Cluster Subtitle',
             });
 
-            mapview.setClusterAnnotation({
+            mapView.setClusterAnnotation({
                 annotation: clusterAnnotation,
-                memberAnnotations: e.memberAnnotations
+                memberAnnotations: event.memberAnnotations
             });
         });
-        win.add(mapview);
-        win.open();
+        window.add(mapView);
+        window.open();
+        ```
+  - title: Search Request (iOS only)
+    example: |
+        The following example shows the MapKit based search request.
+        The options in `search` (2nd parameter) are optional, but improve
+        the accuracy of the results.
+        
+        ```javascript
+        import Map from 'ti.map';
+
+        Map.addEventListener('didUpdateResults', event => {
+            console.warn('Found place:');
+            console.warn(event)
+        });
+
+        Map.search('Colosseum', {
+          region: {
+            latitude: 41.890560,
+            longitude: 12.494270,
+            latitudeDelta: 1,
+            longitudeDelta: 1,
+          },
+          resultTypes: [Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST, Map.SEARCH_RESULT_TYPE_ADDRESS]
+        });
         ```
 
 ---
@@ -652,7 +796,25 @@ properties:
   - name: longitude
     summary: Longitude value of the map point, in decimal degrees.
     type: Number
-
   - name: latitude
     summary: Latitude value of the map point, in decimal degrees.
     type: Number
+
+---
+name: SearchCompletionOptions
+summary: Additional options to fine-tune the search request.
+description: The latitute and longitude describe the location, the delta values the distance to include.
+properties:
+  - name: region
+    summary: |
+        The region to look for results. Note that only `latitude`, `longitude`, `latitudeDelta` and `longitudeDelta`
+        are currently handled to define the region.
+    type: MapRegionTypev2
+  - name: resultTypes
+    summary: These options configure the types of search results you want to receive, including points of interest and addresses.
+    description: |
+        Use one or more of the following constants:
+          - <Modules.Map.SEARCH_RESULT_TYPE_ADDRESS>
+          - <Modules.Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST>
+          - <Modules.Map.SEARCH_RESULT_TYPE_QUERY>
+    type: Array<Number>

@@ -9,6 +9,7 @@
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapFeatureAnnotationProxy.h"
 #import "TiMapImageAnnotationView.h"
 #import "TiMapImageOverlayProxy.h"
 #import "TiMapMarkerAnnotationView.h"
@@ -353,6 +354,23 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
+#if IS_SDK_IOS_16
+- (void)setSelectableMapFeatures_:(id)args
+{
+  if (![TiUtils isIOSVersionOrGreater:@"16.0"]) {
+    return;
+  }
+
+  __block MKMapFeatureOptions options;
+
+  [(NSArray *)args enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+    options |= [TiUtils intValue:obj];
+  }];
+
+  [[self map] setSelectableMapFeatures:options];
+}
+#endif
+
 - (void)deselectAnnotation:(id)args
 {
   ENSURE_SINGLE_ARG(args, NSObject);
@@ -369,6 +387,8 @@ CLLocationCoordinate2D userNewLocation;
     }
   } else if ([args isKindOfClass:[TiMapAnnotationProxy class]]) {
     [[self map] deselectAnnotation:args animated:animate];
+  } else if ([args isKindOfClass:[TiMapFeatureAnnotationProxy class]]) {
+    [[self map] deselectAnnotation:[(TiMapFeatureAnnotationProxy *)args annotation] animated:animate];
   }
 }
 
@@ -1089,6 +1109,44 @@ CLLocationCoordinate2D userNewLocation;
   return nil;
 }
 
+#if IS_SDK_IOS_16
+- (void)mapView:(MKMapView *)mapView didSelectAnnotation:(id<MKAnnotation>)annotation
+{
+  if (![TiUtils isIOSVersionOrGreater:@"16.0"]) {
+    return;
+  }
+
+  if (![annotation isKindOfClass:[MKMapFeatureAnnotation class]]) {
+    return;
+  }
+
+  MKMapItemRequest *request = [[MKMapItemRequest alloc] initWithMapFeatureAnnotation:annotation];
+
+  [request getMapItemWithCompletionHandler:^(MKMapItem *_Nullable mapItem, NSError *_Nullable error) {
+    if (error != nil) {
+      NSLog(@"[ERROR] Cannot get POI details: %@", error.localizedDescription);
+      return;
+    }
+
+    MKMapFeatureAnnotation *featureAnnotation = (MKMapFeatureAnnotation *)annotation;
+
+    NSDictionary *event = @{
+      @"annotation" : [[TiMapFeatureAnnotationProxy alloc] _initWithPageContext:[(TiMapViewProxy *)[self proxy] pageContext] andAnnotation:featureAnnotation],
+      @"name" : NULL_IF_NIL(mapItem.name),
+      @"featureType" : @(featureAnnotation.featureType),
+      @"pointOfInterestCategory" : NULL_IF_NIL(featureAnnotation.pointOfInterestCategory),
+      @"phoneNumber" : NULL_IF_NIL(mapItem.phoneNumber),
+      @"url" : NULL_IF_NIL(mapItem.url.absoluteString),
+      @"place" : [TiMapUtils dictionaryFromPlacemark:mapItem.placemark],
+      @"latitude" : @(annotation.coordinate.latitude),
+      @"longitude" : @(annotation.coordinate.longitude)
+    };
+
+    [[self proxy] fireEvent:@"poiclick" withObject:event];
+  }];
+}
+#endif
+
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
   if ([view conformsToProtocol:@protocol(TiMapAnnotation)]) {
@@ -1120,6 +1178,19 @@ CLLocationCoordinate2D userNewLocation;
     }
   }
 }
+
+#if IS_SDK_IOS_16
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotation:(id<MKAnnotation>)annotation
+{
+  if (![TiUtils isIOSVersionOrGreater:@"16.0"]) {
+    return;
+  }
+
+  if ([annotation isKindOfClass:MKMapFeatureAnnotation.class]) {
+    [self.proxy fireEvent:@"poideselect"];
+  }
+}
+#endif
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
