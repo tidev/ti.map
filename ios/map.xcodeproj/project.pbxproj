@@ -183,6 +183,8 @@
 				DB3656EF1E50BA740040E0B9 /* TiMapConstants.h */,
 				24DD6CF71134B3F500162E58 /* TiMapModule.h */,
 				24DD6CF81134B3F500162E58 /* TiMapModule.m */,
+				CEE33CF119EC4C150005E745 /* TiMapUtils.h */,
+				CEE33CF219EC4C150005E745 /* TiMapUtils.m */,
 				24DE9E0F11C5FE74003F90F6 /* TiMapModuleAssets.h */,
 				24DE9E1011C5FE74003F90F6 /* TiMapModuleAssets.m */,
 			);
@@ -293,8 +295,6 @@
 				CED651C317D7AA21007C2954 /* TiMapView.m */,
 				CED651C417D7AA21007C2954 /* TiMapViewProxy.h */,
 				CED651C517D7AA21007C2954 /* TiMapViewProxy.m */,
-				CEE33CF119EC4C150005E745 /* TiMapUtils.h */,
-				CEE33CF219EC4C150005E745 /* TiMapUtils.m */,
 				27A609E819F5922B00CA150A /* WildcardGestureRecognizer.h */,
 				27A609E919F5927000CA150A /* WildcardGestureRecognizer.m */,
 			);
