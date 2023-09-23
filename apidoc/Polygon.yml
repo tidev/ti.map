@@ -62,4 +62,4 @@ properties:
     summary: Returns the bounding box of the polygon. Useful to center the region.
     type: MapRegionTypev2
     platforms: [android]
-    since: "5.5.0"
+    since: "12.3.0"
