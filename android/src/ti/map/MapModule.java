@@ -79,6 +79,8 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public static final String PROPERTY_PITCH = "pitch";
 
 	@Kroll.constant
+	public static final int TYPE_NONE = GoogleMap.MAP_TYPE_NONE;
+	@Kroll.constant
 	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
 	@Kroll.constant
 	public static final int TERRAIN_TYPE = GoogleMap.MAP_TYPE_TERRAIN;

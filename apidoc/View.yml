@@ -758,9 +758,9 @@ properties:
     platforms: [android]
 
   - name: maxZoomLevel
-    summary: Returns the maximum zoom level available at the current camera position.
+    summary: Maximum zoom level available at the current camera position.
     description: |
-        Returns the maximum zoom level for the current camera position.
+        Set and returns the maximum zoom level for the current camera position.
         This takes into account what map type is currently being used.
         For example, satellite or terrain may have a lower max zoom level than the base map tiles.
 
@@ -769,18 +769,19 @@ properties:
     type: Number
     platforms: [android]
     permission: read-only
+    availability: creation
 
   - name: minZoomLevel
-    summary: Returns the minimum zoom level available at the current camera position.
+    summary: Minimum zoom level available at the current camera position.
     description: |
-        Returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level)
+        Set and returns the minimum zoom level. This is the same for every location (unlike the maximum zoom level)
         but may vary between devices and map sizes.
 
         This will only give the correct value after the 'complete' event is fired.
     since: "3.2.3"
     type: Number
     platforms: [android]
-    permission: read-only
+    availability: creation
 
   - name: minClusterSize
     summary: Sets the minium size of a cluster.
