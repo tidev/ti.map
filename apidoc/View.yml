@@ -287,11 +287,11 @@ methods:
         whole world and has a cutout in the shape of a circle. The radius
         of the shape, the overlay color and stroke properties can be configured.
     exclude-platforms: [android]
-    since: { iphone: "7.4.0", ipad: "7.4.0", macos: "7.4.0" }
+    since: { iphone: "12.3.0", ipad: "12.3.0", macos: "12.3.0" }
     parameters:
       - name: circleConfiguration
-        summary: A <Modules.Map.CutoutCircleConfiguration> object.
-        type: Modules.Map.CutoutCircleConfiguration
+        summary: A <CutoutCircleConfiguration> object.
+        type: CutoutCircleConfiguration
 
   - name: addCircle
     summary: Adds a new circle to the map.
