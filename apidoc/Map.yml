@@ -821,7 +821,7 @@ properties:
 
 ---
 name: CutoutCircleConfiguration
-summary: Options to configure a cutout circle (iOS only right now).
+summary: Options to configure a cutout circle.
 properties:
   - name: longitude
     summary: Longitude value of the map point, in decimal degrees.
