@@ -987,8 +987,10 @@ CLLocationCoordinate2D userNewLocation;
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay
 {
-  if ([overlay isKindOfClass:[TiCutoutCircle class]]) {
-    NSDictionary *circleConfiguration = [[self proxy] valueForKey:@"cutoutCircle"];
+  NSDictionary *circleConfiguration = [[self proxy] valueForKey:@"cutoutCircle"];
+
+  // Configure cutout circles in a special way, as they do not own an own proxy
+  if ([overlay isKindOfClass:[TiCutoutCircle class]] && circleConfiguration != nil) {
     UIColor *overlayColor = [TiUtils colorValue:@"overlayColor" properties:circleConfiguration def:[TiColor colorNamed:@"black"]].color;
     UIColor *strokeColor = [TiUtils colorValue:@"strokeColor" properties:circleConfiguration def:[TiColor colorNamed:@"black"]].color;
     CGFloat lineWidth = [TiUtils floatValue:@"strokeWidth" properties:circleConfiguration def:1.0];
