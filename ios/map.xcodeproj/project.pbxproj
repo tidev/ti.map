@@ -255,6 +255,8 @@
 		DB07496D1E081A6A009D8A71 /* Circle */ = {
 			isa = PBXGroup;
 			children = (
+				3A699AC72B68CB0E00938935 /* TiCutoutCircle.h */,
+				3A699AC82B68CB0E00938935 /* TiCutoutCircle.m */,
 				27A609EB19F5B84000CA150A /* TiMapCircleProxy.m */,
 				27A609ED19F5B85900CA150A /* TiMapCircleProxy.h */,
 			);
@@ -269,8 +271,6 @@
 				DB0CCA022010841A00597F24 /* Pattern */,
 				DB07496B1E081A36009D8A71 /* Polygon */,
 				DB07496A1E081A23009D8A71 /* Polyline */,
-				3A699AC72B68CB0E00938935 /* TiCutoutCircle.h */,
-				3A699AC82B68CB0E00938935 /* TiCutoutCircle.m */,
 			);
 			name = Overlays;
 			sourceTree = "<group>";

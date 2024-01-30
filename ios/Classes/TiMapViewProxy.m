@@ -300,7 +300,7 @@
 
   CGFloat latitude = [TiUtils floatValue:@"latitude" properties:arg];
   CGFloat longitude = [TiUtils floatValue:@"longitude" properties:arg];
-  double radius = [TiUtils doubleValue:@"radius" properties:arg];
+  CGFloat radius = [TiUtils doubleValue:@"radius" properties:arg];
   double tolerance = [TiUtils doubleValue:@"tolerance" properties:arg def:3.0];
 
   CLLocationCoordinate2D WORLD_COORDINATES[6];
@@ -312,18 +312,21 @@
   WORLD_COORDINATES[5] = CLLocationCoordinate2DMake(90, -180);
 
   CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-  NSArray<NSDictionary *> *circleCoordinates = [TiMapUtils makeCircleCoordinates:coordinate withRadius:radius andTolerance:tolerance];
+  NSArray<NSDictionary *> *circleCoordinates = [TiMapUtils generateCircleCoordinates:coordinate
+                                                                          withRadius:radius
+                                                                        andTolerance:tolerance];
+
   CLLocationCoordinate2D *circleCoordinatesNative = malloc(sizeof(CLLocationCoordinate2D) * [circleCoordinates count]);
 
-  for (int i = 0; i < [circleCoordinates count]; ++i) {
+  for (NSUInteger i = 0; i < [circleCoordinates count]; ++i) {
     CLLocationCoordinate2D coordinate = [TiMapUtils processLocation:[circleCoordinates objectAtIndex:i]];
     circleCoordinatesNative[i] = coordinate;
   }
 
-  MKPolygon *polygon1 = [MKPolygon polygonWithCoordinates:circleCoordinatesNative count:circleCoordinates.count];
-  TiCutoutCircle *polygon2 = [TiCutoutCircle polygonWithCoordinates:WORLD_COORDINATES count:6 interiorPolygons:@[ polygon1 ]];
+  MKPolygon *circlePolygon = [MKPolygon polygonWithCoordinates:circleCoordinatesNative count:circleCoordinates.count];
+  TiCutoutCircle *cutoutPolygon = [TiCutoutCircle polygonWithCoordinates:WORLD_COORDINATES count:6 interiorPolygons:@[ circlePolygon ]];
 
-  [[(TiMapView *)[self view] map] addOverlay:polygon2];
+  [[(TiMapView *)[self view] map] addOverlay:cutoutPolygon];
 }
 
 - (void)setAnnotations:(id)arg

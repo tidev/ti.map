@@ -68,7 +68,7 @@
   return resultTypes;
 }
 
-+ (NSArray<NSDictionary *> *)makeCircleCoordinates:(CLLocationCoordinate2D)coordinate withRadius:(double)radius andTolerance:(double)tolerance
++ (NSArray<NSDictionary *> *)generateCircleCoordinates:(CLLocationCoordinate2D)coordinate withRadius:(double)radius andTolerance:(double)tolerance
 {
   NSMutableArray<NSDictionary *> *coordinates = [[NSMutableArray alloc] init];
   double latRadian = coordinate.latitude * M_PI / 180.0;
