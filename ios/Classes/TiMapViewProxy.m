@@ -329,6 +329,18 @@
   [[(TiMapView *)[self view] map] addOverlay:cutoutPolygon];
 }
 
+- (void)removeCutoutCircle:(id)unused
+{
+  MKMapView *mapView = [(TiMapView *)[self view] map];
+  NSArray<id<MKOverlay>> *overlays = [mapView overlays];
+
+  for (id<MKOverlay> overlay in overlays) {
+    if ([overlay isKindOfClass:[TiCutoutCircle class]]) {
+      [mapView removeOverlay:overlay];
+    }
+  }
+}
+
 - (void)setAnnotations:(id)arg
 {
   ENSURE_TYPE(arg, NSArray);

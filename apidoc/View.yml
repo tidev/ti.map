@@ -293,6 +293,11 @@ methods:
         summary: A <CutoutCircleConfiguration> object.
         type: CutoutCircleConfiguration
 
+  - name: removeCutoutCircle
+    summary: Removes a previously added cutout circle.
+    exclude-platforms: [android]
+    since: { iphone: "12.3.0", ipad: "12.3.0", macos: "12.3.0" }
+
   - name: addCircle
     summary: Adds a new circle to the map.
     parameters:
