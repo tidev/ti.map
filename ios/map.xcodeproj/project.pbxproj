@@ -37,6 +37,8 @@
 		27A609F019F711B700CA150A /* TiMapPolylineProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A609EF19F711B700CA150A /* TiMapPolylineProxy.m */; };
 		3A155BE82A9B35C000247646 /* TiMapFeatureAnnotationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A155BE62A9B35C000247646 /* TiMapFeatureAnnotationProxy.h */; };
 		3A155BE92A9B35C000247646 /* TiMapFeatureAnnotationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A155BE72A9B35C000247646 /* TiMapFeatureAnnotationProxy.m */; };
+		3A699AC92B68CB0E00938935 /* TiCutoutCircle.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A699AC72B68CB0E00938935 /* TiCutoutCircle.h */; };
+		3A699ACA2B68CB0E00938935 /* TiCutoutCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A699AC82B68CB0E00938935 /* TiCutoutCircle.m */; };
 		815136F31D355BF5009E3E2C /* TiMapSnapshotterProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 815136F11D355BF5009E3E2C /* TiMapSnapshotterProxy.h */; };
 		815136F41D355BF5009E3E2C /* TiMapSnapshotterProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 815136F21D355BF5009E3E2C /* TiMapSnapshotterProxy.m */; };
 		AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */; };
@@ -98,6 +100,8 @@
 		27A609EF19F711B700CA150A /* TiMapPolylineProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapPolylineProxy.m; path = Classes/TiMapPolylineProxy.m; sourceTree = "<group>"; };
 		3A155BE62A9B35C000247646 /* TiMapFeatureAnnotationProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiMapFeatureAnnotationProxy.h; path = Classes/TiMapFeatureAnnotationProxy.h; sourceTree = "<group>"; };
 		3A155BE72A9B35C000247646 /* TiMapFeatureAnnotationProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TiMapFeatureAnnotationProxy.m; path = Classes/TiMapFeatureAnnotationProxy.m; sourceTree = "<group>"; };
+		3A699AC72B68CB0E00938935 /* TiCutoutCircle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TiCutoutCircle.h; path = Classes/TiCutoutCircle.h; sourceTree = "<group>"; };
+		3A699AC82B68CB0E00938935 /* TiCutoutCircle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TiCutoutCircle.m; path = Classes/TiCutoutCircle.m; sourceTree = "<group>"; };
 		815136F11D355BF5009E3E2C /* TiMapSnapshotterProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiMapSnapshotterProxy.h; path = Classes/TiMapSnapshotterProxy.h; sourceTree = "<group>"; };
 		815136F21D355BF5009E3E2C /* TiMapSnapshotterProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiMapSnapshotterProxy.m; path = Classes/TiMapSnapshotterProxy.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiMap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiMap_Prefix.pch; sourceTree = SOURCE_ROOT; };
@@ -265,6 +269,8 @@
 				DB0CCA022010841A00597F24 /* Pattern */,
 				DB07496B1E081A36009D8A71 /* Polygon */,
 				DB07496A1E081A23009D8A71 /* Polyline */,
+				3A699AC72B68CB0E00938935 /* TiCutoutCircle.h */,
+				3A699AC82B68CB0E00938935 /* TiCutoutCircle.m */,
 			);
 			name = Overlays;
 			sourceTree = "<group>";
@@ -336,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				194D001C2047DB4A002150BD /* TiMapImageOverlayProxy.h in Headers */,
+				3A699AC92B68CB0E00938935 /* TiCutoutCircle.h in Headers */,
 				AA747D9F0F9514B9006C5449 /* TiMap_Prefix.pch in Headers */,
 				CE92EC2217DF8B020082E943 /* TiMKOverlayPathUniversal.h in Headers */,
 				24DD6CF91134B3F500162E58 /* TiMapModule.h in Headers */,
@@ -430,6 +437,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A699ACA2B68CB0E00938935 /* TiCutoutCircle.m in Sources */,
 				194D00212047DDED002150BD /* TiMapImageOverlayRenderer.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* TiMapModule.m in Sources */,
 				194D001D2047DB4A002150BD /* TiMapImageOverlayProxy.m in Sources */,

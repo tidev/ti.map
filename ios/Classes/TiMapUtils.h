@@ -17,4 +17,8 @@
 
 + (MKLocalSearchCompleterResultType)mappedResultTypes:(NSArray<NSNumber *> *)inputResultTypes;
 
++ (NSArray<NSDictionary *> *)makeCircleCoordinates:(CLLocationCoordinate2D)coordinate withRadius:(double)radius andTolerance:(double)tolerance;
+
++ (CLLocationCoordinate2D)processLocation:(id)locObj;
+
 @end

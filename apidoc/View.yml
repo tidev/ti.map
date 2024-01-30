@@ -280,6 +280,19 @@ methods:
   - name: removeAllPolylines
     summary: Remove all polylines from the map.
 
+  - name: addCutoutCircle
+    summary: Adds a new cutout circle to the map.
+    description: |
+        A cutout circle represents a special polygon that spans over the
+        whole world and has a cutout in the shape of a circle. The radius
+        of the shape, the overlay color and stroke properties can be configured.
+    exclude-platforms: [android]
+    since: { iphone: "7.4.0", ipad: "7.4.0", macos: "7.4.0" }
+    parameters:
+      - name: circleConfiguration
+        summary: A <Modules.Map.CutoutCircleConfiguration> object.
+        type: Modules.Map.CutoutCircleConfiguration
+
   - name: addCircle
     summary: Adds a new circle to the map.
     parameters:
