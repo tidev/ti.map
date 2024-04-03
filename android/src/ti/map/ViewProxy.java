@@ -1514,6 +1514,15 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 	}
 
+	@Kroll.method
+	public void loadKml(KrollDict args)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).loadKml(args);
+		}
+	}
+
 	public String getApiName()
 	{
 		return "Ti.Map.View";

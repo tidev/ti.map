@@ -39,6 +39,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.data.kml.KmlLayer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1446,5 +1447,17 @@ public class TiUIMapView extends TiUIFragment
 	public boolean onClusterItemClick(TiMarker tiMarker)
 	{
 		return onMarkerClick(tiMarker.getMarker());
+	}
+
+	public void loadKml(KrollDict args)
+	{
+		TiBlob file = TiConvert.toBlob(args.get("file"));
+		try {
+			KmlLayer layer =
+				new KmlLayer(map, file.getInputStream(), TiApplication.getInstance().getApplicationContext());
+			layer.addLayerToMap();
+		} catch (Exception ex) {
+			Log.e(TAG, "Error: " + ex.getMessage());
+		}
 	}
 }
