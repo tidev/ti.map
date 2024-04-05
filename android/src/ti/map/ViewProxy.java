@@ -1517,9 +1517,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void loadKml(KrollDict args)
 	{
+		if (!args.containsKeyAndNotNull("file")) {
+			Log.w(TAG, "file property is not set to a TiBlob");
+			return;
+		}
+
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).loadKml(args);
+		} else {
+			Log.e(TAG, "Map is not available");
 		}
 	}
 
