@@ -546,7 +546,7 @@ methods:
     parameters:
       - name: file
         summary: Ti.Blob of the KML file.
-        type: TiBlob
+        type: Object
     platforms: [android]
     since: "12.4.0"
 
