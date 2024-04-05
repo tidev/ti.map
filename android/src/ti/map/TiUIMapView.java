@@ -1455,7 +1455,7 @@ public class TiUIMapView extends TiUIFragment
 			TiBlob file = TiConvert.toBlob(args.get("file"));
 			try {
 				KmlLayer layer =
-						new KmlLayer(map, file.getInputStream(), TiApplication.getInstance().getApplicationContext());
+					new KmlLayer(map, file.getInputStream(), TiApplication.getInstance().getApplicationContext());
 				layer.addLayerToMap();
 			} catch (Exception ex) {
 				Log.e(TAG, "Error: " + ex.getMessage());
