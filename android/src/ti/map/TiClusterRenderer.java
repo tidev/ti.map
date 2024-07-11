@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
@@ -111,7 +112,7 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		}
 		// Update marker position if the item changed position
 		if (!marker.getPosition().equals(item.getPosition())) {
-			if (item.getPosition() != null) {
+			if (!item.getPosition().equals(new LatLng(0, 0))) {
 				marker.setPosition(item.getPosition());
 			}
 			changed = true;

@@ -501,7 +501,9 @@ public class TiUIMapView extends TiUIFragment
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 		for (TiMarker marker : markers) {
-			builder.include(marker.getPosition());
+			if (!marker.getPosition().equals(new LatLng(0, 0))) {
+				builder.include(marker.getPosition());
+			}
 		}
 		LatLngBounds bounds = builder.build();
 
@@ -645,7 +647,7 @@ public class TiUIMapView extends TiUIFragment
 				// It is assigned to the TiMarker instance after it has been rendered in
 				// onClusterItemRendered callback.
 				tiMarker = new TiMarker(null, annotation);
-				if (mClusterManager != null) {
+				if (mClusterManager != null && tiMarker != null) {
 					mClusterManager.addItem((TiMarker) tiMarker);
 					mClusterManager.cluster();
 				}

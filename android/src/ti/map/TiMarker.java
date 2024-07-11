@@ -7,6 +7,7 @@
 
 package ti.map;
 
+import androidx.annotation.NonNull;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterItem;
@@ -48,13 +49,14 @@ public class TiMarker implements ClusterItem
 		}
 	}
 
+	@NonNull
 	@Override
 	public LatLng getPosition()
 	{
 		if (proxy != null) {
 			return proxy.getMarkerOptions().getPosition();
 		}
-		return null;
+		return new LatLng(0, 0);
 	}
 
 	@Override
