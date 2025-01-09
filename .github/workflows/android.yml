@@ -18,16 +18,16 @@ jobs:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       USE_CCACHE: 1
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18.x'
 
     - name: Cache Node.js modules
       id: node-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: node_modules
         key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
@@ -40,7 +40,7 @@ jobs:
       if: steps.node-cache.outputs.cache-hit != 'true'
 
     - name: Cache Gradle packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -56,21 +56,21 @@ jobs:
       name: Install Titanium CLI
 
 # TODO: Cache sdk install
-    - run: ti sdk install 12.3.1.GA
+    - run: ti sdk install 12.5.1.GA
       name: Install Titanium SDK
 
     - name: Install ccache
       run: brew install ccache
 
     - name: Retrieve ccache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ${{ runner.os }}-ccache-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-ccache-
 
-    - uses: actions/setup-java@v3
+    - uses: actions/setup-java@v4
       with:
         distribution: 'adopt'
         java-version: '18'
@@ -80,7 +80,7 @@ jobs:
       with:
         api-level: 29
         target: playstore
-        script: npm run test:android -- --sdkVersion 12.3.1.GA
+        script: npm run test:android -- --sdkVersion 12.5.1.GA
         disable-animations: false # defaulting to true, the commands sent to emulator to do this sometimes run too quickly after boot and cause "adb: device offline" failures
 
     - name: Show summary of ccache configuration and statistics counters
@@ -89,7 +89,7 @@ jobs:
 # TODO: Grab the version so zip file name can contain it
 
     - name: Archive Android zip
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ti.map-android
         path: |
