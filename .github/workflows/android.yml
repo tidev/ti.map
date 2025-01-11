@@ -13,6 +13,8 @@ on:
 jobs:
   android:
     runs-on: ubuntu-22.04
+    container:
+      image: docker://fabernovel/android:api-29-v1.1.0
     name: Android
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -76,11 +78,7 @@ jobs:
         java-version: '18'
 
     - name: Build and Test
-      uses: fabernovel/docker-android
-      with:
-        docker-android-tag: api-29-ndk-v1.1.0
-        exec: |
-          npm run test:android -- --sdkVersion 12.5.1.GA
+      run: npm run test:android -- --sdkVersion 12.5.1.GA
 
     - name: Show summary of ccache configuration and statistics counters
       run: ccache --show-stats
