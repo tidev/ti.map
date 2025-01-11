@@ -61,8 +61,8 @@ jobs:
     - run: ti sdk install 12.5.1.GA
       name: Install Titanium SDK
 
-    - name: Install ccache
-      run: brew install ccache
+    # - name: Install ccache
+    #   run: brew install ccache
 
     - name: Retrieve ccache
       uses: actions/cache@v4
