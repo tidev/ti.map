@@ -78,10 +78,11 @@ jobs:
     - name: Build and Test
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 33
+        api-level: 29
         cores: 2
         target: playstore
         ram-size: 2048M
+        arch: x86_64
         sdcard-path-or-size: 100M
         script: npm run test:android -- --sdkVersion 12.5.1.GA
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
