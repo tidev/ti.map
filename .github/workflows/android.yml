@@ -12,7 +12,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-latest
+    runs-on: ubuntu-22.04
     name: Android
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
