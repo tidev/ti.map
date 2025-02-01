@@ -9,19 +9,17 @@ package ti.map;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import com.google.android.gms.maps.model.BitmapDescriptor;
+import android.os.AsyncTask;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import java.io.IOException;
 import java.net.URL;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
-import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
 @Kroll.proxy(creatableInModule = MapModule.class)
@@ -29,7 +27,6 @@ public class ImageOverlayProxy extends KrollProxy
 {
 
 	private static final String TAG = "ImageOverlayProxy";
-
 	private static final String PROPERTY_BOUNDS_COORDINATE = "boundsCoordinate";
 	private static final String PROPERTY_IMAGE = "image";
 	private static final String PROPERTY_TOP_LEFT = "topLeft";
@@ -55,10 +52,7 @@ public class ImageOverlayProxy extends KrollProxy
 	@Kroll.setProperty
 	public void setImage(Object image)
 	{
-		TiDrawableReference source = TiDrawableReference.fromObject(this, image);
-		if (!source.isTypeNull()) {
-			groundOverlay.setImage(BitmapDescriptorFactory.fromBitmap(source.getBitmap()));
-		}
+		handleImage(image);
 	}
 
 	public GroundOverlay getGroundOverlay()
@@ -87,10 +81,28 @@ public class ImageOverlayProxy extends KrollProxy
 
 	private void handleImage(Object image)
 	{
-		TiDrawableReference source = TiDrawableReference.fromObject(this, image);
-		if (!source.isTypeNull()) {
-			BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(source.getBitmap());
-			groundOverlayOptions.image(bitmapDescriptor);
+		if (image.toString().contains("https://") || image.toString().contains("http://")) {
+			// remote image
+			try {
+				Bitmap bmp = new DownloadImage().execute(image.toString()).get();
+				if (groundOverlay != null) {
+					groundOverlay.setImage(BitmapDescriptorFactory.fromBitmap(bmp));
+				} else {
+					groundOverlayOptions.image(BitmapDescriptorFactory.fromBitmap(bmp));
+				}
+			} catch (Exception ex) {
+				Log.e(TAG, "Error: " + ex.toString());
+			}
+		} else {
+			// local image
+			TiDrawableReference source = TiDrawableReference.fromObject(this, image);
+			if (!source.isTypeNull()) {
+				if (groundOverlay != null) {
+					groundOverlay.setImage(BitmapDescriptorFactory.fromBitmap(source.getBitmap()));
+				} else {
+					groundOverlayOptions.image(BitmapDescriptorFactory.fromBitmap(source.getBitmap()));
+				}
+			}
 		}
 	}
 
@@ -103,5 +115,20 @@ public class ImageOverlayProxy extends KrollProxy
 	public String getApiName()
 	{
 		return "Ti.Map.ImageOverlay";
+	}
+
+	class DownloadImage extends AsyncTask<String, Void, Bitmap>
+	{
+		protected Bitmap doInBackground(String... urls)
+		{
+			try {
+				URL url = new URL(urls[0]);
+				Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+				return bmp;
+			} catch (Exception ex) {
+				Log.e(TAG, "Download error: " + ex.toString());
+				return null;
+			}
+		}
 	}
 }
