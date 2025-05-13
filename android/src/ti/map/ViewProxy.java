@@ -7,12 +7,11 @@
 package ti.map;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.Message;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
@@ -110,7 +109,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Override
 	public TiUIView createView(Activity activity)
 	{
-		return new TiUIMapView(this, activity);
+		return new TiUIMapView(this);
 	}
 
 	public void clearPreloadObjects()
@@ -120,6 +119,26 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolylines.clear();
 		preloadCircles.clear();
 		preloadTileOverlayOptionsList.clear();
+	}
+
+	@Override
+	public void onCreate(Activity activity, Bundle savedInstanceState)
+	{
+		super.onCreate(activity, savedInstanceState);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onResume();
+		}
+	}
+
+	@Override
+	public void onDestroy(Activity activity)
+	{
+		super.onDestroy(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onDestroy();
+		}
 	}
 
 	@Override
