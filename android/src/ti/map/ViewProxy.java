@@ -1525,11 +1525,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.setProperty
-	public void geoJSON(String json)
+	public void geoJSON(KrollDict obj)
 	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			((TiUIMapView) view).loadGeoJSON(json);
+			((TiUIMapView) view).loadGeoJSON(obj);
 		} else {
 			Log.e(TAG, "Map is not available");
 		}

@@ -40,6 +40,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import com.google.maps.android.data.kml.KmlLayer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,7 +91,7 @@ public class TiUIMapView extends TiUIFragment
 	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
 	private MarkerManager.Collection collection;
-	private String localGeoJson;
+	private KrollDict localGeoJson;
 	private TiBlob localKml;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
@@ -326,11 +327,11 @@ public class TiUIMapView extends TiUIFragment
 			if (clusterRender != null)
 				clusterRender.setMinClusterSize(d.getInt(MapModule.PROPERTY_MIN_CLUSTER_SIZE));
 		}
-		if (d.containsKey("kml")) {
+		if (d.containsKeyAndNotNull("kml")) {
 			localKml = TiConvert.toBlob(d.get("kml"));
 		}
-		if (d.containsKey("geoJSON")) {
-			localGeoJson = d.getString("geoJSON");
+		if (d.containsKeyAndNotNull("geoJSON")) {
+			localGeoJson = d.getKrollDict("geoJSON");
 		}
 	}
 
@@ -1426,7 +1427,7 @@ public class TiUIMapView extends TiUIFragment
 		if (proxy != null) {
 			proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 		}
-		if (!localGeoJson.isEmpty()) {
+		if (localGeoJson != null) {
 			loadGeoJSON(localGeoJson);
 		}
 		if (localKml != null) {
@@ -1480,19 +1481,33 @@ public class TiUIMapView extends TiUIFragment
 		}
 	}
 
-	public void loadGeoJSON(String json)
+	public void loadGeoJSON(KrollDict obj)
 	{
 		if (map != null) {
 			try {
+				String json = obj.getString("json");
 				JSONObject jsonObject = new JSONObject(json);
 				GeoJsonLayer layer = new GeoJsonLayer(map, jsonObject);
+				GeoJsonPolygonStyle polygonStyle = layer.getDefaultPolygonStyle();
+
+				if (obj.containsKeyAndNotNull("strokeWidth")) {
+					polygonStyle.setStrokeWidth(obj.getInt("strokeWidth"));
+				}
+				if (obj.containsKeyAndNotNull("strokeColor")) {
+					polygonStyle.setStrokeColor(
+						TiConvert.toColor(obj.getString("strokeColor"), TiApplication.getAppRootOrCurrentActivity()));
+				}
+				if (obj.containsKeyAndNotNull("dimColor")) {
+					polygonStyle.setFillColor(
+						TiConvert.toColor(obj.getString("dimColor"), TiApplication.getAppRootOrCurrentActivity()));
+				}
 				layer.addLayerToMap();
 			} catch (Exception ex) {
 				Log.e(TAG, "Error: " + ex.getMessage());
 			}
 			localGeoJson = null;
 		} else {
-			localGeoJson = json;
+			localGeoJson = obj;
 		}
 	}
 }

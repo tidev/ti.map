@@ -519,7 +519,7 @@ properties:
   - name: geoJSON
     summary: |
         Loads a geoJSON and displays the content on the map.
-    type: String
+    type: GeoJsonType
     exclude-platforms: [iphone, ipad, macos]
     since: "13.1.0"
 
@@ -805,6 +805,23 @@ examples:
           resultTypes: [Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST, Map.SEARCH_RESULT_TYPE_ADDRESS]
         });
         ```
+
+---
+name: GeoJsonType
+summary: An object representing a geoJSON object.
+properties:
+  - name: json
+    summary: JSON string to render on the map
+    type: String
+  - name: dimColor
+    summary: color of the area
+    type: String
+  - name: strokeColor
+    summary: stroke color of the area
+    type: String
+  - name: strokeWidth
+    summary: width of the stroke
+    type: Number
 
 ---
 name: MapPointType
