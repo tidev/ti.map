@@ -90,6 +90,8 @@ public class TiUIMapView extends TiUIFragment
 	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
 	private MarkerManager.Collection collection;
+	private String localGeoJson;
+	private TiBlob localKml;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -323,6 +325,12 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(MapModule.PROPERTY_MIN_CLUSTER_SIZE)) {
 			if (clusterRender != null)
 				clusterRender.setMinClusterSize(d.getInt(MapModule.PROPERTY_MIN_CLUSTER_SIZE));
+		}
+		if (d.containsKey("kml")) {
+			localKml = TiConvert.toBlob(d.get("kml"));
+		}
+		if (d.containsKey("geoJSON")) {
+			localGeoJson = d.getString("geoJSON");
 		}
 	}
 
@@ -1418,6 +1426,12 @@ public class TiUIMapView extends TiUIFragment
 		if (proxy != null) {
 			proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 		}
+		if (!localGeoJson.isEmpty()) {
+			loadGeoJSON(localGeoJson);
+		}
+		if (localKml != null) {
+			loadKml(localKml);
+		}
 	}
 
 	protected void onViewCreated()
@@ -1460,6 +1474,9 @@ public class TiUIMapView extends TiUIFragment
 			} catch (Exception ex) {
 				Log.e(TAG, "Error: " + ex.getMessage());
 			}
+			localKml = null;
+		} else {
+			localKml = file;
 		}
 	}
 
@@ -1473,6 +1490,9 @@ public class TiUIMapView extends TiUIFragment
 			} catch (Exception ex) {
 				Log.e(TAG, "Error: " + ex.getMessage());
 			}
+			localGeoJson = null;
+		} else {
+			localGeoJson = json;
 		}
 	}
 }
