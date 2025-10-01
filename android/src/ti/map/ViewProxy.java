@@ -27,6 +27,7 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -1514,17 +1515,23 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 	}
 
-	@Kroll.method
-	public void loadKml(KrollDict args)
+	@Kroll.setProperty
+	public void kml(TiBlob file)
 	{
-		if (!args.containsKeyAndNotNull("file")) {
-			Log.w(TAG, "file property is not set to a TiBlob");
-			return;
-		}
-
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			((TiUIMapView) view).loadKml(args);
+			((TiUIMapView) view).loadKml(file);
+		} else {
+			Log.e(TAG, "Map is not available");
+		}
+	}
+
+	@Kroll.setProperty
+	public void geoJSON(String json)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).loadGeoJSON(json);
 		} else {
 			Log.e(TAG, "Map is not available");
 		}

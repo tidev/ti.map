@@ -39,6 +39,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.kml.KmlLayer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -1449,17 +1450,27 @@ public class TiUIMapView extends TiUIFragment
 		return onMarkerClick(tiMarker.getMarker());
 	}
 
-	public void loadKml(KrollDict args)
-	{
-		if (map != null) {
-			TiBlob file = TiConvert.toBlob(args.get("file"));
-			try {
-				KmlLayer layer =
-					new KmlLayer(map, file.getInputStream(), TiApplication.getInstance().getApplicationContext());
-				layer.addLayerToMap();
-			} catch (Exception ex) {
-				Log.e(TAG, "Error: " + ex.getMessage());
-			}
-		}
-	}
+    public void loadKml(TiBlob file) {
+        if (map != null) {
+            try {
+                KmlLayer layer =
+                        new KmlLayer(map, file.getInputStream(), TiApplication.getInstance().getApplicationContext());
+                layer.addLayerToMap();
+            } catch (Exception ex) {
+                Log.e(TAG, "Error: " + ex.getMessage());
+            }
+        }
+    }
+
+    public void loadGeoJSON(String json) {
+        if (map != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(json);
+                GeoJsonLayer layer = new GeoJsonLayer(map, jsonObject);
+                layer.addLayerToMap();
+            } catch (Exception ex) {
+                Log.e(TAG, "Error: " + ex.getMessage());
+            }
+        }
+    }
 }
