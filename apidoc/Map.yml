@@ -506,6 +506,23 @@ properties:
     osver: {ios: {min: "13.0"} }
     since: "12.3.0"
 
+  - name: kml
+    summary: |
+        Loads a KML file and displays the content on the map.
+    description: |
+        Check [Google Maps KML support](https://developers.google.com/maps/documentation/android-sdk/utility/kml#supported)
+        for more details.
+    type: Object
+    exclude-platforms: [iphone, ipad, macos]
+    since: "13.1.0"
+
+  - name: geoJSON
+    summary: |
+        Loads a geoJSON and displays the content on the map.
+    type: String
+    exclude-platforms: [iphone, ipad, macos]
+    since: "13.1.0"
+
 methods:
   - name: isGooglePlayServicesAvailable
     returns:
@@ -536,19 +553,6 @@ methods:
         type: SearchCompletionOptions
     platforms: [iphone, ipad, macos]
     since: "12.3.0"
-
-  - name: loadKml
-    summary: |
-        Loads a KML file and displays the content on the map.
-    description: |
-        Check [Google Maps KML support](https://developers.google.com/maps/documentation/android-sdk/utility/kml#supported)
-        for more details.
-    parameters:
-      - name: file
-        summary: Ti.Blob of the KML file.
-        type: Object
-    platforms: [android]
-    since: "12.4.0"
 
   - name: geocodeAddress
     summary: |
