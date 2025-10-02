@@ -53,6 +53,7 @@ import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -1485,21 +1486,38 @@ public class TiUIMapView extends TiUIFragment
 	{
 		if (map != null) {
 			try {
-				String json = obj.getString("json");
-				JSONObject jsonObject = new JSONObject(json);
+				JSONObject jsonObject;
+
+				if (obj.containsKeyAndNotNull("json")) {
+					String json = obj.getString("json");
+					jsonObject = new JSONObject(json);
+				} else if (obj.containsKeyAndNotNull(TiC.PROPERTY_FILE)) {
+					String url = proxy.resolveUrl(null, obj.getString(TiC.PROPERTY_FILE));
+					TiBaseFile file = TiFileFactory.createTitaniumFile(new String[]{url}, false);
+					if (file.exists()) {
+						jsonObject = new JSONObject(file.read().toString());
+					} else {
+						Log.e(TAG, "File not found");
+						return;
+					}
+				} else {
+					Log.e(TAG, "To use a geoJSON you'll need to either set the 'file' or 'json' property.");
+					return;
+				}
+
 				GeoJsonLayer layer = new GeoJsonLayer(map, jsonObject);
 				GeoJsonPolygonStyle polygonStyle = layer.getDefaultPolygonStyle();
 
-				if (obj.containsKeyAndNotNull("strokeWidth")) {
-					polygonStyle.setStrokeWidth(obj.getInt("strokeWidth"));
+				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BORDER_WIDTH)) {
+					polygonStyle.setStrokeWidth(obj.getInt(TiC.PROPERTY_BORDER_WIDTH));
 				}
-				if (obj.containsKeyAndNotNull("strokeColor")) {
+				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BORDER_COLOR)) {
 					polygonStyle.setStrokeColor(
-						TiConvert.toColor(obj.getString("strokeColor"), TiApplication.getAppRootOrCurrentActivity()));
+						TiConvert.toColor(obj.getString(TiC.PROPERTY_BORDER_COLOR), TiApplication.getAppRootOrCurrentActivity()));
 				}
-				if (obj.containsKeyAndNotNull("dimColor")) {
+				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BACKGROUND_COLOR)) {
 					polygonStyle.setFillColor(
-						TiConvert.toColor(obj.getString("dimColor"), TiApplication.getAppRootOrCurrentActivity()));
+						TiConvert.toColor(obj.getString(TiC.PROPERTY_BACKGROUND_COLOR), TiApplication.getAppRootOrCurrentActivity()));
 				}
 				layer.addLayerToMap();
 			} catch (Exception ex) {

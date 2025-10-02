@@ -811,16 +811,18 @@ name: GeoJsonType
 summary: An object representing a geoJSON object.
 properties:
   - name: json
-    summary: JSON string to render on the map
+    summary: JSON string to render on the map (use either 'json' or 'file').
+  - name: file
+    summary: file name of the geoJSON file (use either 'json' or 'file').
     type: String
-  - name: dimColor
-    summary: color of the area
+  - name: backgroundColor
+    summary: background color of the area.
     type: String
-  - name: strokeColor
-    summary: stroke color of the area
+  - name: borderColor
+    summary: border color of the area.
     type: String
-  - name: strokeWidth
-    summary: width of the stroke
+  - name: borderWidth
+    summary: width of the border.
     type: Number
 
 ---
