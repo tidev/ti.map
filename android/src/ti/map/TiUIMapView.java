@@ -1493,7 +1493,7 @@ public class TiUIMapView extends TiUIFragment
 					jsonObject = new JSONObject(json);
 				} else if (obj.containsKeyAndNotNull(TiC.PROPERTY_FILE)) {
 					String url = proxy.resolveUrl(null, obj.getString(TiC.PROPERTY_FILE));
-					TiBaseFile file = TiFileFactory.createTitaniumFile(new String[]{url}, false);
+					TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { url }, false);
 					if (file.exists()) {
 						jsonObject = new JSONObject(file.read().toString());
 					} else {
@@ -1512,12 +1512,12 @@ public class TiUIMapView extends TiUIFragment
 					polygonStyle.setStrokeWidth(obj.getInt(TiC.PROPERTY_BORDER_WIDTH));
 				}
 				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BORDER_COLOR)) {
-					polygonStyle.setStrokeColor(
-						TiConvert.toColor(obj.getString(TiC.PROPERTY_BORDER_COLOR), TiApplication.getAppRootOrCurrentActivity()));
+					polygonStyle.setStrokeColor(TiConvert.toColor(obj.getString(TiC.PROPERTY_BORDER_COLOR),
+																  TiApplication.getAppRootOrCurrentActivity()));
 				}
 				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BACKGROUND_COLOR)) {
-					polygonStyle.setFillColor(
-						TiConvert.toColor(obj.getString(TiC.PROPERTY_BACKGROUND_COLOR), TiApplication.getAppRootOrCurrentActivity()));
+					polygonStyle.setFillColor(TiConvert.toColor(obj.getString(TiC.PROPERTY_BACKGROUND_COLOR),
+																TiApplication.getAppRootOrCurrentActivity()));
 				}
 				layer.addLayerToMap();
 			} catch (Exception ex) {

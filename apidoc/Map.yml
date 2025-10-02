@@ -812,8 +812,9 @@ summary: An object representing a geoJSON object.
 properties:
   - name: json
     summary: JSON string to render on the map (use either 'json' or 'file').
+    type: String
   - name: file
-    summary: file name of the geoJSON file (use either 'json' or 'file').
+    summary: filename of the geoJSON file (use either 'json' or 'file').
     type: String
   - name: backgroundColor
     summary: background color of the area.
