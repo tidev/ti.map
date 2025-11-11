@@ -11,7 +11,7 @@ function projectManagerHook(projectManager) {
 		console.log(`Copying ${src} to ${dest}`);
 		fs.copySync(src, dest);
 
-		// Trun off app thinning so images don't get shoved in asset catalog
+		// Turn off app thinning so images don't get shoved in asset catalog
 		const tiapp = path.join(this.karmaRunnerProjectPath, 'tiapp.xml');
 		const contents = fs.readFileSync(tiapp, 'utf8');
 		fs.writeFileSync(tiapp, contents.replace('</ios>', `<use-app-thinning>false</use-app-thinning>

@@ -1155,7 +1155,7 @@ CLLocationCoordinate2D userNewLocation;
 
     selectedAnnotation = [ann retain];
 
-    // If canShowCallout == YES we will try to find calloutView to hadleTap on callout
+    // If canShowCallout == YES we will try to find calloutView to handle tap on callout
     if ([ann canShowCallout]) {
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
         [self findCalloutView:ann];
@@ -1326,7 +1326,7 @@ CLLocationCoordinate2D userNewLocation;
 }
 // mapView:viewForAnnotation: provides the view for each annotation.
 // This method may be called for all or some of the added annotations.
-// For MapKit provided annotations (eg. MKUserLocation) return nil to use the MapKit provided annotatiown view.
+// For MapKit provided annotations (e.g. MKUserLocation) return nil to use the MapKit provided annotation view.
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
   if ([annotation isKindOfClass:[TiMapAnnotationProxy class]]) {
@@ -1530,7 +1530,7 @@ CLLocationCoordinate2D userNewLocation;
         // Polyline points are equal, which means line length is zero. Use distance from one of the poly points.
         distanceFromLine = lengthA;
       } else {
-        // Touch point is between polyline's points. Calculte distance with Heron's formula.
+        // Touch point is between polyline's points. Calculate distance with Heron's formula.
         double value = (lengthA + lengthB + lengthC) / 2.0;
         double area = sqrt((value - lengthA) * (value - lengthB) * (value - lengthC) * value);
         distanceFromLine = (area * 2.0) / lengthC;
