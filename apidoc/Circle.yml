@@ -11,7 +11,7 @@ since: { android: "4.1.0", iphone: "4.1.0", ipad: "4.1.0", macos: "9.2.0" }
 platforms: [android, iphone, ipad, macos]
 properties:
   - name: center
-    summary: An object with longitude and latitude values. Can also be an array with longitude (index 0), latitude (index 1) touples.
+    summary: An object with longitude and latitude values. Can also be an array with longitude (index 0), latitude (index 1) tuples.
     availability: creation
     type: MapPointType
     optional: false
