@@ -182,6 +182,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Override
+	public void onLowMemory(Activity activity)
+	{
+		super.onLowMemory(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onLowMemory();
+		}
+	}
+
+	@Override
 	public boolean handleMessage(Message msg)
 	{
 		AsyncResult result = null;

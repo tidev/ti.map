@@ -1504,6 +1504,13 @@ public class TiUIMapView extends TiUIView
 		}
 	}
 
+	public void onLowMemory()
+	{
+		if (mMapView != null) {
+			mMapView.onLowMemory();
+		}
+	}
+
 	public void setSavedInstanceState(Bundle savedState)
 	{
 		this.pendingSavedState = savedState;
