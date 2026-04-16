@@ -17,17 +17,17 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,14 +46,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.kroll.KrollProxyListener;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.TiLifecycle;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.view.TiUIFragment;
+import org.appcelerator.titanium.view.TiCompositeLayout;
+import org.appcelerator.titanium.view.TiUIView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,12 +66,13 @@ import ti.map.Shape.Boundary;
 import ti.map.Shape.IShape;
 import ti.map.Shape.PolylineBoundary;
 
-public class TiUIMapView extends TiUIFragment
+public class TiUIMapView extends TiUIView
 	implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener,
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
 			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
-			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
+			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>,
+			   TiLifecycle.OnInstanceStateEvent
 {
 
 	public static final String DEFAULT_COLLECTION_ID = "defaultCollection";
@@ -77,8 +82,10 @@ public class TiUIMapView extends TiUIFragment
 	protected boolean preLayout = true;
 	protected boolean liteMode = false;
 	protected LatLngBounds preLayoutUpdateBounds;
+	private Bundle pendingSavedState;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
+	private MapView mMapView;
 
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
@@ -89,15 +96,46 @@ public class TiUIMapView extends TiUIFragment
 	private MarkerManager mMarkerManager;
 	private MarkerManager.Collection collection;
 
-	public TiUIMapView(final TiViewProxy proxy, Activity activity)
+	public TiUIMapView(TiViewProxy proxy)
 	{
-		super(proxy, activity);
+		super(proxy);
+		GoogleMapOptions options = new GoogleMapOptions();
+		Object liteModeValue = proxy.getProperty(MapModule.PROPERTY_LITE_MODE);
+		if (liteModeValue != null && TiConvert.toBoolean(liteModeValue, false)) {
+			options.liteMode(true);
+		}
+		Object zOrderOnTopValue = proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP);
+		if (zOrderOnTopValue != null && TiConvert.toBoolean(zOrderOnTopValue, false)) {
+			options.zOrderOnTop(true);
+		}
+		mMapView = new MapView(proxy.getActivity(), options);
+		mMapView.onCreate(null);
+		mMapView.onStart();
+		mMapView.onResume();
+
+		mMapView.getMapAsync(this);
+
+		TiCompositeLayout container = new TiCompositeLayout(proxy.getActivity(), proxy) {
+			@Override
+			public boolean dispatchTouchEvent(MotionEvent ev)
+			{
+				return interceptTouchEvent(ev) || super.dispatchTouchEvent(ev);
+			}
+		};
+		container.addView(mMapView);
+		setNativeView(container);
+
 		timarkers = new ArrayList<TiMarker>();
 		currentCircles = new ArrayList<CircleProxy>();
 		currentPolygons = new ArrayList<PolygonProxy>();
 		currentPolylines = new ArrayList<PolylineProxy>();
 		currentImageOverlays = new ArrayList<ImageOverlayProxy>();
 		proxy.setProperty(MapModule.PROPERTY_INDOOR_ENABLED, true);
+
+		Activity activity = proxy.getActivity();
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).addOnInstanceStateEventListener(this);
+		}
 	}
 
 	/**
@@ -119,30 +157,6 @@ public class TiUIMapView extends TiUIFragment
 			for (int i = 0; i < viewGroup.getChildCount(); i++) {
 				setBackgroundTransparent(viewGroup.getChildAt(i));
 			}
-		}
-	}
-
-	@Override
-	protected Fragment createFragment()
-	{
-		if (proxy == null) {
-			Fragment map = SupportMapFragment.newInstance();
-			if (map instanceof SupportMapFragment) {
-				((SupportMapFragment) map).getMapAsync(this);
-			}
-			return map;
-		} else {
-			boolean zOrderOnTop = TiConvert.toBoolean(proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP), false);
-			GoogleMapOptions gOptions = new GoogleMapOptions();
-			gOptions.zOrderOnTop(zOrderOnTop);
-			if (this.liteMode) {
-				gOptions.liteMode(true);
-			}
-			Fragment map = SupportMapFragment.newInstance(gOptions);
-			if (map instanceof SupportMapFragment) {
-				((SupportMapFragment) map).getMapAsync(this);
-			}
-			return map;
 		}
 	}
 
@@ -1311,6 +1325,17 @@ public class TiUIMapView extends TiUIFragment
 		timarkers.clear();
 		mClusterManager = null;
 		mMarkerManager = null;
+
+		if (mMapView != null) {
+			mMapView.onDestroy();
+			mMapView = null;
+		}
+
+		Activity activity = proxy != null ? proxy.getActivity() : null;
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).removeOnInstanceStateEventListener(this);
+		}
+
 		super.release();
 	}
 
@@ -1374,7 +1399,6 @@ public class TiUIMapView extends TiUIFragment
 
 	// Intercept the touch event to find out the correct clicksource if clicking
 	// on the info window.
-	@Override
 	protected boolean interceptTouchEvent(MotionEvent ev)
 	{
 		if (ev.getAction() == MotionEvent.ACTION_UP && selectedAnnotation != null) {
@@ -1446,5 +1470,71 @@ public class TiUIMapView extends TiUIFragment
 	public boolean onClusterItemClick(TiMarker tiMarker)
 	{
 		return onMarkerClick(tiMarker.getMarker());
+	}
+
+	public void onResume()
+	{
+		if (mMapView != null) {
+			if (pendingSavedState != null) {
+				mMapView.onDestroy();
+				mMapView.onCreate(pendingSavedState);
+				mMapView.onStart();
+				pendingSavedState = null;
+			}
+			mMapView.onResume();
+		}
+	}
+
+	public void onDestroy()
+	{
+		if (mMapView != null) {
+			mMapView.onDestroy();
+		}
+		Activity activity = proxy != null ? proxy.getActivity() : null;
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).removeOnInstanceStateEventListener(this);
+		}
+	}
+
+	public void onStart()
+	{
+		if (mMapView != null) {
+			mMapView.onStart();
+		}
+	}
+
+	public void onPause()
+	{
+		if (mMapView != null) {
+			mMapView.onPause();
+		}
+	}
+
+	public void onStop()
+	{
+		if (mMapView != null) {
+			mMapView.onStop();
+		}
+	}
+
+	public void setSavedInstanceState(Bundle savedState)
+	{
+		this.pendingSavedState = savedState;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle)
+	{
+		if (mMapView != null) {
+			mMapView.onSaveInstanceState(bundle);
+		}
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle)
+	{
+		if (mMapView != null) {
+			pendingSavedState = bundle;
+		}
 	}
 }
