@@ -49,8 +49,10 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.KrollProxyListener;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.TiLifecycle;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -69,7 +71,8 @@ public class TiUIMapView extends TiUIView
 			   GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnMapLongClickListener,
 			   GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, GoogleMap.OnCameraMoveStartedListener,
 			   GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMyLocationChangeListener,
-			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>
+			   ClusterManager.OnClusterClickListener<TiMarker>, ClusterManager.OnClusterItemClickListener<TiMarker>,
+			   TiLifecycle.OnInstanceStateEvent
 {
 
 	public static final String DEFAULT_COLLECTION_ID = "defaultCollection";
@@ -83,6 +86,7 @@ public class TiUIMapView extends TiUIView
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
 	private MapView mMapView;
+	private boolean mapViewInitialized = false;
 
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
@@ -108,6 +112,7 @@ public class TiUIMapView extends TiUIView
 		mMapView = new MapView(proxy.getActivity(), options);
 		mMapView.onCreate(null);
 		mMapView.onResume();
+		mapViewInitialized = true;
 
 		mMapView.getMapAsync(this);
 
@@ -127,6 +132,11 @@ public class TiUIMapView extends TiUIView
 		currentPolylines = new ArrayList<PolylineProxy>();
 		currentImageOverlays = new ArrayList<ImageOverlayProxy>();
 		proxy.setProperty(MapModule.PROPERTY_INDOOR_ENABLED, true);
+
+		Activity activity = proxy.getActivity();
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).addOnInstanceStateEventListener(this);
+		}
 	}
 
 	/**
@@ -1455,9 +1465,10 @@ public class TiUIMapView extends TiUIView
 	public void onResume()
 	{
 		if (mMapView != null) {
-			if (pendingSavedState != null) {
+			if (!mapViewInitialized && pendingSavedState != null) {
 				mMapView.onCreate(pendingSavedState);
 				pendingSavedState = null;
+				mapViewInitialized = true;
 			}
 			mMapView.onResume();
 		}
@@ -1467,6 +1478,10 @@ public class TiUIMapView extends TiUIView
 	{
 		if (mMapView != null) {
 			mMapView.onDestroy();
+		}
+		Activity activity = proxy != null ? proxy.getActivity() : null;
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).removeOnInstanceStateEventListener(this);
 		}
 	}
 
@@ -1494,5 +1509,21 @@ public class TiUIMapView extends TiUIView
 	public void setSavedInstanceState(Bundle savedState)
 	{
 		this.pendingSavedState = savedState;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle)
+	{
+		if (mMapView != null) {
+			mMapView.onSaveInstanceState(bundle);
+		}
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle)
+	{
+		if (mMapView != null) {
+			pendingSavedState = bundle;
+		}
 	}
 }
