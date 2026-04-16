@@ -33,7 +33,7 @@ description: |
                 <manifest>
                     <application>
                         <!-- Replace "YOUR_API_KEY" with the Google API key you obtained -->
-                        <meta-data 
+                        <meta-data
                             android:name="com.google.android.geo.API_KEY"
                             android:value="YOUR_API_KEY" />
                     </application>
@@ -438,7 +438,7 @@ properties:
     since: "6.3.0"
 
   - name: FEATURE_TERRITORIES
-    summary: | 
+    summary: |
         The option that represents territorial boundaries such as a national border,
         a state boundary, or a neighborhood.
     type: Number
@@ -448,7 +448,7 @@ properties:
     since: "12.0.0"
 
   - name: FEATURE_PHYSICAL_FEATURES
-    summary: | 
+    summary: |
         The option that represents physical map features such as mountain ranges, rivers,
         and ocean basins.
     type: Number
@@ -484,14 +484,14 @@ properties:
     osver: {ios: {min: "11.0"} }
     exclude-platforms: [android]
     since: "6.3.0"
-  
+
   - name: SEARCH_RESULT_TYPE_ADDRESS
     summary: A value that indicates that search results include addresses.
     type: Number
     permission: read-only
     osver: {ios: {min: "13.0"} }
     since: "12.3.0"
- 
+
   - name: SEARCH_RESULT_TYPE_POINT_OF_INTEREST
     summary: A value that indicates that search results include points of interest.
     type: Number
@@ -506,6 +506,23 @@ properties:
     osver: {ios: {min: "13.0"} }
     since: "12.3.0"
 
+  - name: kml
+    summary: |
+        Loads a KML file and displays the content on the map.
+    description: |
+        Check [Google Maps KML support](https://developers.google.com/maps/documentation/android-sdk/utility/kml#supported)
+        for more details.
+    type: Object
+    exclude-platforms: [iphone, ipad, macos]
+    since: "13.1.0"
+
+  - name: geoJSON
+    summary: |
+        Loads a geoJSON and displays the content on the map.
+    type: GeoJsonType
+    exclude-platforms: [iphone, ipad, macos]
+    since: "13.1.0"
+
 methods:
   - name: isGooglePlayServicesAvailable
     returns:
@@ -518,7 +535,7 @@ methods:
     summary: Returns a code to indicate whether Google Play Services is available on the device.
     since: "3.1.1"
     platforms: [android]
-  
+
   - name: search
     summary: |
         Uses the native `MKLocalSearchCompleter` class to search places for
@@ -614,7 +631,7 @@ examples:
 
         const mapView = Map.createView({
             mapType: Map.NORMAL_TYPE,
-            region: { 
+            region: {
                 latitude: 33.74511,
                 longitude: -84.38993,
                 latitudeDelta: 0.01,
@@ -769,7 +786,7 @@ examples:
         The following example shows the MapKit based search request.
         The options in `search` (2nd parameter) are optional, but improve
         the accuracy of the results.
-        
+
         ```javascript
         import Map from 'ti.map';
 
@@ -788,6 +805,26 @@ examples:
           resultTypes: [Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST, Map.SEARCH_RESULT_TYPE_ADDRESS]
         });
         ```
+
+---
+name: GeoJsonType
+summary: An object representing a geoJSON object.
+properties:
+  - name: json
+    summary: JSON string to render on the map (use either 'json' or 'file').
+    type: String
+  - name: file
+    summary: filename of the geoJSON file (use either 'json' or 'file').
+    type: String
+  - name: backgroundColor
+    summary: background color of the area.
+    type: String
+  - name: borderColor
+    summary: border color of the area.
+    type: String
+  - name: borderWidth
+    summary: width of the border.
+    type: Number
 
 ---
 name: MapPointType

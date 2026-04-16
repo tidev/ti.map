@@ -10,9 +10,7 @@ import android.app.Activity;
 import android.os.Message;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -1512,6 +1511,28 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void setClusterAnnotation()
 	{
+	}
+
+	@Kroll.setProperty
+	public void kml(TiBlob file)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).loadKml(file);
+		} else {
+			Log.e(TAG, "Map is not available");
+		}
+	}
+
+	@Kroll.setProperty
+	public void geoJSON(KrollDict obj)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).loadGeoJSON(obj);
+		} else {
+			Log.e(TAG, "Map is not available");
+		}
 	}
 
 	public String getApiName()
