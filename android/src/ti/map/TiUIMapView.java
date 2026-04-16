@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -93,7 +94,16 @@ public class TiUIMapView extends TiUIView
 	public TiUIMapView(TiViewProxy proxy)
 	{
 		super(proxy);
-		mMapView = new MapView(proxy.getActivity());
+		GoogleMapOptions options = new GoogleMapOptions();
+		Object liteModeValue = proxy.getProperty(MapModule.PROPERTY_LITE_MODE);
+		if (liteModeValue != null && TiConvert.toBoolean(liteModeValue, false)) {
+			options.liteMode(true);
+		}
+		Object zOrderOnTopValue = proxy.getProperty(MapModule.PROPERTY_ZORDER_ON_TOP);
+		if (zOrderOnTopValue != null && TiConvert.toBoolean(zOrderOnTopValue, false)) {
+			options.zOrderOnTop(true);
+		}
+		mMapView = new MapView(proxy.getActivity(), options);
 		mMapView.onCreate(null);
 		mMapView.onResume();
 
