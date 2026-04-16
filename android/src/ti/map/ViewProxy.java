@@ -128,7 +128,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).setSavedInstanceState(savedInstanceState);
-			((TiUIMapView) view).onResume();
 		}
 	}
 
@@ -139,6 +138,16 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).onDestroy();
+		}
+	}
+
+	@Override
+	public void onResume(Activity activity)
+	{
+		super.onResume(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onResume();
 		}
 	}
 

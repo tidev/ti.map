@@ -86,7 +86,6 @@ public class TiUIMapView extends TiUIView
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
 	private MapView mMapView;
-	private boolean mapViewInitialized = false;
 
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
@@ -112,7 +111,6 @@ public class TiUIMapView extends TiUIView
 		mMapView = new MapView(proxy.getActivity(), options);
 		mMapView.onCreate(null);
 		mMapView.onResume();
-		mapViewInitialized = true;
 
 		mMapView.getMapAsync(this);
 
@@ -1465,10 +1463,10 @@ public class TiUIMapView extends TiUIView
 	public void onResume()
 	{
 		if (mMapView != null) {
-			if (!mapViewInitialized && pendingSavedState != null) {
+			if (pendingSavedState != null) {
+				mMapView.onDestroy();
 				mMapView.onCreate(pendingSavedState);
 				pendingSavedState = null;
-				mapViewInitialized = true;
 			}
 			mMapView.onResume();
 		}
