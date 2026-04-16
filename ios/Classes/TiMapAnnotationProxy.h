@@ -21,7 +21,7 @@
   CGPoint offset;
 }
 
-// Center latitude and longitude of the annotion view.
+// Center latitude and longitude of the annotation view.
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, readwrite, assign) TiMapViewProxy *delegate;
 @property (nonatomic, readonly) BOOL needsRefreshingWithSelection;

@@ -642,7 +642,7 @@ examples:
             Ti.API.info('Clicked ' + event.clicksource + ' on ' + event.latitude + ', ' + event.longitude);
         });
 
-        windown.open();
+        window.open();
         ```
   - title: Alloy XML Markup
     example: |
@@ -803,7 +803,7 @@ properties:
 ---
 name: SearchCompletionOptions
 summary: Additional options to fine-tune the search request.
-description: The latitute and longitude describe the location, the delta values the distance to include.
+description: The latitude and longitude describe the location, the delta values the distance to include.
 properties:
   - name: region
     summary: |

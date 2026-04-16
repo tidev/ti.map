@@ -155,7 +155,7 @@ public class TiMapInfoWindow extends RelativeLayout
 		} else if (flag == RIGHT_PANE) {
 			pane = rightPane;
 		} else {
-			Log.e(TAG, "Invalid valud for flag in setLeftOrRightPane", Log.DEBUG_MODE);
+			Log.e(TAG, "Invalid value for flag in setLeftOrRightPane", Log.DEBUG_MODE);
 			return;
 		}
 
@@ -192,8 +192,8 @@ public class TiMapInfoWindow extends RelativeLayout
 	 * Analyze the touch event to find out:
 	 * 1. whether it is inside the info window and
 	 * 2. if it is, what the corresponding clicksource is.
-	 * The clicksource can be one of "leftPane", "title", "subtible", "rightPane" or null. Null means the event
-	 * is not inside "leftPane", "title", "subtible" or "rightPane".
+	 * The clicksource can be one of "leftPane", "title", "subtitle", "rightPane" or null. Null means the event
+	 * is not inside "leftPane", "title", "subtitle" or "rightPane".
 	 * @param ev The MotionEvent detected. Its coordinates are relative to the map view.
 	 * @param markerPoint The screen coordinate for the marker which displays the info window.
 	 * @param iconImageHeight The height of the marker icon.
