@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -78,6 +79,7 @@ public class TiUIMapView extends TiUIView
 	protected boolean preLayout = true;
 	protected boolean liteMode = false;
 	protected LatLngBounds preLayoutUpdateBounds;
+	private Bundle pendingSavedState;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
 	private MapView mMapView;
@@ -1453,6 +1455,10 @@ public class TiUIMapView extends TiUIView
 	public void onResume()
 	{
 		if (mMapView != null) {
+			if (pendingSavedState != null) {
+				mMapView.onCreate(pendingSavedState);
+				pendingSavedState = null;
+			}
 			mMapView.onResume();
 		}
 	}
@@ -1462,5 +1468,31 @@ public class TiUIMapView extends TiUIView
 		if (mMapView != null) {
 			mMapView.onDestroy();
 		}
+	}
+
+	public void onStart()
+	{
+		if (mMapView != null) {
+			mMapView.onStart();
+		}
+	}
+
+	public void onPause()
+	{
+		if (mMapView != null) {
+			mMapView.onPause();
+		}
+	}
+
+	public void onStop()
+	{
+		if (mMapView != null) {
+			mMapView.onStop();
+		}
+	}
+
+	public void setSavedInstanceState(Bundle savedState)
+	{
+		this.pendingSavedState = savedState;
 	}
 }
