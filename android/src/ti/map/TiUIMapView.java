@@ -1263,7 +1263,7 @@ public class TiUIMapView extends TiUIView
 		if (annoProxy != null) {
 			String clicksource = annoProxy.getMapInfoWindow().getClicksource();
 			// The clicksource is null means the click event is not inside
-			// "leftPane", "title", "subtible"
+			// "leftPane", "title", "subtitle"
 			// or "rightPane". In this case, use "infoWindow" as the
 			// clicksource.
 			if (clicksource == null) {
