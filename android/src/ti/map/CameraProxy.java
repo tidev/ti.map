@@ -43,8 +43,8 @@ public class CameraProxy extends KrollProxy
 									  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 			}
 		}
-		if (dict.containsKeyAndNotNull(MapModule.PROPERTY_ALTITIDE)) {
-			zoom = TiConvert.toFloat(dict.get(MapModule.PROPERTY_ALTITIDE));
+		if (dict.containsKeyAndNotNull(MapModule.PROPERTY_ALTITUDE)) {
+			zoom = TiConvert.toFloat(dict.get(MapModule.PROPERTY_ALTITUDE));
 		}
 		if (dict.containsKeyAndNotNull(MapModule.PROPERTY_HEADING)) {
 			heading = TiConvert.toFloat(dict.get(MapModule.PROPERTY_HEADING));
@@ -68,7 +68,7 @@ public class CameraProxy extends KrollProxy
 									  TiConvert.toDouble(point.get(TiC.PROPERTY_LONGITUDE)));
 			}
 		}
-		if (name.equals(MapModule.PROPERTY_ALTITIDE)) {
+		if (name.equals(MapModule.PROPERTY_ALTITUDE)) {
 			zoom = TiConvert.toFloat(value);
 		}
 		if (name.equals(MapModule.PROPERTY_HEADING)) {
