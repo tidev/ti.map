@@ -110,6 +110,7 @@ public class TiUIMapView extends TiUIView
 		}
 		mMapView = new MapView(proxy.getActivity(), options);
 		mMapView.onCreate(null);
+		mMapView.onStart();
 		mMapView.onResume();
 
 		mMapView.getMapAsync(this);
@@ -1324,6 +1325,17 @@ public class TiUIMapView extends TiUIView
 		timarkers.clear();
 		mClusterManager = null;
 		mMarkerManager = null;
+
+		if (mMapView != null) {
+			mMapView.onDestroy();
+			mMapView = null;
+		}
+
+		Activity activity = proxy != null ? proxy.getActivity() : null;
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).removeOnInstanceStateEventListener(this);
+		}
+
 		super.release();
 	}
 
@@ -1466,6 +1478,7 @@ public class TiUIMapView extends TiUIView
 			if (pendingSavedState != null) {
 				mMapView.onDestroy();
 				mMapView.onCreate(pendingSavedState);
+				mMapView.onStart();
 				pendingSavedState = null;
 			}
 			mMapView.onResume();
