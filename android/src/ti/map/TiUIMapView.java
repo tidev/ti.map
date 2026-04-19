@@ -7,6 +7,10 @@
 
 package ti.map;
 
+import static ti.map.TiMapUtils.createHole;
+import static ti.map.TiMapUtils.createOuterBounds;
+import static ti.map.TiMapUtils.parseLocation;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -34,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -892,6 +897,32 @@ public class TiUIMapView extends TiUIFragment
 			polylineProxy.setPolyline(null);
 		}
 		currentPolylines.clear();
+	}
+
+	/**
+	 * Cutout Circle
+	 */
+	protected void addCutoutCircle(KrollDict circleConfig) {
+		if (map == null) {
+			return;
+		}
+
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
+
+		LatLng center = parseLocation(circleConfig);
+		int radius = circleConfig.getInt(MapModule.PROPERTY_RADIUS);
+		float strokeWidth = circleConfig.getDouble(MapModule.PROPERTY_STROKE_WIDTH).floatValue();
+		int strokeColor = TiConvert.toColor(circleConfig.getString(MapModule.PROPERTY_STROKE_COLOR), currentActivity);
+		int overlayColor = TiConvert.toColor(circleConfig.getString(MapModule.PROPERTY_OVERLAY_COLOR), currentActivity);
+
+		PolygonOptions options = new PolygonOptions()
+				.fillColor(overlayColor)
+				.addAll(createOuterBounds())
+				.addHole(createHole(center, radius))
+				.strokeColor(strokeColor)
+				.strokeWidth(strokeWidth);
+
+		map.addPolygon(options);
 	}
 
 	/**

@@ -53,4 +53,41 @@ public class TiMapUtils
 		}
 		return locationArray;
 	}
+
+	public static List<LatLng> createOuterBounds() {
+		float delta = 0.01f;
+
+		return new ArrayList<LatLng>() {{
+			add(new LatLng(90 - delta, -180 + delta));
+			add(new LatLng(0, -180 + delta));
+			add(new LatLng(-90 + delta, -180 + delta));
+			add(new LatLng(-90 + delta, 0));
+			add(new LatLng(-90 + delta, 180 - delta));
+			add(new LatLng(0, 180 - delta));
+			add(new LatLng(90 - delta, 180 - delta));
+			add(new LatLng(90 - delta, 0));
+			add(new LatLng(90 - delta, -180 + delta));
+		}};
+	}
+
+	public static Iterable<LatLng> createHole(LatLng center, int radius) {
+		int points = 50; // number of corners of inscribed polygon
+
+		double radiusLatitude = Math.toDegrees(radius / 1000 / 6371.0);
+		double radiusLongitude = radiusLatitude / Math.cos(Math.toRadians(center.latitude));
+
+		List<LatLng> result = new ArrayList<>(points);
+
+		double anglePerCircleRegion = 2 * Math.PI / points;
+
+		for (int i = 0; i < points; i++) {
+			double theta = i * anglePerCircleRegion;
+			double latitude = center.latitude + (radiusLatitude * Math.sin(theta));
+			double longitude = center.longitude + (radiusLongitude * Math.cos(theta));
+
+			result.add(new LatLng(latitude, longitude));
+		}
+
+		return result;
+	}
 }

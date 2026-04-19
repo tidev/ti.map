@@ -818,3 +818,31 @@ properties:
           - <Modules.Map.SEARCH_RESULT_TYPE_POINT_OF_INTEREST>
           - <Modules.Map.SEARCH_RESULT_TYPE_QUERY>
     type: Array<Number>
+
+---
+name: CutoutCircleConfiguration
+summary: Options to configure a cutout circle.
+properties:
+  - name: longitude
+    summary: Longitude value of the map point, in decimal degrees.
+    type: Number
+  - name: latitude
+    summary: Latitude value of the map point, in decimal degrees.
+    type: Number
+  - name: radius
+    summary: The radius of the circle in meters.
+    type: Number
+  - name: overlayColor
+    summary: The color of the overlay (not the circle).
+    type: String
+  - name: strokeColor
+    summary: |
+        Color to use for the the polyline, as a color name or hex triplet.
+    description: |
+        For information about color values, see the "Colors" section of <Titanium.UI>.
+    type: String
+    default: black
+  - name: strokeWidth
+    summary: Line width in pixels to use when drawing the polyline.
+    type: Number
+    default: 10
