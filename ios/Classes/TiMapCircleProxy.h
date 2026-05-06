@@ -19,6 +19,7 @@
   double radius;
   double alpha;
   double strokeWidth;
+  int blendMode;
   TiColor *strokeColor;
   TiColor *fillColor;
 }

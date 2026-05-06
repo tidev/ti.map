@@ -33,7 +33,7 @@ describe('ti.map.Route', () => {
 		});
 	});
 
-	it('instace should be defined', () => {
+	it('instance should be defined', () => {
 		expect(route1).not.toEqual(undefined);
 	});
 

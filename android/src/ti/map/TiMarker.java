@@ -74,4 +74,13 @@ public class TiMarker implements ClusterItem
 		}
 		return null;
 	}
+
+	@Override
+	public Float getZIndex()
+	{
+		if (proxy != null) {
+			return proxy.getMarkerOptions().getZIndex();
+		}
+		return null;
+	}
 }

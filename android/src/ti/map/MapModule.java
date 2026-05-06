@@ -74,7 +74,7 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public static final String PROPERTY_LITE_MODE = "liteMode";
 	public static final String PROPERTY_MIN_CLUSTER_SIZE = "minClusterSize";
 	public static final String PROPERTY_CENTER_COORDINATES = "centerCoordinates";
-	public static final String PROPERTY_ALTITIDE = "altitude";
+	public static final String PROPERTY_ALTITUDE = "altitude";
 	public static final String PROPERTY_HEADING = "heading";
 	public static final String PROPERTY_PITCH = "pitch";
 

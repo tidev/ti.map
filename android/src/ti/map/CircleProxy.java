@@ -6,6 +6,7 @@
  */
 package ti.map;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Message;
 import android.view.ViewGroup;
@@ -146,6 +147,7 @@ public class CircleProxy extends KrollProxy implements IShape
 	public void processOptions()
 	{
 		options = new CircleOptions();
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 
 		if (hasProperty(MapModule.PROPERTY_CENTER)) {
 			options.center(TiMapUtils.parseLocation(getProperty(MapModule.PROPERTY_CENTER)));
@@ -160,11 +162,13 @@ public class CircleProxy extends KrollProxy implements IShape
 		}
 
 		if (hasProperty(MapModule.PROPERTY_STROKE_COLOR)) {
-			options.strokeColor(alphaColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR))));
+			options.strokeColor(
+				alphaColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR), currentActivity)));
 		}
 
 		if (hasProperty(MapModule.PROPERTY_FILL_COLOR)) {
-			options.fillColor(alphaColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_FILL_COLOR))));
+			options.fillColor(
+				alphaColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_FILL_COLOR), currentActivity)));
 		}
 
 		if (hasProperty(MapModule.PROPERTY_ZINDEX)) {
@@ -184,6 +188,7 @@ public class CircleProxy extends KrollProxy implements IShape
 	public void onPropertyChanged(String name, Object value)
 	{
 		super.onPropertyChanged(name, value);
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 		if (circle == null) {
 			return;
 		}
@@ -203,12 +208,12 @@ public class CircleProxy extends KrollProxy implements IShape
 
 		else if (name.equals(MapModule.PROPERTY_STROKE_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
-												TiConvert.toColor((String) value));
+												TiConvert.toColor((String) value, currentActivity));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_FILL_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_FILL_COLOR),
-												TiConvert.toColor((String) value));
+												TiConvert.toColor((String) value, currentActivity));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_ZINDEX)) {

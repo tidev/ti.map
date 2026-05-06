@@ -6,8 +6,10 @@
  */
 package ti.map;
 
+import android.app.Activity;
 import android.os.Message;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.PolyUtil;
@@ -18,6 +20,7 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
 import ti.map.Shape.IShape;
@@ -109,7 +112,7 @@ public class PolygonProxy extends KrollProxy implements IShape
 	{
 
 		options = new PolygonOptions();
-
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
 			processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
 		}
@@ -119,7 +122,8 @@ public class PolygonProxy extends KrollProxy implements IShape
 		}
 
 		if (hasProperty(MapModule.PROPERTY_STROKE_COLOR)) {
-			options.strokeColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR)));
+			options.strokeColor(
+				TiConvert.toColor((String) getProperty(MapModule.PROPERTY_STROKE_COLOR), currentActivity));
 		}
 
 		if (hasProperty(MapModule.PROPERTY_STROKE_WIDTH)) {
@@ -127,7 +131,7 @@ public class PolygonProxy extends KrollProxy implements IShape
 		}
 
 		if (hasProperty(MapModule.PROPERTY_FILL_COLOR)) {
-			options.fillColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_FILL_COLOR)));
+			options.fillColor(TiConvert.toColor((String) getProperty(MapModule.PROPERTY_FILL_COLOR), currentActivity));
 		}
 
 		if (hasProperty(MapModule.PROPERTY_ZINDEX)) {
@@ -266,7 +270,7 @@ public class PolygonProxy extends KrollProxy implements IShape
 	{
 
 		super.onPropertyChanged(name, value);
-
+		Activity currentActivity = TiApplication.getAppCurrentActivity();
 		if (polygon == null) {
 			return;
 		}
@@ -282,12 +286,12 @@ public class PolygonProxy extends KrollProxy implements IShape
 
 		else if (name.equals(MapModule.PROPERTY_STROKE_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_STROKE_COLOR),
-												TiConvert.toColor((String) value));
+												TiConvert.toColor((String) value, currentActivity));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_FILL_COLOR)) {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_FILL_COLOR),
-												TiConvert.toColor((String) value));
+												TiConvert.toColor((String) value, currentActivity));
 		}
 
 		else if (name.equals(MapModule.PROPERTY_ZINDEX)) {
@@ -299,6 +303,27 @@ public class PolygonProxy extends KrollProxy implements IShape
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_TOUCH_ENABLED),
 												TiConvert.toBoolean(value));
 		}
+	}
+
+	@Kroll.getProperty
+	public HashMap getBounds()
+	{
+		if (polygon == null) {
+			return null;
+		}
+		final LatLngBounds.Builder centerBuilder = LatLngBounds.builder();
+		List<LatLng> points = polygon.getPoints();
+		for (LatLng point : points) {
+			centerBuilder.include(point);
+		}
+
+		LatLngBounds llb = centerBuilder.build();
+		HashMap hm = new HashMap();
+		hm.put(TiC.PROPERTY_LONGITUDE, llb.getCenter().longitude);
+		hm.put(TiC.PROPERTY_LATITUDE, llb.getCenter().latitude);
+		hm.put(TiC.PROPERTY_LATITUDE_DELTA, Math.abs(llb.northeast.latitude - llb.southwest.latitude));
+		hm.put(TiC.PROPERTY_LONGITUDE_DELTA, Math.abs(llb.northeast.longitude - llb.southwest.longitude));
+		return hm;
 	}
 
 	public String getApiName()

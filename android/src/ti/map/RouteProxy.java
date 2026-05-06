@@ -18,6 +18,7 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
 
@@ -86,7 +87,8 @@ public class RouteProxy extends KrollProxy
 		}
 
 		if (hasProperty(TiC.PROPERTY_COLOR)) {
-			options.color(TiConvert.toColor((String) getProperty(TiC.PROPERTY_COLOR)));
+			options.color(
+				TiConvert.toColor((String) getProperty(TiC.PROPERTY_COLOR), TiApplication.getAppCurrentActivity()));
 		}
 	}
 
@@ -160,8 +162,9 @@ public class RouteProxy extends KrollProxy
 		}
 
 		else if (name.equals(TiC.PROPERTY_COLOR)) {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_COLOR),
-												TiConvert.toColor((String) value));
+			TiMessenger.sendBlockingMainMessage(
+				getMainHandler().obtainMessage(MSG_SET_COLOR),
+				TiConvert.toColor((String) value, TiApplication.getAppCurrentActivity()));
 		}
 
 		else if (name.equals(TiC.PROPERTY_WIDTH)) {
