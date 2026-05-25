@@ -953,6 +953,9 @@ public class TiUIMapView extends TiUIView
 
 	public void addImageOverlay(ImageOverlayProxy proxy)
 	{
+		if (map == null) {
+			return;
+		}
 		proxy.setGroundOverlay(map.addGroundOverlay(proxy.getGroundOverlayOptions()));
 		currentImageOverlays.add(proxy);
 	}
