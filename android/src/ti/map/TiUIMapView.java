@@ -661,7 +661,6 @@ public class TiUIMapView extends TiUIView
 				tiMarker = new TiMarker(null, annotation);
 				if (mClusterManager != null) {
 					mClusterManager.addItem((TiMarker) tiMarker);
-					mClusterManager.cluster();
 				}
 			}
 			annotation.setTiMarker(tiMarker);
@@ -703,7 +702,6 @@ public class TiUIMapView extends TiUIView
 		// clear cluster markers
 		if (mClusterManager != null) {
 			mClusterManager.clearItems();
-			mClusterManager.cluster();
 		}
 	}
 
@@ -732,7 +730,6 @@ public class TiUIMapView extends TiUIView
 		if (timarker != null && timarkers.contains(timarker)) {
 			if (mClusterManager != null) {
 				mClusterManager.removeItem(timarker);
-				mClusterManager.cluster();
 			}
 			if (timarker.getMarker() != null) {
 				timarker.getMarker().remove();
@@ -1079,27 +1076,24 @@ public class TiUIMapView extends TiUIView
 
 	private String loadJSONFromAsset(String filename)
 	{
-		String json = null;
-
 		try {
 			String url = proxy.resolveUrl(null, filename);
-			InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
-			byte[] buffer = new byte[4096];
-			int length;
+			try (InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream()) {
+				ByteArrayOutputStream result = new ByteArrayOutputStream();
+				byte[] buffer = new byte[4096];
+				int length;
 
-			while ((length = inputStream.read(buffer)) != -1) {
-				result.write(buffer, 0, length);
+				while ((length = inputStream.read(buffer)) != -1) {
+					result.write(buffer, 0, length);
+				}
+
+				return result.toString("UTF-8");
 			}
-
-			json = result.toString("UTF-8");
-			inputStream.close();
-			result.close();
 		} catch (IOException ex) {
 			Log.e(TAG, "Error opening file: " + ex.getMessage());
 		}
 
-		return json;
+		return null;
 	}
 
 	@Override
@@ -1330,6 +1324,10 @@ public class TiUIMapView extends TiUIView
 		mMarkerManager = null;
 
 		if (mMapView != null) {
+			ViewGroup parent = (ViewGroup) mMapView.getParent();
+			if (parent != null) {
+				parent.removeView(mMapView);
+			}
 			mMapView.onDestroy();
 			mMapView = null;
 		}

@@ -118,6 +118,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolygons.clear();
 		preloadPolylines.clear();
 		preloadCircles.clear();
+		preloadOverlaysList.clear();
 		preloadTileOverlayOptionsList.clear();
 	}
 
@@ -1486,6 +1487,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void removeAllImageOverlays()
 	{
+		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			if (TiApplication.isUIThread()) {
 				handleRemoveAllImageOverlays();
