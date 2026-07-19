@@ -216,11 +216,16 @@ public class TiMapInfoWindow extends RelativeLayout
 		if (evX > markerPoint.x - infoWindowHalfWidth && evX < markerPoint.x + infoWindowHalfWidth
 			&& evY > markerPoint.y - infoWindowHeight - iconImageHeight && evY < markerPoint.y - iconImageHeight) {
 			MotionEvent evCopy = MotionEvent.obtain(ev);
-			evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth,
-								  -markerPoint.y + infoWindowHeight + iconImageHeight);
-
-			int x = (int) evCopy.getX();
-			int y = (int) evCopy.getY();
+			int x;
+			int y;
+			try {
+				evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth,
+									  -markerPoint.y + infoWindowHeight + iconImageHeight);
+				x = (int) evCopy.getX();
+				y = (int) evCopy.getY();
+			} finally {
+				evCopy.recycle();
+			}
 
 			Rect hitRect = new Rect();
 

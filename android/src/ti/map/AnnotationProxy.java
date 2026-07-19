@@ -85,24 +85,15 @@ public class AnnotationProxy extends KrollProxy
 	@Override
 	public void release()
 	{
-		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
-			TiViewProxy customView = (TiViewProxy) getProperty(MapModule.PROPERTY_CUSTOM_VIEW);
-			customView.release();
-		}
-		/*
-		if (markerOptions != null) {
-			markerOptions = null;
-		}
-		if (clusterMarker != null) {
-			clusterMarker = null;
+		Object customViewProperty = getProperty(MapModule.PROPERTY_CUSTOM_VIEW);
+		if (customViewProperty instanceof TiViewProxy) {
+			((TiViewProxy) customViewProperty).release();
 		}
 		if (infoWindow != null) {
+			infoWindow.removeAllViews();
 			infoWindow = null;
 		}
-		if (delegate != null) {
-			delegate = null;
-		}
-		*/
+		delegate = null;
 		super.release();
 	}
 
@@ -159,9 +150,9 @@ public class AnnotationProxy extends KrollProxy
 
 			case MSG_SET_HIDDEN: {
 				result = (AsyncResult) msg.obj;
-				Marker m = marker.getMarker();
-				if (m != null) {
-					m.setVisible(!(Boolean) result.getArg());
+				Marker hiddenMarker = getNativeMarker();
+				if (hiddenMarker != null) {
+					hiddenMarker.setVisible(!(Boolean) result.getArg());
 				}
 				result.setResult(null);
 				return true;
@@ -169,9 +160,9 @@ public class AnnotationProxy extends KrollProxy
 
 			case MSG_SET_DRAGGABLE: {
 				result = (AsyncResult) msg.obj;
-				Marker m = marker.getMarker();
-				if (m != null) {
-					m.setDraggable((Boolean) result.getArg());
+				Marker draggableMarker = getNativeMarker();
+				if (draggableMarker != null) {
+					draggableMarker.setDraggable((Boolean) result.getArg());
 				}
 				result.setResult(null);
 				return true;
@@ -182,14 +173,12 @@ public class AnnotationProxy extends KrollProxy
 				return true;
 			}
 
-			case MSG_SET_IMAGE:
+			case MSG_SET_IMAGE: {
 				result = (AsyncResult) msg.obj;
-				Marker m = marker.getMarker();
-				if (m != null) {
-					updateImage(m, result.getArg());
-				}
+				updateImage(getNativeMarker(), result.getArg());
 				result.setResult(null);
 				return true;
+			}
 
 			default: {
 				return super.handleMessage(msg);
@@ -197,9 +186,18 @@ public class AnnotationProxy extends KrollProxy
 		}
 	}
 
+	/**
+	 * The native marker, or null while the annotation is not (yet) rendered on the map.
+	 * Clustered annotations only get one once TiClusterRenderer has rendered them.
+	 */
+	private Marker getNativeMarker()
+	{
+		return (marker != null) ? marker.getMarker() : null;
+	}
+
 	public void setPosition(double latitude, double longitude)
 	{
-		Marker m = marker.getMarker();
+		Marker m = getNativeMarker();
 		if (m != null) {
 			animateMarkerToPosition(m, new LatLng(latitude, longitude));
 		}
@@ -315,32 +313,20 @@ public class AnnotationProxy extends KrollProxy
 
 	private void handleImage(Object image)
 	{
-		// Image path
+		Bitmap bitmap = null;
 		if (image instanceof String) {
-			TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) image);
-			Bitmap bitmap = imageref.getBitmap();
-			if (bitmap != null) {
-				try {
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
-				} catch (Exception e) {
-					Log.e(TAG, e.getMessage());
-				}
-				return;
-			}
+			bitmap = TiDrawableReference.fromUrl(this, (String) image).getBitmap();
+		} else if (image instanceof TiBlob) {
+			bitmap = ((TiBlob) image).getImage();
 		}
 
-		// Image blob
-		if (image instanceof TiBlob) {
-			Bitmap bitmap = ((TiBlob) image).getImage();
-			if (bitmap != null) {
-				try {
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
-				} catch (Exception e) {
-					Log.e(TAG, e.getMessage());
-				}
+		if (bitmap != null) {
+			try {
+				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				return;
+			} catch (Exception e) {
+				Log.e(TAG, "Unable to apply the marker image", e);
 			}
 		}
 
@@ -355,46 +341,41 @@ public class AnnotationProxy extends KrollProxy
 
 	public void updateImage(Marker m, Object value)
 	{
+		if (m == null) {
+			return;
+		}
 		if (hasProperty(MapModule.PROPERTY_CUSTOM_VIEW)) {
 			// Custom view used. Update image not allowed
 			return;
 		}
 
+		// Clearing the image falls back to the pin, tinted with "pinColor" when one is set.
 		if (value == null) {
-			m.setIcon(BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(getProperty(TiC.PROPERTY_PINCOLOR))));
+			Object pinColor = getProperty(TiC.PROPERTY_PINCOLOR);
+			m.setIcon(pinColor != null ? BitmapDescriptorFactory.defaultMarker(TiConvert.toFloat(pinColor))
+									   : BitmapDescriptorFactory.defaultMarker());
 			setIconImageDimensions(-1, -1);
 			return;
 		}
 
 		// image not null has only effect if customView is null. Any other case, customView has more priority
-		if (value != null) {
-			// Image path
-			if (value instanceof String) {
-				TiDrawableReference imageref = TiDrawableReference.fromUrl(this, (String) value);
-				Bitmap bitmap = imageref.getBitmap();
-				if (bitmap != null) {
-					try {
-						if (m != null) {
-							m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-							setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
-						}
-					} catch (Exception e) {
-					}
-					return;
-				}
-			}
+		Bitmap bitmap = null;
+		if (value instanceof String) {
+			bitmap = TiDrawableReference.fromUrl(this, (String) value).getBitmap();
+		} else if (value instanceof TiBlob) {
+			bitmap = ((TiBlob) value).getImage();
+		}
 
-			// Image blob
-			if (value instanceof TiBlob) {
-				Bitmap bitmap = ((TiBlob) value).getImage();
-				if (bitmap != null) {
-					if (m != null) {
-						m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-						setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
-					}
-					return;
-				}
-			}
+		if (bitmap == null) {
+			Log.w(TAG, "Unable to get the image from: " + value);
+			return;
+		}
+
+		try {
+			m.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+			setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
+		} catch (Exception e) {
+			Log.e(TAG, "Unable to apply the marker image", e);
 		}
 	}
 

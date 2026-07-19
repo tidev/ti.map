@@ -10,9 +10,7 @@ import android.app.Activity;
 import android.os.Message;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
@@ -119,6 +117,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadPolygons.clear();
 		preloadPolylines.clear();
 		preloadCircles.clear();
+		preloadOverlaysList.clear();
 		preloadTileOverlayOptionsList.clear();
 	}
 
@@ -376,9 +375,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	private void handleAddAnnotation(AnnotationProxy annotation)
 	{
-		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
-			mapView.addAnnotation(annotation);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addAnnotation(annotation);
+			}
 		}
 	}
 
@@ -450,7 +452,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		if (TiApplication.isUIThread()) {
 			handleShowAnnotations(annotations);
 		} else {
-			getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS).sendToTarget();
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS), annotations);
 		}
 	}
 
@@ -462,9 +464,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		}
 		Object[] annos = (Object[]) annotations;
 
-		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
-			mapView.showAnnotations(annos);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.showAnnotations(annos);
+			}
 		}
 	}
 
@@ -602,9 +607,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	public void handleRemoveAnnotation(Object annotation)
 	{
-		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
-			mapView.removeAnnotation(annotation);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removeAnnotation(annotation);
+			}
 		}
 	}
 
@@ -972,7 +980,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			ArrayList<Object> polylinesList = new ArrayList<Object>(Arrays.asList((Object[]) polylines));
 			for (int i = 0; i < lines.length; i++) {
 				Object polylineObject = lines[i];
-				if (polylineObject instanceof AnnotationProxy) {
+				if (polylineObject instanceof PolylineProxy) {
 					polylinesList.add(polylineObject);
 				}
 			}
@@ -1216,10 +1224,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
-			return ((TiUIMapView) view).getMap().getCameraPosition().zoom;
-		} else {
-			return 0;
+			GoogleMap map = ((TiUIMapView) view).getMap();
+			if (map != null) {
+				return map.getCameraPosition().zoom;
+			}
 		}
+		return 0;
 	}
 
 	@Kroll.method
@@ -1425,12 +1435,10 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void removeAllImageOverlays()
 	{
-		if (view instanceof TiUIMapView) {
-			if (TiApplication.isUIThread()) {
-				handleRemoveAllImageOverlays();
-			} else {
-				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_IMAGE_OVERLAYS));
-			}
+		if (TiApplication.isUIThread()) {
+			handleRemoveAllImageOverlays();
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_IMAGE_OVERLAYS));
 		}
 	}
 

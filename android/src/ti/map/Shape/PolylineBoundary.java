@@ -1,7 +1,6 @@
 package ti.map.Shape;
 
 import android.graphics.PointF;
-import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import ti.map.PolylineProxy;
@@ -76,7 +75,7 @@ public class PolylineBoundary
 	{
 
 		double diffX = point2.x - point1.x;
-		double diffY = point2.y - point.y;
+		double diffY = point2.y - point1.y;
 		if ((diffX == 0) && (diffY == 0)) {
 			diffX = test.x - point1.x;
 			diffY = test.y - point1.y;

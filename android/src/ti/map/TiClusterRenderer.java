@@ -39,6 +39,9 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		if (anno != null) {
 			if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
 				handleImage(anno, markerOptions, anno.getProperty(TiC.PROPERTY_IMAGE));
+			} else {
+				// Fall back to the default icon size so "centerOffset" below does not divide by zero.
+				setIconImageDimensions(-1, -1);
 			}
 
 			if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
@@ -53,28 +56,20 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 
 	private void handleImage(AnnotationProxy anno, MarkerOptions markerOptions, Object image)
 	{
-		// Image path
+		Bitmap bitmap = null;
 		if (image instanceof String) {
-			TiDrawableReference imageref =
-				TiDrawableReference.fromUrl(anno, (String) anno.getProperty(TiC.PROPERTY_IMAGE));
-			Bitmap bitmap = imageref.getBitmap();
-			if (bitmap != null) {
-				try {
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
-				} catch (Exception e) {
-				}
-				return;
-			}
+			bitmap = TiDrawableReference.fromUrl(anno, (String) image).getBitmap();
+		} else if (image instanceof TiBlob) {
+			bitmap = ((TiBlob) image).getImage();
 		}
 
-		// Image blob
-		if (image instanceof TiBlob) {
-			Bitmap bitmap = ((TiBlob) image).getImage();
-			if (bitmap != null) {
+		if (bitmap != null) {
+			try {
 				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				return;
+			} catch (Exception e) {
+				Log.e(TAG, "Unable to apply the cluster item image", e);
 			}
 		}
 
@@ -89,6 +84,7 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		clusterItem.setMarker(marker);
 	}
 
+	@Override
 	protected void onClusterItemUpdated(TiMarker item, Marker marker)
 	{
 		boolean changed = false;
@@ -110,10 +106,8 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 			changed = true;
 		}
 		// Update marker position if the item changed position
-		if (!marker.getPosition().equals(item.getPosition())) {
-			if (item.getPosition() != null) {
-				marker.setPosition(item.getPosition());
-			}
+		if (item.getPosition() != null && !item.getPosition().equals(marker.getPosition())) {
+			marker.setPosition(item.getPosition());
 			changed = true;
 		}
 		if (changed && marker.isInfoWindowShown()) {

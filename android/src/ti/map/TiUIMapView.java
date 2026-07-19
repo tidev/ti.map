@@ -16,7 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
-import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -85,7 +84,7 @@ public class TiUIMapView extends TiUIFragment
 	private ArrayList<PolylineProxy> currentPolylines;
 	private ArrayList<ImageOverlayProxy> currentImageOverlays;
 	private ClusterManager<TiMarker> mClusterManager;
-	private DefaultClusterRenderer clusterRender;
+	private DefaultClusterRenderer<TiMarker> clusterRender;
 	private MarkerManager mMarkerManager;
 	private MarkerManager.Collection collection;
 
@@ -379,7 +378,12 @@ public class TiUIMapView extends TiUIFragment
 			try {
 				// Handle .json files
 				if (style.endsWith(".json")) {
-					Object json = new JSONTokener(loadJSONFromAsset(style)).nextValue();
+					String contents = loadJSONFromAsset(style);
+					if (contents == null) {
+						Log.e(TAG, "Cannot read JSON style file: " + style);
+						return;
+					}
+					Object json = new JSONTokener(contents).nextValue();
 
 					if (json instanceof JSONObject) {
 						style = ((JSONObject) json).toString();
@@ -406,13 +410,24 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void setUserLocationEnabled(boolean enabled)
 	{
-		Context context = TiApplication.getInstance().getApplicationContext();
+		if (map == null) {
+			return;
+		}
 
-		if (map != null
-			&& (Build.VERSION.SDK_INT < 23
-				|| context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-					   == PackageManager.PERMISSION_GRANTED)) {
-			map.setMyLocationEnabled(enabled);
+		// Disabling never needs a permission.
+		if (!enabled) {
+			map.setMyLocationEnabled(false);
+			return;
+		}
+
+		Context context = TiApplication.getInstance().getApplicationContext();
+		boolean hasLocationPermission =
+			context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+			|| context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+				   == PackageManager.PERMISSION_GRANTED;
+
+		if (hasLocationPermission) {
+			map.setMyLocationEnabled(true);
 		} else {
 			Log.e(TAG, "Enable ACCESS_FINE_LOCATION permission to use userLocation");
 		}
@@ -485,10 +500,14 @@ public class TiUIMapView extends TiUIFragment
 
 	protected void showAnnotations(Object[] annotations)
 	{
+		if (map == null) {
+			return;
+		}
+
 		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
 
 		// Use supplied annotations first. If none available, select all (parity with iOS)
-		if (annotations != null) {
+		if (annotations != null && annotations.length > 0) {
 			for (int i = 0; i < annotations.length; i++) {
 				Object annotation = annotations[i];
 				if (annotation instanceof AnnotationProxy) {
@@ -500,13 +519,22 @@ public class TiUIMapView extends TiUIFragment
 		}
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		boolean hasPosition = false;
 		for (TiMarker marker : markers) {
+			if (marker == null || marker.getPosition() == null) {
+				continue;
+			}
 			builder.include(marker.getPosition());
+			hasPosition = true;
 		}
-		LatLngBounds bounds = builder.build();
+		// LatLngBounds.Builder.build() throws when no point was included.
+		if (!hasPosition) {
+			Log.w(TAG, "showAnnotations: no annotation with a valid position, nothing to show.");
+			return;
+		}
 
 		int padding = 30;
-		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(), padding);
 		map.animateCamera(cu);
 	}
 
@@ -635,24 +663,22 @@ public class TiUIMapView extends TiUIFragment
 			}
 		}
 
-		if (map != null) {
-			annotation.processOptions();
-			if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
-				Marker marker = collection.addMarker(annotation.getMarkerOptions());
-				tiMarker = new TiMarker(marker, annotation);
-			} else {
-				// TiClusterRenderer is responsible for creating the Marker in this case.
-				// It is assigned to the TiMarker instance after it has been rendered in
-				// onClusterItemRendered callback.
-				tiMarker = new TiMarker(null, annotation);
-				if (mClusterManager != null) {
-					mClusterManager.addItem((TiMarker) tiMarker);
-					mClusterManager.cluster();
-				}
+		annotation.processOptions();
+		if (annotation.getProperty(MapModule.PROPERTY_CLUSTER_IDENTIFIER) == null) {
+			Marker marker = collection.addMarker(annotation.getMarkerOptions());
+			tiMarker = new TiMarker(marker, annotation);
+		} else {
+			// TiClusterRenderer is responsible for creating the Marker in this case.
+			// It is assigned to the TiMarker instance after it has been rendered in
+			// onClusterItemRendered callback.
+			tiMarker = new TiMarker(null, annotation);
+			if (mClusterManager != null) {
+				mClusterManager.addItem(tiMarker);
+				mClusterManager.cluster();
 			}
-			annotation.setTiMarker(tiMarker);
-			timarkers.add(tiMarker);
 		}
+		annotation.setTiMarker(tiMarker);
+		timarkers.add(tiMarker);
 	}
 
 	protected void addAnnotations(Object[] annotations)
@@ -840,8 +866,10 @@ public class TiUIMapView extends TiUIFragment
 	public void removeAllPolygons()
 	{
 		for (PolygonProxy polygonProxy : currentPolygons) {
-			polygonProxy.getPolygon().remove();
-			polygonProxy.setPolygon(null);
+			if (polygonProxy.getPolygon() != null) {
+				polygonProxy.getPolygon().remove();
+				polygonProxy.setPolygon(null);
+			}
 		}
 		currentPolygons.clear();
 	}
@@ -888,8 +916,10 @@ public class TiUIMapView extends TiUIFragment
 	public void removeAllPolylines()
 	{
 		for (PolylineProxy polylineProxy : currentPolylines) {
-			polylineProxy.getPolyline().remove();
-			polylineProxy.setPolyline(null);
+			if (polylineProxy.getPolyline() != null) {
+				polylineProxy.getPolyline().remove();
+				polylineProxy.setPolyline(null);
+			}
 		}
 		currentPolylines.clear();
 	}
@@ -923,22 +953,29 @@ public class TiUIMapView extends TiUIFragment
 		if (!currentCircles.contains(c)) {
 			return;
 		}
-		c.getCircle().remove();
-		c.setCircle(null);
+		if (c.getCircle() != null) {
+			c.getCircle().remove();
+			c.setCircle(null);
+		}
 		currentCircles.remove(c);
 	}
 
 	public void removeAllCircles()
 	{
 		for (CircleProxy circleProxy : currentCircles) {
-			circleProxy.getCircle().remove();
-			circleProxy.setCircle(null);
+			if (circleProxy.getCircle() != null) {
+				circleProxy.getCircle().remove();
+				circleProxy.setCircle(null);
+			}
 		}
 		currentCircles.clear();
 	}
 
 	public void addImageOverlay(ImageOverlayProxy proxy)
 	{
+		if (map == null || currentImageOverlays.contains(proxy)) {
+			return;
+		}
 		proxy.setGroundOverlay(map.addGroundOverlay(proxy.getGroundOverlayOptions()));
 		currentImageOverlays.add(proxy);
 	}
@@ -946,8 +983,10 @@ public class TiUIMapView extends TiUIFragment
 	public void removeImageOverlay(ImageOverlayProxy proxy)
 	{
 		if (currentImageOverlays.contains(proxy)) {
-			proxy.getGroundOverlay().remove();
-			proxy.setGroundOverlay(null);
+			if (proxy.getGroundOverlay() != null) {
+				proxy.getGroundOverlay().remove();
+				proxy.setGroundOverlay(null);
+			}
 			currentImageOverlays.remove(proxy);
 		}
 	}
@@ -955,8 +994,10 @@ public class TiUIMapView extends TiUIFragment
 	public void removeAllImageOverlays()
 	{
 		for (ImageOverlayProxy imageOverlayProxy : currentImageOverlays) {
-			imageOverlayProxy.getGroundOverlay().remove();
-			imageOverlayProxy.setGroundOverlay(null);
+			if (imageOverlayProxy.getGroundOverlay() != null) {
+				imageOverlayProxy.getGroundOverlay().remove();
+				imageOverlayProxy.setGroundOverlay(null);
+			}
 		}
 		currentImageOverlays.clear();
 	}
@@ -1062,12 +1103,10 @@ public class TiUIMapView extends TiUIFragment
 
 	private String loadJSONFromAsset(String filename)
 	{
-		String json = null;
+		String url = proxy.resolveUrl(null, filename);
 
-		try {
-			String url = proxy.resolveUrl(null, filename);
-			InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
+		try (InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream();
+			 ByteArrayOutputStream result = new ByteArrayOutputStream()) {
 			byte[] buffer = new byte[4096];
 			int length;
 
@@ -1075,14 +1114,12 @@ public class TiUIMapView extends TiUIFragment
 				result.write(buffer, 0, length);
 			}
 
-			json = result.toString("UTF-8");
-			inputStream.close();
-			result.close();
+			return result.toString("UTF-8");
 		} catch (IOException ex) {
 			Log.e(TAG, "Error opening file: " + ex.getMessage());
 		}
 
-		return json;
+		return null;
 	}
 
 	@Override
@@ -1144,6 +1181,9 @@ public class TiUIMapView extends TiUIFragment
 			for (CircleProxy circleProxy : clickableCircles) {
 
 				Circle circle = circleProxy.getCircle();
+				if (circle == null) {
+					continue;
+				}
 				LatLng center = circle.getCenter();
 
 				double radius = circle.getRadius();
@@ -1304,13 +1344,18 @@ public class TiUIMapView extends TiUIFragment
 		if (map != null) {
 			map.clear();
 		}
-		currentCircles = null;
-		currentPolygons = null;
-		currentPolylines = null;
-		map = null;
+		// Clear rather than null out: these are read by removeXxx() paths which may still be
+		// reached from JS after the view was released.
+		currentCircles.clear();
+		currentPolygons.clear();
+		currentPolylines.clear();
+		currentImageOverlays.clear();
 		timarkers.clear();
+		map = null;
+		clusterRender = null;
 		mClusterManager = null;
 		mMarkerManager = null;
+		collection = null;
 		super.release();
 	}
 
@@ -1436,7 +1481,7 @@ public class TiUIMapView extends TiUIFragment
 			try {
 				map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(TAG, "Unable to zoom to cluster bounds", e);
 			}
 		}
 		return true;
