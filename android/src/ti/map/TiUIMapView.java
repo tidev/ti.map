@@ -82,7 +82,6 @@ public class TiUIMapView extends TiUIView
 	protected boolean preLayout = true;
 	protected boolean liteMode = false;
 	protected LatLngBounds preLayoutUpdateBounds;
-	private Bundle pendingSavedState;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
 	private MapView mMapView;
@@ -108,8 +107,9 @@ public class TiUIMapView extends TiUIView
 		if (zOrderOnTopValue != null && TiConvert.toBoolean(zOrderOnTopValue, false)) {
 			options.zOrderOnTop(true);
 		}
+		Bundle savedState = (proxy instanceof ViewProxy) ? ((ViewProxy) proxy).getSavedInstanceState() : null;
 		mMapView = new MapView(proxy.getActivity(), options);
-		mMapView.onCreate(null);
+		mMapView.onCreate(savedState);
 		mMapView.onStart();
 		mMapView.onResume();
 
@@ -637,6 +637,11 @@ public class TiUIMapView extends TiUIView
 
 	protected void addAnnotation(AnnotationProxy annotation)
 	{
+		addAnnotation(annotation, true);
+	}
+
+	private void addAnnotation(AnnotationProxy annotation, boolean recluster)
+	{
 		if (map == null) {
 			return;
 		}
@@ -661,6 +666,9 @@ public class TiUIMapView extends TiUIView
 				tiMarker = new TiMarker(null, annotation);
 				if (mClusterManager != null) {
 					mClusterManager.addItem((TiMarker) tiMarker);
+					if (recluster) {
+						mClusterManager.cluster();
+					}
 				}
 			}
 			annotation.setTiMarker(tiMarker);
@@ -674,8 +682,11 @@ public class TiUIMapView extends TiUIView
 			Object obj = annotations[i];
 			if (obj instanceof AnnotationProxy) {
 				AnnotationProxy annotation = (AnnotationProxy) obj;
-				addAnnotation(annotation);
+				addAnnotation(annotation, false);
 			}
+		}
+		if (mClusterManager != null) {
+			mClusterManager.cluster();
 		}
 	}
 
@@ -702,6 +713,7 @@ public class TiUIMapView extends TiUIView
 		// clear cluster markers
 		if (mClusterManager != null) {
 			mClusterManager.clearItems();
+			mClusterManager.cluster();
 		}
 	}
 
@@ -730,6 +742,7 @@ public class TiUIMapView extends TiUIView
 		if (timarker != null && timarkers.contains(timarker)) {
 			if (mClusterManager != null) {
 				mClusterManager.removeItem(timarker);
+				mClusterManager.cluster();
 			}
 			if (timarker.getMarker() != null) {
 				timarker.getMarker().remove();
@@ -1078,7 +1091,8 @@ public class TiUIMapView extends TiUIView
 	{
 		try {
 			String url = proxy.resolveUrl(null, filename);
-			try (InputStream inputStream = TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream()) {
+			try (InputStream inputStream =
+					 TiFileFactory.createTitaniumFile(new String[] { url }, false).getInputStream()) {
 				ByteArrayOutputStream result = new ByteArrayOutputStream();
 				byte[] buffer = new byte[4096];
 				int length;
@@ -1476,12 +1490,6 @@ public class TiUIMapView extends TiUIView
 	public void onResume()
 	{
 		if (mMapView != null) {
-			if (pendingSavedState != null) {
-				mMapView.onDestroy();
-				mMapView.onCreate(pendingSavedState);
-				mMapView.onStart();
-				pendingSavedState = null;
-			}
 			mMapView.onResume();
 		}
 	}
@@ -1518,11 +1526,6 @@ public class TiUIMapView extends TiUIView
 		}
 	}
 
-	public void setSavedInstanceState(Bundle savedState)
-	{
-		this.pendingSavedState = savedState;
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle bundle)
 	{
@@ -1534,8 +1537,8 @@ public class TiUIMapView extends TiUIView
 	@Override
 	public void onRestoreInstanceState(Bundle bundle)
 	{
-		if (mMapView != null) {
-			pendingSavedState = bundle;
-		}
+		// Restoring an already-created MapView would require destroying and re-creating it
+		// (and re-fetching the GoogleMap). Instead, the saved state is picked up from
+		// ViewProxy.onCreate() and passed to MapView.onCreate() when the view is built.
 	}
 }

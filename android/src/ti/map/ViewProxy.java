@@ -89,6 +89,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private final ArrayList<CircleProxy> preloadCircles;
 	private final ArrayList<ImageOverlayProxy> preloadOverlaysList;
 	private final ArrayList<TileOverlayOptions> preloadTileOverlayOptionsList;
+	private Bundle savedInstanceState;
 
 	public ViewProxy()
 	{
@@ -126,10 +127,14 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	public void onCreate(Activity activity, Bundle savedInstanceState)
 	{
 		super.onCreate(activity, savedInstanceState);
-		TiUIView view = peekView();
-		if (view instanceof TiUIMapView) {
-			((TiUIMapView) view).setSavedInstanceState(savedInstanceState);
-		}
+		// The view does not exist yet at this point. Keep the bundle so TiUIMapView
+		// can pass it to MapView.onCreate() when the view is created.
+		this.savedInstanceState = savedInstanceState;
+	}
+
+	public Bundle getSavedInstanceState()
+	{
+		return savedInstanceState;
 	}
 
 	@Override
@@ -478,11 +483,9 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	private void handleAddAnnotations(Object[] annotations)
 	{
-		for (int i = 0; i < annotations.length; i++) {
-			Object annotation = annotations[i];
-			if (annotation instanceof AnnotationProxy) {
-				handleAddAnnotation((AnnotationProxy) annotation);
-			}
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		if (mapView.getMap() != null) {
+			mapView.addAnnotations(annotations);
 		}
 	}
 
