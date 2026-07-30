@@ -4,8 +4,8 @@ dependencies {
 	implementation 'com.google.android.gms:play-services-maps:20.0.0'
 
 	// https://github.com/googlemaps/android-maps-utils/releases
-	implementation 'com.google.maps.android:android-maps-utils:3.16.2'
+	implementation 'com.google.maps.android:android-maps-utils:3.16.0'
 
 	// https://developer.android.com/jetpack/androidx/releases/fragment
-	implementation 'androidx.fragment:fragment:1.7.1'
+	implementation 'androidx.fragment:fragment:1.8.9'
 }
