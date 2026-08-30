@@ -1277,13 +1277,16 @@ CLLocationCoordinate2D userNewLocation;
   UIView *right = [ann rightViewAccessory];
 
   [annView setHidden:[TiUtils boolValue:[ann valueForUndefinedKey:@"hidden"] def:NO]];
-
   if (left != nil) {
     annView.leftCalloutAccessoryView = left;
+    UITapGestureRecognizer *singleFingerTapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTapLeft:)];
+    [left addGestureRecognizer:singleFingerTapLeft];
   }
 
   if (right != nil) {
     annView.rightCalloutAccessoryView = right;
+    UITapGestureRecognizer *singleFingerTapRight = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTapRight:)];
+    [right addGestureRecognizer:singleFingerTapRight];
   }
 
   [annView setDraggable:[TiUtils boolValue:[ann valueForUndefinedKey:@"draggable"]]];
@@ -1313,6 +1316,17 @@ CLLocationCoordinate2D userNewLocation;
   }
   return annView;
 }
+
+- (void)handleSingleTapLeft:(UITapGestureRecognizer *)recognizer
+{
+  [self fireClickEvent:selectedAnnotation source:@"leftButton" deselected:NO];
+}
+
+- (void)handleSingleTapRight:(UITapGestureRecognizer *)recognizer
+{
+  [self fireClickEvent:selectedAnnotation source:@"rightButton" deselected:NO];
+}
+
 - (void)animateAnnotation:(TiMapAnnotationProxy *)newAnnotation withLocation:(CLLocationCoordinate2D)newLocation
 {
   userNewLocation.latitude = newLocation.latitude;
