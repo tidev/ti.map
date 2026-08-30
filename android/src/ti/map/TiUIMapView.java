@@ -39,6 +39,9 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
+import com.google.maps.android.data.kml.KmlLayer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,6 +53,7 @@ import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -88,6 +92,8 @@ public class TiUIMapView extends TiUIFragment
 	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
 	private MarkerManager.Collection collection;
+	private KrollDict localGeoJson;
+	private TiBlob localKml;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -321,6 +327,12 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(MapModule.PROPERTY_MIN_CLUSTER_SIZE)) {
 			if (clusterRender != null)
 				clusterRender.setMinClusterSize(d.getInt(MapModule.PROPERTY_MIN_CLUSTER_SIZE));
+		}
+		if (d.containsKeyAndNotNull("kml")) {
+			localKml = TiConvert.toBlob(d.get("kml"));
+		}
+		if (d.containsKeyAndNotNull("geoJSON")) {
+			localGeoJson = d.getKrollDict("geoJSON");
 		}
 	}
 
@@ -1416,6 +1428,12 @@ public class TiUIMapView extends TiUIFragment
 		if (proxy != null) {
 			proxy.fireEvent(TiC.EVENT_COMPLETE, null);
 		}
+		if (localGeoJson != null) {
+			loadGeoJSON(localGeoJson);
+		}
+		if (localKml != null) {
+			loadKml(localKml);
+		}
 	}
 
 	protected void onViewCreated()
@@ -1446,5 +1464,68 @@ public class TiUIMapView extends TiUIFragment
 	public boolean onClusterItemClick(TiMarker tiMarker)
 	{
 		return onMarkerClick(tiMarker.getMarker());
+	}
+
+	public void loadKml(TiBlob file)
+	{
+		if (map != null) {
+			try {
+				KmlLayer layer =
+					new KmlLayer(map, file.getInputStream(), TiApplication.getInstance().getApplicationContext());
+				layer.addLayerToMap();
+			} catch (Exception ex) {
+				Log.e(TAG, "Error: " + ex.getMessage());
+			}
+			localKml = null;
+		} else {
+			localKml = file;
+		}
+	}
+
+	public void loadGeoJSON(KrollDict obj)
+	{
+		if (map != null) {
+			try {
+				JSONObject jsonObject;
+
+				if (obj.containsKeyAndNotNull("json")) {
+					String json = obj.getString("json");
+					jsonObject = new JSONObject(json);
+				} else if (obj.containsKeyAndNotNull(TiC.PROPERTY_FILE)) {
+					String url = proxy.resolveUrl(null, obj.getString(TiC.PROPERTY_FILE));
+					TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { url }, false);
+					if (file.exists()) {
+						jsonObject = new JSONObject(file.read().toString());
+					} else {
+						Log.e(TAG, "File not found");
+						return;
+					}
+				} else {
+					Log.e(TAG, "To use a geoJSON you'll need to either set the 'file' or 'json' property.");
+					return;
+				}
+
+				GeoJsonLayer layer = new GeoJsonLayer(map, jsonObject);
+				GeoJsonPolygonStyle polygonStyle = layer.getDefaultPolygonStyle();
+
+				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BORDER_WIDTH)) {
+					polygonStyle.setStrokeWidth(obj.getInt(TiC.PROPERTY_BORDER_WIDTH));
+				}
+				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BORDER_COLOR)) {
+					polygonStyle.setStrokeColor(TiConvert.toColor(obj.getString(TiC.PROPERTY_BORDER_COLOR),
+																  TiApplication.getAppRootOrCurrentActivity()));
+				}
+				if (obj.containsKeyAndNotNull(TiC.PROPERTY_BACKGROUND_COLOR)) {
+					polygonStyle.setFillColor(TiConvert.toColor(obj.getString(TiC.PROPERTY_BACKGROUND_COLOR),
+																TiApplication.getAppRootOrCurrentActivity()));
+				}
+				layer.addLayerToMap();
+			} catch (Exception ex) {
+				Log.e(TAG, "Error: " + ex.getMessage());
+			}
+			localGeoJson = null;
+		} else {
+			localGeoJson = obj;
+		}
 	}
 }
