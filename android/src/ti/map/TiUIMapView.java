@@ -88,6 +88,8 @@ public class TiUIMapView extends TiUIFragment
 	private DefaultClusterRenderer clusterRender;
 	private MarkerManager mMarkerManager;
 	private MarkerManager.Collection collection;
+	private float minZoom = -1;
+	private float maxZoom = -1;
 
 	public TiUIMapView(final TiViewProxy proxy, Activity activity)
 	{
@@ -239,7 +241,12 @@ public class TiUIMapView extends TiUIFragment
 		markerCollection.setInfoWindowAdapter(this);
 		markerCollection.setOnInfoWindowClickListener(this);
 		markerCollection.setOnMarkerDragListener(this);
-
+		if (minZoom != -1) {
+			map.setMinZoomPreference(minZoom);
+		}
+		if (maxZoom != -1) {
+			map.setMaxZoomPreference(maxZoom);
+		}
 		((ViewProxy) proxy).clearPreloadObjects();
 	}
 
@@ -321,6 +328,12 @@ public class TiUIMapView extends TiUIFragment
 		if (d.containsKey(MapModule.PROPERTY_MIN_CLUSTER_SIZE)) {
 			if (clusterRender != null)
 				clusterRender.setMinClusterSize(d.getInt(MapModule.PROPERTY_MIN_CLUSTER_SIZE));
+		}
+		if (d.containsKey("maxZoomLevel")) {
+			maxZoom = Float.parseFloat(d.getString("maxZoomLevel"));
+		}
+		if (d.containsKey("minZoomLevel")) {
+			minZoom = Float.parseFloat(d.getString("minZoomLevel"));
 		}
 	}
 
