@@ -8,7 +8,7 @@ apiversion: 2
 architectures: arm64 x86_64
 description: External version of Map module
 author: Jeff Haynie, Jon Alter, Pedro Enrique, Hans Knöchel, Vijay Singh
-license: Apache Public License v2
+license: Apache-2.0
 copyright: Copyright (c) 2013-present by Axway Appcelerator
 
 # these should not be edited
