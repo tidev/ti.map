@@ -26,6 +26,7 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -110,7 +111,25 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Override
 	public TiUIView createView(Activity activity)
 	{
+		// A TiViewProxy is not registered for activity lifecycle events by default
+		// (only when created with a "lifecycleContainer"). Register explicitly so the
+		// MapView receives onStart/onResume/onPause/onStop/onDestroy.
+		if (activity instanceof TiBaseActivity) {
+			// Remove first so a proxy already attached via "lifecycleContainer" is not registered twice.
+			((TiBaseActivity) activity).removeOnLifecycleEventListener(this);
+			((TiBaseActivity) activity).addOnLifecycleEventListener(this);
+		}
 		return new TiUIMapView(this);
+	}
+
+	@Override
+	public void releaseViews()
+	{
+		Activity activity = getActivity();
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).removeOnLifecycleEventListener(this);
+		}
+		super.releaseViews();
 	}
 
 	public void clearPreloadObjects()

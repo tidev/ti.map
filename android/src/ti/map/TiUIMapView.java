@@ -1337,6 +1337,20 @@ public class TiUIMapView extends TiUIView
 		mClusterManager = null;
 		mMarkerManager = null;
 
+		destroyMapView();
+
+		super.release();
+	}
+
+	/**
+	 * Detaches and destroys the native MapView and drops the GoogleMap reference.
+	 * Safe to call more than once: the activity's onDestroy() and release() can
+	 * both reach this, and MapView.onDestroy() must only be invoked a single time.
+	 */
+	private void destroyMapView()
+	{
+		map = null;
+
 		if (mMapView != null) {
 			ViewGroup parent = (ViewGroup) mMapView.getParent();
 			if (parent != null) {
@@ -1350,8 +1364,6 @@ public class TiUIMapView extends TiUIView
 		if (activity instanceof TiBaseActivity) {
 			((TiBaseActivity) activity).removeOnInstanceStateEventListener(this);
 		}
-
-		super.release();
 	}
 
 	@Override
@@ -1496,13 +1508,13 @@ public class TiUIMapView extends TiUIView
 
 	public void onDestroy()
 	{
-		if (mMapView != null) {
-			mMapView.onDestroy();
-		}
-		Activity activity = proxy != null ? proxy.getActivity() : null;
-		if (activity instanceof TiBaseActivity) {
-			((TiBaseActivity) activity).removeOnInstanceStateEventListener(this);
-		}
+		// The activity notifies lifecycle listeners before it releases the views,
+		// so release() runs after this. Clear the map here so release() does not
+		// call GoogleMap.clear() on a destroyed map or MapView.onDestroy() twice.
+		selectedAnnotation = null;
+		mClusterManager = null;
+		mMarkerManager = null;
+		destroyMapView();
 	}
 
 	public void onStart()
