@@ -77,6 +77,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private static final int MSG_ADD_CIRCLE = MSG_FIRST_ID + 921;
 	private static final int MSG_REMOVE_CIRCLE = MSG_FIRST_ID + 922;
 	private static final int MSG_REMOVE_ALL_CIRCLES = MSG_FIRST_ID + 923;
+	private static final int MSG_ADD_CUTOUT_CIRCLE = MSG_FIRST_ID + 924;
 
 	private static final int MSG_ADD_IMAGE_OVERLAY = MSG_FIRST_ID + 931;
 	private static final int MSG_REMOVE_IMAGE_OVERLAY = MSG_FIRST_ID + 932;
@@ -285,6 +286,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			case MSG_ADD_CIRCLE: {
 				result = (AsyncResult) msg.obj;
 				handleAddCircle((CircleProxy) result.getArg());
+				result.setResult(null);
+				return true;
+			}
+
+			case MSG_ADD_CUTOUT_CIRCLE: {
+				result = (AsyncResult) msg.obj;
+				handleAddCutoutCircle((KrollDict) result.getArg());
 				result.setResult(null);
 				return true;
 			}
@@ -1102,6 +1110,23 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			}
 		} else {
 			addPreloadCircle(circle);
+		}
+	}
+
+	@Kroll.method
+	public void addCutoutCircle(KrollDict circleConfiguration)
+	{
+		handleAddCutoutCircle(circleConfiguration);
+	}
+
+	public void handleAddCutoutCircle(KrollDict circleConfiguration)
+	{
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addCutoutCircle(circleConfiguration);
+			}
 		}
 	}
 

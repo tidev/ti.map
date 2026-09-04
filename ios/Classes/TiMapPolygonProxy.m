@@ -6,6 +6,7 @@
  */
 
 #import "TiMapPolygonProxy.h"
+#import "TiMapUtils.h"
 
 @implementation TiMapPolygonProxy
 
@@ -46,7 +47,7 @@
 
   for (int i = 0; i < [points count]; i++) {
     id locObj = [points objectAtIndex:i];
-    CLLocationCoordinate2D coord = [self processLocation:locObj];
+    CLLocationCoordinate2D coord = [TiMapUtils processLocation:locObj];
     coordArray[i] = coord;
   }
 
@@ -61,7 +62,7 @@
 
       for (int j = 0; j < [holeObj count]; ++j) {
         id obj = [holeObj objectAtIndex:j];
-        CLLocationCoordinate2D coord = [self processLocation:obj];
+        CLLocationCoordinate2D coord = [TiMapUtils processLocation:obj];
         hole[j] = coord;
       }
 
@@ -81,27 +82,6 @@
   [self applyFillColor];
   [self applyStrokeColor];
   [self applyStrokeWidth];
-}
-
-// A location can either be a an array of longitude, latitude pairings or
-// an array of longitude, latitude objects.
-// e.g. [ [123.33, 34.44], [100.39, 78.23], etc. ]
-// [ {longitude: 123.33, latitude, 34.44}, {longitude: 100.39, latitude: 78.23}, etc. ]
-- (CLLocationCoordinate2D)processLocation:(id)locObj
-{
-  if ([locObj isKindOfClass:[NSDictionary class]]) {
-    CLLocationDegrees lat = [TiUtils doubleValue:[locObj objectForKey:@"latitude"]];
-    CLLocationDegrees lon = [TiUtils doubleValue:[locObj objectForKey:@"longitude"]];
-
-    return CLLocationCoordinate2DMake(lat, lon);
-  } else if ([locObj isKindOfClass:[NSArray class]]) {
-    CLLocationDegrees lat = [TiUtils doubleValue:[locObj objectAtIndex:1]];
-    CLLocationDegrees lon = [TiUtils doubleValue:[locObj objectAtIndex:0]];
-
-    return CLLocationCoordinate2DMake(lat, lon);
-  }
-
-  return kCLLocationCoordinate2DInvalid;
 }
 
 - (void)applyFillColor

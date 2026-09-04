@@ -5,6 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import "TiMapViewProxy.h"
+#import "TiCutoutCircle.h"
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapImageOverlayProxy.h"
@@ -287,6 +288,55 @@
   } else {
     for (id annotation in newAnnotations) {
       [self addAnnotation:annotation];
+    }
+  }
+}
+
+- (void)addCutoutCircle:(id)arg
+{
+  ENSURE_SINGLE_ARG(arg, NSDictionary);
+
+  [self replaceValue:arg forKey:@"cutoutCircle" notification:NO];
+
+  CGFloat latitude = [TiUtils floatValue:@"latitude" properties:arg];
+  CGFloat longitude = [TiUtils floatValue:@"longitude" properties:arg];
+  CGFloat radius = [TiUtils doubleValue:@"radius" properties:arg];
+  double tolerance = [TiUtils doubleValue:@"tolerance" properties:arg def:3.0];
+
+  CLLocationCoordinate2D WORLD_COORDINATES[6];
+  WORLD_COORDINATES[0] = CLLocationCoordinate2DMake(90, 0);
+  WORLD_COORDINATES[1] = CLLocationCoordinate2DMake(90, 180);
+  WORLD_COORDINATES[2] = CLLocationCoordinate2DMake(-90, 180);
+  WORLD_COORDINATES[3] = CLLocationCoordinate2DMake(-90, 0);
+  WORLD_COORDINATES[4] = CLLocationCoordinate2DMake(-90, -180);
+  WORLD_COORDINATES[5] = CLLocationCoordinate2DMake(90, -180);
+
+  CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+  NSArray<NSDictionary *> *circleCoordinates = [TiMapUtils generateCircleCoordinates:coordinate
+                                                                          withRadius:radius
+                                                                        andTolerance:tolerance];
+
+  CLLocationCoordinate2D *circleCoordinatesNative = malloc(sizeof(CLLocationCoordinate2D) * [circleCoordinates count]);
+
+  for (NSUInteger i = 0; i < [circleCoordinates count]; ++i) {
+    CLLocationCoordinate2D coordinate = [TiMapUtils processLocation:[circleCoordinates objectAtIndex:i]];
+    circleCoordinatesNative[i] = coordinate;
+  }
+
+  MKPolygon *circlePolygon = [MKPolygon polygonWithCoordinates:circleCoordinatesNative count:circleCoordinates.count];
+  TiCutoutCircle *cutoutPolygon = [TiCutoutCircle polygonWithCoordinates:WORLD_COORDINATES count:6 interiorPolygons:@[ circlePolygon ]];
+
+  [[(TiMapView *)[self view] map] addOverlay:cutoutPolygon];
+}
+
+- (void)removeCutoutCircle:(id)unused
+{
+  MKMapView *mapView = [(TiMapView *)[self view] map];
+  NSArray<id<MKOverlay>> *overlays = [mapView overlays];
+
+  for (id<MKOverlay> overlay in overlays) {
+    if ([overlay isKindOfClass:[TiCutoutCircle class]]) {
+      [mapView removeOverlay:overlay];
     }
   }
 }

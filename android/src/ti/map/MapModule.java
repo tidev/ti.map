@@ -60,6 +60,7 @@ public class MapModule extends KrollModule implements OnMapsSdkInitializedCallba
 	public static final String PROPERTY_STROKE_COLOR = "strokeColor";
 	public static final String PROPERTY_STROKE_WIDTH = "strokeWidth";
 	public static final String PROPERTY_FILL_COLOR = "fillColor";
+	public static final String PROPERTY_OVERLAY_COLOR = "overlayColor";
 	public static final String PROPERTY_ZINDEX = "zIndex";
 	public static final String PROPERTY_POLYGON = "polygon";
 	public static final String PROPERTY_POLYGONS = "polygons";
