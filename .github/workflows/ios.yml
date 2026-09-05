@@ -20,11 +20,11 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '24.x'
 
     - name: Cache Node.js modules
       id: node-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: node_modules
         key: ${{ runner.OS }}-node-modules-${{ hashFiles('package-lock.json') }}
@@ -44,11 +44,11 @@ jobs:
 
 # TODO cache SDK install
 
-    - run: ti sdk install 12.8.0.GA
+    - run: ti sdk install 13.2.0.GA
       name: Install Titanium SDK
 
-    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 12.5.1.GA/' ios/titanium.xcconfig
-      name: Set to Build with 12.5.1.GA SDK
+    - run: sed -i .bak 's/TITANIUM_SDK_VERSION = .*/TITANIUM_SDK_VERSION = 13.2.0.GA/' ios/titanium.xcconfig
+      name: Set to Build with 13.2.0.GA SDK
 
     # - run: npm run test:ios -- --sdkVersion 11.0.0.GA
     #   name: Build and Test

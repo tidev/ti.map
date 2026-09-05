@@ -351,7 +351,7 @@ methods:
 
 events:
   - name: clusterstart
-    summary: Fired when a collision between annotations occures.
+    summary: Fired when a collision between annotations occurs.
     properties:
       - name: memberAnnotations
         summary: Array of annotations participating in clustering.
@@ -390,21 +390,21 @@ events:
       - name: newState
         summary: |
             New drag state for the annotation, one of
-            [ANNOTATION_DRAG_STATE_NONE](Titanium.Map.ANNOTATION_DRAG_STATE_NONE),
-            [ANNOTATION_DRAG_STATE_START](Titanium.Map.ANNOTATION_DRAG_STATE_START),
-            [ANNOTATION_DRAG_STATE_DRAG](Titanium.Map.ANNOTATION_DRAG_STATE_DRAG),
-            [ANNOTATION_DRAG_STATE_CANCEL](Titanium.Map.ANNOTATION_DRAG_STATE_CANCEL) or
-            [ANNOTATION_DRAG_STATE_END](Titanium.Map.ANNOTATION_DRAG_STATE_END).
+            [ANNOTATION_DRAG_STATE_NONE](Modules.Map.ANNOTATION_DRAG_STATE_NONE),
+            [ANNOTATION_DRAG_STATE_START](Modules.Map.ANNOTATION_DRAG_STATE_START),
+            [ANNOTATION_DRAG_STATE_DRAG](Modules.Map.ANNOTATION_DRAG_STATE_DRAG),
+            [ANNOTATION_DRAG_STATE_CANCEL](Modules.Map.ANNOTATION_DRAG_STATE_CANCEL) or
+            [ANNOTATION_DRAG_STATE_END](Modules.Map.ANNOTATION_DRAG_STATE_END).
         type: Number
 
       - name: oldState
         summary: |
             Previous drag state for the annotation, one of
-            [ANNOTATION_DRAG_STATE_NONE](Titanium.Map.ANNOTATION_DRAG_STATE_NONE),
-            [ANNOTATION_DRAG_STATE_START](Titanium.Map.ANNOTATION_DRAG_STATE_START),
-            [ANNOTATION_DRAG_STATE_DRAG](Titanium.Map.ANNOTATION_DRAG_STATE_DRAG),
-            [ANNOTATION_DRAG_STATE_CANCEL](Titanium.Map.ANNOTATION_DRAG_STATE_CANCEL) or
-            [ANNOTATION_DRAG_STATE_END](Titanium.Map.ANNOTATION_DRAG_STATE_END).
+            [ANNOTATION_DRAG_STATE_NONE](Modules.Map.ANNOTATION_DRAG_STATE_NONE),
+            [ANNOTATION_DRAG_STATE_START](Modules.Map.ANNOTATION_DRAG_STATE_START),
+            [ANNOTATION_DRAG_STATE_DRAG](Modules.Map.ANNOTATION_DRAG_STATE_DRAG),
+            [ANNOTATION_DRAG_STATE_CANCEL](Modules.Map.ANNOTATION_DRAG_STATE_CANCEL) or
+            [ANNOTATION_DRAG_STATE_END](Modules.Map.ANNOTATION_DRAG_STATE_END).
         type: Number
     since: "3.1.0"
 
@@ -429,7 +429,7 @@ events:
 
         For polygon, polyline or circle, The `click` event includes the following values.
         `clicksource` is a string describing the shape type. `map` is the map view instance.
-        `latitude` and `longtitude` is the corresponding coordinates on the map where the user
+        `latitude` and `longitude` is the corresponding coordinates on the map where the user
         clicked in the shape.
     properties:
       - name: title
@@ -925,7 +925,7 @@ properties:
     summary: A Boolean value indicating whether the map can be zoomed by pinching or tapping.
     description: |
         When this property is set to `true` the a map view can be zoomed by pinching inwards to zoom out
-        and reverse to zoom in. Zooming in can also be accoplished by double-tapping the map view. Zooming
+        and reverse to zoom in. Zooming in can also be accomplished by double-tapping the map view. Zooming
         out can also be accomplished by two-finger tapping the map view.
     type: Boolean
     default: true
@@ -1081,7 +1081,7 @@ since: "6.3.0"
 properties:
   - name: memberAnnotations
     summary: |
-      Array of Modules.Map.Annotation, which is recieved in event 'clusteringstarted' as
+      Array of Modules.Map.Annotation, which is received in event 'clusteringstarted' as
       memberAnnotations.
     type: Array<Modules.Map.Annotation>
 

@@ -7,6 +7,7 @@
 package ti.map;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.Message;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollObject;
@@ -25,6 +27,7 @@ import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBaseActivity;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -88,6 +91,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private final ArrayList<CircleProxy> preloadCircles;
 	private final ArrayList<ImageOverlayProxy> preloadOverlaysList;
 	private final ArrayList<TileOverlayOptions> preloadTileOverlayOptionsList;
+	// Native MapView state saved by TiUIMapView.onSaveInstanceState(). The proxy outlives the
+	// activity when it is temporarily destroyed ("Don't keep activities", low memory), so keeping the
+	// bundle here makes it available to MapView.onCreate() when the view is rebuilt.
+	private Bundle savedInstanceState;
+	// KrollProxy.getProxyId() is never populated, so keep our own stable id for the saved-state key.
+	private static final AtomicInteger MAP_ID_GENERATOR = new AtomicInteger();
+	private final int mapId = MAP_ID_GENERATOR.incrementAndGet();
 
 	public ViewProxy()
 	{
@@ -108,7 +118,25 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Override
 	public TiUIView createView(Activity activity)
 	{
-		return new TiUIMapView(this, activity);
+		// A TiViewProxy is not registered for activity lifecycle events by default
+		// (only when created with a "lifecycleContainer"). Register explicitly so the
+		// MapView receives onStart/onResume/onPause/onStop/onDestroy.
+		if (activity instanceof TiBaseActivity) {
+			// Remove first so a proxy already attached via "lifecycleContainer" is not registered twice.
+			((TiBaseActivity) activity).removeOnLifecycleEventListener(this);
+			((TiBaseActivity) activity).addOnLifecycleEventListener(this);
+		}
+		return new TiUIMapView(this);
+	}
+
+	@Override
+	public void releaseViews()
+	{
+		Activity activity = getActivity();
+		if (activity instanceof TiBaseActivity) {
+			((TiBaseActivity) activity).removeOnLifecycleEventListener(this);
+		}
+		super.releaseViews();
 	}
 
 	public void clearPreloadObjects()
@@ -119,6 +147,104 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		preloadCircles.clear();
 		preloadOverlaysList.clear();
 		preloadTileOverlayOptionsList.clear();
+	}
+
+	@Override
+	public void onCreate(Activity activity, Bundle savedInstanceState)
+	{
+		super.onCreate(activity, savedInstanceState);
+		// TiBaseActivity creates the window's views in windowCreated() before it dispatches onCreate to
+		// lifecycle listeners, so the map normally already exists here and has consumed the state kept
+		// on this proxy. Only fall back to the activity bundle if the view has not been created yet.
+		if (peekView() == null && savedInstanceState != null) {
+			Bundle mapState = savedInstanceState.getBundle(getSavedInstanceStateKey());
+			if (mapState != null) {
+				this.savedInstanceState = mapState;
+			}
+		}
+	}
+
+	/**
+	 * Key under which this map's native state is stored in the activity's saved-state bundle.
+	 * Every map in an activity gets its own sub-bundle so multiple maps do not overwrite each other.
+	 */
+	public String getSavedInstanceStateKey()
+	{
+		return "ti.map.state." + mapId;
+	}
+
+	public void setSavedInstanceState(Bundle savedInstanceState)
+	{
+		this.savedInstanceState = savedInstanceState;
+	}
+
+	/**
+	 * Returns the saved native map state and clears it, so a later view rebuild that was not
+	 * preceded by onSaveInstanceState() does not replay stale state.
+	 */
+	public Bundle takeSavedInstanceState()
+	{
+		Bundle bundle = savedInstanceState;
+		savedInstanceState = null;
+		return bundle;
+	}
+
+	@Override
+	public void onDestroy(Activity activity)
+	{
+		super.onDestroy(activity);
+		// A finishing activity is never restored by Android, so state saved for it must not be
+		// replayed if this proxy is later added to a new window.
+		if (activity != null && activity.isFinishing()) {
+			savedInstanceState = null;
+		}
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onDestroy();
+		}
+	}
+
+	@Override
+	public void onResume(Activity activity)
+	{
+		super.onResume(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			// The activity was not recreated after the last onSaveInstanceState(), so drop the kept
+			// state. Otherwise a later view rebuild (e.g. remove()/add()) would replay an old camera.
+			savedInstanceState = null;
+			((TiUIMapView) view).onResume();
+		}
+	}
+
+	@Override
+	public void onStart(Activity activity)
+	{
+		super.onStart(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onStart();
+		}
+	}
+
+	@Override
+	public void onPause(Activity activity)
+	{
+		super.onPause(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onPause();
+		}
+	}
+
+	@Override
+	public void onStop(Activity activity)
+	{
+		super.onStop(activity);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			((TiUIMapView) view).onStop();
+		}
 	}
 
 	@Override
@@ -420,11 +546,9 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	private void handleAddAnnotations(Object[] annotations)
 	{
-		for (int i = 0; i < annotations.length; i++) {
-			Object annotation = annotations[i];
-			if (annotation instanceof AnnotationProxy) {
-				handleAddAnnotation((AnnotationProxy) annotation);
-			}
+		TiUIMapView mapView = (TiUIMapView) peekView();
+		if (mapView.getMap() != null) {
+			mapView.addAnnotations(annotations);
 		}
 	}
 
@@ -1225,7 +1349,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			GoogleMap map = ((TiUIMapView) view).getMap();
-			if (map != null) {
+			if (map != null && map.getCameraPosition() != null) {
 				return map.getCameraPosition().zoom;
 			}
 		}
@@ -1435,10 +1559,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void removeAllImageOverlays()
 	{
-		if (TiApplication.isUIThread()) {
-			handleRemoveAllImageOverlays();
-		} else {
-			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_IMAGE_OVERLAYS));
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			if (TiApplication.isUIThread()) {
+				handleRemoveAllImageOverlays();
+			} else {
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_REMOVE_ALL_IMAGE_OVERLAYS));
+			}
 		}
 	}
 

@@ -12,7 +12,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-13
+    runs-on: macos-latest
     name: Android
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -23,7 +23,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '24.x'
 
     - name: Cache Node.js modules
       id: node-cache
@@ -56,7 +56,7 @@ jobs:
       name: Install Titanium CLI
 
 # TODO: Cache sdk install
-    - run: ti sdk install 12.8.0.GA
+    - run: ti sdk install 13.2.0.GA
       name: Install Titanium SDK
 
     - name: Install ccache

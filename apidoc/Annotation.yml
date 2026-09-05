@@ -15,14 +15,14 @@ description: |
     The controls on the left and right side of the annotation can be specified in one of two
     ways:
 
-    * To display an image, set the [leftButton](Titanium.Map.Annotation.leftButton) or
-      [rightButton](Titanium.Map.Annotation.rightButton) property to an image URL. (On
-      iOS, you can also use a [SystemButton](Titanium.UI.iPhone.SystemButton) constant
+    * To display an image, set the [leftButton](Modules.Map.Annotation.leftButton) or
+      [rightButton](Modules.Map.Annotation.rightButton) property to an image URL. (On
+      iOS, you can also use a [SystemButton](Titanium.UI.iOS.SystemButton) constant
       to use one of the native system button icons.)
 
     * To add another type of view to the annotation, set the
-      [leftView](Titanium.Map.Annotation.leftView) or
-      [rightView](Titanium.Map.Annotation.rightView) property to a [View](Titanium.UI.View)
+      [leftView](Modules.Map.Annotation.leftView) or
+      [rightView](Modules.Map.Annotation.rightView) property to a [View](Titanium.UI.View)
       object.
 
     An annotation has two states: selected and deselected. A deselected annotation

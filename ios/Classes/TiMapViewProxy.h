@@ -22,8 +22,8 @@
   NSMutableArray *circlesToRemove;
   NSMutableArray *polylinesToAdd;
   NSMutableArray *polylinesToRemove;
-  NSMutableArray *imageOvelaysToAdd;
-  NSMutableArray *imageOvelaysToRemove;
+  NSMutableArray *imageOverlaysToAdd;
+  NSMutableArray *imageOverlaysToRemove;
 
   int zoomCount; // Number of times to zoom in/out on initial display
 }

@@ -155,7 +155,7 @@ public class TiMapInfoWindow extends RelativeLayout
 		} else if (flag == RIGHT_PANE) {
 			pane = rightPane;
 		} else {
-			Log.e(TAG, "Invalid valud for flag in setLeftOrRightPane", Log.DEBUG_MODE);
+			Log.e(TAG, "Invalid value for flag in setLeftOrRightPane", Log.DEBUG_MODE);
 			return;
 		}
 
@@ -192,8 +192,8 @@ public class TiMapInfoWindow extends RelativeLayout
 	 * Analyze the touch event to find out:
 	 * 1. whether it is inside the info window and
 	 * 2. if it is, what the corresponding clicksource is.
-	 * The clicksource can be one of "leftPane", "title", "subtible", "rightPane" or null. Null means the event
-	 * is not inside "leftPane", "title", "subtible" or "rightPane".
+	 * The clicksource can be one of "leftPane", "title", "subtitle", "rightPane" or null. Null means the event
+	 * is not inside "leftPane", "title", "subtitle" or "rightPane".
 	 * @param ev The MotionEvent detected. Its coordinates are relative to the map view.
 	 * @param markerPoint The screen coordinate for the marker which displays the info window.
 	 * @param iconImageHeight The height of the marker icon.
@@ -216,40 +216,39 @@ public class TiMapInfoWindow extends RelativeLayout
 		if (evX > markerPoint.x - infoWindowHalfWidth && evX < markerPoint.x + infoWindowHalfWidth
 			&& evY > markerPoint.y - infoWindowHeight - iconImageHeight && evY < markerPoint.y - iconImageHeight) {
 			MotionEvent evCopy = MotionEvent.obtain(ev);
-			int x;
-			int y;
+			evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth,
+								  -markerPoint.y + infoWindowHeight + iconImageHeight);
+
 			try {
-				evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth,
-									  -markerPoint.y + infoWindowHeight + iconImageHeight);
-				x = (int) evCopy.getX();
-				y = (int) evCopy.getY();
+				int x = (int) evCopy.getX();
+				int y = (int) evCopy.getY();
+
+				Rect hitRect = new Rect();
+
+				int count = clicksourceList.length;
+				for (int i = 0; i < count; i++) {
+					View v = clicksourceList[i];
+					String tag = (String) v.getTag();
+					if (v.getVisibility() == View.VISIBLE && tag != null) {
+						v.getHitRect(hitRect);
+
+						// The title and subtitle are the children of a relative layout which is the child of this.
+						if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)) {
+							Rect textLayoutRect = new Rect();
+							((ViewGroup) (v.getParent())).getHitRect(textLayoutRect);
+							hitRect.offset(textLayoutRect.left, textLayoutRect.top);
+						}
+
+						if (hitRect.contains(x, y)) {
+							setClickSource(tag);
+							return;
+						}
+					}
+				}
+				setClickSource(null);
 			} finally {
 				evCopy.recycle();
 			}
-
-			Rect hitRect = new Rect();
-
-			int count = clicksourceList.length;
-			for (int i = 0; i < count; i++) {
-				View v = clicksourceList[i];
-				String tag = (String) v.getTag();
-				if (v.getVisibility() == View.VISIBLE && tag != null) {
-					v.getHitRect(hitRect);
-
-					// The title and subtitle are the children of a relative layout which is the child of this.
-					if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)) {
-						Rect textLayoutRect = new Rect();
-						((ViewGroup) (v.getParent())).getHitRect(textLayoutRect);
-						hitRect.offset(textLayoutRect.left, textLayoutRect.top);
-					}
-
-					if (hitRect.contains(x, y)) {
-						setClickSource(tag);
-						return;
-					}
-				}
-			}
-			setClickSource(null);
 		}
 	}
 
