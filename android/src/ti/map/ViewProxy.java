@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollObject;
@@ -90,7 +91,13 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	private final ArrayList<CircleProxy> preloadCircles;
 	private final ArrayList<ImageOverlayProxy> preloadOverlaysList;
 	private final ArrayList<TileOverlayOptions> preloadTileOverlayOptionsList;
+	// Native MapView state saved by TiUIMapView.onSaveInstanceState(). The proxy outlives the
+	// activity when it is temporarily destroyed ("Don't keep activities", low memory), so keeping the
+	// bundle here makes it available to MapView.onCreate() when the view is rebuilt.
 	private Bundle savedInstanceState;
+	// KrollProxy.getProxyId() is never populated, so keep our own stable id for the saved-state key.
+	private static final AtomicInteger MAP_ID_GENERATOR = new AtomicInteger();
+	private final int mapId = MAP_ID_GENERATOR.incrementAndGet();
 
 	public ViewProxy()
 	{
@@ -146,14 +153,40 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	public void onCreate(Activity activity, Bundle savedInstanceState)
 	{
 		super.onCreate(activity, savedInstanceState);
-		// The view does not exist yet at this point. Keep the bundle so TiUIMapView
-		// can pass it to MapView.onCreate() when the view is created.
+		// TiBaseActivity creates the window's views in windowCreated() before it dispatches onCreate to
+		// lifecycle listeners, so the map normally already exists here and has consumed the state kept
+		// on this proxy. Only fall back to the activity bundle if the view has not been created yet.
+		if (peekView() == null && savedInstanceState != null) {
+			Bundle mapState = savedInstanceState.getBundle(getSavedInstanceStateKey());
+			if (mapState != null) {
+				this.savedInstanceState = mapState;
+			}
+		}
+	}
+
+	/**
+	 * Key under which this map's native state is stored in the activity's saved-state bundle.
+	 * Every map in an activity gets its own sub-bundle so multiple maps do not overwrite each other.
+	 */
+	public String getSavedInstanceStateKey()
+	{
+		return "ti.map.state." + mapId;
+	}
+
+	public void setSavedInstanceState(Bundle savedInstanceState)
+	{
 		this.savedInstanceState = savedInstanceState;
 	}
 
-	public Bundle getSavedInstanceState()
+	/**
+	 * Returns the saved native map state and clears it, so a later view rebuild that was not
+	 * preceded by onSaveInstanceState() does not replay stale state.
+	 */
+	public Bundle takeSavedInstanceState()
 	{
-		return savedInstanceState;
+		Bundle bundle = savedInstanceState;
+		savedInstanceState = null;
+		return bundle;
 	}
 
 	@Override
@@ -172,6 +205,9 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		super.onResume(activity);
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
+			// The activity was not recreated after the last onSaveInstanceState(), so drop the kept
+			// state. Otherwise a later view rebuild (e.g. remove()/add()) would replay an old camera.
+			savedInstanceState = null;
 			((TiUIMapView) view).onResume();
 		}
 	}

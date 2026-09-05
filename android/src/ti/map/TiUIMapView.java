@@ -107,7 +107,7 @@ public class TiUIMapView extends TiUIView
 		if (zOrderOnTopValue != null && TiConvert.toBoolean(zOrderOnTopValue, false)) {
 			options.zOrderOnTop(true);
 		}
-		Bundle savedState = (proxy instanceof ViewProxy) ? ((ViewProxy) proxy).getSavedInstanceState() : null;
+		Bundle savedState = (proxy instanceof ViewProxy) ? ((ViewProxy) proxy).takeSavedInstanceState() : null;
 		mMapView = new MapView(proxy.getActivity(), options);
 		mMapView.onCreate(savedState);
 		mMapView.onStart();
@@ -1541,8 +1541,20 @@ public class TiUIMapView extends TiUIView
 	@Override
 	public void onSaveInstanceState(Bundle bundle)
 	{
-		if (mMapView != null) {
-			mMapView.onSaveInstanceState(bundle);
+		if (mMapView == null) {
+			return;
+		}
+		// The activity hands the same bundle to every listener and MapView writes its state under fixed
+		// keys, so give each map its own sub-bundle. Keep it on the proxy as well: the proxy survives the
+		// activity recreation and the new view is built before the activity's onCreate reaches the proxy.
+		Bundle mapState = new Bundle();
+		mMapView.onSaveInstanceState(mapState);
+		if (proxy instanceof ViewProxy) {
+			ViewProxy viewProxy = (ViewProxy) proxy;
+			viewProxy.setSavedInstanceState(mapState);
+			if (bundle != null) {
+				bundle.putBundle(viewProxy.getSavedInstanceStateKey(), mapState);
+			}
 		}
 	}
 
@@ -1550,7 +1562,7 @@ public class TiUIMapView extends TiUIView
 	public void onRestoreInstanceState(Bundle bundle)
 	{
 		// Restoring an already-created MapView would require destroying and re-creating it
-		// (and re-fetching the GoogleMap). Instead, the saved state is picked up from
-		// ViewProxy.onCreate() and passed to MapView.onCreate() when the view is built.
+		// (and re-fetching the GoogleMap). Instead, the state stored on the ViewProxy in
+		// onSaveInstanceState() is passed to MapView.onCreate() when the view is built.
 	}
 }
