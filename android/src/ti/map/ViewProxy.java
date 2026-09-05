@@ -193,6 +193,11 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	public void onDestroy(Activity activity)
 	{
 		super.onDestroy(activity);
+		// A finishing activity is never restored by Android, so state saved for it must not be
+		// replayed if this proxy is later added to a new window.
+		if (activity != null && activity.isFinishing()) {
+			savedInstanceState = null;
+		}
 		TiUIView view = peekView();
 		if (view instanceof TiUIMapView) {
 			((TiUIMapView) view).onDestroy();
