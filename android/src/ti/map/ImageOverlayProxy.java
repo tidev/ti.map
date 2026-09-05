@@ -7,7 +7,7 @@
 
 package ti.map;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
+import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
 @Kroll.proxy(creatableInModule = MapModule.class)
@@ -73,10 +74,15 @@ public class ImageOverlayProxy extends KrollProxy
 	private void handleImage(Object image)
 	{
 		TiDrawableReference source = TiDrawableReference.fromObject(this, image);
-		if (!source.isTypeNull()) {
-			BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(source.getBitmap());
-			groundOverlayOptions.image(bitmapDescriptor);
+		if (source.isTypeNull()) {
+			return;
 		}
+		Bitmap bitmap = source.getBitmap();
+		if (bitmap == null) {
+			Log.w(TAG, "Unable to load the image overlay image: " + image);
+			return;
+		}
+		groundOverlayOptions.image(BitmapDescriptorFactory.fromBitmap(bitmap));
 	}
 
 	public GroundOverlayOptions getGroundOverlayOptions()

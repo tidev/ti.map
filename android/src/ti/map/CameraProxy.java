@@ -83,6 +83,11 @@ public class CameraProxy extends KrollProxy
 
 	private void updateCamera()
 	{
+		// CameraPosition requires a target. Without "centerCoordinates" there is nothing to move the camera to.
+		if (position == null) {
+			cameraPosition = null;
+			return;
+		}
 		cameraPosition = new CameraPosition.Builder().target(position).zoom(zoom).bearing(heading).tilt(pitch).build();
 	}
 
@@ -93,5 +98,11 @@ public class CameraProxy extends KrollProxy
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public String getApiName()
+	{
+		return "Ti.Map.Camera";
 	}
 }
