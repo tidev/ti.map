@@ -1,5 +1,6 @@
 package ti.map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -130,9 +131,12 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		} else { // default maker icon
 			TiDimension widthDimension = new TiDimension(defaultIconImageWidth, TiDimension.TYPE_UNDEFINED);
 			TiDimension heightDimension = new TiDimension(defaultIconImageHeight, TiDimension.TYPE_UNDEFINED);
-			View view = TiApplication.getAppCurrentActivity().getWindow().getDecorView();
-			iconImageWidth = widthDimension.getAsPixels(view);
-			iconImageHeight = heightDimension.getAsPixels(view);
+			Activity activity = TiApplication.getAppCurrentActivity();
+			if (activity != null) {
+				View view = activity.getWindow().getDecorView();
+				iconImageWidth = widthDimension.getAsPixels(view);
+				iconImageHeight = heightDimension.getAsPixels(view);
+			}
 		}
 	}
 }

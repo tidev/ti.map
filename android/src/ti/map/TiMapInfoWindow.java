@@ -219,32 +219,36 @@ public class TiMapInfoWindow extends RelativeLayout
 			evCopy.offsetLocation(-markerPoint.x + infoWindowHalfWidth,
 								  -markerPoint.y + infoWindowHeight + iconImageHeight);
 
-			int x = (int) evCopy.getX();
-			int y = (int) evCopy.getY();
+			try {
+				int x = (int) evCopy.getX();
+				int y = (int) evCopy.getY();
 
-			Rect hitRect = new Rect();
+				Rect hitRect = new Rect();
 
-			int count = clicksourceList.length;
-			for (int i = 0; i < count; i++) {
-				View v = clicksourceList[i];
-				String tag = (String) v.getTag();
-				if (v.getVisibility() == View.VISIBLE && tag != null) {
-					v.getHitRect(hitRect);
+				int count = clicksourceList.length;
+				for (int i = 0; i < count; i++) {
+					View v = clicksourceList[i];
+					String tag = (String) v.getTag();
+					if (v.getVisibility() == View.VISIBLE && tag != null) {
+						v.getHitRect(hitRect);
 
-					// The title and subtitle are the children of a relative layout which is the child of this.
-					if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)) {
-						Rect textLayoutRect = new Rect();
-						((ViewGroup) (v.getParent())).getHitRect(textLayoutRect);
-						hitRect.offset(textLayoutRect.left, textLayoutRect.top);
-					}
+						// The title and subtitle are the children of a relative layout which is the child of this.
+						if (tag.equals(TiC.PROPERTY_TITLE) || tag.equals(TiC.PROPERTY_SUBTITLE)) {
+							Rect textLayoutRect = new Rect();
+							((ViewGroup) (v.getParent())).getHitRect(textLayoutRect);
+							hitRect.offset(textLayoutRect.left, textLayoutRect.top);
+						}
 
-					if (hitRect.contains(x, y)) {
-						setClickSource(tag);
-						return;
+						if (hitRect.contains(x, y)) {
+							setClickSource(tag);
+							return;
+						}
 					}
 				}
+				setClickSource(null);
+			} finally {
+				evCopy.recycle();
 			}
-			setClickSource(null);
 		}
 	}
 
