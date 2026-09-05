@@ -571,7 +571,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void showAnnotations(Object annotations)
+	public void showAnnotations(@Kroll.argument(optional = true) Object annotations)
 	{
 		if (TiApplication.isUIThread()) {
 			handleShowAnnotations(annotations);
@@ -582,8 +582,9 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	private void handleShowAnnotations(Object annotations)
 	{
-		if (!(annotations instanceof Object[])) {
-			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
+		// No argument shows all annotations (parity with iOS).
+		if (annotations != null && !(annotations instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to showAnnotations", Log.DEBUG_MODE);
 			return;
 		}
 		Object[] annos = (Object[]) annotations;

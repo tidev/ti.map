@@ -520,8 +520,9 @@ public class TiUIMapView extends TiUIView
 
 		ArrayList<TiMarker> markers = new ArrayList<TiMarker>();
 
-		// Use supplied annotations first. If none available, select all (parity with iOS)
-		if (annotations != null && annotations.length > 0) {
+		// Use the supplied annotations, an empty array shows nothing. Only when no array
+		// was passed at all are all annotations selected (parity with iOS).
+		if (annotations != null) {
 			for (int i = 0; i < annotations.length; i++) {
 				Object annotation = annotations[i];
 				if (annotation instanceof AnnotationProxy) {
