@@ -8,12 +8,11 @@ package ti.map;
 
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
 import android.util.Property;
-import android.view.View;
+import android.util.TypedValue;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -28,7 +27,6 @@ import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.TiPoint;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -54,8 +52,8 @@ public class AnnotationProxy extends KrollProxy
 	private MarkerOptions markerOptions;
 	private TiMarker marker;
 	private TiMapInfoWindow infoWindow = null;
-	private static final String defaultIconImageHeight = "40dip"; //The height of the default marker icon
-	private static final String defaultIconImageWidth = "36dip";  //The width of the default marker icon
+	private static final float DEFAULT_ICON_IMAGE_HEIGHT_DIP = 40f; // The height of the default marker icon
+	private static final float DEFAULT_ICON_IMAGE_WIDTH_DIP = 36f;  // The width of the default marker icon
 	// The height of the marker icon in the unit of "px". Will use it to analyze the touch event to find out
 	// the correct clicksource for the click event.
 	private int iconImageHeight = 0;
@@ -287,7 +285,7 @@ public class AnnotationProxy extends KrollProxy
 			setIconImageDimensions(-1, -1);
 		}
 
-		if (hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
+		if (hasProperty(MapModule.PROPERTY_CENTER_OFFSET) && iconImageWidth > 0 && iconImageHeight > 0) {
 			HashMap centerOffsetProperty = (HashMap) getProperty(MapModule.PROPERTY_CENTER_OFFSET);
 			TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
 
@@ -422,17 +420,20 @@ public class AnnotationProxy extends KrollProxy
 		if (w >= 0 && h >= 0) {
 			iconImageWidth = w;
 			iconImageHeight = h;
-		} else { // default maker icon
-			TiDimension widthDimension = new TiDimension(defaultIconImageWidth, TiDimension.TYPE_UNDEFINED);
-			TiDimension heightDimension = new TiDimension(defaultIconImageHeight, TiDimension.TYPE_UNDEFINED);
-			// TiDimension needs a view to grab the window manager, so we'll just use the decorview of the current window
-			Activity activity = TiApplication.getAppCurrentActivity();
-			if (activity != null) {
-				View view = activity.getWindow().getDecorView();
-				iconImageWidth = widthDimension.getAsPixels(view);
-				iconImageHeight = heightDimension.getAsPixels(view);
-			}
+		} else { // default marker icon
+			iconImageWidth = dipToPixels(DEFAULT_ICON_IMAGE_WIDTH_DIP);
+			iconImageHeight = dipToPixels(DEFAULT_ICON_IMAGE_HEIGHT_DIP);
 		}
+	}
+
+	/**
+	 * Converts dip to pixels using the application display metrics, so it works even when
+	 * no activity is currently available.
+	 */
+	private static int dipToPixels(float dip)
+	{
+		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,
+													TiApplication.getInstance().getResources().getDisplayMetrics()));
 	}
 
 	public int getIconImageHeight()
