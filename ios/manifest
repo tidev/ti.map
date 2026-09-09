@@ -17,4 +17,4 @@ mac: true
 moduleid: ti.map
 guid: f0d8fd44-86d2-4730-b67d-bd454577aeee
 platform: iphone
-minsdk: 10.0.0
+minsdk: 12.7.0
