@@ -501,9 +501,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	private void handleAddAnnotation(AnnotationProxy annotation)
 	{
-		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
-			mapView.addAnnotation(annotation);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.addAnnotation(annotation);
+			}
 		}
 	}
 
@@ -568,26 +571,30 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	}
 
 	@Kroll.method
-	public void showAnnotations(Object annotations)
+	public void showAnnotations(@Kroll.argument(optional = true) Object annotations)
 	{
 		if (TiApplication.isUIThread()) {
 			handleShowAnnotations(annotations);
 		} else {
-			getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS).sendToTarget();
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SHOW_ANNOTATIONS), annotations);
 		}
 	}
 
 	private void handleShowAnnotations(Object annotations)
 	{
-		if (!(annotations instanceof Object[])) {
-			Log.e(TAG, "Invalid argument to addAnnotations", Log.DEBUG_MODE);
+		// No argument shows all annotations (parity with iOS).
+		if (annotations != null && !(annotations instanceof Object[])) {
+			Log.e(TAG, "Invalid argument to showAnnotations", Log.DEBUG_MODE);
 			return;
 		}
 		Object[] annos = (Object[]) annotations;
 
-		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
-			mapView.showAnnotations(annos);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.showAnnotations(annos);
+			}
 		}
 	}
 
@@ -725,9 +732,12 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 
 	public void handleRemoveAnnotation(Object annotation)
 	{
-		TiUIMapView mapView = (TiUIMapView) peekView();
-		if (mapView.getMap() != null) {
-			mapView.removeAnnotation(annotation);
+		TiUIView view = peekView();
+		if (view instanceof TiUIMapView) {
+			TiUIMapView mapView = (TiUIMapView) view;
+			if (mapView.getMap() != null) {
+				mapView.removeAnnotation(annotation);
+			}
 		}
 	}
 
@@ -1095,7 +1105,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 			ArrayList<Object> polylinesList = new ArrayList<Object>(Arrays.asList((Object[]) polylines));
 			for (int i = 0; i < lines.length; i++) {
 				Object polylineObject = lines[i];
-				if (polylineObject instanceof AnnotationProxy) {
+				if (polylineObject instanceof PolylineProxy) {
 					polylinesList.add(polylineObject);
 				}
 			}

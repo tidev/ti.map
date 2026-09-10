@@ -1,9 +1,8 @@
 package ti.map;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.View;
+import android.util.TypedValue;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
@@ -15,15 +14,14 @@ import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.TiPoint;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
 public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 {
 	private static final String TAG = "ClusterRender";
-	private static final String defaultIconImageHeight = "40dip"; //The height of the default marker icon
-	private static final String defaultIconImageWidth = "36dip";  //The width of the default marker icon
+	private static final float DEFAULT_ICON_IMAGE_HEIGHT_DIP = 40f; // The height of the default marker icon
+	private static final float DEFAULT_ICON_IMAGE_WIDTH_DIP = 36f;  // The width of the default marker icon
 	private int iconImageHeight = 0;
 	private int iconImageWidth = 0;
 
@@ -40,9 +38,12 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		if (anno != null) {
 			if (anno.hasProperty(TiC.PROPERTY_IMAGE)) {
 				handleImage(anno, markerOptions, anno.getProperty(TiC.PROPERTY_IMAGE));
+			} else {
+				// Fall back to the default icon size so "centerOffset" below does not divide by zero.
+				setIconImageDimensions(-1, -1);
 			}
 
-			if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET)) {
+			if (anno.hasProperty(MapModule.PROPERTY_CENTER_OFFSET) && iconImageWidth > 0 && iconImageHeight > 0) {
 				HashMap centerOffsetProperty = (HashMap) anno.getProperty(MapModule.PROPERTY_CENTER_OFFSET);
 				TiPoint centerOffset = new TiPoint(centerOffsetProperty, 0.0, 0.0);
 				float offsetX = 0.5f - ((float) centerOffset.getX().getValue() / (float) iconImageWidth);
@@ -54,28 +55,20 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 
 	private void handleImage(AnnotationProxy anno, MarkerOptions markerOptions, Object image)
 	{
-		// Image path
+		Bitmap bitmap = null;
 		if (image instanceof String) {
-			TiDrawableReference imageref =
-				TiDrawableReference.fromUrl(anno, (String) anno.getProperty(TiC.PROPERTY_IMAGE));
-			Bitmap bitmap = imageref.getBitmap();
-			if (bitmap != null) {
-				try {
-					markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-					setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
-				} catch (Exception e) {
-				}
-				return;
-			}
+			bitmap = TiDrawableReference.fromUrl(anno, (String) image).getBitmap();
+		} else if (image instanceof TiBlob) {
+			bitmap = ((TiBlob) image).getImage();
 		}
 
-		// Image blob
-		if (image instanceof TiBlob) {
-			Bitmap bitmap = ((TiBlob) image).getImage();
-			if (bitmap != null) {
+		if (bitmap != null) {
+			try {
 				markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 				setIconImageDimensions(bitmap.getWidth(), bitmap.getHeight());
 				return;
+			} catch (Exception e) {
+				Log.e(TAG, "Unable to apply the cluster item image", e);
 			}
 		}
 
@@ -90,6 +83,7 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		clusterItem.setMarker(marker);
 	}
 
+	@Override
 	protected void onClusterItemUpdated(TiMarker item, Marker marker)
 	{
 		boolean changed = false;
@@ -111,10 +105,8 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 			changed = true;
 		}
 		// Update marker position if the item changed position
-		if (!marker.getPosition().equals(item.getPosition())) {
-			if (item.getPosition() != null) {
-				marker.setPosition(item.getPosition());
-			}
+		if (item.getPosition() != null && !item.getPosition().equals(marker.getPosition())) {
+			marker.setPosition(item.getPosition());
 			changed = true;
 		}
 		if (changed && marker.isInfoWindowShown()) {
@@ -128,15 +120,19 @@ public class TiClusterRenderer extends DefaultClusterRenderer<TiMarker>
 		if (w >= 0 && h >= 0) {
 			iconImageWidth = w;
 			iconImageHeight = h;
-		} else { // default maker icon
-			TiDimension widthDimension = new TiDimension(defaultIconImageWidth, TiDimension.TYPE_UNDEFINED);
-			TiDimension heightDimension = new TiDimension(defaultIconImageHeight, TiDimension.TYPE_UNDEFINED);
-			Activity activity = TiApplication.getAppCurrentActivity();
-			if (activity != null) {
-				View view = activity.getWindow().getDecorView();
-				iconImageWidth = widthDimension.getAsPixels(view);
-				iconImageHeight = heightDimension.getAsPixels(view);
-			}
+		} else { // default marker icon
+			iconImageWidth = dipToPixels(DEFAULT_ICON_IMAGE_WIDTH_DIP);
+			iconImageHeight = dipToPixels(DEFAULT_ICON_IMAGE_HEIGHT_DIP);
 		}
+	}
+
+	/**
+	 * Converts dip to pixels using the application display metrics, so it works even when
+	 * no activity is currently available.
+	 */
+	private static int dipToPixels(float dip)
+	{
+		return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,
+													TiApplication.getInstance().getResources().getDisplayMetrics()));
 	}
 }

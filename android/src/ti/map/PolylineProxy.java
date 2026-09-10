@@ -290,8 +290,6 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private List<PatternItem> processPatternDefinition(HashMap definition)
 	{
 		List<PatternItem> pattern = null;
-		int type = (Integer) definition.get("type");
-		int gapLength = (Integer) definition.get("gapLength");
 
 		if (definition.get("type") == null) {
 			Log.e(TAG, "No pattern type specified. Using default dashed pattern.");
@@ -299,8 +297,11 @@ public class PolylineProxy extends KrollProxy implements IShape
 			return DEFAULT_DASHED_PATTERN;
 		}
 
+		int type = TiConvert.toInt(definition.get("type"));
+		int gapLength = TiConvert.toInt(definition.get("gapLength"), DEFAULT_PATTERN_GAP_LENGTH_PX);
+
 		if (type == MapModule.POLYLINE_PATTERN_DASHED) {
-			int dashLength = (Integer) definition.get("dashLength");
+			int dashLength = TiConvert.toInt(definition.get("dashLength"), DEFAULT_PATTERN_DASH_LENGTH_PX);
 
 			pattern = Arrays.asList(new Dash(dashLength), new Gap(gapLength));
 		} else if (type == MapModule.POLYLINE_PATTERN_DOTTED) {
